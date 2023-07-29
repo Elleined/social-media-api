@@ -1,7 +1,6 @@
 package com.forum.application.controller;
 
 import com.forum.application.dto.CommentDTO;
-import com.forum.application.model.like.CommentLike;
 import com.forum.application.model.like.Like;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j

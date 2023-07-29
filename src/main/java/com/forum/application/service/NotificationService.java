@@ -1,7 +1,6 @@
 package com.forum.application.service;
 
 import com.forum.application.dto.NotificationResponse;
-import com.forum.application.exception.ResourceNotFoundException;
 import com.forum.application.mapper.NotificationMapper;
 import com.forum.application.model.User;
 import lombok.RequiredArgsConstructor;

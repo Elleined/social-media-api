@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -184,8 +183,8 @@ public class ForumService {
         return commentMapper.toDTO(comment);
     }
 
-    public PostDTO updateCommentSectionStatus(int postId, Post.CommentSectionStatus status) throws ResourceNotFoundException {
-        Post post = postService.updateCommentSectionStatus(postId, status);
+    public PostDTO updateCommentSectionStatus(int postId) throws ResourceNotFoundException {
+        Post post = postService.updateCommentSectionStatus(postId);
         return postMapper.toDTO(post);
     }
 

@@ -22,11 +22,6 @@ public class ModalTrackerController {
         return ResponseEntity.ok(modalTracker);
     }
 
-    @GetMapping("/getTracker")
-    public ModalTracker getTrackerByUserId(@PathVariable("currentUserId") int currentUserId) {
-        return modalTrackerService.getTrackerOfUserById(currentUserId);
-    }
-
     @DeleteMapping("/deleteTracker")
     public ResponseEntity<ModalTracker> deleteTrackerByUserId(@PathVariable("currentUserId") int currentUserId,
                                                               @RequestParam("type") String type) {

@@ -63,9 +63,13 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    Post updateCommentSectionStatus(int postId, CommentSectionStatus status) throws ResourceNotFoundException {
+    Post updateCommentSectionStatus(int postId) throws ResourceNotFoundException {
         Post post = getById(postId);
-        post.setCommentSectionStatus(status);
+        if (post.getCommentSectionStatus() == CommentSectionStatus.OPEN) {
+            post.setCommentSectionStatus(CommentSectionStatus.CLOSED);
+        } else {
+            post.setCommentSectionStatus(CommentSectionStatus.OPEN);
+        }
         log.debug("Comment section of Post with id of {} are now {}", postId, post.getCommentSectionStatus().name());
         return postRepository.save(post);
     }

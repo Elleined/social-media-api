@@ -1,10 +1,7 @@
 package com.forum.application.controller;
 
 import com.forum.application.dto.PostDTO;
-import com.forum.application.model.Post;
-import com.forum.application.model.like.CommentLike;
 import com.forum.application.model.like.Like;
-import com.forum.application.model.like.PostLike;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -31,14 +27,9 @@ public class PostController {
         return forumService.getPostById(postId);
     }
 
-    @GetMapping("/author/{id}")
-    public List<PostDTO> getAllByAuthorId(@PathVariable("id") int authorId) {
+    @GetMapping("/author")
+    public List<PostDTO> getAllByAuthorId(@PathVariable("currentUserId") int authorId) {
         return forumService.getAllByAuthorId(authorId);
-    }
-
-    @GetMapping("/commentSectionStatus/{postId}")
-    public String getCommentSectionStatus(@PathVariable("postId") int postId) {
-        return forumService.getCommentSectionStatus(postId);
     }
 
     @PostMapping
@@ -57,10 +48,8 @@ public class PostController {
     }
 
     @PatchMapping("/commentSectionStatus/{postId}")
-    public PostDTO updateCommentSectionStatus(@PathVariable("postId") int postId,
-                                                              @RequestParam("newStatus") Post.CommentSectionStatus status) {
-
-        return forumService.updateCommentSectionStatus(postId, status);
+    public PostDTO updateCommentSectionStatus(@PathVariable("postId") int postId) {
+        return forumService.updateCommentSectionStatus(postId);
     }
 
     @PatchMapping("/body/{postId}")
