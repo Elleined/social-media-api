@@ -1,6 +1,5 @@
 package com.forum.application.dto;
 
-import com.forum.application.model.mention.Mention;
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,5 +27,5 @@ public class CommentDTO {
     private String attachedPicture;
     private int totalLikes;
     private Set<UserDTO> likers;
-    private Set<Mention> mentionedUsers;
+    private Set<UserDTO> mentionedUsers;
 }

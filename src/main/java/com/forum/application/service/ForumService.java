@@ -41,7 +41,8 @@ public class ForumService {
     private final ReplyMapper replyMapper;
     private final UserMapper userMapper;
 
-    public PostDTO savePost(int currentUserId, String body, String attachedPicture, Set<Integer> mentionedUserIds) throws EmptyBodyException,
+    public PostDTO savePost(int currentUserId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
+            throws EmptyBodyException,
             BlockedException,
             ResourceNotFoundException {
 
@@ -53,7 +54,8 @@ public class ForumService {
         return postMapper.toDTO(post);
     }
 
-    public CommentDTO saveComment(int currentUserId, int postId, String body, String attachedPicture, Set<Integer> mentionedUserIds) throws ResourceNotFoundException,
+    public CommentDTO saveComment(int currentUserId, int postId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
+            throws ResourceNotFoundException,
             ClosedCommentSectionException,
             BlockedException,
             EmptyBodyException {
@@ -62,7 +64,7 @@ public class ForumService {
         if (Validator.isValidBody(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
         if (postService.isCommentSectionClosed(postId)) throw new ClosedCommentSectionException("Cannot comment because author already closed the comment section for this post!");
         if (postService.isDeleted(postId)) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
-        if (blockService.isBlockedBy(currentUser, postService.getById(postId).getAuthor()))  throw new BlockedException("Cannot comment because you blocked this user already!");
+        if (blockService.isBlockedBy(currentUser, postService.getById(postId).getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, postService.getById(postId).getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
 
         Comment comment = commentService.save(currentUser, postId, body, attachedPicture);
@@ -70,10 +72,12 @@ public class ForumService {
         return commentMapper.toDTO(comment);
     }
 
-    public ReplyDTO saveReply(int currentUserId, int commentId, String body, String attachedPicture, Set<Integer> mentionedUserIds) throws EmptyBodyException,
+    public ReplyDTO saveReply(int currentUserId, int commentId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
+            throws EmptyBodyException,
             ClosedCommentSectionException,
             ResourceNotFoundException,
             BlockedException {
+
         User currentUser = userService.getById(currentUserId);
 
         if (Validator.isValidBody(body)) throw new EmptyBodyException("Reply body cannot be empty!");
@@ -87,42 +91,42 @@ public class ForumService {
         return replyMapper.toDTO(reply);
     }
 
-    public PostDTO getPostById(int postId) {
+    public PostDTO getPostById(int postId) throws ResourceNotFoundException {
         Post post = postService.getById(postId);
         return postMapper.toDTO(post);
     }
-    public CommentDTO getCommentById(int commentId) {
+    public CommentDTO getCommentById(int commentId) throws ResourceNotFoundException {
         Comment comment = commentService.getById(commentId);
         return commentMapper.toDTO(comment);
     }
 
-    public ReplyDTO getReplyById(int replyId) {
+    public ReplyDTO getReplyById(int replyId) throws ResourceNotFoundException {
         Reply reply = replyService.getById(replyId);
         return replyMapper.toDTO(reply);
     }
 
-    public void deletePost(int postId) {
+    public void deletePost(int postId) throws ResourceNotFoundException {
         postService.delete(postId);
     }
 
-    public CommentDTO deleteComment(int commentId) {
+    public CommentDTO deleteComment(int commentId) throws ResourceNotFoundException {
         Comment comment = commentService.delete(commentId);
         return commentMapper.toDTO(comment);
     }
 
-    public ReplyDTO deleteReply(int replyId) {
+    public ReplyDTO deleteReply(int replyId) throws ResourceNotFoundException {
         Reply reply = replyService.delete(replyId);
         return replyMapper.toDTO(reply);
     }
 
-    public List<PostDTO> getAllByAuthorId(int authorId) {
+    public List<PostDTO> getAllByAuthorId(int authorId) throws ResourceNotFoundException {
         return postService.getAllByAuthorId(authorId)
                 .stream()
                 .map(postMapper::toDTO)
                 .toList();
     }
 
-    public List<PostDTO> getAllPost(int currentUserId) {
+    public List<PostDTO> getAllPost(int currentUserId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         likeService.readLikes(currentUser);
         mentionService.readMentions(currentUser);
@@ -132,7 +136,7 @@ public class ForumService {
                 .toList();
     }
 
-    public List<CommentDTO> getAllCommentsOf(int currentUserId, int postId) {
+    public List<CommentDTO> getAllCommentsOf(int currentUserId, int postId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
@@ -156,16 +160,16 @@ public class ForumService {
                 .toList();
     }
 
-    public long getTotalNotificationCount(User currentUser) throws ResourceNotFoundException {
+    public long getTotalNotificationCount(User currentUser) {
         return notificationService.getTotalNotificationCount(currentUser);
     }
 
-    public Set<NotificationResponse> getAllNotification(User currentUser) throws ResourceNotFoundException {
+    public Set<NotificationResponse> getAllNotification(User currentUser) {
         return notificationService.getAllNotification(currentUser);
     }
 
-    public CommentDTO updateUpvote(int currentUserId, int commentId) throws NoLoggedInUserException,
-            ResourceNotFoundException,
+    public CommentDTO updateUpvote(int currentUserId, int commentId)
+            throws ResourceNotFoundException,
             UpvoteException {
 
         User currentUser = userService.getById(currentUserId);
@@ -177,31 +181,31 @@ public class ForumService {
         return commentMapper.toDTO(comment);
     }
 
-    public PostDTO updateCommentSectionStatus(int postId, Post.CommentSectionStatus status) {
+    public PostDTO updateCommentSectionStatus(int postId, Post.CommentSectionStatus status) throws ResourceNotFoundException {
         Post post = postService.updateCommentSectionStatus(postId, status);
         return postMapper.toDTO(post);
     }
 
-    public PostDTO updatePostBody(int postId, String newBody) {
+    public PostDTO updatePostBody(int postId, String newBody) throws ResourceNotFoundException {
         Post post = postService.updatePostBody(postId, newBody);
         return postMapper.toDTO(post);
     }
 
-    public CommentDTO updateCommentBody(int commentId, String newBody) {
+    public CommentDTO updateCommentBody(int commentId, String newBody) throws ResourceNotFoundException {
         Comment comment = commentService.updateCommentBody(commentId, newBody);
         return commentMapper.toDTO(comment);
     }
 
-    public ReplyDTO updateReplyBody(int replyId, String newReplyBody) {
+    public ReplyDTO updateReplyBody(int replyId, String newReplyBody) throws ResourceNotFoundException {
         Reply reply = replyService.updateReplyBody(replyId, newReplyBody);
         return replyMapper.toDTO(reply);
     }
 
-    public String getCommentSectionStatus(int postId) {
+    public String getCommentSectionStatus(int postId) throws ResourceNotFoundException {
         return postService.getCommentSectionStatus(postId);
     }
 
-    public List<UserDTO> getAllUser(int currentUserId) {
+    public List<UserDTO> getAllUser(int currentUserId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         return userService.getAllUser(currentUser)
                 .stream()
@@ -209,7 +213,7 @@ public class ForumService {
                 .toList();
     }
 
-    public List<UserDTO> getSuggestedMentions(int currentUserId, String name) {
+    public List<UserDTO> getSuggestedMentions(int currentUserId, String name) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         return userService.getSuggestedMentions(currentUser, name)
                 .stream()
@@ -217,7 +221,10 @@ public class ForumService {
                 .toList();
     }
 
-    public void blockUser(int currentUserId, int userToBeBlockedId) throws ResourceNotFoundException, BlockedException {
+    public void blockUser(int currentUserId, int userToBeBlockedId)
+            throws ResourceNotFoundException,
+            BlockedException {
+
         if (currentUserId == userToBeBlockedId) throw new BlockedException("You cannot blocked yourself!");
         User currentUser = userService.getById(currentUserId);
         User userToBeBlocked = userService.getById(userToBeBlockedId);
@@ -250,21 +257,30 @@ public class ForumService {
                 .collect(Collectors.toSet());
     }
 
-    public Optional<Like> likePost(int respondentId, int postId) throws ResourceNotFoundException, BlockedException {
+    public Optional<Like> likePost(int respondentId, int postId)
+            throws ResourceNotFoundException,
+            BlockedException {
+
         User currentUser = userService.getById(respondentId);
         Post post = postService.getById(postId);
 
         return likeService.like(post, currentUser);
     }
 
-    public Optional<Like> likeComment(int respondentId, int commentId) throws ResourceNotFoundException, BlockedException {
+    public Optional<Like> likeComment(int respondentId, int commentId)
+            throws ResourceNotFoundException,
+            BlockedException {
+
         User currentUser = userService.getById(respondentId);
         Comment comment = commentService.getById(commentId);
 
         return likeService.like(comment, currentUser);
     }
 
-    public Optional<Like> likeReply(int respondentId, int replyId) throws ResourceNotFoundException, BlockedException {
+    public Optional<Like> likeReply(int respondentId, int replyId)
+            throws ResourceNotFoundException,
+            BlockedException {
+
         User currentUser = userService.getById(respondentId);
         Reply reply = replyService.getById(replyId);
 

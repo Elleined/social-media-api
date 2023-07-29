@@ -50,7 +50,7 @@ public class ReplyService {
         return reply;
     }
 
-    Reply delete(int replyId) {
+    Reply delete(int replyId) throws ResourceNotFoundException {
         Reply reply = getById(replyId);
         log.debug("Reply with id of {} are now inactive!", replyId);
         return this.setStatus(reply);
@@ -71,7 +71,7 @@ public class ReplyService {
         log.debug("Reply with id of {} notification status updated successfully to {}", reply, NotificationStatus.READ);
     }
 
-    public void readAllReplies(User currentUser, Comment comment) throws ResourceNotFoundException {
+    public void readAllReplies(User currentUser, Comment comment) {
         if (!currentUser.equals(comment.getCommenter())) {
             log.trace("Will not mark as unread because the current user with id of {} are not the commenter of the comment {}", currentUser.getId(), comment.getCommenter().getId());
             return;
@@ -100,7 +100,7 @@ public class ReplyService {
         return replyRepository.findById(replyId).orElseThrow(() -> new ResourceNotFoundException("Reply with id of " + replyId + " does not exists!"));
     }
 
-    Set<Reply> getUnreadRepliesOfAllComments(User currentUser) throws ResourceNotFoundException {
+    Set<Reply> getUnreadRepliesOfAllComments(User currentUser) {
         List<Comment> comments = currentUser.getComments();
         return comments.stream()
                 .map(Comment::getReplies)
@@ -129,12 +129,12 @@ public class ReplyService {
                 .count();
     }
 
-    Reply setStatus(Reply reply) throws ResourceNotFoundException {
+    Reply setStatus(Reply reply) {
         reply.setStatus(Status.INACTIVE);
         return replyRepository.save(reply);
     }
 
-    boolean isDeleted(Reply reply) throws  ResourceNotFoundException {
+    boolean isDeleted(Reply reply) {
         return reply.getStatus() == Status.INACTIVE;
     }
 }

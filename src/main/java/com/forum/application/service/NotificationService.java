@@ -21,7 +21,7 @@ public class NotificationService {
     private final ReplyService replyService;
     private final NotificationMapper notificationMapper;
 
-    public Set<NotificationResponse> getAllNotification(User currentUser) throws ResourceNotFoundException {
+    public Set<NotificationResponse> getAllNotification(User currentUser) {
         Set<NotificationResponse> unreadComments = commentService.getUnreadCommentsOfAllPost(currentUser).stream()
                 .map(notificationMapper::toNotification)
                 .collect(Collectors.toSet());
@@ -67,7 +67,7 @@ public class NotificationService {
                 .collect(Collectors.toSet());
     }
 
-    public long getTotalNotificationCount(User currentUser) throws ResourceNotFoundException {
+    public long getTotalNotificationCount(User currentUser) {
         return commentService.getUnreadCommentsOfAllPost(currentUser).size() +
                 replyService.getUnreadRepliesOfAllComments(currentUser).size() +
                 likeService.getUnreadPostLikes(currentUser).size() +

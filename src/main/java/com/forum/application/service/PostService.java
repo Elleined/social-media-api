@@ -30,7 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentService commentService;
 
-    Post save(User currentUser, String body, String attachedPicture) throws ResourceNotFoundException {
+    Post save(User currentUser, String body, String attachedPicture) {
         Post post = Post.builder()
                 .body(body)
                 .dateCreated(LocalDateTime.now())
@@ -49,8 +49,9 @@ public class PostService {
         return post;
     }
 
-    void delete(int postId) {
-        this.setStatus(postId);
+    void delete(int postId) throws ResourceNotFoundException {
+        Post post = getById(postId);
+        this.setStatus(post);
         log.debug("Post with id of {} are now inactive", postId);
     }
 
@@ -127,8 +128,7 @@ public class PostService {
         return commentCount + commentRepliesCount;
     }
 
-    private void setStatus(int postId) throws ResourceNotFoundException {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Comment with id of " + postId + " does not exists!"));
+    private void setStatus(Post post) throws ResourceNotFoundException {
         post.setStatus(Status.INACTIVE);
         post.getComments().forEach(commentService::setStatus);
     }

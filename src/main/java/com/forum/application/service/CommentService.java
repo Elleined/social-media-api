@@ -53,7 +53,7 @@ public class CommentService {
         return comment;
     }
 
-    Comment delete(int commentId) {
+    Comment delete(int commentId) throws ResourceNotFoundException {
         Comment comment = getById(commentId);
         log.debug("Comment with id of {} are now inactive!", commentId);
         return this.setStatus(comment);
@@ -98,7 +98,7 @@ public class CommentService {
                 .count();
     }
 
-    public Set<Comment> getUnreadCommentsOfAllPost(User currentUser) throws ResourceNotFoundException {
+    public Set<Comment> getUnreadCommentsOfAllPost(User currentUser) {
         List<Post> posts = currentUser.getPosts();
 
         return posts.stream()
