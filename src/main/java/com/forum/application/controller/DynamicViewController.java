@@ -25,7 +25,7 @@ public class DynamicViewController {
 
         User currentUser = userService.getById(currentUserId);
         boolean currentUserLikedPost = likeService.isUserAlreadyLiked(currentUser, postDto);
-        return new ModelAndView("/fragments/post-body")
+        return new ModelAndView("post-body")
                 .addObject("currentUserLikedPost", currentUserLikedPost)
                 .addObject("currentUserId", currentUser.getId())
                 .addObject("post", postDto);
