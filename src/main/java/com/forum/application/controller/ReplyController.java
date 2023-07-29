@@ -2,6 +2,7 @@ package com.forum.application.controller;
 
 import com.forum.application.dto.ReplyDTO;
 import com.forum.application.model.like.Like;
+import com.forum.application.model.like.ReplyLike;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class ReplyController {
     }
 
     @PatchMapping("/like/{replyId}")
-    public Optional<Like> likeReply(@PathVariable("currentUserId") int respondentId,
+    public Like likeReply(@PathVariable("currentUserId") int respondentId,
                                     @PathVariable("replyId") int replyId) {
 
         return forumService.likeReply(respondentId, replyId);

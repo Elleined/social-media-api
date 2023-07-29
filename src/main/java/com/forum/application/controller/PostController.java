@@ -2,7 +2,9 @@ package com.forum.application.controller;
 
 import com.forum.application.dto.PostDTO;
 import com.forum.application.model.Post;
+import com.forum.application.model.like.CommentLike;
 import com.forum.application.model.like.Like;
+import com.forum.application.model.like.PostLike;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,8 +71,8 @@ public class PostController {
     }
 
     @PatchMapping("/like/{postId}")
-    public Optional<Like> likePost(@PathVariable("currentUserId") int respondentId,
-                                   @PathVariable("postId") int postId) {
+    public Like likePost(@PathVariable("currentUserId") int respondentId,
+                         @PathVariable("postId") int postId) {
 
         return forumService.likePost(respondentId, postId);
     }

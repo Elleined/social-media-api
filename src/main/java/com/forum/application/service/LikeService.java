@@ -1,5 +1,8 @@
 package com.forum.application.service;
 
+import com.forum.application.dto.CommentDTO;
+import com.forum.application.dto.PostDTO;
+import com.forum.application.dto.ReplyDTO;
 import com.forum.application.exception.BlockedException;
 import com.forum.application.exception.ResourceNotFoundException;
 import com.forum.application.model.*;
@@ -93,6 +96,13 @@ public class LikeService {
                 .anyMatch(post::equals);
     }
 
+    public boolean isUserAlreadyLiked(User respondent, PostDTO postDTO) {
+        return respondent.getLikedPosts().stream()
+                .map(PostLike::getPost)
+                .map(Post::getId)
+                .anyMatch(postId -> postId == postDTO.getId());
+    }
+
     private void unlike(User respondent, Post post) {
         PostLike postLike = respondent.getLikedPosts()
                 .stream()
@@ -130,6 +140,14 @@ public class LikeService {
                 .anyMatch(comment::equals);
     }
 
+    public boolean isUserAlreadyLiked(User respondent, CommentDTO commentDTO) {
+        return respondent.getLikedComments().stream()
+                .map(CommentLike::getComment)
+                .map(Comment::getId)
+                .anyMatch(commentId -> commentId == commentDTO.getId());
+    }
+
+
     private void unlike(User respondent, Comment comment) {
         CommentLike commentLike = respondent.getLikedComments().stream()
                 .filter(likedComment -> likedComment.getComment().equals(comment))
@@ -165,6 +183,13 @@ public class LikeService {
         return respondent.getLikedReplies().stream()
                 .map(ReplyLike::getReply)
                 .anyMatch(reply::equals);
+    }
+
+    public boolean isUserAlreadyLiked(User respondent, ReplyDTO replyDTO) {
+        return respondent.getLikedReplies().stream()
+                .map(ReplyLike::getReply)
+                .map(Reply::getId)
+                .anyMatch(replyId -> replyId == replyDTO.getId());
     }
 
 

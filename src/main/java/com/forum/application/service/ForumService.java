@@ -10,7 +10,10 @@ import com.forum.application.model.Comment;
 import com.forum.application.model.Post;
 import com.forum.application.model.Reply;
 import com.forum.application.model.User;
+import com.forum.application.model.like.CommentLike;
 import com.forum.application.model.like.Like;
+import com.forum.application.model.like.PostLike;
+import com.forum.application.model.like.ReplyLike;
 import com.forum.application.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -257,33 +260,33 @@ public class ForumService {
                 .collect(Collectors.toSet());
     }
 
-    public Optional<Like> likePost(int respondentId, int postId)
+    public Like likePost(int respondentId, int postId)
             throws ResourceNotFoundException,
             BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Post post = postService.getById(postId);
 
-        return likeService.like(post, currentUser);
+        return likeService.like(post, currentUser).orElseGet(PostLike::new);
     }
 
-    public Optional<Like> likeComment(int respondentId, int commentId)
+    public Like likeComment(int respondentId, int commentId)
             throws ResourceNotFoundException,
             BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Comment comment = commentService.getById(commentId);
 
-        return likeService.like(comment, currentUser);
+        return likeService.like(comment, currentUser).orElseGet(CommentLike::new);
     }
 
-    public Optional<Like> likeReply(int respondentId, int replyId)
+    public Like likeReply(int respondentId, int replyId)
             throws ResourceNotFoundException,
             BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Reply reply = replyService.getById(replyId);
 
-        return likeService.like(reply, currentUser);
+        return likeService.like(reply, currentUser).orElseGet(ReplyLike::new);
     }
 }

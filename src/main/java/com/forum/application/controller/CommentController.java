@@ -1,6 +1,7 @@
 package com.forum.application.controller;
 
 import com.forum.application.dto.CommentDTO;
+import com.forum.application.model.like.CommentLike;
 import com.forum.application.model.like.Like;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
@@ -60,8 +61,8 @@ public class CommentController {
     }
 
     @PatchMapping("/like/{commentId}")
-    public Optional<Like> likeComment(@PathVariable("currentUserId") int respondentId,
-                                      @PathVariable("commentId") int commentId) {
+    public Like likeComment(@PathVariable("currentUserId") int respondentId,
+                            @PathVariable("commentId") int commentId) {
 
         return forumService.likeComment(respondentId, commentId);
     }

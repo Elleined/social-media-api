@@ -78,8 +78,8 @@
         </div>
       </div>
       <a class="me-2" style="color: #3b5998;" href="#" role="button" th:id="${'likeBtn' + post.id}">
-        <i th:if="${post.isCurrentUserLikedPost}" class="fas fa-thumbs-up"></i> <!--shade like-->
-        <i th:unless="${post.isCurrentUserLikedPost}" class="far fa-thumbs-up"></i> <!--unshade like-->
+        <i th:if="${currentUserLikedPost}" class="fas fa-thumbs-up"></i> <!--shade like-->
+        <i th:unless="${currentUserLikedPost}" class="far fa-thumbs-up"></i> <!--unshade like-->
       </a>
       <div class="vr vr-blurry" style="height: 30px;"></div>
       <a class="ms-2 btn btn-primary"

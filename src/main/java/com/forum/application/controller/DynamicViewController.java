@@ -5,6 +5,7 @@ import com.forum.application.dto.NotificationResponse;
 import com.forum.application.dto.PostDTO;
 import com.forum.application.dto.ReplyDTO;
 import com.forum.application.model.User;
+import com.forum.application.service.LikeService;
 import com.forum.application.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,16 @@ import org.springframework.web.servlet.ModelAndView;
 public class DynamicViewController {
 
     private final UserService userService;
+    private final LikeService likeService;
 
     @PostMapping("/getPostBlock")
     public ModelAndView getPostBlock(@PathVariable("currentUserId") int currentUserId,
                                      @RequestBody PostDTO postDto) {
 
         User currentUser = userService.getById(currentUserId);
+        boolean currentUserLikedPost = likeService.isUserAlreadyLiked(currentUser, postDto);
         return new ModelAndView("/fragments/post-body")
+                .addObject("currentUserLikedPost", currentUserLikedPost)
                 .addObject("currentUserId", currentUser.getId())
                 .addObject("post", postDto);
     }
@@ -32,7 +36,9 @@ public class DynamicViewController {
                                         @RequestBody CommentDTO commentDto) {
 
         User currentUser = userService.getById(currentUserId);
+        boolean currentUserLikedComment = likeService.isUserAlreadyLiked(currentUser, commentDto);
         return new ModelAndView("comment-body")
+                .addObject("currentUserLikedComment", currentUserLikedComment)
                 .addObject("currentUserId", currentUser.getId())
                 .addObject("commentDto", commentDto);
     }
@@ -42,7 +48,9 @@ public class DynamicViewController {
                                       @RequestBody ReplyDTO replyDto) {
 
         User currentUser = userService.getById(currentUserId);
+        boolean currentUserLikedReply = likeService.isUserAlreadyLiked(currentUser, replyDto);
         return new ModelAndView("reply-body")
+                .addObject("currentUserLikedReply", currentUserLikedReply)
                 .addObject("currentUserId", currentUser.getId())
                 .addObject("replyDto", replyDto);
     }

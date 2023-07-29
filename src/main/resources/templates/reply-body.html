@@ -35,8 +35,8 @@
       <div class="row">
         <div class="md-col">
           <a class="me-2" style="color: #3b5998;" href="#" type="button" th:id="${'replyLikeBtn' + replyDto.id}">
-            <i th:if="${replyDto.isCurrentUserLikedReply}" class="fas fa-thumbs-up"></i> <!--shade like-->
-            <i th:unless="${replyDto.isCurrentUserLikedReply}" class="far fa-thumbs-up"></i> <!--unshade like-->
+            <i th:if="${currentUserLikedReply}" class="fas fa-thumbs-up"></i> <!--shade like-->
+            <i th:unless="${currentUserLikedReply}" class="far fa-thumbs-up"></i> <!--unshade like-->
           </a>
           <div class="vr vr-blurry" style="height: 30px;"></div>
           <span class="ms-2" th:text="${' at ' + replyDto.formattedTime + ' on ' + replyDto.formattedDate}"></span>
