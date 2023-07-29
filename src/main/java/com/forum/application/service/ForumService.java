@@ -217,7 +217,8 @@ public class ForumService {
                 .toList();
     }
 
-    public void blockUser(int currentUserId, int userToBeBlockedId) throws ResourceNotFoundException {
+    public void blockUser(int currentUserId, int userToBeBlockedId) throws ResourceNotFoundException, BlockedException {
+        if (currentUserId == userToBeBlockedId) throw new BlockedException("You cannot blocked yourself!");
         User currentUser = userService.getById(currentUserId);
         User userToBeBlocked = userService.getById(userToBeBlockedId);
         blockService.blockUser(currentUser, userToBeBlocked);

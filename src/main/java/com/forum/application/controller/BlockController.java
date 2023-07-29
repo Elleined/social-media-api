@@ -10,7 +10,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/{currentUserId}/blocks")
+@RequestMapping("/{currentUserId}")
 public class BlockController {
     private final ForumService forumService;
 

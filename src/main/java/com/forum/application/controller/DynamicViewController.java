@@ -32,7 +32,7 @@ public class DynamicViewController {
                                         @RequestBody CommentDTO commentDto) {
 
         User currentUser = userService.getById(currentUserId);
-        return new ModelAndView("/fragments/comment-body")
+        return new ModelAndView("comment-body")
                 .addObject("currentUserId", currentUser.getId())
                 .addObject("commentDto", commentDto);
     }
@@ -42,7 +42,7 @@ public class DynamicViewController {
                                       @RequestBody ReplyDTO replyDto) {
 
         User currentUser = userService.getById(currentUserId);
-        return new ModelAndView("/fragments/reply-body")
+        return new ModelAndView("reply-body")
                 .addObject("currentUserId", currentUser.getId())
                 .addObject("replyDto", replyDto);
     }
@@ -52,13 +52,13 @@ public class DynamicViewController {
                                              @RequestBody NotificationResponse notification) {
 
         User currentUser = userService.getById(currentUserId);
-        return new ModelAndView("/fragments/notification-body")
+        return new ModelAndView("notification-body")
                 .addObject("currentUserId", currentUser.getId())
                 .addObject("notification", notification);
     }
 
     @PostMapping("/getLikeIcon")
     public ModelAndView getLikeIcon(@RequestParam("isLiked") boolean isLiked) {
-        return new ModelAndView("/fragments/like-icon").addObject("isLiked", isLiked);
+        return new ModelAndView("like-icon").addObject("isLiked", isLiked);
     }
 }

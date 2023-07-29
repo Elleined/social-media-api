@@ -1,0 +1,98 @@
+<div th:fragment="post-body-fragment">
+  <div class="card w-75 mb-3" th:id="${'postContainer' + post.id}">
+    <div class="card-body">
+      <div class="container card-title">
+        <div class="row">
+          <div class="col-md-6">
+            <img class="rounded-circle shadow-4-strong" alt="avatar2" height="50px" width="50px" th:src="${'/img/' + post.authorPicture}" src="" />
+            <span class="md5 mb-5">
+                   <strong th:text="${post.authorName}" id="authorName"></strong>
+            </span>
+          </div>
+          <div class="col-md-6">
+            <div th:if="${post.authorId} != ${currentUserId}">
+              <div class="row ">
+                <div class="col-md-12">
+                  <div class="note note-primary mb-3" th:text="${'Comment section status: ' + post.commentSectionStatus}"></div>
+                </div>
+              </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end" th:if="${post.authorId} == ${currentUserId}">
+              <a class="btn btn-danger me-1"
+                 role="button"
+                 href="#"
+                 th:id="${'postDeleteBtn' + post.id}">
+                <i class="fas fa-trash"></i>
+                Delete
+              </a>
+
+              <div class="vr vr-blurry" style="height: 30px;"></div>
+
+              <a class="btn btn-primary"
+                 role="button"
+                 href="#"
+                 th:id="${'editPostBtn' + post.id}">
+                <i class="fas fa-pencil"></i>
+                Edit
+              </a>
+
+              <div class="vr vr-blurry" style="height: 30px;"></div>
+
+              <div class="form-check form-switch mt-1 ms-1">
+                <input class="form-check-input"
+                       type="checkbox"
+                       role="switch"
+                       th:id="${'commentSectionStatusToggle' + post.id}"
+                       th:checked="${post.commentSectionStatus.equals('OPEN')}"/>
+                <label class="form-check-label"
+                       th:for="commentSectionStatusToggle"
+                       th:id="${'commentSectionStatusText' + post.id}"
+                       th:text="${post.commentSectionStatus.equals('OPEN') ? 'Close comment section' : 'Open comment section'}"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <span th:text="${post.formattedDateCreated}"></span>
+      <span th:text="${'at ' + post.formattedTimeCreated}"></span>
+
+      <div class="container mb-4">
+        <div class="row ">
+          <div class="col-md-6">
+            <p class="card-text mt-3" th:text="${post.body}" th:id="${'postBody' + post.id}" ></p>
+            <img
+                    th:if="${!post.attachedPicture.isEmpty()}"
+                    style="height: 100px; width: 100px"
+                    th:src="${'/img/' + post.attachedPicture}"
+                    class="mb-4 img-fluid rounded"
+                    alt="attached picture"
+                    src="" />
+          </div>
+          <div class="col-md-6 mt-2">
+            <button type="button"
+                    th:if="${post.authorId} == ${currentUserId}"
+                    th:id="${'editPostBtnSave' + post.id}"
+                    class="btn btn-primary ms-3 d-none">Save</button>
+          </div>
+        </div>
+      </div>
+      <a class="me-2" style="color: #3b5998;" href="#" role="button" th:id="${'likeBtn' + post.id}">
+        <i th:if="${post.isCurrentUserLikedPost}" class="fas fa-thumbs-up"></i> <!--shade like-->
+        <i th:unless="${post.isCurrentUserLikedPost}" class="far fa-thumbs-up"></i> <!--unshade like-->
+      </a>
+      <div class="vr vr-blurry" style="height: 30px;"></div>
+      <a class="ms-2 btn btn-primary"
+         href="#"
+         role="button"
+         data-bs-toggle="modal"
+         data-bs-target="#commentModal"
+         th:id="${'commentBtn' + post.id}">
+        <i class="fas fa-message"></i>
+        <span th:text="${'Comments  ·  ' + post.totalCommentAndReplies}"
+              th:id="${'totalCommentsOfPost' + post.id}"
+              th:aria-valuetext=${post.totalCommentAndReplies}> </span>
+      </a>
+    </div>
+  </div>
+</div>
