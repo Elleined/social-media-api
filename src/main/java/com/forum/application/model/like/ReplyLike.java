@@ -39,7 +39,7 @@ public final class ReplyLike extends Like {
     }
 
     @Override
-    public int getSubscriberId() {
+    public int getReceiverId() {
         return reply.getReplier().getId();
     }
 

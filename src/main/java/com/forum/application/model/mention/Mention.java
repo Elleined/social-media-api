@@ -54,4 +54,6 @@ public abstract class Mention {
     private User mentioningUser;
 
     public abstract String getMessage();
+
+    public abstract int getReceiverId();
 }

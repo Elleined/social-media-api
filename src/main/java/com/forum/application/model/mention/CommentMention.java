@@ -37,4 +37,9 @@ public final class CommentMention extends Mention {
     public String getMessage() {
         return this.getMentioningUser().getName() + " mentioned you in a comment: " + "\"" + this.getComment().getBody() + "\"";
     }
+
+    @Override
+    public int getReceiverId() {
+        return getMentionedUser().getId();
+    }
 }

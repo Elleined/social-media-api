@@ -17,4 +17,5 @@ public class NotificationResponse {
     private String formattedTime;
     private int postId;
     private int commentId;
+    private int receiverId;
 }

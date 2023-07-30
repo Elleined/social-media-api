@@ -37,4 +37,9 @@ public final class PostMention extends Mention {
     public String getMessage() {
         return this.getMentioningUser().getName() + " mentioned you in a post: " + "\"" + this.getPost().getBody() + "\"";
     }
+
+    @Override
+    public int getReceiverId() {
+        return getMentionedUser().getId();
+    }
 }

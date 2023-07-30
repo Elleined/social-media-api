@@ -47,5 +47,5 @@ public abstract class Like {
     private NotificationStatus notificationStatus;
 
     public abstract String getMessage();
-    public abstract int getSubscriberId();
+    public abstract int getReceiverId();
 }

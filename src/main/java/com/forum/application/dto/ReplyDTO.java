@@ -23,6 +23,7 @@ public class ReplyDTO {
     private String notificationStatus;
     private String attachedPicture;
     private int totalLikes;
+    private int commenterId;
     private Set<UserDTO> likers;
     private Set<UserDTO> mentionedUsers;
 }

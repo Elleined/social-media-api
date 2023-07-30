@@ -37,4 +37,9 @@ public final class ReplyMention extends Mention {
     public String getMessage() {
         return this.getMentioningUser().getName() + " mentioned you in a reply: " + "\"" + this.getReply().getBody() + "\"";
     }
+
+    @Override
+    public int getReceiverId() {
+        return getMentionedUser().getId();
+    }
 }

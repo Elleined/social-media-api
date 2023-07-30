@@ -40,7 +40,8 @@ public abstract class NotificationMapper {
             @Mapping(target = "type", expression = "java(Type.COMMENT.name())"),
             @Mapping(target = "count", expression = "java(commentService.getNotificationCountForRespondent(comment.getPost().getAuthor(), comment.getPost().getId(), comment.getCommenter().getId()))"),
             @Mapping(target = "postId", source = "comment.post.id"),
-            @Mapping(target = "commentId", ignore = true)
+            @Mapping(target = "commentId", ignore = true),
+            @Mapping(target = "receiverId", source = "comment.post.author.id")
     })
     public abstract NotificationResponse toNotification(Comment comment);
 
@@ -55,7 +56,8 @@ public abstract class NotificationMapper {
             @Mapping(target = "type", expression = "java(Type.REPLY.name())"),
             @Mapping(target = "count", expression = "java(replyService.getNotificationCountForRespondent(reply.getComment().getCommenter(), reply.getComment().getId(), reply.getReplier().getId()))"),
             @Mapping(target = "postId", source = "reply.comment.post.id"),
-            @Mapping(target = "commentId", source = "reply.comment.id")
+            @Mapping(target = "commentId", source = "reply.comment.id"),
+            @Mapping(target = "receiverId", source = "reply.comment.commenter.id")
     })
     public abstract NotificationResponse toNotification(Reply reply);
 
@@ -68,9 +70,10 @@ public abstract class NotificationMapper {
             @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(postLike.getCreatedAt()))"),
             @Mapping(target = "notificationStatus", source = "postLike.notificationStatus"),
             @Mapping(target = "type", expression = "java(Type.POST.name())"),
+            @Mapping(target = "receiverId", expression = "java(postLike.getReceiverId())"),
+            @Mapping(target = "postId", source = "postLike.post.id"),
             @Mapping(target = "count", ignore = true),
             @Mapping(target = "commentId", ignore = true),
-            @Mapping(target = "postId", ignore = true)
     })
     public abstract NotificationResponse toLikeNotification(PostLike postLike);
 
@@ -84,8 +87,9 @@ public abstract class NotificationMapper {
             @Mapping(target = "notificationStatus", source = "commentLike.notificationStatus"),
             @Mapping(target = "postId", source = "commentLike.comment.post.id"),
             @Mapping(target = "type", expression = "java(Type.COMMENT.name())"),
+            @Mapping(target = "receiverId", expression = "java(commentLike.getReceiverId())"),
+            @Mapping(target = "commentId", source = "commentLike.comment.id"),
             @Mapping(target = "count", ignore = true),
-            @Mapping(target = "commentId", ignore = true)
     })
     public abstract NotificationResponse toLikeNotification(CommentLike commentLike);
 
@@ -100,7 +104,8 @@ public abstract class NotificationMapper {
             @Mapping(target = "type", expression = "java(Type.REPLY.name())"),
             @Mapping(target = "count", ignore = true),
             @Mapping(target = "postId", source = "replyLike.reply.comment.post.id"),
-            @Mapping(target = "commentId", source = "replyLike.reply.comment.id")
+            @Mapping(target = "commentId", source = "replyLike.reply.comment.id"),
+            @Mapping(target = "receiverId", expression = "java(replyLike.getReceiverId())")
     })
     public abstract NotificationResponse toLikeNotification(ReplyLike replyLike);
 
@@ -114,6 +119,7 @@ public abstract class NotificationMapper {
             @Mapping(target = "type", expression = "java(Type.COMMENT.name())"),
             @Mapping(target = "notificationStatus", source = "postMention.notificationStatus"),
             @Mapping(target = "postId", source = "postMention.post.id"),
+            @Mapping(target = "receiverId", expression = "java(postMention.getReceiverId())"),
             @Mapping(target = "commentId", ignore = true),
             @Mapping(target = "count", ignore = true),
     })
@@ -129,7 +135,8 @@ public abstract class NotificationMapper {
             @Mapping(target = "type", expression = "java(Type.COMMENT.name())"),
             @Mapping(target = "postId", source = "commentMention.comment.post.id"),
             @Mapping(target = "notificationStatus", source = "commentMention.notificationStatus"),
-            @Mapping(target = "commentId", ignore = true),
+            @Mapping(target = "receiverId", expression = "java(commentMention.getReceiverId())"),
+            @Mapping(target = "commentId", source = "commentMention.comment.id"),
             @Mapping(target = "count", ignore = true),
     })
     public abstract NotificationResponse toMentionNotification(CommentMention commentMention);
@@ -145,6 +152,7 @@ public abstract class NotificationMapper {
             @Mapping(target = "postId", source = "replyMention.reply.comment.post.id"),
             @Mapping(target = "commentId", source = "replyMention.reply.comment.id"),
             @Mapping(target = "notificationStatus", source = "notificationStatus"),
+            @Mapping(target = "receiverId", expression = "java(replyMention.getReceiverId())"),
             @Mapping(target = "count", ignore = true),
     })
     public abstract NotificationResponse toMentionNotification(ReplyMention replyMention);

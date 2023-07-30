@@ -39,7 +39,7 @@ public final class PostLike extends Like {
     }
 
     @Override
-    public int getSubscriberId() {
+    public int getReceiverId() {
         return post.getAuthor().getId();
     }
 

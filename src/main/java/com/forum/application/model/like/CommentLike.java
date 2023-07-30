@@ -38,7 +38,7 @@ public final class CommentLike extends Like {
     }
 
     @Override
-    public int getSubscriberId() {
+    public int getReceiverId() {
         return comment.getCommenter().getId();
     }
 
