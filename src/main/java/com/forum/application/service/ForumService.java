@@ -2,16 +2,12 @@ package com.forum.application.service;
 
 import com.forum.application.dto.*;
 import com.forum.application.exception.*;
-import com.forum.application.mapper.CommentMapper;
-import com.forum.application.mapper.PostMapper;
-import com.forum.application.mapper.ReplyMapper;
-import com.forum.application.mapper.UserMapper;
+import com.forum.application.mapper.*;
 import com.forum.application.model.Comment;
 import com.forum.application.model.Post;
 import com.forum.application.model.Reply;
 import com.forum.application.model.User;
 import com.forum.application.model.like.CommentLike;
-import com.forum.application.model.like.Like;
 import com.forum.application.model.like.PostLike;
 import com.forum.application.model.like.ReplyLike;
 import com.forum.application.validator.Validator;
@@ -21,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,6 +39,7 @@ public class ForumService {
     private final CommentMapper commentMapper;
     private final ReplyMapper replyMapper;
     private final UserMapper userMapper;
+    private final NotificationMapper notificationMapper;
 
     public PostDTO savePost(int currentUserId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
             throws EmptyBodyException,
@@ -299,33 +297,58 @@ public class ForumService {
                 .collect(Collectors.toSet());
     }
 
-    public Like likePost(int respondentId, int postId)
+    public Optional<NotificationResponse> likePost(int respondentId, int postId)
             throws ResourceNotFoundException,
             BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Post post = postService.getById(postId);
 
-        return likeService.like(post, currentUser).orElseGet(PostLike::new);
+        if (postService.isDeleted(post)) throw new ResourceNotFoundException("Cannot like/unlike! The post with id of " + post.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
+        if (blockService.isBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot like/unlike! You blocked the author of this post with id of !" + post.getAuthor().getId());
+        if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw  new BlockedException("Cannot like/unlike! The author of this post with id of " + post.getAuthor().getId() + " already blocked you");
+
+        if (likeService.isUserAlreadyLiked(currentUser, post)) {
+            likeService.unlike(currentUser, post);
+            return Optional.empty();
+        }
+        PostLike postLike = likeService.like(currentUser, post);
+        return Optional.of( notificationMapper.toLikeNotification(postLike) );
     }
 
-    public Like likeComment(int respondentId, int commentId)
+    public Optional<NotificationResponse> likeComment(int respondentId, int commentId)
             throws ResourceNotFoundException,
             BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Comment comment = commentService.getById(commentId);
+        if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("Cannot like/unlike! The comment with id of " + comment.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
+        if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! You blocked the author of this comment with id of !" + comment.getCommenter().getId());
+        if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! The author of this comment with id of " + comment.getCommenter().getId() + " already blocked you");
 
-        return likeService.like(comment, currentUser).orElseGet(CommentLike::new);
+        if (likeService.isUserAlreadyLiked(currentUser, comment))  {
+            likeService.unlike(currentUser, comment);
+            return Optional.empty();
+        }
+        CommentLike commentLike = likeService.like(currentUser, comment);
+        return Optional.of( notificationMapper.toLikeNotification(commentLike) );
     }
 
-    public Like likeReply(int respondentId, int replyId)
+    public Optional<NotificationResponse> likeReply(int respondentId, int replyId)
             throws ResourceNotFoundException,
             BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Reply reply = replyService.getById(replyId);
+        if (replyService.isDeleted(reply)) throw new ResourceNotFoundException("Cannot like/unlike! The reply with id of " + reply.getId() + " you are trying to like/unlike might already be deleted or does not exists!");
+        if (blockService.isBlockedBy(currentUser, reply.getReplier())) throw new BlockedException("Cannot like/unlike! You blocked the author of this reply with id of !" + reply.getReplier().getId());
+        if (blockService.isYouBeenBlockedBy(currentUser, reply.getReplier())) throw  new BlockedException("Cannot like/unlike! The author of this reply with id of " + reply.getReplier().getId() + " already blocked you");
 
-        return likeService.like(reply, currentUser).orElseGet(ReplyLike::new);
+        if (likeService.isUserAlreadyLiked(currentUser, reply)) {
+            likeService.unlike(currentUser, reply);
+            return Optional.empty();
+        }
+        ReplyLike replyLike = likeService.like(currentUser, reply);
+        return Optional.of( notificationMapper.toLikeNotification(replyLike) );
     }
 }

@@ -1,6 +1,5 @@
 package com.forum.application.dto;
 
-import com.forum.application.model.ModalTracker;
 import lombok.Builder;
 import lombok.Data;
 

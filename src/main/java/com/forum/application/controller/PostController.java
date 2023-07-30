@@ -1,7 +1,7 @@
 package com.forum.application.controller;
 
+import com.forum.application.dto.NotificationResponse;
 import com.forum.application.dto.PostDTO;
-import com.forum.application.model.like.Like;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -60,8 +61,8 @@ public class PostController {
     }
 
     @PatchMapping("/like/{postId}")
-    public Like likePost(@PathVariable("currentUserId") int respondentId,
-                         @PathVariable("postId") int postId) {
+    public Optional<NotificationResponse> likePost(@PathVariable("currentUserId") int respondentId,
+                                                   @PathVariable("postId") int postId) {
 
         return forumService.likePost(respondentId, postId);
     }

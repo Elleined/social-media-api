@@ -3,7 +3,6 @@ package com.forum.application.controller;
 import com.forum.application.dto.UserDTO;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -15,18 +14,18 @@ public class BlockController {
     private final ForumService forumService;
 
     @PatchMapping("/blockUser/{userToBeBlockedId}")
-    public ResponseEntity<String> blockUser(@PathVariable("currentUserId") int currentUserId,
+    public String blockUser(@PathVariable("currentUserId") int currentUserId,
                                             @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
 
         forumService.blockUser(currentUserId, userToBeBlockedId);
-        return ResponseEntity.ok("User with id of " + userToBeBlockedId + " blocked successfully");
+        return "User with id of " + userToBeBlockedId + " blocked successfully";
     }
 
     @PatchMapping("/unblockUser/{userToBeUnblockedId}")
-    public ResponseEntity<String> unblockUser(@PathVariable("currentUserId") int currentUserId,
-                                              @PathVariable("userToBeUnblockedId") int userToBeUnblockedId) {
+    public String unblockUser(@PathVariable("currentUserId") int currentUserId,
+                              @PathVariable("userToBeUnblockedId") int userToBeUnblockedId) {
         forumService.unBlockUser(currentUserId, userToBeUnblockedId);
-        return ResponseEntity.ok("User with id of " + userToBeUnblockedId + " unblocked successfully");
+        return "User with id of " + userToBeUnblockedId + " unblocked successfully";
     }
 
     @GetMapping("/isBlockedBy/{userToCheckId}")

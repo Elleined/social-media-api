@@ -3,8 +3,6 @@ package com.forum.application.service;
 import com.forum.application.dto.CommentDTO;
 import com.forum.application.dto.PostDTO;
 import com.forum.application.dto.ReplyDTO;
-import com.forum.application.exception.BlockedException;
-import com.forum.application.exception.ResourceNotFoundException;
 import com.forum.application.model.*;
 import com.forum.application.model.like.CommentLike;
 import com.forum.application.model.like.Like;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,47 +28,7 @@ public class LikeService {
     private final LikeNotificationService likeNotificationService;
     private final LikeNotificationReaderService likeNotificationReaderService;
 
-    private final PostService postService;
-    private final CommentService commentService;
-    private final ReplyService replyService;
-    private final BlockService blockService;
-
-    Optional<Like> like(Post post, User respondent) throws ResourceNotFoundException, BlockedException {
-        if (postService.isDeleted(post)) throw new ResourceNotFoundException("Cannot like/unlike! The post with id of " + post.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
-        if (blockService.isBlockedBy(respondent, post.getAuthor())) throw new BlockedException("Cannot like/unlike! You blocked the author of this post with id of !" + post.getAuthor().getId());
-        if (blockService.isYouBeenBlockedBy(respondent, post.getAuthor())) throw  new BlockedException("Cannot like/unlike! The author of this post with id of " + post.getAuthor().getId() + " already blocked you");
-
-        if (isUserAlreadyLiked(respondent, post)) {
-            unlike(respondent, post);
-            return Optional.empty();
-        }
-        return Optional.of(like(respondent, post));
-    }
-
-    Optional<Like> like(Comment comment, User respondent) throws ResourceNotFoundException, BlockedException {
-        if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("Cannot like/unlike! The comment with id of " + comment.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
-        if (blockService.isBlockedBy(respondent, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! You blocked the author of this comment with id of !" + comment.getCommenter().getId());
-        if (blockService.isYouBeenBlockedBy(respondent, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! The author of this comment with id of " + comment.getCommenter().getId() + " already blocked you");
-
-        if (isUserAlreadyLiked(respondent, comment))  {
-            unlike(respondent, comment);
-            return Optional.empty();
-        }
-        return Optional.of(like(respondent, comment));
-    }
-
-    Optional<Like> like(Reply reply, User respondent) throws ResourceNotFoundException, BlockedException {
-        if (replyService.isDeleted(reply)) throw new ResourceNotFoundException("Cannot like/unlike! The reply with id of " + reply.getId() + " you are trying to like/unlike might already be deleted or does not exists!");
-        if (blockService.isBlockedBy(respondent, reply.getReplier())) throw new BlockedException("Cannot like/unlike! You blocked the author of this reply with id of !" + reply.getReplier().getId());
-        if (blockService.isYouBeenBlockedBy(respondent, reply.getReplier())) throw  new BlockedException("Cannot like/unlike! The author of this reply with id of " + reply.getReplier().getId() + " already blocked you");
-        if (isUserAlreadyLiked(respondent, reply)) {
-            unlike(respondent, reply);
-            return Optional.empty();
-        }
-        return Optional.of(like(respondent, reply));
-    }
-
-    private Like like(User respondent, Post post) {
+    PostLike like(User respondent, Post post) {
         NotificationStatus notificationStatus = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.POST)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
@@ -103,7 +60,7 @@ public class LikeService {
                 .anyMatch(postId -> postId == postDTO.getId());
     }
 
-    private void unlike(User respondent, Post post) {
+    void unlike(User respondent, Post post) {
         PostLike postLike = respondent.getLikedPosts()
                 .stream()
                 .filter(like -> like.getPost().equals(post))
@@ -115,7 +72,7 @@ public class LikeService {
         likeRepository.delete(postLike);
         log.debug("User with id of {} unlike post with id of {}", respondent.getId(), post.getId());
     }
-    private Like like(User respondent, Comment comment) {
+    CommentLike like(User respondent, Comment comment) {
         NotificationStatus notificationStatus = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getPost().getId(), ModalTracker.Type.COMMENT)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
@@ -148,7 +105,7 @@ public class LikeService {
     }
 
 
-    private void unlike(User respondent, Comment comment) {
+    void unlike(User respondent, Comment comment) {
         CommentLike commentLike = respondent.getLikedComments().stream()
                 .filter(likedComment -> likedComment.getComment().equals(comment))
                 .findFirst()
@@ -160,7 +117,7 @@ public class LikeService {
         log.debug("User with id of {} unlike comment with id of {}", respondent.getId(), comment.getId());
     }
 
-    private Like like(User respondent, Reply reply) {
+    ReplyLike like(User respondent, Reply reply) {
         NotificationStatus notificationStatus = modalTrackerService.isModalOpen(reply.getReplier().getId(), reply.getComment().getId(), ModalTracker.Type.REPLY)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
@@ -193,7 +150,7 @@ public class LikeService {
     }
 
 
-    private void unlike(User respondent, Reply reply) {
+    void unlike(User respondent, Reply reply) {
         ReplyLike replyLike = respondent.getLikedReplies()
                 .stream()
                 .filter(likedReply -> likedReply.getReply().equals(reply))
