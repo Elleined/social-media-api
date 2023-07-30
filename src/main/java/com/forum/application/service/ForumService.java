@@ -351,4 +351,9 @@ public class ForumService {
         ReplyLike replyLike = likeService.like(currentUser, reply);
         return Optional.of( notificationMapper.toLikeNotification(replyLike) );
     }
+
+    public UserDTO saveUser(UserDTO userDTO) {
+        User user = userService.save(userDTO.name(), userDTO.email(), userDTO.picture());
+        return userMapper.toDTO(user);
+    }
 }

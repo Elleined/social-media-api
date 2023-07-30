@@ -18,10 +18,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
-    public int save(User user) {
-        int userId = userRepository.save(user).getId();
-        log.debug("User registered successfully! with id of {}", userId);
-        return userId;
+    User save(String name, String email, String picture) {
+
+        User user = User.builder()
+                .name(name)
+                .email(email)
+                .picture(picture)
+                .build();
+
+        userRepository.save(user);
+        log.debug("User registered successfully! with id of {}", user.getId());
+        return user;
+    }
+
+    User save(User user) {
+        return userRepository.save(user);
     }
 
     public int getIdByEmail(String email) {
@@ -30,10 +41,6 @@ public class UserService {
 
     public boolean isEmailExists(String email) {
         return userRepository.fetchAllEmail().contains(email);
-    }
-
-    public boolean existsById(int userId) {
-        return userRepository.existsById(userId);
     }
 
     public User getById(int userId) throws ResourceNotFoundException {
