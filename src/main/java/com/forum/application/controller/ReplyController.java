@@ -25,11 +25,6 @@ public class ReplyController {
         return forumService.getAllRepliesOf(currentUserId, commentId);
     }
 
-    @GetMapping("/{replyId}")
-    public ReplyDTO getById(@PathVariable("replyId") int replyId) {
-        return forumService.getReplyById(replyId);
-    }
-
     @PostMapping
     public ReplyDTO saveReply(@PathVariable("currentUserId") int currentUserId,
                               @PathVariable("commentId") int commentId,

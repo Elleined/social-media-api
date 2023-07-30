@@ -22,11 +22,6 @@ public class PostController {
         return forumService.getAllPost(currentUserId);
     }
 
-    @GetMapping("/{postId}")
-    public PostDTO getById(@PathVariable("postId") int postId) {
-        return forumService.getPostById(postId);
-    }
-
     @GetMapping("/author")
     public List<PostDTO> getAllByAuthorId(@PathVariable("currentUserId") int authorId) {
         return forumService.getAllByAuthorId(authorId);

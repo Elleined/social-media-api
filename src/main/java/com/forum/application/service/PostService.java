@@ -56,9 +56,6 @@ public class PostService {
         post.getComments().forEach(commentService::delete);
     }
 
-    boolean isUserNotOwnedPost(User currentUser, Post post) {
-        return currentUser.getPosts().stream().noneMatch(post::equals);
-    }
 
     void updatePostBody(Post post, String newBody) {
         post.setBody(newBody);
@@ -73,6 +70,7 @@ public class PostService {
             post.setCommentSectionStatus(CommentSectionStatus.OPEN);
         }
         log.debug("Comment section of Post with id of {} are now {}", post.getId(), post.getCommentSectionStatus().name());
+        postRepository.save(post);
     }
 
     public Post getById(int postId) throws ResourceNotFoundException {
@@ -102,10 +100,13 @@ public class PostService {
         return post.getCommentSectionStatus() == CommentSectionStatus.CLOSED;
     }
 
-    public boolean isDeleted(Post post) throws ResourceNotFoundException {
+    public boolean isDeleted(Post post) {
         return post.getStatus() == Status.INACTIVE;
     }
 
+    boolean isUserNotOwnedPost(User currentUser, Post post) {
+        return currentUser.getPosts().stream().noneMatch(post::equals);
+    }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalCommentsAndReplies(Post post) {

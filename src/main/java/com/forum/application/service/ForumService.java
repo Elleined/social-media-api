@@ -96,19 +96,6 @@ public class ForumService {
         return replyMapper.toDTO(reply);
     }
 
-    public PostDTO getPostById(int postId) throws ResourceNotFoundException {
-        Post post = postService.getById(postId);
-        return postMapper.toDTO(post);
-    }
-    public CommentDTO getCommentById(int commentId) throws ResourceNotFoundException {
-        Comment comment = commentService.getById(commentId);
-        return commentMapper.toDTO(comment);
-    }
-
-    public ReplyDTO getReplyById(int replyId) throws ResourceNotFoundException {
-        Reply reply = replyService.getById(replyId);
-        return replyMapper.toDTO(reply);
-    }
 
     public void deletePost(int currentUserId, int postId)
             throws ResourceNotFoundException,

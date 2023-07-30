@@ -24,11 +24,6 @@ public class CommentController {
         return forumService.getAllCommentsOf(currentUserId, postId);
     }
 
-    @GetMapping("/{commentId}")
-    public CommentDTO getById(@PathVariable("commentId") int commentId) {
-        return forumService.getCommentById(commentId);
-    }
-
     @PostMapping
     public CommentDTO saveComment(@PathVariable("currentUserId") int currentUserId,
                                   @PathVariable("postId") int postId,
