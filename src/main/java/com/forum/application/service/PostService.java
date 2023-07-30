@@ -24,8 +24,6 @@ import java.util.List;
 @Service
 @Transactional
 public class PostService {
-
-    private final UserService userService;
     private final BlockService blockService;
     private final PostRepository postRepository;
     private final CommentService commentService;
@@ -69,8 +67,8 @@ public class PostService {
         } else {
             post.setCommentSectionStatus(CommentSectionStatus.OPEN);
         }
-        log.debug("Comment section of Post with id of {} are now {}", post.getId(), post.getCommentSectionStatus().name());
         postRepository.save(post);
+        log.debug("Comment section of Post with id of {} are now {}", post.getId(), post.getCommentSectionStatus().name());
     }
 
     public Post getById(int postId) throws ResourceNotFoundException {
@@ -87,12 +85,9 @@ public class PostService {
                 .toList();
     }
 
-    List<Post> getAllByAuthorId(int authorId) throws ResourceNotFoundException {
-        if (!userService.existsById(authorId)) throw new ResourceNotFoundException("User with id of " + authorId + " does not exists");
-        return postRepository.fetchAllByAuthorId(authorId)
-                .stream()
+    List<Post> getAllByAuthorId(User author) {
+        return author.getPosts().stream()
                 .filter(post -> post.getStatus() == Status.ACTIVE)
-                .sorted(Comparator.comparing(Post::getDateCreated).reversed())
                 .toList();
     }
 

@@ -132,7 +132,8 @@ public class ForumService {
     }
 
     public List<PostDTO> getAllByAuthorId(int authorId) throws ResourceNotFoundException {
-        return postService.getAllByAuthorId(authorId)
+        User author = userService.getById(authorId);
+        return postService.getAllByAuthorId(author)
                 .stream()
                 .map(postMapper::toDTO)
                 .toList();

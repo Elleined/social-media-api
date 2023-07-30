@@ -62,11 +62,8 @@ public class ReplyService {
         log.debug("Reply with id of {} updated with the new body of {}", reply.getId(), newReplyBody);
     }
 
-    private void readReply(int replyId) throws ResourceNotFoundException {
-        Reply reply = getById(replyId);
+    private void readReply(Reply reply) {
         reply.setNotificationStatus(NotificationStatus.READ);
-        replyRepository.save(reply);
-        log.debug("Reply with id of {} notification status updated successfully to {}", reply, NotificationStatus.READ);
     }
 
     public void readAllReplies(User currentUser, Comment comment) {
@@ -75,13 +72,16 @@ public class ReplyService {
             return;
         }
         log.trace("Will mark all as read because the current user with id of {} is the commenter of the comment {}", currentUser.getId(), comment.getCommenter().getId());
-        comment.getReplies()
+        List<Reply> replies = comment.getReplies()
                 .stream()
                 .filter(reply -> reply.getStatus() == Status.ACTIVE)
                 .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
-                .map(Reply::getId)
-                .forEach(this::readReply);
+                .toList();
+
+        replies.forEach(this::readReply);
+        replyRepository.saveAll(replies);
+        log.debug("Replies in comment with id of {} read successfully!", comment.getId());
     }
 
     List<Reply> getAllRepliesOf(User currentUser, Comment comment) {

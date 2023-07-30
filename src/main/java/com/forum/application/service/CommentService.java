@@ -123,26 +123,26 @@ public class CommentService {
         log.debug("Comment with id of {} updated with the new body of {}", comment.getId(), newBody);
     }
 
-    private void readComment(int commentId) throws ResourceNotFoundException {
-        Comment comment = getById(commentId);
+    private void readComment(Comment comment) {
         comment.setNotificationStatus(NotificationStatus.READ);
-        commentRepository.save(comment);
-        log.debug("Comment with id of {} notification status updated to {}", commentId, NotificationStatus.READ);
     }
 
-    public void readAllComments(User currentUser, Post post) throws ResourceNotFoundException {
+    void readAllComments(User currentUser, Post post) {
         if (!currentUser.equals(post.getAuthor())) {
             log.trace("Will not mark as unread because the current user with id of {} are not the author of the post who is {}", currentUser.getId(), post.getAuthor().getId());
             return;
         }
         log.trace("Will mark all as read becuase the current user with id of {} is the author of the post {}", currentUser.getId(), post.getAuthor().getId());
-        post.getComments()
+        List<Comment> comments = post.getComments()
                 .stream()
                 .filter(comment -> comment.getStatus() == Status.ACTIVE)
                 .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
-                .map(Comment::getId)
-                .forEach(this::readComment);
+                .toList();
+
+        comments.forEach(this::readComment);
+        commentRepository.saveAll(comments);
+        log.debug("Comments in post with id of {} read successfully!", post.getId());
     }
 
 
