@@ -16,7 +16,7 @@ public class ExceptionController {
         return new ResponseEntity<>(responseMessage, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({NoLoggedInUserException.class, BlockedException.class})
+    @ExceptionHandler({NoLoggedInUserException.class, BlockedException.class, NotOwnedException.class})
     public ResponseEntity<ResponseMessage> handleNoLoggedInUserException(RuntimeException ex) {
         var responseMessage = new ResponseMessage(HttpStatus.FORBIDDEN, ex.getMessage());
         return new ResponseEntity<>(responseMessage, HttpStatus.FORBIDDEN);

@@ -50,10 +50,13 @@ public class ReplyService {
         return reply;
     }
 
-    Reply delete(int replyId) throws ResourceNotFoundException {
-        Reply reply = getById(replyId);
-        log.debug("Reply with id of {} are now inactive!", replyId);
+    Reply delete(Reply reply) {
+        log.debug("Reply with id of {} are now inactive!", reply.getId());
         return this.setStatus(reply);
+    }
+
+    boolean isUserHasReply(User currentUser, Reply reply) {
+        return currentUser.getReplies().stream().anyMatch(reply::equals);
     }
 
     Reply updateReplyBody(int replyId, String newReplyBody) throws ResourceNotFoundException {

@@ -42,8 +42,10 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<PostDTO> deletePost(@PathVariable("postId") int postId) {
-        forumService.deletePost(postId);
+    public ResponseEntity<PostDTO> deletePost(@PathVariable("currentUserId") int currentUserId,
+                                              @PathVariable("postId") int postId) {
+
+        forumService.deletePost(currentUserId, postId);
         return ResponseEntity.noContent().build();
     }
 

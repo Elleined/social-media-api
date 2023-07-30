@@ -41,8 +41,10 @@ public class ReplyController {
     }
 
     @DeleteMapping("/{replyId}")
-    public ReplyDTO delete(@PathVariable("replyId") int replyId) {
-        return forumService.deleteReply(replyId);
+    public ReplyDTO delete(@PathVariable("currentUserId") int currentUserId,
+                           @PathVariable("replyId") int replyId) {
+
+        return forumService.deleteReply(currentUserId, replyId);
     }
 
     @PatchMapping("/body/{replyId}")

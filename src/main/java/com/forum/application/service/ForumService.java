@@ -107,18 +107,34 @@ public class ForumService {
         return replyMapper.toDTO(reply);
     }
 
-    public void deletePost(int postId) throws ResourceNotFoundException {
-        postService.delete(postId);
+    public void deletePost(int currentUserId, int postId)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        if (!postService.isUserHasPostOf(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
+        postService.delete(post);
     }
 
-    public CommentDTO deleteComment(int commentId) throws ResourceNotFoundException {
-        Comment comment = commentService.delete(commentId);
-        return commentMapper.toDTO(comment);
+    public CommentDTO deleteComment(int currentUserId, int commentId)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        User currentUser = userService.getById(currentUserId);
+        Comment comment = commentService.getById(commentId);
+        if (commentService.isUserHasComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
+        return commentMapper.toDTO( commentService.delete(comment) );
     }
 
-    public ReplyDTO deleteReply(int replyId) throws ResourceNotFoundException {
-        Reply reply = replyService.delete(replyId);
-        return replyMapper.toDTO(reply);
+    public ReplyDTO deleteReply(int currentUserId, int replyId)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        User currentUser = userService.getById(currentUserId);
+        Reply reply = replyService.getById(replyId);
+        if (replyService.isUserHasReply(currentUser, reply))  throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
+        return replyMapper.toDTO( replyService.delete(reply) );
     }
 
     public List<PostDTO> getAllByAuthorId(int authorId) throws ResourceNotFoundException {
@@ -201,10 +217,6 @@ public class ForumService {
     public ReplyDTO updateReplyBody(int replyId, String newReplyBody) throws ResourceNotFoundException {
         Reply reply = replyService.updateReplyBody(replyId, newReplyBody);
         return replyMapper.toDTO(reply);
-    }
-
-    public String getCommentSectionStatus(int postId) throws ResourceNotFoundException {
-        return postService.getCommentSectionStatus(postId);
     }
 
     public List<UserDTO> getAllUser(int currentUserId) throws ResourceNotFoundException {

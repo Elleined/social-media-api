@@ -49,10 +49,13 @@ public class PostService {
         return post;
     }
 
-    void delete(int postId) throws ResourceNotFoundException {
-        Post post = getById(postId);
+    void delete(Post post) throws ResourceNotFoundException {
         this.setStatus(post);
-        log.debug("Post with id of {} are now inactive", postId);
+        log.debug("Post with id of {} are now inactive", post.getId());
+    }
+
+    boolean isUserHasPostOf(User currentUser, Post post) {
+        return currentUser.getPosts().stream().anyMatch(post::equals);
     }
 
     Post updatePostBody(int postId, String newBody) throws ResourceNotFoundException {

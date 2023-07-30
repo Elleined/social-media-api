@@ -11,7 +11,7 @@ public class NotificationResponse {
     private String message;
     private String respondentPicture;
     private int respondentId;
-    private ModalTracker.Type type;
+    private String type;
     private String notificationStatus;
     private int count;
     private String formattedDate;

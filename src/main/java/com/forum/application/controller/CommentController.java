@@ -40,8 +40,10 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public CommentDTO delete(@PathVariable("commentId") int commentId) {
-        return forumService.deleteComment(commentId);
+    public CommentDTO delete(@PathVariable("currentUserId") int currentUserId,
+                             @PathVariable("commentId") int commentId) {
+
+        return forumService.deleteComment(currentUserId, commentId);
     }
 
     @PatchMapping("/upvote/{commentId}")

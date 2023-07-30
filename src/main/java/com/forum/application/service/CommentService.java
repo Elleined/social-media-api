@@ -53,18 +53,22 @@ public class CommentService {
         return comment;
     }
 
-    Comment delete(int commentId) throws ResourceNotFoundException {
-        Comment comment = getById(commentId);
-        log.debug("Comment with id of {} are now inactive!", commentId);
+    Comment delete(Comment comment) {
+        log.debug("Comment with id of {} are now inactive!", comment.getId());
         return this.setStatus(comment);
     }
 
-    public boolean isDeleted(int commentId) throws ResourceNotFoundException {
+    boolean isUserHasComment(User currentUser, Comment comment) {
+        return currentUser.getComments().stream().anyMatch(comment::equals);
+    }
+
+
+    boolean isDeleted(int commentId) throws ResourceNotFoundException {
         Comment comment = getById(commentId);
         return comment.getStatus() == Status.INACTIVE;
     }
 
-    public boolean isDeleted(Comment comment) throws ResourceNotFoundException {
+    boolean isDeleted(Comment comment) throws ResourceNotFoundException {
         return comment.getStatus() == Status.INACTIVE;
     }
 
