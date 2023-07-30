@@ -116,7 +116,7 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        if (!postService.isUserHasPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
+        if (postService.isUserNotOwnedPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
         postService.delete(post);
     }
 
@@ -126,7 +126,7 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
-        if (!commentService.isUserHasComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
+        if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
 
         commentService.delete(comment);
         return commentMapper.toDTO(comment);
@@ -138,7 +138,7 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Reply reply = replyService.getById(replyId);
-        if (!replyService.isUserHasReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
+        if (replyService.isUserNotOwnedReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
 
         replyService.delete(reply);
         return replyMapper.toDTO(reply);
@@ -213,7 +213,7 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        if (!postService.isUserHasPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
+        if (postService.isUserNotOwnedPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
 
         postService.updateCommentSectionStatus(post);
         return postMapper.toDTO(post);
@@ -226,7 +226,7 @@ public class ForumService {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         if (post.getBody().equals(newBody)) return postMapper.toDTO(post);
-        if (!postService.isUserHasPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
+        if (postService.isUserNotOwnedPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
 
         postService.updatePostBody(post, newBody);
         return postMapper.toDTO(post);
@@ -239,7 +239,7 @@ public class ForumService {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
         if (comment.getBody().equals(newBody)) return commentMapper.toDTO(comment);
-        if (!commentService.isUserHasComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
+        if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
 
         commentService.updateCommentBody(comment, newBody);
         return commentMapper.toDTO(comment);
@@ -250,11 +250,11 @@ public class ForumService {
             NotOwnedException {
 
         User currentUser = userService.getById(currentUserId);
-        Reply reply = replyService.getById(replyId;
+        Reply reply = replyService.getById(replyId);
 
         if (reply.getBody().equals(newReplyBody)) return replyMapper.toDTO(reply);
-        if (!replyService.isUserHasReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
-        
+        if (replyService.isUserNotOwnedReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
+
         replyService.updateReplyBody(reply, newReplyBody);
         return replyMapper.toDTO(reply);
     }

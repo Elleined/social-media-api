@@ -52,8 +52,8 @@ public class ReplyService {
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 
-    boolean isUserHasReply(User currentUser, Reply reply) {
-        return currentUser.getReplies().stream().anyMatch(reply::equals);
+    boolean isUserNotOwnedReply(User currentUser, Reply reply) {
+        return currentUser.getReplies().stream().noneMatch(reply::equals);
     }
 
     void updateReplyBody(Reply reply, String newReplyBody) {

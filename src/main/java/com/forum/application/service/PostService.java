@@ -56,8 +56,8 @@ public class PostService {
         post.getComments().forEach(commentService::delete);
     }
 
-    boolean isUserHasPost(User currentUser, Post post) {
-        return currentUser.getPosts().stream().anyMatch(post::equals);
+    boolean isUserNotOwnedPost(User currentUser, Post post) {
+        return currentUser.getPosts().stream().noneMatch(post::equals);
     }
 
     void updatePostBody(Post post, String newBody) {

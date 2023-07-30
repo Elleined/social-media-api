@@ -3,7 +3,6 @@ package com.forum.application.service;
 import com.forum.application.exception.ResourceNotFoundException;
 import com.forum.application.model.*;
 import com.forum.application.repository.CommentRepository;
-import com.forum.application.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,8 +57,8 @@ public class CommentService {
         comment.getReplies().forEach(replyService::delete);
     }
 
-    boolean isUserHasComment(User currentUser, Comment comment) {
-        return currentUser.getComments().stream().anyMatch(comment::equals);
+    boolean isUserNotOwnedComment(User currentUser, Comment comment) {
+        return currentUser.getComments().stream().noneMatch(comment::equals);
     }
 
     boolean isDeleted(Comment comment) {
