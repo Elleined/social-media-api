@@ -54,10 +54,11 @@ public class CommentController {
     }
 
     @PatchMapping("/body/{commentId}")
-    public CommentDTO updateCommentBody(@PathVariable("commentId") int commentId,
+    public CommentDTO updateCommentBody(@PathVariable("currentUserId") int currentUserId,
+                                        @PathVariable("commentId") int commentId,
                                         @RequestParam("newCommentBody") String newCommentBody) {
 
-        return forumService.updateCommentBody(commentId, newCommentBody);
+        return forumService.updateCommentBody(currentUserId, commentId, newCommentBody);
     }
 
     @PatchMapping("/like/{commentId}")

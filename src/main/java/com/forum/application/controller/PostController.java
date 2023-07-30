@@ -50,15 +50,18 @@ public class PostController {
     }
 
     @PatchMapping("/commentSectionStatus/{postId}")
-    public PostDTO updateCommentSectionStatus(@PathVariable("postId") int postId) {
-        return forumService.updateCommentSectionStatus(postId);
+    public PostDTO updateCommentSectionStatus(@PathVariable("currentUserId") int currentUserId,
+                                              @PathVariable("postId") int postId) {
+
+        return forumService.updateCommentSectionStatus(currentUserId, postId);
     }
 
     @PatchMapping("/body/{postId}")
-    public PostDTO updatePostBody(@PathVariable("postId") int postId,
-                                                  @RequestParam("newPostBody") String newPostBody) {
+    public PostDTO updatePostBody(@PathVariable("currentUserId") int currentUserId,
+                                  @PathVariable("postId") int postId,
+                                  @RequestParam("newPostBody") String newPostBody) {
 
-        return forumService.updatePostBody(postId, newPostBody);
+        return forumService.updatePostBody(currentUserId, postId, newPostBody);
     }
 
     @PatchMapping("/like/{postId}")

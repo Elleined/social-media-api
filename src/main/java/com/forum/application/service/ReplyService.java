@@ -2,7 +2,6 @@ package com.forum.application.service;
 
 import com.forum.application.exception.ResourceNotFoundException;
 import com.forum.application.model.*;
-import com.forum.application.repository.CommentRepository;
 import com.forum.application.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,16 +20,13 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ReplyService {
-    private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
 
     private final ModalTrackerService modalTrackerService;
     private final BlockService blockService;
 
-    Reply save(User currentUser, int commentId, String body,String attachedPicture) throws ResourceNotFoundException {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment with id of " + commentId + " does not exists!"));
-
-        NotificationStatus status = modalTrackerService.isModalOpen(comment.getCommenter().getId(), commentId, ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
+    Reply save(User currentUser, Comment comment, String body,String attachedPicture) throws ResourceNotFoundException {
+        NotificationStatus status = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getId(), ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
         Reply reply = Reply.builder()
                 .body(body)
                 .dateCreated(LocalDateTime.now())
@@ -50,21 +46,20 @@ public class ReplyService {
         return reply;
     }
 
-    Reply delete(Reply reply) {
+    void delete(Reply reply) {
+        reply.setStatus(Status.INACTIVE);
+        replyRepository.save(reply);
         log.debug("Reply with id of {} are now inactive!", reply.getId());
-        return this.setStatus(reply);
     }
 
     boolean isUserHasReply(User currentUser, Reply reply) {
         return currentUser.getReplies().stream().anyMatch(reply::equals);
     }
 
-    Reply updateReplyBody(int replyId, String newReplyBody) throws ResourceNotFoundException {
-        Reply reply = getById(replyId);
-        if (reply.getBody().equals(newReplyBody)) return reply;
+    void updateReplyBody(Reply reply, String newReplyBody) {
         reply.setBody(newReplyBody);
-        log.debug("Reply with id of {} updated with the new body of {}", replyId, newReplyBody);
-        return replyRepository.save(reply);
+        replyRepository.save(reply);
+        log.debug("Reply with id of {} updated with the new body of {}", reply.getId(), newReplyBody);
     }
 
     private void readReply(int replyId) throws ResourceNotFoundException {
@@ -130,11 +125,6 @@ public class ReplyService {
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
                 .filter(reply -> reply.getReplier().getId() == respondentId)
                 .count();
-    }
-
-    Reply setStatus(Reply reply) {
-        reply.setStatus(Status.INACTIVE);
-        return replyRepository.save(reply);
     }
 
     boolean isDeleted(Reply reply) {

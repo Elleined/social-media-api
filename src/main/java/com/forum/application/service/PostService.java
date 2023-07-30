@@ -49,32 +49,30 @@ public class PostService {
         return post;
     }
 
-    void delete(Post post) throws ResourceNotFoundException {
-        this.setStatus(post);
+    void delete(Post post) {
+        post.setStatus(Status.INACTIVE);
+        postRepository.save(post);
         log.debug("Post with id of {} are now inactive", post.getId());
+        post.getComments().forEach(commentService::delete);
     }
 
-    boolean isUserHasPostOf(User currentUser, Post post) {
+    boolean isUserHasPost(User currentUser, Post post) {
         return currentUser.getPosts().stream().anyMatch(post::equals);
     }
 
-    Post updatePostBody(int postId, String newBody) throws ResourceNotFoundException {
-        Post post = getById(postId);
-        if (post.getBody().equals(newBody)) return post; // Returning if user doesn't change the post body
+    void updatePostBody(Post post, String newBody) {
         post.setBody(newBody);
-        log.debug("Post with id of {} updated with the new body of {}", postId, newBody);
-        return postRepository.save(post);
+        postRepository.save(post);
+        log.debug("Post with id of {} updated with the new body of {}", post.getId(), newBody);
     }
 
-    Post updateCommentSectionStatus(int postId) throws ResourceNotFoundException {
-        Post post = getById(postId);
+    void updateCommentSectionStatus(Post post) {
         if (post.getCommentSectionStatus() == CommentSectionStatus.OPEN) {
             post.setCommentSectionStatus(CommentSectionStatus.CLOSED);
         } else {
             post.setCommentSectionStatus(CommentSectionStatus.OPEN);
         }
-        log.debug("Comment section of Post with id of {} are now {}", postId, post.getCommentSectionStatus().name());
-        return postRepository.save(post);
+        log.debug("Comment section of Post with id of {} are now {}", post.getId(), post.getCommentSectionStatus().name());
     }
 
     public Post getById(int postId) throws ResourceNotFoundException {
@@ -100,24 +98,14 @@ public class PostService {
                 .toList();
     }
 
-    boolean isCommentSectionClosed(int postId) throws ResourceNotFoundException {
-        Post post = getById(postId);
+    boolean isCommentSectionClosed(Post post) {
         return post.getCommentSectionStatus() == CommentSectionStatus.CLOSED;
-    }
-
-    boolean isDeleted(int postId) throws ResourceNotFoundException {
-        Post post = getById(postId);
-        return post.getStatus() == Status.INACTIVE;
     }
 
     public boolean isDeleted(Post post) throws ResourceNotFoundException {
         return post.getStatus() == Status.INACTIVE;
     }
 
-    public String getCommentSectionStatus(int postId) throws ResourceNotFoundException {
-        Post post = getById(postId);
-        return post.getCommentSectionStatus().name();
-    }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalCommentsAndReplies(Post post) {
@@ -134,10 +122,4 @@ public class PostService {
 
         return commentCount + commentRepliesCount;
     }
-
-    private void setStatus(Post post) throws ResourceNotFoundException {
-        post.setStatus(Status.INACTIVE);
-        post.getComments().forEach(commentService::setStatus);
-    }
-
 }

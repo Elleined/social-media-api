@@ -20,16 +20,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class CommentService {
     private final UserService userService;
-    private final PostRepository postRepository;
     private final ReplyService replyService;
     private final BlockService blockService;
     private final ModalTrackerService modalTrackerService;
     private final CommentRepository commentRepository;
 
-    Comment save(User currentUser, int postId, String body, String attachedPicture) throws ResourceNotFoundException {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post with id of " + postId + " does not exists!"));
-
-        NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), postId, ModalTracker.Type.COMMENT)
+    Comment save(User currentUser, Post post, String body, String attachedPicture) throws ResourceNotFoundException {
+        NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.COMMENT)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
 
@@ -53,22 +50,19 @@ public class CommentService {
         return comment;
     }
 
-    Comment delete(Comment comment) {
+    void delete(Comment comment) {
+        comment.setStatus(Status.INACTIVE);
+        commentRepository.save(comment);
+
         log.debug("Comment with id of {} are now inactive!", comment.getId());
-        return this.setStatus(comment);
+        comment.getReplies().forEach(replyService::delete);
     }
 
     boolean isUserHasComment(User currentUser, Comment comment) {
         return currentUser.getComments().stream().anyMatch(comment::equals);
     }
 
-
-    boolean isDeleted(int commentId) throws ResourceNotFoundException {
-        Comment comment = getById(commentId);
-        return comment.getStatus() == Status.INACTIVE;
-    }
-
-    boolean isDeleted(Comment comment) throws ResourceNotFoundException {
+    boolean isDeleted(Comment comment) {
         return comment.getStatus() == Status.INACTIVE;
     }
 
@@ -115,19 +109,19 @@ public class CommentService {
                 .collect(Collectors.toSet());
     }
 
-    int updateUpvote(User respondent, int commentId) throws ResourceNotFoundException {
-        this.setUpvote(respondent, commentId);
-        log.debug("User with id of {} upvoted the Comment with id of {} successfully", respondent.getId(), commentId);
-        return commentId;
+    void updateUpvote(User respondent, Comment comment) {
+        comment.setUpvote(comment.getUpvote() + 1);
+        commentRepository.save(comment);
+
+        respondent.getUpvotedComments().add(comment);
+        userService.save(respondent);
+        log.debug("User with id of {} upvoted the Comment with id of {} successfully", respondent.getId(), comment.getId());
     }
 
-    Comment updateCommentBody(int commentId, String newBody) throws ResourceNotFoundException {
-        Comment comment = getById(commentId);
-        if (comment.getBody().equals(newBody)) return comment;
+    void updateCommentBody(Comment comment, String newBody) throws ResourceNotFoundException {
         comment.setBody(newBody);
         commentRepository.save(comment);
-        log.debug("Comment with id of {} updated with the new body of {}", commentId, newBody);
-        return comment;
+        log.debug("Comment with id of {} updated with the new body of {}", comment.getId(), newBody);
     }
 
     private void readComment(int commentId) throws ResourceNotFoundException {
@@ -159,28 +153,11 @@ public class CommentService {
                 .anyMatch(upvotedComment -> upvotedComment.getId() == commentId);
     }
 
-    boolean isCommentSectionClosed(int commentId) throws ResourceNotFoundException {
-        Comment comment = getById(commentId);
+    boolean isCommentSectionClosed(Comment comment) {
         Post post = comment.getPost();
         return post.getCommentSectionStatus() == Post.CommentSectionStatus.CLOSED;
     }
 
-    Comment setStatus(Comment comment) throws ResourceNotFoundException {
-        comment.setStatus(Status.INACTIVE);
-        commentRepository.save(comment);
-
-        comment.getReplies().forEach(replyService::setStatus);
-        return comment;
-    }
-
-    private void setUpvote(User respondent, int commentId) throws ResourceNotFoundException {
-        Comment comment = getById(commentId);
-        comment.setUpvote(comment.getUpvote() + 1);
-        commentRepository.save(comment);
-
-        respondent.getUpvotedComments().add(comment);
-        userService.save(respondent);
-    }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalReplies(Comment comment) {

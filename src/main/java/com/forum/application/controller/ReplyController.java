@@ -48,10 +48,11 @@ public class ReplyController {
     }
 
     @PatchMapping("/body/{replyId}")
-    public ReplyDTO updateReplyBody(@PathVariable("replyId") int replyId,
+    public ReplyDTO updateReplyBody(@PathVariable("currentUserId") int currentUserId,
+                                    @PathVariable("replyId") int replyId,
                                     @RequestParam("newReplyBody") String newReplyBody) {
 
-        return forumService.updateReplyBody(replyId, newReplyBody);
+        return forumService.updateReplyBody(currentUserId, replyId, newReplyBody);
     }
 
     @PatchMapping("/like/{replyId}")

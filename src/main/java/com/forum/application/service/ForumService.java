@@ -63,13 +63,15 @@ public class ForumService {
             EmptyBodyException {
 
         User currentUser = userService.getById(currentUserId);
-        if (Validator.isValidBody(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
-        if (postService.isCommentSectionClosed(postId)) throw new ClosedCommentSectionException("Cannot comment because author already closed the comment section for this post!");
-        if (postService.isDeleted(postId)) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
-        if (blockService.isBlockedBy(currentUser, postService.getById(postId).getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
-        if (blockService.isYouBeenBlockedBy(currentUser, postService.getById(postId).getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
+        Post post = postService.getById(postId);
 
-        Comment comment = commentService.save(currentUser, postId, body, attachedPicture);
+        if (Validator.isValidBody(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
+        if (postService.isCommentSectionClosed(post)) throw new ClosedCommentSectionException("Cannot comment because author already closed the comment section for this post!");
+        if (postService.isDeleted(post)) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
+        if (blockService.isBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
+
+        Comment comment = commentService.save(currentUser, post, body, attachedPicture);
         if (mentionedUserIds != null) mentionService.addAllMention(currentUser, mentionedUserIds, comment);
         return commentMapper.toDTO(comment);
     }
@@ -81,14 +83,15 @@ public class ForumService {
             BlockedException {
 
         User currentUser = userService.getById(currentUserId);
+        Comment comment = commentService.getById(commentId);
 
         if (Validator.isValidBody(body)) throw new EmptyBodyException("Reply body cannot be empty!");
-        if (commentService.isCommentSectionClosed(commentId)) throw new ClosedCommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
-        if (commentService.isDeleted(commentId)) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
-        if (blockService.isBlockedBy(currentUser, commentService.getById(commentId).getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
-        if (blockService.isYouBeenBlockedBy(currentUser, commentService.getById(commentId).getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
+        if (commentService.isCommentSectionClosed(comment)) throw new ClosedCommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
+        if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
+        if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
 
-        Reply reply = replyService.save(currentUser, commentId, body, attachedPicture);
+        Reply reply = replyService.save(currentUser, comment, body, attachedPicture);
         if (mentionedUserIds != null) mentionService.addAllMention(currentUser, mentionedUserIds, reply);
         return replyMapper.toDTO(reply);
     }
@@ -113,7 +116,7 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        if (!postService.isUserHasPostOf(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
+        if (!postService.isUserHasPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
         postService.delete(post);
     }
 
@@ -124,7 +127,9 @@ public class ForumService {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
         if (!commentService.isUserHasComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
-        return commentMapper.toDTO( commentService.delete(comment) );
+
+        commentService.delete(comment);
+        return commentMapper.toDTO(comment);
     }
 
     public ReplyDTO deleteReply(int currentUserId, int replyId)
@@ -133,8 +138,10 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Reply reply = replyService.getById(replyId);
-        if (!replyService.isUserHasReply(currentUser, reply))  throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
-        return replyMapper.toDTO( replyService.delete(reply) );
+        if (!replyService.isUserHasReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
+
+        replyService.delete(reply);
+        return replyMapper.toDTO(reply);
     }
 
     public List<PostDTO> getAllByAuthorId(int authorId) throws ResourceNotFoundException {
@@ -159,7 +166,7 @@ public class ForumService {
         Post post = postService.getById(postId);
 
         commentService.readAllComments(currentUser, post);
-         likeService.readLikes(currentUser, post);
+        likeService.readLikes(currentUser, post);
         mentionService.readMentions(currentUser, post);
         return commentService.getAllCommentsOf(currentUser, post).stream()
                 .map(commentMapper::toDTO)
@@ -191,31 +198,64 @@ public class ForumService {
             UpvoteException {
 
         User currentUser = userService.getById(currentUserId);
-        if (commentService.isDeleted(commentId)) throw new ResourceNotFoundException("The comment you trying to upvote might be deleted by the author or does not exists anymore!");
+        Comment comment = commentService.getById(commentId);
+
+        if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("The comment you trying to upvote might be deleted by the author or does not exists anymore!");
         if (commentService.isUserAlreadyUpvoteComment(currentUser, commentId)) throw new UpvoteException("You can only up vote and down vote a comment once!");
 
-        int updatedCommentId = commentService.updateUpvote(currentUser, commentId);
-        Comment comment = commentService.getById(updatedCommentId);
+        commentService.updateUpvote(currentUser, comment);
         return commentMapper.toDTO(comment);
     }
 
-    public PostDTO updateCommentSectionStatus(int postId) throws ResourceNotFoundException {
-        Post post = postService.updateCommentSectionStatus(postId);
+    public PostDTO updateCommentSectionStatus(int currentUserId, int postId)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        if (!postService.isUserHasPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
+
+        postService.updateCommentSectionStatus(post);
         return postMapper.toDTO(post);
     }
 
-    public PostDTO updatePostBody(int postId, String newBody) throws ResourceNotFoundException {
-        Post post = postService.updatePostBody(postId, newBody);
+    public PostDTO updatePostBody(int currentUserId, int postId, String newBody)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        if (post.getBody().equals(newBody)) return postMapper.toDTO(post);
+        if (!postService.isUserHasPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
+
+        postService.updatePostBody(post, newBody);
         return postMapper.toDTO(post);
     }
 
-    public CommentDTO updateCommentBody(int commentId, String newBody) throws ResourceNotFoundException {
-        Comment comment = commentService.updateCommentBody(commentId, newBody);
+    public CommentDTO updateCommentBody(int currentUserId, int commentId, String newBody)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        User currentUser = userService.getById(currentUserId);
+        Comment comment = commentService.getById(commentId);
+        if (comment.getBody().equals(newBody)) return commentMapper.toDTO(comment);
+        if (!commentService.isUserHasComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
+
+        commentService.updateCommentBody(comment, newBody);
         return commentMapper.toDTO(comment);
     }
 
-    public ReplyDTO updateReplyBody(int replyId, String newReplyBody) throws ResourceNotFoundException {
-        Reply reply = replyService.updateReplyBody(replyId, newReplyBody);
+    public ReplyDTO updateReplyBody(int currentUserId, int replyId, String newReplyBody)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        User currentUser = userService.getById(currentUserId);
+        Reply reply = replyService.getById(replyId;
+
+        if (reply.getBody().equals(newReplyBody)) return replyMapper.toDTO(reply);
+        if (!replyService.isUserHasReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
+        
+        replyService.updateReplyBody(reply, newReplyBody);
         return replyMapper.toDTO(reply);
     }
 
