@@ -123,7 +123,7 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
-        if (commentService.isUserHasComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
+        if (!commentService.isUserHasComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
         return commentMapper.toDTO( commentService.delete(comment) );
     }
 
@@ -133,7 +133,7 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Reply reply = replyService.getById(replyId);
-        if (replyService.isUserHasReply(currentUser, reply))  throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
+        if (!replyService.isUserHasReply(currentUser, reply))  throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
         return replyMapper.toDTO( replyService.delete(reply) );
     }
 
