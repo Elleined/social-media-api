@@ -1,0 +1,44 @@
+<div th:fragment="notification-body-fragment">
+    <li th:if="${#strings.containsIgnoreCase(notification.type.toString(), 'REPLY')}"
+        th:id="${'notificationReplyItem_' + notification.respondentId + '_' + notification.commentId + '_' + notification.id}"
+        class="d-inline-flex position-relative ms-2 dropdown-item">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle" th:text="${notification.count + '+'}"></span>
+                <img class="rounded-4 shadow-4" style="width: 50px; height: 50px;" th:src="${'/img/' + notification.respondentPicture}">
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <a th:id="${'replyNotificationButton_' + notification.respondentId + '_' + notification.commentId}"
+                   role="button"
+                   data-bs-toggle="modal"
+                   data-bs-target="#replyModal" >
+                    <p class="lead mt-2 ms-2 me-2" th:text="${notification.message}"></p>
+                    <span class="ms-2" th:text="${' on ' + notification.formattedTime + ' on ' + notification.formattedDate}"></span>
+                </a>
+            </div>
+        </div>
+        <hr>
+    </li>
+
+    <li th:if="${#strings.containsIgnoreCase(notification.type.toString(), 'COMMENT')}"
+        th:id="${'notificationCommentItem_' + notification.respondentId + '_' + notification.postId + '_' + notification.id}"
+        class="d-inline-flex position-relative ms-2 dropdown-item">
+        <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle"
+                      th:text="${notification.count + '+'}"></span>
+                <img class="rounded-4 shadow-4" style="width: 50px; height: 50px;" th:src="${'/img/' + notification.respondentPicture}">
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <a  th:id="${'commentNotificationButton_' + notification.respondentId + '_' + notification.postId}"
+                    role="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#commentModal">
+                    <p class="lead mt-2 ms-2 me-2" th:text="${notification.message}"></p>
+                    <span class="ms-2" th:text="${' on ' + notification.formattedTime + ' on ' + notification.formattedDate}"></span>
+                </a>
+            </div>
+        </div>
+        <hr>
+    </li>
+</div>
