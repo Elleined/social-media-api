@@ -3,6 +3,7 @@ package com.forum.application.controller;
 import com.forum.application.dto.UserDTO;
 import com.forum.application.service.ForumService;
 import com.forum.application.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,13 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final ForumService forumService;
+
     private final UserService userService;
+    @PostMapping
+    public UserDTO save(@Valid @RequestBody UserDTO userDTO) {
+        return forumService.saveUser(userDTO);
+    }
+
     @GetMapping("/{currentUserId}")
     public List<UserDTO> getAllUser(@PathVariable("currentUserId") int currentUserId) {
         return forumService.getAllUser(currentUserId);
@@ -25,6 +32,11 @@ public class UserController {
         return forumService.getSuggestedMentions(currentUserId, name);
     }
 
+    @GetMapping("/getByUUID/{UUID}")
+    public UserDTO UserDTO(@PathVariable("UUID") String UUID) {
+        return forumService.getByUUID(UUID);
+    }
+
     @GetMapping("/{currentUserId}/getIdByEmail")
     public int getIdByEmail(@RequestParam("email") String email) {
         return userService.getIdByEmail(email);
@@ -33,10 +45,5 @@ public class UserController {
     @GetMapping("/{currentUserId}/isUserExists")
     public boolean isUserExists(@RequestParam("email") String email) {
         return userService.isEmailExists(email);
-    }
-
-    @PostMapping
-    public UserDTO save(@RequestBody UserDTO userDTO) {
-        return forumService.saveUser(userDTO);
     }
 }

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 public abstract class Like {
 
     @Id

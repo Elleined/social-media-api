@@ -10,7 +10,7 @@ import com.forum.application.model.User;
 import com.forum.application.model.like.CommentLike;
 import com.forum.application.model.like.PostLike;
 import com.forum.application.model.like.ReplyLike;
-import com.forum.application.validator.Validator;
+import com.forum.application.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class ForumService {
             ResourceNotFoundException {
 
         User currentUser = userService.getById(currentUserId);
-        if (Validator.isValidBody(body)) throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
+        if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
         Post post = postService.save(currentUser, body, attachedPicture);
         if (mentionedUserIds != null) mentionService.addAllMention(currentUser, mentionedUserIds, post);
@@ -63,7 +63,7 @@ public class ForumService {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        if (Validator.isValidBody(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
+        if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
         if (postService.isCommentSectionClosed(post)) throw new ClosedCommentSectionException("Cannot comment because author already closed the comment section for this post!");
         if (postService.isDeleted(post)) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
@@ -83,7 +83,7 @@ public class ForumService {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
 
-        if (Validator.isValidBody(body)) throw new EmptyBodyException("Reply body cannot be empty!");
+        if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Reply body cannot be empty!");
         if (commentService.isCommentSectionClosed(comment)) throw new ClosedCommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
         if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
@@ -353,7 +353,20 @@ public class ForumService {
     }
 
     public UserDTO saveUser(UserDTO userDTO) {
-        User user = userService.save(userDTO.name(), userDTO.email(), userDTO.picture());
+        User user = User.builder()
+                .picture(userDTO.picture())
+                .name(userDTO.name())
+                .email(userDTO.email())
+                .UUID(userDTO.UUID())
+                .build();
+
+        userService.save(user);
+        return userMapper.toDTO(user);
+    }
+
+    public UserDTO getByUUID(String UUID) {
+        if (StringValidator.isNotValidBody(UUID)) throw new IllegalArgumentException("UUID cannot be empty, null, or blank");
+        User user = userService.getByUUID(UUID);
         return userMapper.toDTO(user);
     }
 }

@@ -5,10 +5,13 @@ import com.forum.application.model.User;
 import com.forum.application.model.like.Like;
 import com.forum.application.model.mention.Mention;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserDTO toDTO(User user);
+
 
     default UserDTO mapLikeToUserDTO(Like like) {
         return toDTO(like.getRespondent());

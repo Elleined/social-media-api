@@ -18,19 +18,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
-    User save(String name, String email, String picture) {
-
-        User user = User.builder()
-                .name(name)
-                .email(email)
-                .picture(picture)
-                .build();
-
-        userRepository.save(user);
-        log.debug("User registered successfully! with id of {}", user.getId());
-        return user;
-    }
-
     User save(User user) {
         return userRepository.save(user);
     }
@@ -45,6 +32,10 @@ public class UserService {
 
     public User getById(int userId) throws ResourceNotFoundException {
         return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with id of " + userId +  " does not exists"));
+    }
+
+    public User getByUUID(String UUID) throws ResourceNotFoundException {
+        return userRepository.findByUUID(UUID).orElseThrow(() -> new ResourceNotFoundException("User with UUID of " + UUID +  " does not exists"));
     }
 
     public List<User> getAllUser(User currentUser) {

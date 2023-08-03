@@ -35,6 +35,9 @@ public class User {
     @Column(name = "picture")
     private String picture;
 
+    @Column(name = "uuid")
+    private String UUID;
+
     @ManyToMany
     @JoinTable(
             name = "tbl_comment_upvotes",
