@@ -21,7 +21,7 @@ public class UserController {
         return forumService.saveUser(userDTO);
     }
 
-    @GetMapping("/{currentUserId}")
+    @GetMapping("/{currentUserId}/getAllUser")
     public List<UserDTO> getAllUser(@PathVariable("currentUserId") int currentUserId) {
         return forumService.getAllUser(currentUserId);
     }

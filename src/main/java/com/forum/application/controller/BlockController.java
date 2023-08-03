@@ -9,13 +9,13 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/{currentUserId}")
+@RequestMapping("/blocking/{currentUserId}")
 public class BlockController {
     private final ForumService forumService;
 
     @PatchMapping("/blockUser/{userToBeBlockedId}")
     public String blockUser(@PathVariable("currentUserId") int currentUserId,
-                                            @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
+                            @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
 
         forumService.blockUser(currentUserId, userToBeBlockedId);
         return "User with id of " + userToBeBlockedId + " blocked successfully";
