@@ -1,9 +1,9 @@
 package com.forum.application.controller;
 
 import com.forum.application.dto.CommentDTO;
-import com.forum.application.dto.NotificationResponse;
 import com.forum.application.dto.PostDTO;
 import com.forum.application.dto.ReplyDTO;
+import com.forum.application.dto.notification.Notification;
 import com.forum.application.model.User;
 import com.forum.application.service.LikeService;
 import com.forum.application.service.UserService;
@@ -57,7 +57,7 @@ public class DynamicViewController {
 
     @PostMapping("/getNotificationBlock")
     public ModelAndView getNotificationBlock(@PathVariable("currentUserId") int currentUserId,
-                                             @RequestBody NotificationResponse notification) {
+                                             @RequestBody Notification notification) {
 
         User currentUser = userService.getById(currentUserId);
         return new ModelAndView("notification-body")

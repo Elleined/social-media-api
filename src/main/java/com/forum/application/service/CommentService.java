@@ -79,18 +79,21 @@ public class CommentService {
         return commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment with id of " + commentId + " does not exists!"));
     }
 
-    public int getNotificationCountForRespondent(User currentUser, int postId, int respondentId) throws ResourceNotFoundException {
-        Post post = currentUser.getPosts().stream()
+    /**
+     * @param author alias for currentUser
+     */
+    public int getNotificationCountForRespondent(User author, int postId, int respondentId) throws ResourceNotFoundException {
+        Post post = author.getPosts().stream()
                 .filter(userPost -> userPost.getId() == postId)
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Author with id of " + currentUser.getId() + " does not have post with id of " + postId));
+                .orElseThrow(() -> new ResourceNotFoundException("Author with id of " + author.getId() + " does not have post with id of " + postId));
 
         return (int) post.getComments()
                 .stream()
                 .filter(comment -> comment.getStatus() == Status.ACTIVE)
                 .filter(comment -> comment.getNotificationStatus() == NotificationStatus.UNREAD)
-                .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
-                .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
+                .filter(comment -> !blockService.isBlockedBy(author, comment.getCommenter()))
+                .filter(comment -> !blockService.isYouBeenBlockedBy(author, comment.getCommenter()))
                 .filter(comment -> comment.getCommenter().getId() == respondentId)
                 .count();
     }

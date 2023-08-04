@@ -16,6 +16,7 @@ public class ReplyDTO {
     private String formattedDate;
     private String formattedTime;
     private int commentId;
+    private String commentBody;
     private int replierId;
     private String replierPicture;
     private String status;

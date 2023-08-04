@@ -75,4 +75,8 @@ public class Comment {
     @OneToMany(mappedBy = "comment")
     @Setter(AccessLevel.NONE)
     private Set<CommentLike> likes;
+
+    public String getNotificationMessage() {
+        return this.getCommenter().getName() + " commented in your post: " + "\"" + this.getPost().getBody() + "\"";
+    }
 }

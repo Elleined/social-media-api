@@ -110,19 +110,22 @@ public class ReplyService {
                 .collect(Collectors.toSet());
     }
 
-    public int getNotificationCountForRespondent(User currentUser, int commentId, int respondentId) throws ResourceNotFoundException {
-        Comment comment = currentUser.getComments()
+    /**
+     * @param commenter alias for currentUser
+     */
+    public int getNotificationCountForRespondent(User commenter, int commentId, int respondentId) throws ResourceNotFoundException {
+        Comment comment = commenter.getComments()
                 .stream()
                 .filter(userComment -> userComment.getId() == commentId)
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Commenter with id of " + currentUser.getId() + " does not have a comment with id of " + commentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Commenter with id of " + commenter.getId() + " does not have a comment with id of " + commentId));
 
         return (int) comment.getReplies()
                 .stream()
                 .filter(reply -> reply.getStatus() == Status.ACTIVE)
                 .filter(reply -> reply.getNotificationStatus() == NotificationStatus.UNREAD)
-                .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
-                .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
+                .filter(reply -> !blockService.isBlockedBy(commenter, reply.getReplier()))
+                .filter(reply -> !blockService.isYouBeenBlockedBy(commenter, reply.getReplier()))
                 .filter(reply -> reply.getReplier().getId() == respondentId)
                 .count();
     }

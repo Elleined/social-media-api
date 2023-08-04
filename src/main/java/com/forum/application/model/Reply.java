@@ -62,4 +62,8 @@ public class Reply {
     @OneToMany(mappedBy = "reply")
     @Setter(AccessLevel.NONE)
     private Set<ReplyLike> likes;
+
+    public String getNotificationMessage() {
+        return this.getReplier().getName() + " replied to your comment: " + "\"" + this.getComment().getBody() + "\"";
+    }
 }

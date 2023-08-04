@@ -1,7 +1,7 @@
 package com.forum.application.controller;
 
-import com.forum.application.dto.NotificationResponse;
 import com.forum.application.dto.PostDTO;
+import com.forum.application.dto.notification.PostNotification;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +28,12 @@ public class PostController {
         return forumService.getAllByAuthorId(authorId);
     }
 
+
     @PostMapping
     public PostDTO savePost(@PathVariable("currentUserId") int currentUserId,
-                                            @RequestParam("body") String body,
-                                            @RequestParam(required = false, name = "attachedPicture") String attachedPicture,
-                                            @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) {
+                            @RequestParam("body") String body,
+                            @RequestParam(required = false, name = "attachedPicture") String attachedPicture,
+                            @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) {
 
         return forumService.savePost(currentUserId, body, attachedPicture, mentionedUserIds);
     }
@@ -61,8 +62,8 @@ public class PostController {
     }
 
     @PatchMapping("/like/{postId}")
-    public Optional<NotificationResponse> likePost(@PathVariable("currentUserId") int respondentId,
-                                                   @PathVariable("postId") int postId) {
+    public Optional<PostNotification> likePost(@PathVariable("currentUserId") int respondentId,
+                                               @PathVariable("postId") int postId) {
 
         return forumService.likePost(respondentId, postId);
     }

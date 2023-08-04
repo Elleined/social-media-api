@@ -1,14 +1,15 @@
 package com.forum.application.controller;
 
-import com.forum.application.dto.NotificationResponse;
+import com.forum.application.dto.CommentDTO;
+import com.forum.application.dto.ReplyDTO;
+import com.forum.application.dto.notification.CommentNotification;
+import com.forum.application.dto.notification.Notification;
+import com.forum.application.dto.notification.ReplyNotification;
 import com.forum.application.model.User;
-import com.forum.application.service.ForumService;
+import com.forum.application.service.NotificationService;
 import com.forum.application.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -18,16 +19,29 @@ import java.util.Set;
 public class NotificationController {
 
     private final UserService userService;
-    private final ForumService forumService;
+    private final NotificationService notificationService;
+
     @GetMapping("/getAllNotification")
-    public Set<NotificationResponse> getAllNotification(@PathVariable("currentUserId") int currentUserId) {
+    public Set<Notification> getAllNotification(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return forumService.getAllNotification(currentUser);
+        return notificationService.getAllNotification(currentUser);
     }
 
     @GetMapping("/getTotalNotificationCount")
     public long getTotalNotificationCount(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return forumService.getTotalNotificationCount(currentUser);
+        return notificationService.getTotalNotificationCount(currentUser);
     }
+
+    @PostMapping("/getCommentNotification")
+    public CommentNotification getNotification(@RequestBody CommentDTO commentDTO) {
+        return notificationService.getNotification(commentDTO);
+    }
+
+    @PostMapping("/getReplyNotification")
+    public ReplyNotification getNotification(@RequestBody ReplyDTO replyDTO) {
+        return notificationService.getNotification(replyDTO);
+    }
+
+
 }

@@ -1,7 +1,14 @@
 package com.forum.application.service;
 
-import com.forum.application.dto.NotificationResponse;
+import com.forum.application.dto.CommentDTO;
+import com.forum.application.dto.ReplyDTO;
+import com.forum.application.dto.notification.CommentNotification;
+import com.forum.application.dto.notification.Notification;
+import com.forum.application.dto.notification.PostNotification;
+import com.forum.application.dto.notification.ReplyNotification;
+import com.forum.application.mapper.CommentMapper;
 import com.forum.application.mapper.NotificationMapper;
+import com.forum.application.mapper.ReplyMapper;
 import com.forum.application.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,36 +27,41 @@ public class NotificationService {
     private final ReplyService replyService;
     private final NotificationMapper notificationMapper;
 
-    public Set<NotificationResponse> getAllNotification(User currentUser) {
-        Set<NotificationResponse> unreadComments = commentService.getUnreadCommentsOfAllPost(currentUser).stream()
+    private final CommentMapper commentMapper;
+    private final ReplyMapper replyMapper;
+
+    public Set<Notification> getAllNotification(User currentUser) {
+        Set<CommentNotification> unreadComments = commentService.getUnreadCommentsOfAllPost(currentUser).stream()
+                .map(commentMapper::toDTO)
                 .map(notificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
-        Set<NotificationResponse> unreadReply = replyService.getUnreadRepliesOfAllComments(currentUser).stream()
+        Set<ReplyNotification> unreadReply = replyService.getUnreadRepliesOfAllComments(currentUser).stream()
+                .map(replyMapper::toDTO)
                 .map(notificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
-        Set<NotificationResponse> unreadPostLikes = likeService.getUnreadPostLikes(currentUser).stream()
+        Set<PostNotification> unreadPostLikes = likeService.getUnreadPostLikes(currentUser).stream()
                 .map(notificationMapper::toLikeNotification)
                 .collect(Collectors.toSet());
 
-        Set<NotificationResponse> unreadCommentLikes = likeService.getUnreadCommentLikes(currentUser).stream()
+        Set<CommentNotification> unreadCommentLikes = likeService.getUnreadCommentLikes(currentUser).stream()
                 .map(notificationMapper::toLikeNotification)
                 .collect(Collectors.toSet());
 
-        Set<NotificationResponse> unreadReplyLikes = likeService.getUnreadReplyLikes(currentUser).stream()
+        Set<ReplyNotification> unreadReplyLikes = likeService.getUnreadReplyLikes(currentUser).stream()
                 .map(notificationMapper::toLikeNotification)
                 .collect(Collectors.toSet());
 
-        Set<NotificationResponse> unreadPostMentions = mentionService.getUnreadPostMentions(currentUser).stream()
+        Set<PostNotification> unreadPostMentions = mentionService.getUnreadPostMentions(currentUser).stream()
                 .map(notificationMapper::toMentionNotification)
                 .collect(Collectors.toSet());
 
-        Set<NotificationResponse> unreadCommentMentions = mentionService.getUnreadCommentMentions(currentUser).stream()
+        Set<CommentNotification> unreadCommentMentions = mentionService.getUnreadCommentMentions(currentUser).stream()
                 .map(notificationMapper::toMentionNotification)
                 .collect(Collectors.toSet());
 
-        Set<NotificationResponse> unreadReplyMentions = mentionService.getUnreadReplyMentions(currentUser).stream()
+        Set<ReplyNotification> unreadReplyMentions = mentionService.getUnreadReplyMentions(currentUser).stream()
                 .map(notificationMapper::toMentionNotification)
                 .collect(Collectors.toSet());
 
@@ -77,4 +89,11 @@ public class NotificationService {
                 mentionService.getUnreadReplyMentions(currentUser).size();
     }
 
+    public CommentNotification getNotification(CommentDTO commentDTO) {
+        return notificationMapper.toNotification(commentDTO);
+    }
+
+    public ReplyNotification getNotification(ReplyDTO replyDTO) {
+        return notificationMapper.toNotification(replyDTO);
+    }
 }

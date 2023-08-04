@@ -24,7 +24,8 @@ public abstract class ReplyMapper {
             @Mapping(target = "likers", source = "reply.likes"),
             @Mapping(target = "mentionedUsers", source = "reply.mentions"),
             @Mapping(target = "totalLikes", expression = "java(reply.getLikes().size())"),
-            @Mapping(target = "commenterId", source = "reply.comment.commenter.id")
+            @Mapping(target = "commenterId", source = "reply.comment.commenter.id"),
+            @Mapping(target = "commentBody", source = "reply.comment.body")
     })
     public abstract ReplyDTO toDTO(Reply reply);
 }

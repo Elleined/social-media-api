@@ -5,8 +5,6 @@ import com.forum.application.model.User;
 import com.forum.application.model.like.Like;
 import com.forum.application.model.mention.Mention;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

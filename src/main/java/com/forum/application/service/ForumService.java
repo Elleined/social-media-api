@@ -1,6 +1,12 @@
 package com.forum.application.service;
 
-import com.forum.application.dto.*;
+import com.forum.application.dto.CommentDTO;
+import com.forum.application.dto.PostDTO;
+import com.forum.application.dto.ReplyDTO;
+import com.forum.application.dto.UserDTO;
+import com.forum.application.dto.notification.CommentNotification;
+import com.forum.application.dto.notification.PostNotification;
+import com.forum.application.dto.notification.ReplyNotification;
 import com.forum.application.exception.*;
 import com.forum.application.mapper.*;
 import com.forum.application.model.Comment;
@@ -33,7 +39,6 @@ public class ForumService {
     private final BlockService blockService;
     private final LikeService likeService;
     private final MentionService mentionService;
-    private final NotificationService notificationService;
 
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
@@ -171,14 +176,6 @@ public class ForumService {
                 .toList();
     }
 
-    public long getTotalNotificationCount(User currentUser) {
-        return notificationService.getTotalNotificationCount(currentUser);
-    }
-
-    public Set<NotificationResponse> getAllNotification(User currentUser) {
-        return notificationService.getAllNotification(currentUser);
-    }
-
     public CommentDTO updateUpvote(int currentUserId, int commentId)
             throws ResourceNotFoundException,
             UpvoteException {
@@ -297,7 +294,7 @@ public class ForumService {
                 .collect(Collectors.toSet());
     }
 
-    public Optional<NotificationResponse> likePost(int respondentId, int postId)
+    public Optional<PostNotification> likePost(int respondentId, int postId)
             throws ResourceNotFoundException,
             BlockedException {
 
@@ -316,7 +313,7 @@ public class ForumService {
         return Optional.of( notificationMapper.toLikeNotification(postLike) );
     }
 
-    public Optional<NotificationResponse> likeComment(int respondentId, int commentId)
+    public Optional<CommentNotification> likeComment(int respondentId, int commentId)
             throws ResourceNotFoundException,
             BlockedException {
 
@@ -334,7 +331,7 @@ public class ForumService {
         return Optional.of( notificationMapper.toLikeNotification(commentLike) );
     }
 
-    public Optional<NotificationResponse> likeReply(int respondentId, int replyId)
+    public Optional<ReplyNotification> likeReply(int respondentId, int replyId)
             throws ResourceNotFoundException,
             BlockedException {
 
