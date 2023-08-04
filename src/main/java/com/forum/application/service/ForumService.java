@@ -47,15 +47,14 @@ public class ForumService {
     private final NotificationMapper notificationMapper;
 
     public PostDTO savePost(int currentUserId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
-            throws EmptyBodyException,
-            BlockedException,
-            ResourceNotFoundException {
+            throws EmptyBodyException, BlockedException, ResourceNotFoundException {
 
         User currentUser = userService.getById(currentUserId);
         if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
         Post post = postService.save(currentUser, body, attachedPicture);
-        if (mentionedUserIds != null) mentionService.addAllMention(currentUser, mentionedUserIds, post);
+        if (mentionedUserIds != null)
+            mentionedUserIds.forEach(mentionedUserId -> mentionService.addMention(currentUser, mentionedUserId, post));
         return postMapper.toDTO(post);
     }
 
@@ -75,7 +74,8 @@ public class ForumService {
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture);
-        if (mentionedUserIds != null) mentionService.addAllMention(currentUser, mentionedUserIds, comment);
+        if (mentionedUserIds != null)
+            mentionedUserIds.forEach(mentionedUserId -> mentionService.addMention(currentUser, mentionedUserId, comment));
         return commentMapper.toDTO(comment);
     }
 
@@ -95,7 +95,9 @@ public class ForumService {
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
 
         Reply reply = replyService.save(currentUser, comment, body, attachedPicture);
-        if (mentionedUserIds != null) mentionService.addAllMention(currentUser, mentionedUserIds, reply);
+        if (mentionedUserIds != null)
+            mentionedUserIds.forEach(mentionedUserId -> mentionService.addMention(currentUser, mentionedUserId, reply));
+
         return replyMapper.toDTO(reply);
     }
 

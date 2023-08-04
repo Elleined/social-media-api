@@ -6,9 +6,13 @@ import com.forum.application.dto.notification.CommentNotification;
 import com.forum.application.dto.notification.Notification;
 import com.forum.application.dto.notification.PostNotification;
 import com.forum.application.dto.notification.ReplyNotification;
+import com.forum.application.exception.ResourceNotFoundException;
 import com.forum.application.mapper.CommentMapper;
 import com.forum.application.mapper.NotificationMapper;
 import com.forum.application.mapper.ReplyMapper;
+import com.forum.application.model.Comment;
+import com.forum.application.model.Post;
+import com.forum.application.model.Reply;
 import com.forum.application.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,8 +27,11 @@ import java.util.stream.Stream;
 public class NotificationService {
     private final MentionService mentionService;
     private final LikeService likeService;
+
+    private final PostService postService;
     private final CommentService commentService;
     private final ReplyService replyService;
+
     private final NotificationMapper notificationMapper;
 
     private final CommentMapper commentMapper;
@@ -95,5 +102,26 @@ public class NotificationService {
 
     public ReplyNotification getNotification(ReplyDTO replyDTO) {
         return notificationMapper.toNotification(replyDTO);
+    }
+
+    public Set<PostNotification> getPostMentionsNotification(int postId) throws ResourceNotFoundException {
+        Post post = postService.getById(postId);
+        return post.getMentions().stream()
+                .map(notificationMapper::toMentionNotification)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<CommentNotification> getCommentMentionsNotification(int commentId) throws ResourceNotFoundException {
+        Comment comment = commentService.getById(commentId);
+        return comment.getMentions().stream()
+                .map(notificationMapper::toMentionNotification)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<ReplyNotification> getReplyMentionsNotification(int replyId) throws ResourceNotFoundException {
+        Reply reply = replyService.getById(replyId);
+        return reply.getMentions().stream()
+                .map(notificationMapper::toMentionNotification)
+                .collect(Collectors.toSet());
     }
 }

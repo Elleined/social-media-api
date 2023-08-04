@@ -36,7 +36,7 @@ public class MentionService {
     private final ReplyService replyService;
     private final BlockService blockService;
 
-    Mention addMention(User currentUser, int mentionedUserId, Post post) throws ResourceNotFoundException,
+    void addMention(User currentUser, int mentionedUserId, Post post) throws ResourceNotFoundException,
             BlockedException,
             MentionException {
 
@@ -63,10 +63,9 @@ public class MentionService {
         post.getMentions().add(postMention);
         mentionRepository.save(postMention);
         log.debug("User with id of {} mentioned user with id of {} in post with id of {}", currentUser.getId(), mentionedUserId, post.getId());
-        return postMention;
     }
 
-    Mention addMention(User currentUser, int mentionedUserId, Comment comment) throws ResourceNotFoundException,
+    void addMention(User currentUser, int mentionedUserId, Comment comment) throws ResourceNotFoundException,
             BlockedException,
             MentionException {
 
@@ -94,10 +93,9 @@ public class MentionService {
         comment.getMentions().add(commentMention);
         mentionRepository.save(commentMention);
         log.debug("User with id of {} mentioned user with id of {} in comment with id of {}", currentUser.getId(), mentionedUserId, comment.getId());
-        return commentMention;
     }
 
-    Mention addMention(User currentUser, int mentionedUserId, Reply reply) throws ResourceNotFoundException,
+    void addMention(User currentUser, int mentionedUserId, Reply reply) throws ResourceNotFoundException,
             BlockedException,
             MentionException {
 
@@ -125,34 +123,6 @@ public class MentionService {
         reply.getMentions().add(replyMention);
         mentionRepository.save(replyMention);
         log.debug("User with id of {} mentioned user with id of {} in reply with id of {}", currentUser.getId(), mentionedUserId, reply.getId());
-        return replyMention;
-    }
-
-    Set<Mention> addAllMention(User currentUser, Set<Integer> mentionedUserIds, Post post) throws ResourceNotFoundException,
-            BlockedException,
-            MentionException {
-
-        return mentionedUserIds.stream()
-                .map(mentionedUserId -> addMention(currentUser, mentionedUserId, post))
-                .collect(Collectors.toSet());
-    }
-
-    Set<Mention> addAllMention(User currentUser, Set<Integer> mentionedUserIds, Comment comment) throws ResourceNotFoundException,
-            BlockedException,
-            MentionException {
-
-        return mentionedUserIds.stream()
-                .map(mentionedUserId -> addMention(currentUser, mentionedUserId, comment))
-                .collect(Collectors.toSet());
-    }
-
-    Set<Mention> addAllMention(User currentUser, Set<Integer> mentionedUserIds, Reply reply) throws ResourceNotFoundException,
-            BlockedException,
-            MentionException {
-
-        return mentionedUserIds.stream()
-                .map(mentionedUserId -> addMention(currentUser, mentionedUserId, reply))
-                .collect(Collectors.toSet());
     }
 
     Set<PostMention> getUnreadPostMentions(User currentUser) {
