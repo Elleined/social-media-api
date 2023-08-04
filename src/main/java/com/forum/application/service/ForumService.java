@@ -4,6 +4,7 @@ import com.forum.application.dto.CommentDTO;
 import com.forum.application.dto.PostDTO;
 import com.forum.application.dto.ReplyDTO;
 import com.forum.application.dto.UserDTO;
+import com.forum.application.dto.notification.PostNotification;
 import com.forum.application.exception.*;
 import com.forum.application.mapper.*;
 import com.forum.application.model.Comment;
@@ -32,6 +33,7 @@ public class ForumService {
     private final BlockService blockService;
     private final LikeService likeService;
     private final MentionService mentionService;
+    private final NotificationService notificationService;
 
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -163,11 +164,31 @@ public class LikeService {
     Set<PostLike> getUnreadPostLikes(User currentUser) {
         return likeNotificationService.getUnreadPostLikes(currentUser);
     }
+
+    Optional<PostLike> getUnreadLike(User currentUser, Post post) {
+        return likeNotificationService.getUnreadPostLikes(currentUser).stream()
+                .filter(postLike -> postLike.getPost().equals(post))
+                .findFirst();
+    }
+
     Set<CommentLike> getUnreadCommentLikes(User currentUser) {
         return likeNotificationService.getUnreadCommentLikes(currentUser);
     }
+
+    Optional<CommentLike> getUnreadLike(User currentUser, Comment comment) {
+        return likeNotificationService.getUnreadCommentLikes(currentUser).stream()
+                .filter(commentLike -> commentLike.getComment().equals(comment))
+                .findFirst();
+    }
+
     Set<ReplyLike> getUnreadReplyLikes(User currentUser) {
         return likeNotificationService.getUnreadReplyLikes(currentUser);
+    }
+
+    Optional<ReplyLike> getUnreadLike(User currentUser, Reply reply) {
+        return likeNotificationService.getUnreadReplyLikes(currentUser).stream()
+                .filter(replyLike -> replyLike.getReply().equals(reply))
+                .findFirst();
     }
 
     void readLikes(User currentUser) {

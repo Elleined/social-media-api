@@ -12,6 +12,7 @@ import com.forum.application.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -46,17 +47,40 @@ public class NotificationController {
     }
 
     @GetMapping("/getPostMentionsNotification/{postId}")
-    public Set<PostNotification> getPostMentionsNotification(@RequestParam("postId") int postId) {
-        return notificationService.getPostMentionsNotification(postId);
+    public Set<PostNotification> getPostMentionsNotification(@PathVariable("currentUserId") int currentUserId,
+                                                             @PathVariable("postId") int postId) {
+        return notificationService.getPostMentionsNotification(currentUserId, postId);
     }
 
+
     @GetMapping("/getCommentMentionsNotification/{postId}")
-    public Set<CommentNotification> getCommentMentionsNotification(@RequestParam("commentId") int commentId) {
-        return notificationService.getCommentMentionsNotification(commentId);
+    public Set<CommentNotification> getCommentMentionsNotification(@PathVariable("currentUserId") int currentUserId,
+                                                                   @RequestParam("commentId") int commentId) {
+        return notificationService.getCommentMentionsNotification(currentUserId, commentId);
     }
 
     @GetMapping("/getReplyMentionsNotification/{postId}")
-    public Set<ReplyNotification> getReplyMentionsNotification(@RequestParam("replyId") int replyId) {
-        return notificationService.getReplyMentionsNotification(replyId);
+    public Set<ReplyNotification> getReplyMentionsNotification(@PathVariable("currentUserId") int currentUserId,
+                                                               @RequestParam("replyId") int replyId) {
+        return notificationService.getReplyMentionsNotification(currentUserId, replyId);
+    }
+
+    @GetMapping("/getPostLikeNotification/{postId}")
+    public Optional<PostNotification> getPostLikeNotification(@PathVariable("currentUserId") int currentUserId,
+                                                              @PathVariable("postId") int postId) {
+        return notificationService.getPostLikeNotification(currentUserId, postId);
+    }
+
+    @GetMapping("/getCommentLikeNotification/{commentId}")
+    public Optional<CommentNotification> getCommentLikeNotification(@PathVariable("currentUserId") int currentUserId,
+                                                                    @RequestParam("commentId") int commentId) {
+
+        return notificationService.getCommentLikeNotification(currentUserId, commentId);
+    }
+
+    @GetMapping("/getReplyLikeNotification/{replyId}")
+    public Optional<ReplyNotification> getReplyLikeNotification(@PathVariable("currentUserId") int currentUserId,
+                                                                @RequestParam("replyId") int replyId) {
+        return notificationService.getReplyLikeNotification(currentUserId, replyId);
     }
 }

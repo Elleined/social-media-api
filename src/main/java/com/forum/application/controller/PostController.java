@@ -1,7 +1,6 @@
 package com.forum.application.controller;
 
 import com.forum.application.dto.PostDTO;
-import com.forum.application.dto.notification.PostNotification;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -27,7 +25,6 @@ public class PostController {
     public List<PostDTO> getAllByAuthorId(@PathVariable("currentUserId") int authorId) {
         return forumService.getAllByAuthorId(authorId);
     }
-
 
     @PostMapping
     public PostDTO savePost(@PathVariable("currentUserId") int currentUserId,
@@ -68,6 +65,4 @@ public class PostController {
         return forumService.likePost(respondentId, postId);
     }
 
-    // getLikeNotifiation
-    // getmentionnotificaiton
 }

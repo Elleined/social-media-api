@@ -129,11 +129,30 @@ public class MentionService {
         return mentionNotificationService.getUnreadPostMentions(currentUser);
     }
 
+    Set<PostMention> getUnreadMentions(User currentUser, Post post) {
+        return mentionNotificationService.getUnreadPostMentions(currentUser).stream()
+                .filter(postMention -> postMention.getPost().equals(post))
+                .collect(Collectors.toSet());
+    }
+
     Set<CommentMention> getUnreadCommentMentions(User currentUser) {
         return mentionNotificationService.getUnreadCommentMentions(currentUser);
     }
+
+    Set<CommentMention> getUnreadMentions(User currentUser, Comment comment) {
+        return mentionNotificationService.getUnreadCommentMentions(currentUser).stream()
+                .filter(commentMention -> commentMention.getComment().equals(comment))
+                .collect(Collectors.toSet());
+    }
+
     Set<ReplyMention> getUnreadReplyMentions(User currentUser) {
         return mentionNotificationService.getUnreadReplyMentions(currentUser);
+    }
+
+    Set<ReplyMention> getUnreadMentions(User currentUser, Reply reply) {
+        return mentionNotificationService.getUnreadReplyMentions(currentUser).stream()
+                .filter(replyMention -> replyMention.getReply().equals(reply))
+                .collect(Collectors.toSet());
     }
 
     void readMentions(User currentUser) {
