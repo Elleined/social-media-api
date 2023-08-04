@@ -6,6 +6,8 @@ import com.forum.application.dto.notification.CommentNotification;
 import com.forum.application.dto.notification.Notification;
 import com.forum.application.dto.notification.PostNotification;
 import com.forum.application.dto.notification.ReplyNotification;
+import com.forum.application.exception.NotOwnedException;
+import com.forum.application.exception.ResourceNotFoundException;
 import com.forum.application.mapper.CommentMapper;
 import com.forum.application.mapper.NotificationMapper;
 import com.forum.application.mapper.ReplyMapper;
@@ -140,9 +142,12 @@ public class NotificationService {
         return Optional.of(replyNotification);
     }
 
-    public Set<PostNotification> getPostMentionsNotification(int currentUserId, int postId) {
+    public Set<PostNotification> getPostMentionsNotification(int currentUserId, int postId)
+            throws ResourceNotFoundException, NotOwnedException {
+
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
+
         return mentionService.getUnreadMentions(currentUser, post).stream()
                 .map(notificationMapper::toMentionNotification)
                 .collect(Collectors.toSet());

@@ -53,15 +53,15 @@ public class NotificationController {
     }
 
 
-    @GetMapping("/getCommentMentionsNotification/{postId}")
+    @GetMapping("/getCommentMentionsNotification/{commentId}")
     public Set<CommentNotification> getCommentMentionsNotification(@PathVariable("currentUserId") int currentUserId,
-                                                                   @RequestParam("commentId") int commentId) {
+                                                                   @PathVariable("commentId") int commentId) {
         return notificationService.getCommentMentionsNotification(currentUserId, commentId);
     }
 
-    @GetMapping("/getReplyMentionsNotification/{postId}")
+    @GetMapping("/getReplyMentionsNotification/{replyId}")
     public Set<ReplyNotification> getReplyMentionsNotification(@PathVariable("currentUserId") int currentUserId,
-                                                               @RequestParam("replyId") int replyId) {
+                                                               @PathVariable("replyId") int replyId) {
         return notificationService.getReplyMentionsNotification(currentUserId, replyId);
     }
 
@@ -73,14 +73,14 @@ public class NotificationController {
 
     @GetMapping("/getCommentLikeNotification/{commentId}")
     public Optional<CommentNotification> getCommentLikeNotification(@PathVariable("currentUserId") int currentUserId,
-                                                                    @RequestParam("commentId") int commentId) {
+                                                                    @PathVariable("commentId") int commentId) {
 
         return notificationService.getCommentLikeNotification(currentUserId, commentId);
     }
 
     @GetMapping("/getReplyLikeNotification/{replyId}")
     public Optional<ReplyNotification> getReplyLikeNotification(@PathVariable("currentUserId") int currentUserId,
-                                                                @RequestParam("replyId") int replyId) {
+                                                                @PathVariable("replyId") int replyId) {
         return notificationService.getReplyLikeNotification(currentUserId, replyId);
     }
 }

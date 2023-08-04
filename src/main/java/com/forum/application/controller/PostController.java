@@ -60,9 +60,8 @@ public class PostController {
 
     @PatchMapping("/like/{postId}")
     public PostDTO likePost(@PathVariable("currentUserId") int respondentId,
-                                               @PathVariable("postId") int postId) {
+                            @PathVariable("postId") int postId) {
 
         return forumService.likePost(respondentId, postId);
     }
-
 }
