@@ -155,8 +155,8 @@ public class MentionService {
         private Set<PostMention> getUnreadPostMentions(User currentUser) {
             return currentUser.getReceivePostMentions()
                     .stream()
-                    .filter(mention -> !blockService.isBlockedBy(mention.getMentioningUser(), mention.getMentioningUser()))
-                    .filter(mention -> !blockService.isYouBeenBlockedBy(mention.getMentioningUser(), mention.getMentioningUser()))
+                    .filter(mention -> !blockService.isBlockedBy(mention.getMentioningUser(), mention.getMentionedUser()))
+                    .filter(mention -> !blockService.isYouBeenBlockedBy(mention.getMentioningUser(), mention.getMentionedUser()))
                     .filter(mention -> mention.getPost().getStatus() == Status.ACTIVE)
                     .filter(mention -> mention.getNotificationStatus() == NotificationStatus.UNREAD)
                     .collect(Collectors.toSet());
@@ -165,8 +165,8 @@ public class MentionService {
         private Set<CommentMention> getUnreadCommentMentions(User currentUser) {
             return currentUser.getReceiveCommentMentions()
                     .stream()
-                    .filter(mention -> !blockService.isBlockedBy(mention.getMentioningUser(), mention.getMentioningUser()))
-                    .filter(mention -> !blockService.isYouBeenBlockedBy(mention.getMentioningUser(), mention.getMentioningUser()))
+                    .filter(mention -> !blockService.isBlockedBy(mention.getMentioningUser(), mention.getMentionedUser()))
+                    .filter(mention -> !blockService.isYouBeenBlockedBy(mention.getMentioningUser(), mention.getMentionedUser()))
                     .filter(mention -> mention.getComment().getStatus() == Status.ACTIVE)
                     .filter(mention -> mention.getNotificationStatus() == NotificationStatus.UNREAD)
                     .collect(Collectors.toSet());
@@ -175,8 +175,8 @@ public class MentionService {
         private Set<ReplyMention> getUnreadReplyMentions(User currentUser) {
             return currentUser.getReceiveReplyMentions()
                     .stream()
-                    .filter(mention -> !blockService.isBlockedBy(mention.getMentioningUser(), mention.getMentioningUser()))
-                    .filter(mention -> !blockService.isYouBeenBlockedBy(mention.getMentioningUser(), mention.getMentioningUser()))
+                    .filter(mention -> !blockService.isBlockedBy(mention.getMentioningUser(), mention.getMentionedUser()))
+                    .filter(mention -> !blockService.isYouBeenBlockedBy(mention.getMentioningUser(), mention.getMentionedUser()))
                     .filter(mention -> mention.getReply().getStatus() == Status.ACTIVE)
                     .filter(mention -> mention.getNotificationStatus() == NotificationStatus.UNREAD)
                     .collect(Collectors.toSet());

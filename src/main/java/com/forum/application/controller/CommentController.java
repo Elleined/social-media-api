@@ -58,7 +58,7 @@ public class CommentController {
     }
 
     @PatchMapping("/like/{commentId}")
-    public Optional<CommentNotification> likeComment(@PathVariable("currentUserId") int respondentId,
+    public CommentDTO likeComment(@PathVariable("currentUserId") int respondentId,
                                                      @PathVariable("commentId") int commentId) {
 
         return forumService.likeComment(respondentId, commentId);

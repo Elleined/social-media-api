@@ -81,9 +81,7 @@ public abstract class NotificationMapper {
             @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(postLike.getCreatedAt()))"),
             @Mapping(target = "notificationStatus", source = "postLike.notificationStatus"),
 
-
             @Mapping(target = "postId", source = "postLike.post.id"),
-            @Mapping(target = "count", defaultValue = "1")
     })
     public abstract PostNotification toLikeNotification(PostLike postLike);
 
@@ -99,25 +97,24 @@ public abstract class NotificationMapper {
 
             @Mapping(target = "postId", source = "commentLike.comment.post.id"),
             @Mapping(target = "commentId", source = "commentLike.comment.id"),
-            @Mapping(target = "count", defaultValue = "1")
+            @Mapping(target = "count", expression = "java(1)")
     })
     public abstract CommentNotification toLikeNotification(CommentLike commentLike);
 
     @Mappings(value = {
             @Mapping(target = "id", source = "replyLike.id"),
-            @Mapping(target = "message", expression = "java(getLikeMessage(replyLike))"),
+            @Mapping(target = "receiverId", expression = "java(replyLike.getReceiverId())"),
+            @Mapping(target = "message", expression = "java(replyLike.getMessage())"),
             @Mapping(target = "respondentId", source = "replyLike.respondent.id"),
             @Mapping(target = "respondentPicture", source = "replyLike.respondent.picture"),
             @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(replyLike.getCreatedAt()))"),
             @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(replyLike.getCreatedAt()))"),
             @Mapping(target = "notificationStatus", source = "replyLike.notificationStatus"),
 
-            @Mapping(target = "receiverId", expression = "java(replyLike.getReceiverId())"),
-
             @Mapping(target = "postId", source = "replyLike.reply.comment.post.id"),
             @Mapping(target = "commentId", source = "replyLike.reply.comment.id"),
             @Mapping(target = "replyId", source = "replyLike.reply.id"),
-            @Mapping(target = "count", defaultValue = "1")
+            @Mapping(target = "count", expression = "java(1)")
     })
     public abstract ReplyNotification toLikeNotification(ReplyLike replyLike);
 
@@ -132,14 +129,13 @@ public abstract class NotificationMapper {
             @Mapping(target = "notificationStatus", source = "postMention.notificationStatus"),
 
             @Mapping(target = "postId", source = "postMention.post.id"),
-            @Mapping(target = "count", defaultValue = "1")
     })
     public abstract PostNotification toMentionNotification(PostMention postMention);
 
     @Mappings({
             @Mapping(target = "id", source = "commentMention.id"),
             @Mapping(target = "receiverId", expression = "java(commentMention.getReceiverId())"),
-            @Mapping(target = "message", expression = "java(getMentionMessage(commentMention))"),
+            @Mapping(target = "message", expression = "java(commentMention.getMessage())"),
             @Mapping(target = "respondentId", source = "commentMention.mentioningUser.id"),
             @Mapping(target = "respondentPicture", source = "commentMention.mentioningUser.picture"),
             @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(commentMention.getCreatedAt()))"),
@@ -148,14 +144,14 @@ public abstract class NotificationMapper {
 
             @Mapping(target = "postId", source = "commentMention.comment.post.id"),
             @Mapping(target = "commentId", source = "commentMention.comment.id"),
-            @Mapping(target = "count", defaultValue = "1")
+            @Mapping(target = "count", expression = "java(1)")
     })
     public abstract CommentNotification toMentionNotification(CommentMention commentMention);
 
     @Mappings({
             @Mapping(target = "id", source = "replyMention.id"),
             @Mapping(target = "receiverId", expression = "java(replyMention.getReceiverId())"),
-            @Mapping(target = "message", expression = "java(getMentionMessage(replyMention))"),
+            @Mapping(target = "message", expression = "java(replyMention.getMessage())"),
             @Mapping(target = "respondentId", source = "replyMention.mentioningUser.id"),
             @Mapping(target = "respondentPicture", source = "replyMention.mentioningUser.picture"),
             @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(replyMention.getCreatedAt()))"),
@@ -164,9 +160,8 @@ public abstract class NotificationMapper {
 
             @Mapping(target = "postId", source = "replyMention.reply.comment.post.id"),
             @Mapping(target = "commentId", source = "replyMention.reply.comment.id"),
-            @Mapping(target = "replyId", source = "replyLike.reply.id"),
-            @Mapping(target = "count", defaultValue = "1")
-
+            @Mapping(target = "replyId", source = "replyMention.reply.id"),
+            @Mapping(target = "count", expression = "java(1)")
     })
     public abstract ReplyNotification toMentionNotification(ReplyMention replyMention);
 

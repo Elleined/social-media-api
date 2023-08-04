@@ -52,7 +52,7 @@ public class ReplyController {
     }
 
     @PatchMapping("/like/{replyId}")
-    public Optional<ReplyNotification> likeReply(@PathVariable("currentUserId") int respondentId,
+    public ReplyDTO likeReply(@PathVariable("currentUserId") int respondentId,
                                                  @PathVariable("replyId") int replyId) {
 
         return forumService.likeReply(respondentId, replyId);

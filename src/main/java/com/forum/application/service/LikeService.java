@@ -28,7 +28,7 @@ public class LikeService {
     private final LikeNotificationService likeNotificationService;
     private final LikeNotificationReaderService likeNotificationReaderService;
 
-    PostLike like(User respondent, Post post) {
+    void like(User respondent, Post post) {
         NotificationStatus notificationStatus = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.POST)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
@@ -44,7 +44,6 @@ public class LikeService {
         post.getLikes().add(postLike);
         likeRepository.save(postLike);
         log.debug("User with id of {} liked post with id of {}", respondent.getId(), post.getId());
-        return postLike;
     }
 
     public boolean isUserAlreadyLiked(User respondent, Post post) {
@@ -72,7 +71,7 @@ public class LikeService {
         likeRepository.delete(postLike);
         log.debug("User with id of {} unlike post with id of {}", respondent.getId(), post.getId());
     }
-    CommentLike like(User respondent, Comment comment) {
+    void like(User respondent, Comment comment) {
         NotificationStatus notificationStatus = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getPost().getId(), ModalTracker.Type.COMMENT)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
@@ -88,7 +87,6 @@ public class LikeService {
         comment.getLikes().add(commentLike);
         likeRepository.save(commentLike);
         log.debug("User with id of {} liked comment with id of {}", respondent.getId(), comment.getId());
-        return commentLike;
     }
 
     public boolean isUserAlreadyLiked(User respondent, Comment comment) {
@@ -117,7 +115,7 @@ public class LikeService {
         log.debug("User with id of {} unlike comment with id of {}", respondent.getId(), comment.getId());
     }
 
-    ReplyLike like(User respondent, Reply reply) {
+    void like(User respondent, Reply reply) {
         NotificationStatus notificationStatus = modalTrackerService.isModalOpen(reply.getReplier().getId(), reply.getComment().getId(), ModalTracker.Type.REPLY)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
@@ -133,7 +131,6 @@ public class LikeService {
         reply.getLikes().add(replyLike);
         likeRepository.save(replyLike);
         log.debug("User with id of {} liked reply with id of {}", respondent.getId(), reply.getId());
-        return replyLike;
     }
 
     public boolean isUserAlreadyLiked(User respondent, Reply reply) {

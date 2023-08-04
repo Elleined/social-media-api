@@ -4,18 +4,12 @@ import com.forum.application.dto.CommentDTO;
 import com.forum.application.dto.PostDTO;
 import com.forum.application.dto.ReplyDTO;
 import com.forum.application.dto.UserDTO;
-import com.forum.application.dto.notification.CommentNotification;
-import com.forum.application.dto.notification.PostNotification;
-import com.forum.application.dto.notification.ReplyNotification;
 import com.forum.application.exception.*;
 import com.forum.application.mapper.*;
 import com.forum.application.model.Comment;
 import com.forum.application.model.Post;
 import com.forum.application.model.Reply;
 import com.forum.application.model.User;
-import com.forum.application.model.like.CommentLike;
-import com.forum.application.model.like.PostLike;
-import com.forum.application.model.like.ReplyLike;
 import com.forum.application.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,7 +37,6 @@ public class ForumService {
     private final CommentMapper commentMapper;
     private final ReplyMapper replyMapper;
     private final UserMapper userMapper;
-    private final NotificationMapper notificationMapper;
 
     public PostDTO savePost(int currentUserId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
             throws EmptyBodyException, BlockedException, ResourceNotFoundException {
@@ -296,9 +288,8 @@ public class ForumService {
                 .collect(Collectors.toSet());
     }
 
-    public Optional<PostNotification> likePost(int respondentId, int postId)
-            throws ResourceNotFoundException,
-            BlockedException {
+    public PostDTO likePost(int respondentId, int postId)
+            throws ResourceNotFoundException, BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Post post = postService.getById(postId);
@@ -309,15 +300,15 @@ public class ForumService {
 
         if (likeService.isUserAlreadyLiked(currentUser, post)) {
             likeService.unlike(currentUser, post);
-            return Optional.empty();
+            return postMapper.toDTO(post);
         }
-        PostLike postLike = likeService.like(currentUser, post);
-        return Optional.of( notificationMapper.toLikeNotification(postLike) );
+
+        likeService.like(currentUser, post);
+        return postMapper.toDTO(post);
     }
 
-    public Optional<CommentNotification> likeComment(int respondentId, int commentId)
-            throws ResourceNotFoundException,
-            BlockedException {
+    public CommentDTO likeComment(int respondentId, int commentId)
+            throws ResourceNotFoundException, BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Comment comment = commentService.getById(commentId);
@@ -325,17 +316,17 @@ public class ForumService {
         if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! You blocked the author of this comment with id of !" + comment.getCommenter().getId());
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! The author of this comment with id of " + comment.getCommenter().getId() + " already blocked you");
 
-        if (likeService.isUserAlreadyLiked(currentUser, comment))  {
+        if (likeService.isUserAlreadyLiked(currentUser, comment)) {
             likeService.unlike(currentUser, comment);
-            return Optional.empty();
+            return commentMapper.toDTO(comment);
         }
-        CommentLike commentLike = likeService.like(currentUser, comment);
-        return Optional.of( notificationMapper.toLikeNotification(commentLike) );
+
+        likeService.like(currentUser, comment);
+        return commentMapper.toDTO(comment);
     }
 
-    public Optional<ReplyNotification> likeReply(int respondentId, int replyId)
-            throws ResourceNotFoundException,
-            BlockedException {
+    public ReplyDTO likeReply(int respondentId, int replyId)
+            throws ResourceNotFoundException, BlockedException {
 
         User currentUser = userService.getById(respondentId);
         Reply reply = replyService.getById(replyId);
@@ -345,10 +336,11 @@ public class ForumService {
 
         if (likeService.isUserAlreadyLiked(currentUser, reply)) {
             likeService.unlike(currentUser, reply);
-            return Optional.empty();
+            return replyMapper.toDTO(reply);
         }
-        ReplyLike replyLike = likeService.like(currentUser, reply);
-        return Optional.of( notificationMapper.toLikeNotification(replyLike) );
+
+        likeService.like(currentUser, reply);
+        return replyMapper.toDTO(reply);
     }
 
     public UserDTO saveUser(UserDTO userDTO) {

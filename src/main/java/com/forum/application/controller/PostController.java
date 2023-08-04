@@ -62,9 +62,12 @@ public class PostController {
     }
 
     @PatchMapping("/like/{postId}")
-    public Optional<PostNotification> likePost(@PathVariable("currentUserId") int respondentId,
+    public PostDTO likePost(@PathVariable("currentUserId") int respondentId,
                                                @PathVariable("postId") int postId) {
 
         return forumService.likePost(respondentId, postId);
     }
+
+    // getLikeNotifiation
+    // getmentionnotificaiton
 }
