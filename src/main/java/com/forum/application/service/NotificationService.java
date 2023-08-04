@@ -1,16 +1,11 @@
 package com.forum.application.service;
 
-import com.forum.application.dto.CommentDTO;
-import com.forum.application.dto.ReplyDTO;
 import com.forum.application.dto.notification.CommentNotification;
 import com.forum.application.dto.notification.Notification;
 import com.forum.application.dto.notification.PostNotification;
 import com.forum.application.dto.notification.ReplyNotification;
-import com.forum.application.exception.NotOwnedException;
 import com.forum.application.exception.ResourceNotFoundException;
-import com.forum.application.mapper.CommentMapper;
 import com.forum.application.mapper.NotificationMapper;
-import com.forum.application.mapper.ReplyMapper;
 import com.forum.application.model.Comment;
 import com.forum.application.model.Post;
 import com.forum.application.model.Reply;
@@ -35,17 +30,12 @@ public class NotificationService {
 
     private final NotificationMapper notificationMapper;
 
-    private final CommentMapper commentMapper;
-    private final ReplyMapper replyMapper;
-
     public Set<Notification> getAllNotification(User currentUser) {
         Set<CommentNotification> unreadComments = commentService.getUnreadCommentsOfAllPost(currentUser).stream()
-                .map(commentMapper::toDTO)
                 .map(notificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
         Set<ReplyNotification> unreadReply = replyService.getUnreadRepliesOfAllComments(currentUser).stream()
-                .map(replyMapper::toDTO)
                 .map(notificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
@@ -97,15 +87,17 @@ public class NotificationService {
                 mentionService.getUnreadReplyMentions(currentUser).size();
     }
 
-    public CommentNotification getNotification(CommentDTO commentDTO) {
-        return notificationMapper.toNotification(commentDTO);
+    public CommentNotification getCommentNotification(int commentId) throws ResourceNotFoundException {
+        Comment comment = commentService.getById(commentId);
+        return notificationMapper.toNotification(comment);
     }
 
-    public ReplyNotification getNotification(ReplyDTO replyDTO) {
-        return notificationMapper.toNotification(replyDTO);
+    public ReplyNotification getReplyNotification(int replyId) throws ResourceNotFoundException {
+        Reply reply = replyService.getById(replyId);
+        return notificationMapper.toNotification(reply);
     }
 
-    public Set<PostNotification> getPostLikeNotification(int currentUserId, int postId) {
+    public Set<PostNotification> getPostLikeNotification(int currentUserId, int postId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
@@ -114,7 +106,7 @@ public class NotificationService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<CommentNotification> getCommentLikeNotification(int currentUserId, int commentId) {
+    public Set<CommentNotification> getCommentLikeNotification(int currentUserId, int commentId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
 
@@ -123,7 +115,7 @@ public class NotificationService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<ReplyNotification> getReplyLikeNotification(int currentUserId, int replyId) {
+    public Set<ReplyNotification> getReplyLikeNotification(int currentUserId, int replyId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Reply reply = replyService.getById(replyId);
         return likeService.getUnreadLikes(currentUser, reply).stream()
@@ -131,8 +123,7 @@ public class NotificationService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<PostNotification> getPostMentionsNotification(int currentUserId, int postId)
-            throws ResourceNotFoundException, NotOwnedException {
+    public Set<PostNotification> getPostMentionsNotification(int currentUserId, int postId) throws ResourceNotFoundException {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
@@ -142,7 +133,7 @@ public class NotificationService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<CommentNotification> getCommentMentionsNotification(int currentUserId, int commentId) {
+    public Set<CommentNotification> getCommentMentionsNotification(int currentUserId, int commentId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
         return mentionService.getUnreadMentions(currentUser, comment).stream()
@@ -150,7 +141,7 @@ public class NotificationService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<ReplyNotification> getReplyMentionsNotification(int currentUserId, int replyId) {
+    public Set<ReplyNotification> getReplyMentionsNotification(int currentUserId, int replyId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Reply reply = replyService.getById(replyId);
         return mentionService.getUnreadMentions(currentUser, reply).stream()

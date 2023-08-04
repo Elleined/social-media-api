@@ -1,7 +1,5 @@
 package com.forum.application.controller;
 
-import com.forum.application.dto.CommentDTO;
-import com.forum.application.dto.ReplyDTO;
 import com.forum.application.dto.notification.CommentNotification;
 import com.forum.application.dto.notification.Notification;
 import com.forum.application.dto.notification.PostNotification;
@@ -35,14 +33,14 @@ public class NotificationController {
         return notificationService.getTotalNotificationCount(currentUser);
     }
 
-    @PostMapping("/getCommentNotification")
-    public CommentNotification getNotification(@RequestBody CommentDTO commentDTO) {
-        return notificationService.getNotification(commentDTO);
+    @GetMapping("/getCommentNotification/{commentId}")
+    public CommentNotification getCommentNotification(@PathVariable("commentId") int commentId) {
+        return notificationService.getCommentNotification(commentId);
     }
 
-    @PostMapping("/getReplyNotification")
-    public ReplyNotification getNotification(@RequestBody ReplyDTO replyDTO) {
-        return notificationService.getNotification(replyDTO);
+    @GetMapping("/getReplyNotification/{replyId}")
+    public ReplyNotification getReplyNotification(@PathVariable("replyId") int replyId) {
+        return notificationService.getReplyNotification(replyId);
     }
 
     @GetMapping("/getPostMentionsNotification/{postId}")
@@ -66,7 +64,7 @@ public class NotificationController {
 
     @GetMapping("/getPostLikeNotification/{postId}")
     public Set<PostNotification> getPostLikeNotification(@PathVariable("currentUserId") int currentUserId,
-                                                              @PathVariable("postId") int postId) {
+                                                         @PathVariable("postId") int postId) {
         return notificationService.getPostLikeNotification(currentUserId, postId);
     }
 

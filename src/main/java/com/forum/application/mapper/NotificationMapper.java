@@ -1,12 +1,11 @@
 package com.forum.application.mapper;
 
-import com.forum.application.dto.CommentDTO;
-import com.forum.application.dto.ReplyDTO;
 import com.forum.application.dto.notification.CommentNotification;
 import com.forum.application.dto.notification.PostNotification;
 import com.forum.application.dto.notification.ReplyNotification;
+import com.forum.application.model.Comment;
 import com.forum.application.model.ModalTracker;
-import com.forum.application.model.User;
+import com.forum.application.model.Reply;
 import com.forum.application.model.like.CommentLike;
 import com.forum.application.model.like.PostLike;
 import com.forum.application.model.like.ReplyLike;
@@ -28,48 +27,44 @@ public abstract class NotificationMapper {
 
     @Autowired
     @Lazy
-    protected UserService userService;
-
-    @Autowired
-    @Lazy
     protected CommentService commentService;
     @Autowired @Lazy
     protected ReplyService replyService;
 
     @Mappings(value = {
-            @Mapping(target = "id", source = "commentDTO.id"),
-            @Mapping(target = "receiverId", source = "commentDTO.commenterId"),
-            @Mapping(target = "message", expression = "java(getCommentMessage(commentDTO))"),
-            @Mapping(target = "respondentPicture", source = "commentDTO.commenterPicture"),
-            @Mapping(target = "respondentId", source = "commentDTO.commenterId"),
-            @Mapping(target = "formattedDate", source = "commentDTO.formattedDate"),
-            @Mapping(target = "formattedTime", source = "commentDTO.formattedTime"),
-            @Mapping(target = "notificationStatus", source = "commentDTO.notificationStatus"),
+            @Mapping(target = "id", source = "comment.id"),
+            @Mapping(target = "receiverId", source = "comment.commenter.id"),
+            @Mapping(target = "message", expression = "java(getMessage(comment))"),
+            @Mapping(target = "respondentPicture", source = "comment.commenter.picture"),
+            @Mapping(target = "respondentId", source = "comment.commenter.id"),
+            @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(comment.getDateCreated()))"),
+            @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(comment.getDateCreated()))"),
+            @Mapping(target = "notificationStatus", source = "comment.notificationStatus"),
 
-            @Mapping(target = "postId", source = "commentDTO.postId"),
-            @Mapping(target = "commentId", source = "commentDTO.id"),
+            @Mapping(target = "postId", source = "comment.post.id"),
+            @Mapping(target = "commentId", source = "comment.id"),
 
-            @Mapping(target = "count", expression = "java(getNotificationCount(commentDTO))"),
+            @Mapping(target = "count", expression = "java(getNotificationCount(comment))"),
     })
-    public abstract CommentNotification toNotification(CommentDTO commentDTO);
+    public abstract CommentNotification toNotification(Comment comment);
 
     @Mappings(value = {
-            @Mapping(target = "id", source = "replyDTO.id"),
-            @Mapping(target = "receiverId", source = "replyDTO.replierId"),
-            @Mapping(target = "message", expression = "java(getReplyMessage(replyDTO))"),
-            @Mapping(target = "respondentPicture", source = "replyDTO.replierPicture"),
-            @Mapping(target = "respondentId", source = "replyDTO.replierId"),
-            @Mapping(target = "formattedDate", source = "replyDTO.formattedDate"),
-            @Mapping(target = "formattedTime", source = "replyDTO.formattedTime"),
-            @Mapping(target = "notificationStatus", source = "replyDTO.notificationStatus"),
+            @Mapping(target = "id", source = "reply.id"),
+            @Mapping(target = "receiverId", source = "reply.replier.id"),
+            @Mapping(target = "message", expression = "java(getMessage(reply))"),
+            @Mapping(target = "respondentPicture", source = "reply.replier.picture"),
+            @Mapping(target = "respondentId", source = "reply.replier.id"),
+            @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(reply.getDateCreated()))"),
+            @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(reply.getDateCreated()))"),
+            @Mapping(target = "notificationStatus", source = "reply.notificationStatus"),
 
-            @Mapping(target = "postId", source = "replyDTO.postId"),
-            @Mapping(target = "commentId", source = "replyDTO.commentId"),
-            @Mapping(target = "replyId", source = "replyDTO.id"),
+            @Mapping(target = "postId", source = "reply.comment.post.id"),
+            @Mapping(target = "commentId", source = "reply.comment.id"),
+            @Mapping(target = "replyId", source = "reply.id"),
 
-            @Mapping(target = "count", expression = "java(getNotificationCount(replyDTO))"),
+            @Mapping(target = "count", expression = "java(getNotificationCount(reply))"),
     })
-    public abstract ReplyNotification toNotification(ReplyDTO replyDTO);
+    public abstract ReplyNotification toNotification(Reply reply);
 
     @Mappings(value = {
             @Mapping(target = "id", source = "postLike.id"),
@@ -166,22 +161,20 @@ public abstract class NotificationMapper {
     public abstract ReplyNotification toMentionNotification(ReplyMention replyMention);
 
 
-    protected String getCommentMessage(CommentDTO commentDTO) {
-        return commentDTO.getCommenterName() + " commented in your post: " + "\"" + commentDTO.getPostBody() + "\"";
+    protected String getMessage(Comment comment) {
+        return comment.getCommenter().getName() + " commented in your post: " + "\"" + comment.getPost().getBody() + "\"";
     }
 
-    protected String getReplyMessage(ReplyDTO replyDTO) {
-        return replyDTO.getReplierName() + " replied to your comment: " + "\"" + replyDTO.getCommentBody() + "\"";
+    protected String getMessage(Reply reply) {
+        return reply.getReplier().getName() + " replied to your comment: " + "\"" + reply.getComment().getBody() + "\"";
     }
 
-    protected int getNotificationCount(CommentDTO commentDTO) {
-        User author = userService.getById(commentDTO.getAuthorId());
-        return commentService.getNotificationCountForRespondent(author, commentDTO.getPostId(), commentDTO.getCommenterId());
+    protected int getNotificationCount(Comment comment) {
+        return commentService.getNotificationCountForRespondent(comment.getPost().getAuthor(), comment.getPost().getId(), comment.getCommenter().getId());
     }
 
-    protected int getNotificationCount(ReplyDTO replyDTO) {
-        User commenter = userService.getById(replyDTO.getCommenterId());
-        return replyService.getNotificationCountForRespondent(commenter, replyDTO.getCommentId(), replyDTO.getReplierId());
+    protected int getNotificationCount(Reply reply) {
+        return replyService.getNotificationCountForRespondent(reply.getComment().getCommenter(), reply.getComment().getId(), reply.getReplier().getId());
     }
 }
 
