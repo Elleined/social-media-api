@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -165,30 +164,30 @@ public class LikeService {
         return likeNotificationService.getUnreadPostLikes(currentUser);
     }
 
-    Optional<PostLike> getUnreadLike(User currentUser, Post post) {
+    Set<PostLike> getUnreadLikes(User currentUser, Post post) {
         return likeNotificationService.getUnreadPostLikes(currentUser).stream()
                 .filter(postLike -> postLike.getPost().equals(post))
-                .findFirst();
+                .collect(Collectors.toSet());
     }
 
     Set<CommentLike> getUnreadCommentLikes(User currentUser) {
         return likeNotificationService.getUnreadCommentLikes(currentUser);
     }
 
-    Optional<CommentLike> getUnreadLike(User currentUser, Comment comment) {
+    Set<CommentLike> getUnreadLikes(User currentUser, Comment comment) {
         return likeNotificationService.getUnreadCommentLikes(currentUser).stream()
                 .filter(commentLike -> commentLike.getComment().equals(comment))
-                .findFirst();
+                .collect(Collectors.toSet());
     }
 
     Set<ReplyLike> getUnreadReplyLikes(User currentUser) {
         return likeNotificationService.getUnreadReplyLikes(currentUser);
     }
 
-    Optional<ReplyLike> getUnreadLike(User currentUser, Reply reply) {
+    Set<ReplyLike> getUnreadLikes(User currentUser, Reply reply) {
         return likeNotificationService.getUnreadReplyLikes(currentUser).stream()
                 .filter(replyLike -> replyLike.getReply().equals(reply))
-                .findFirst();
+                .collect(Collectors.toSet());
     }
 
     void readLikes(User currentUser) {
@@ -211,7 +210,6 @@ public class LikeService {
                     .stream()
                     .map(Post::getLikes)
                     .flatMap(likes -> likes.stream()
-                            .filter(like -> like.getRespondent() != currentUser)
                             .filter(like -> like.getPost().getStatus() == Status.ACTIVE)
                             .filter(like -> like.getNotificationStatus() == NotificationStatus.UNREAD)
                             .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
@@ -224,7 +222,6 @@ public class LikeService {
                     .stream()
                     .map(Comment::getLikes)
                     .flatMap(likes -> likes.stream()
-                            .filter(like -> like.getRespondent() != currentUser)
                             .filter(like -> like.getComment().getStatus() == Status.ACTIVE)
                             .filter(like -> like.getNotificationStatus() == NotificationStatus.UNREAD)
                             .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
@@ -237,7 +234,6 @@ public class LikeService {
                     .stream()
                     .map(Reply::getLikes)
                     .flatMap(likes -> likes.stream()
-                            .filter(like -> like.getRespondent() != currentUser)
                             .filter(like -> like.getReply().getStatus() == Status.ACTIVE)
                             .filter(like -> like.getNotificationStatus() == NotificationStatus.UNREAD)
                             .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))

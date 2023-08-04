@@ -15,14 +15,10 @@ import com.forum.application.model.Comment;
 import com.forum.application.model.Post;
 import com.forum.application.model.Reply;
 import com.forum.application.model.User;
-import com.forum.application.model.like.CommentLike;
-import com.forum.application.model.like.PostLike;
-import com.forum.application.model.like.ReplyLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -109,37 +105,30 @@ public class NotificationService {
         return notificationMapper.toNotification(replyDTO);
     }
 
-    public Optional<PostNotification> getPostLikeNotification(int currentUserId, int postId) {
+    public Set<PostNotification> getPostLikeNotification(int currentUserId, int postId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        Optional<PostLike> postLike = likeService.getUnreadLike(currentUser, post);
-        if (postLike.isEmpty()) return Optional.empty();
-
-        PostNotification postNotification = notificationMapper.toLikeNotification(postLike.orElseThrow());
-        return Optional.of(postNotification);
+        return likeService.getUnreadLikes(currentUser, post).stream()
+                .map(notificationMapper::toLikeNotification)
+                .collect(Collectors.toSet());
     }
 
-    public Optional<CommentNotification> getCommentLikeNotification(int currentUserId, int commentId) {
+    public Set<CommentNotification> getCommentLikeNotification(int currentUserId, int commentId) {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
 
-        Optional<CommentLike> commentLike = likeService.getUnreadLike(currentUser, comment);
-        if (commentLike.isEmpty()) return Optional.empty();
-
-        CommentNotification commentNotification = notificationMapper.toLikeNotification(commentLike.orElseThrow());
-        return Optional.of(commentNotification);
+        return likeService.getUnreadLikes(currentUser, comment).stream()
+                .map(notificationMapper::toLikeNotification)
+                .collect(Collectors.toSet());
     }
 
-    public Optional<ReplyNotification> getReplyLikeNotification(int currentUserId, int replyId) {
+    public Set<ReplyNotification> getReplyLikeNotification(int currentUserId, int replyId) {
         User currentUser = userService.getById(currentUserId);
         Reply reply = replyService.getById(replyId);
-
-        Optional<ReplyLike> replyLike = likeService.getUnreadLike(currentUser, reply);
-        if (replyLike.isEmpty()) return Optional.empty();
-
-        ReplyNotification replyNotification = notificationMapper.toLikeNotification(replyLike.orElseThrow());
-        return Optional.of(replyNotification);
+        return likeService.getUnreadLikes(currentUser, reply).stream()
+                .map(notificationMapper::toLikeNotification)
+                .collect(Collectors.toSet());
     }
 
     public Set<PostNotification> getPostMentionsNotification(int currentUserId, int postId)
