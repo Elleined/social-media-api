@@ -1,5 +1,5 @@
-# discussion-hub
-A Online Discussion Board(Forum) Using Web Socket and REST API
+# post-comment-reply-api
+An API that supports social media functionality.
 
 # Features
 - Create, Edit, and Delete a Post
