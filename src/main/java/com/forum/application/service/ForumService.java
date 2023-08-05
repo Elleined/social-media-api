@@ -9,10 +9,7 @@ import com.forum.application.mapper.CommentMapper;
 import com.forum.application.mapper.PostMapper;
 import com.forum.application.mapper.ReplyMapper;
 import com.forum.application.mapper.UserMapper;
-import com.forum.application.model.Comment;
-import com.forum.application.model.Post;
-import com.forum.application.model.Reply;
-import com.forum.application.model.User;
+import com.forum.application.model.*;
 import com.forum.application.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +32,7 @@ public class ForumService {
     private final BlockService blockService;
     private final LikeService likeService;
     private final MentionService mentionService;
+    private final ModalTrackerService modalTrackerService;
 
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
@@ -140,6 +138,7 @@ public class ForumService {
     }
 
     public List<PostDTO> getAllPost(int currentUserId) throws ResourceNotFoundException {
+        modalTrackerService.saveTrackerOfUserById(currentUserId, 0, "POST");
         User currentUser = userService.getById(currentUserId);
         likeService.readLikes(currentUser);
         mentionService.readMentions(currentUser);
@@ -156,6 +155,8 @@ public class ForumService {
         commentService.readAllComments(currentUser, post);
         likeService.readLikes(currentUser, post);
         mentionService.readMentions(currentUser, post);
+
+        modalTrackerService.saveTrackerOfUserById(currentUserId, postId, "COMMENT");
         return commentService.getAllCommentsOf(currentUser, post).stream()
                 .map(commentMapper::toDTO)
                 .toList();
@@ -168,6 +169,7 @@ public class ForumService {
         replyService.readAllReplies(currentUser, comment);
         likeService.readLikes(currentUser, comment);
         mentionService.readMentions(currentUser, comment);
+        modalTrackerService.saveTrackerOfUserById(currentUserId, commentId, "REPLY");
         return replyService.getAllRepliesOf(currentUser, comment).stream()
                 .map(replyMapper::toDTO)
                 .toList();

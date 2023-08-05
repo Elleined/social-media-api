@@ -18,8 +18,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
-    User save(User user) {
-        return userRepository.save(user);
+    void save(User user) {
+        userRepository.save(user);
     }
 
     public int getIdByEmail(String email) {
