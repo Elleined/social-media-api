@@ -84,7 +84,7 @@ public class ReplyService {
         log.debug("Replies in comment with id of {} read successfully!", comment.getId());
     }
 
-    List<Reply> getAllRepliesOf(User currentUser, Comment comment) {
+    List<Reply> getAllByComment(User currentUser, Comment comment) {
         return comment.getReplies()
                 .stream()
                 .filter(reply -> reply.getStatus() == Status.ACTIVE)

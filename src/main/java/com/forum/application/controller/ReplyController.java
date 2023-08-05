@@ -18,10 +18,10 @@ public class ReplyController {
     private final ForumService forumService;
 
     @GetMapping
-    public List<ReplyDTO> getAllRepliesOf(@PathVariable("currentUserId") int currentUserId,
+    public List<ReplyDTO> getAllByComment(@PathVariable("currentUserId") int currentUserId,
                                           @PathVariable("commentId") int commentId) {
 
-        return forumService.getAllRepliesOf(currentUserId, commentId);
+        return forumService.getAllByComment(currentUserId, commentId);
     }
 
     @PostMapping

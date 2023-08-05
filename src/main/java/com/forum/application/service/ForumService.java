@@ -148,7 +148,7 @@ public class ForumService {
                 .toList();
     }
 
-    public List<CommentDTO> getAllCommentsOf(int currentUserId, int postId) throws ResourceNotFoundException {
+    public List<CommentDTO> getAllByPost(int currentUserId, int postId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
@@ -157,12 +157,12 @@ public class ForumService {
         mentionService.readMentions(currentUser, post);
 
         modalTrackerService.saveTrackerOfUserById(currentUserId, postId, "COMMENT");
-        return commentService.getAllCommentsOf(currentUser, post).stream()
+        return commentService.getAllByPost(currentUser, post).stream()
                 .map(commentMapper::toDTO)
                 .toList();
     }
 
-    public List<ReplyDTO> getAllRepliesOf(int currentUserId, int commentId) throws ResourceNotFoundException {
+    public List<ReplyDTO> getAllByComment(int currentUserId, int commentId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
 
@@ -170,7 +170,7 @@ public class ForumService {
         likeService.readLikes(currentUser, comment);
         mentionService.readMentions(currentUser, comment);
         modalTrackerService.saveTrackerOfUserById(currentUserId, commentId, "REPLY");
-        return replyService.getAllRepliesOf(currentUser, comment).stream()
+        return replyService.getAllByComment(currentUser, comment).stream()
                 .map(replyMapper::toDTO)
                 .toList();
     }

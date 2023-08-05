@@ -18,9 +18,9 @@ public class CommentController {
     private final ForumService forumService;
 
     @GetMapping
-    public List<CommentDTO> getAllCommentsOf(@PathVariable("currentUserId") int currentUserId,
+    public List<CommentDTO> getAllByPost(@PathVariable("currentUserId") int currentUserId,
                                              @PathVariable("postId") int postId) {
-        return forumService.getAllCommentsOf(currentUserId, postId);
+        return forumService.getAllByPost(currentUserId, postId);
     }
 
     @PostMapping

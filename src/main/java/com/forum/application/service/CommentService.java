@@ -65,7 +65,7 @@ public class CommentService {
         return comment.getStatus() == Status.INACTIVE;
     }
 
-    List<Comment> getAllCommentsOf(User currentUser, Post post) throws ResourceNotFoundException {
+    List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException {
         return post.getComments()
                 .stream()
                 .filter(comment -> comment.getStatus() == Status.ACTIVE)
