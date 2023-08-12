@@ -104,6 +104,7 @@ public class ForumService {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
+        
         if (postService.isUserNotOwnedPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
         postService.delete(post);
     }
@@ -155,6 +156,8 @@ public class ForumService {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
+        if (postService.isDeleted(post)) throw new ResourceNotFoundException("Post with id of " + postId + " might already been deleted or does not exists anymore!");
+
         commentService.readAllComments(currentUser, post);
         likeService.readLikes(currentUser, post);
         mentionService.readMentions(currentUser, post);
@@ -168,6 +171,8 @@ public class ForumService {
     public List<ReplyDTO> getAllByComment(int currentUserId, int commentId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
+
+        if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("Comment with id of " + commentId + " might already been deleted or does not exists anymore!");
 
         replyService.readAllReplies(currentUser, comment);
         likeService.readLikes(currentUser, comment);
@@ -244,25 +249,31 @@ public class ForumService {
         return replyMapper.toDTO(reply);
     }
 
-    public PostDTO pinComment(int postId, int commentId)
+    public PostDTO pinComment(int currentUserId, int postId, int commentId)
             throws ResourceNotFoundException, NotOwnedException {
 
+        User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        if (!postService.isHasComment(post, comment)) throw new NotOwnedException("Post with id of " + postId + "doesn't have comment with id of " + commentId);
+        if (postService.isUserNotOwnedPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " does not own post with id of " + postId + " for him/her to pin a comment in this post!");
+        if (!postService.isHasComment(post, comment)) throw new NotOwnedException("Post with id of " + postId + " doesn't have comment with id of " + commentId);
+        if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("Comment with id of " + commentId + " you specify is already deleted or doesn't exist anymore!");
 
         postService.pinComment(post, comment);
         return postMapper.toDTO(post);
     }
 
-    public CommentDTO pinReply(int commentId, int replyId)
+    public CommentDTO pinReply(int currentUserId, int commentId, int replyId)
             throws ResourceNotFoundException, NotOwnedException {
-        
+
+        User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
 
-        if (commentService.isHasReply(comment, reply)) throw new NotOwnedException("Comment with id of " + commentId + " doesnt have reply of " + replyId);
+        if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " does not owned comment with id of " + commentId + " for him/her to pin a reply in this comment!");
+        if (!commentService.isHasReply(comment, reply)) throw new NotOwnedException("Comment with id of " + commentId + " doesnt have reply of " + replyId);
+        if (replyService.isDeleted(reply)) throw new ResourceNotFoundException("Reply with id of " + replyId + " you specify is already deleted or does not exists anymore!");
 
         commentService.pinReply(comment, reply);
         return commentMapper.toDTO(comment);

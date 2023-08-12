@@ -68,9 +68,10 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}/pinComment/{commentId}")
-    public PostDTO pinComment(@PathVariable("postId") int postId,
-                                      @PathVariable("commentId") int commentId) {
+    public PostDTO pinComment(@PathVariable("currentUserId") int currentUserId,
+                              @PathVariable("postId") int postId,
+                              @PathVariable("commentId") int commentId) {
 
-        return forumService.pinComment(postId, commentId);
+        return forumService.pinComment(currentUserId, postId, commentId);
     }
 }
