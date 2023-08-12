@@ -110,12 +110,15 @@ public class ForumService {
         postService.delete(post);
     }
 
-    public CommentDTO deleteComment(int currentUserId, int commentId)
+    public CommentDTO deleteComment(int currentUserId, int postId, int commentId)
             throws ResourceNotFoundException,
             NotOwnedException {
 
         User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
+
+        if (!postService.isHasComment(post, comment)) throw new NotOwnedException("Post with id of " + postId + " does not have comment with id of " + commentId);
         if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
 
         commentService.delete(comment);
@@ -124,12 +127,15 @@ public class ForumService {
         return commentMapper.toDTO(comment);
     }
 
-    public ReplyDTO deleteReply(int currentUserId, int replyId)
+    public ReplyDTO deleteReply(int currentUserId, int commentId, int replyId)
             throws ResourceNotFoundException,
             NotOwnedException {
 
         User currentUser = userService.getById(currentUserId);
+        Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
+
+        if (!commentService.isHasReply(comment, reply)) throw new NotOwnedException("Comment with id of " + commentId +  " does not have reply with id of " + replyId);
         if (replyService.isUserNotOwnedReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
 
         replyService.delete(reply);
