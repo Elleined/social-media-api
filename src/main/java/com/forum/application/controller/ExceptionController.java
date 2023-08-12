@@ -20,14 +20,15 @@ public class ExceptionController {
         return new ResponseEntity<>(responseMessage, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({NoLoggedInUserException.class, BlockedException.class, NotOwnedException.class})
-    public ResponseEntity<ResponseMessage> handleNoLoggedInUserException(RuntimeException ex) {
-        var responseMessage = new ResponseMessage(HttpStatus.FORBIDDEN, ex.getMessage());
-        return new ResponseEntity<>(responseMessage, HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler({EmptyBodyException.class, ClosedCommentSectionException.class, UpvoteException.class, MentionException.class})
-    public ResponseEntity<ResponseMessage> handleEmptyBodyException(RuntimeException ex) {
+    @ExceptionHandler({
+            BlockedException.class,
+            NotOwnedException.class,
+            EmptyBodyException.class,
+            ClosedCommentSectionException.class,
+            UpvoteException.class,
+            MentionException.class
+    })
+    public ResponseEntity<ResponseMessage> handleBadRequestExceptions(RuntimeException ex) {
         var responseMessage = new ResponseMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
     }

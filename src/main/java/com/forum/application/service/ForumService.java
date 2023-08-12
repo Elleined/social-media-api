@@ -244,17 +244,25 @@ public class ForumService {
         return replyMapper.toDTO(reply);
     }
 
-    public PostDTO pinComment(int postId, int commentId) throws ResourceNotFoundException {
+    public PostDTO pinComment(int postId, int commentId)
+            throws ResourceNotFoundException, NotOwnedException {
+
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
-        postService.pinComment(post, comment);
 
+        if (!postService.isHasComment(post, comment)) throw new NotOwnedException("Post with id of " + postId + "doesn't have comment with id of " + commentId);
+
+        postService.pinComment(post, comment);
         return postMapper.toDTO(post);
     }
 
-    public CommentDTO pinReply(int commentId, int replyId) throws ResourceNotFoundException {
+    public CommentDTO pinReply(int commentId, int replyId)
+            throws ResourceNotFoundException, NotOwnedException {
+        
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
+
+        if (commentService.isHasReply(comment, reply)) throw new NotOwnedException("Comment with id of " + commentId + " doesnt have reply of " + replyId);
 
         commentService.pinReply(comment, reply);
         return commentMapper.toDTO(comment);

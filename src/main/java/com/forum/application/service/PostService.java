@@ -108,6 +108,10 @@ public class PostService {
         return currentUser.getPosts().stream().noneMatch(post::equals);
     }
 
+    boolean isHasComment(Post post, Comment comment) {
+        return post.getComments().stream().anyMatch(comment::equals);
+    }
+
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalCommentsAndReplies(Post post) {
         int commentCount = (int) post.getComments()

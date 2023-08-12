@@ -63,15 +63,6 @@ public class CommentService {
         log.debug("Comment author with id of {} pinned reply with id of {} in his/her comment with id of {}", comment.getCommenter().getId(), reply.getId(), comment.getId());
     }
 
-    boolean isUserNotOwnedComment(User currentUser, Comment comment) {
-        return currentUser.getComments().stream().noneMatch(comment::equals);
-    }
-
-
-    boolean isDeleted(Comment comment) {
-        return comment.getStatus() == Status.INACTIVE;
-    }
-
     List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException {
         return post.getComments()
                 .stream()
@@ -168,6 +159,17 @@ public class CommentService {
         return post.getCommentSectionStatus() == Post.CommentSectionStatus.CLOSED;
     }
 
+    boolean isUserNotOwnedComment(User currentUser, Comment comment) {
+        return currentUser.getComments().stream().noneMatch(comment::equals);
+    }
+
+    boolean isHasReply(Comment comment, Reply reply) {
+        return comment.getReplies().stream().anyMatch(reply::equals);
+    }
+
+    boolean isDeleted(Comment comment) {
+        return comment.getStatus() == Status.INACTIVE;
+    }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalReplies(Comment comment) {
