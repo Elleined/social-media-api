@@ -63,7 +63,10 @@ public class Reply {
     @Setter(AccessLevel.NONE)
     private Set<ReplyLike> likes;
 
-    public String getNotificationMessage() {
-        return this.getReplier().getName() + " replied to your comment: " + "\"" + this.getComment().getBody() + "\"";
-    }
+    @OneToOne(
+            mappedBy = "pinnedReply",
+            orphanRemoval = true
+    )
+    @Setter(AccessLevel.NONE)
+    private Comment commentPinnedReply;
 }

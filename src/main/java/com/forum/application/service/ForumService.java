@@ -210,7 +210,7 @@ public class ForumService {
         if (post.getBody().equals(newBody)) return postMapper.toDTO(post);
         if (postService.isUserNotOwnedPost(currentUser, post)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have post with id of " + postId);
 
-        postService.updatePostBody(post, newBody);
+        postService.updateBody(post, newBody);
         return postMapper.toDTO(post);
     }
 

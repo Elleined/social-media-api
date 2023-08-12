@@ -48,6 +48,7 @@ public class Post {
     )
     private User author;
 
+
     // post id reference is in comment table
     @OneToMany(mappedBy = "post")
     @Setter(AccessLevel.NONE)
@@ -63,6 +64,9 @@ public class Post {
     @Setter(AccessLevel.NONE)
     private Set<PostLike> likes;
 
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "pinned_comment_id")
+    private Comment pinnedComment;
 
     public enum CommentSectionStatus {OPEN, CLOSED}
 }

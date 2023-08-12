@@ -54,8 +54,11 @@ public class PostService {
         post.getComments().forEach(commentService::delete);
     }
 
+    void pinComment(Comment comment) {
 
-    void updatePostBody(Post post, String newBody) {
+    }
+
+    void updateBody(Post post, String newBody) {
         post.setBody(newBody);
         postRepository.save(post);
         log.debug("Post with id of {} updated with the new body of {}", post.getId(), newBody);

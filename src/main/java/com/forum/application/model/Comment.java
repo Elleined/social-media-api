@@ -76,7 +76,14 @@ public class Comment {
     @Setter(AccessLevel.NONE)
     private Set<CommentLike> likes;
 
-    public String getNotificationMessage() {
-        return this.getCommenter().getName() + " commented in your post: " + "\"" + this.getPost().getBody() + "\"";
-    }
+    @OneToOne(
+            mappedBy = "pinnedComment",
+            orphanRemoval = true
+    )
+    @Setter(AccessLevel.NONE)
+    private Post postPinnedComment;
+
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "pinned_reply_id")
+    private Reply pinnedReply;
 }
