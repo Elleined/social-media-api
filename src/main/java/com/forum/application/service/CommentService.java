@@ -51,11 +51,17 @@ public class CommentService {
 
     void delete(Comment comment) {
         comment.setStatus(Status.INACTIVE);
-        comment.setPinnedReply(null);
         commentRepository.save(comment);
 
         log.debug("Comment with id of {} are now inactive!", comment.getId());
         comment.getReplies().forEach(replyService::delete);
+    }
+
+    void unpin(Comment comment) {
+        comment.getPost().setPinnedComment(null);
+        commentRepository.save(comment);
+
+        log.debug("Post pinned comment unpinned successfully");
     }
 
     void pinReply(Comment comment, Reply reply) {

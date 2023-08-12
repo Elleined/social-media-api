@@ -48,7 +48,7 @@ public class Post {
     )
     private User author;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne
     @JoinColumn(
             name = "pinned_comment_id",
             referencedColumnName = "comment_id"

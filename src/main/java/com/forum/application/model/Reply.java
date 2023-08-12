@@ -62,8 +62,4 @@ public class Reply {
     @OneToMany(mappedBy = "reply")
     @Setter(AccessLevel.NONE)
     private Set<ReplyLike> likes;
-
-    @OneToOne(mappedBy = "pinnedReply")
-    @Setter(AccessLevel.NONE)
-    private Comment commentPinnedReply;
 }

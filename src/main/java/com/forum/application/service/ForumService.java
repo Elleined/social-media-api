@@ -119,6 +119,8 @@ public class ForumService {
         if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
 
         commentService.delete(comment);
+        commentService.unpin(comment);
+
         return commentMapper.toDTO(comment);
     }
 
@@ -131,6 +133,8 @@ public class ForumService {
         if (replyService.isUserNotOwnedReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
 
         replyService.delete(reply);
+        replyService.unpin(reply);
+
         return replyMapper.toDTO(reply);
     }
 

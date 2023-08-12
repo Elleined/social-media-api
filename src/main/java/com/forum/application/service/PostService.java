@@ -46,7 +46,6 @@ public class PostService {
 
     void delete(Post post) {
         post.setStatus(Status.INACTIVE);
-        post.setPinnedComment(null);
         postRepository.save(post);
 
         log.debug("Post with id of {} are now inactive", post.getId());

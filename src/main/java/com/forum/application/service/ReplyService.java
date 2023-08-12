@@ -52,6 +52,12 @@ public class ReplyService {
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 
+    void unpin(Reply reply) {
+        reply.getComment().setPinnedReply(null);
+        replyRepository.save(reply);
+        log.debug("Comment pinned reply unpinned successfully");
+    }
+
     boolean isUserNotOwnedReply(User currentUser, Reply reply) {
         return currentUser.getReplies().stream().noneMatch(reply::equals);
     }
