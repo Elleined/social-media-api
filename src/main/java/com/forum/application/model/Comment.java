@@ -59,6 +59,14 @@ public class Comment {
     )
     private User commenter;
 
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(
+            name = "pinned_reply_id",
+            referencedColumnName = "reply_id"
+    )
+    private Reply pinnedReply;
+
+
     // comment id reference is in reply table
     @OneToMany(mappedBy = "comment")
     @Setter(AccessLevel.NONE)
@@ -76,14 +84,7 @@ public class Comment {
     @Setter(AccessLevel.NONE)
     private Set<CommentLike> likes;
 
-    @OneToOne(
-            mappedBy = "pinnedComment",
-            orphanRemoval = true
-    )
+    @OneToOne(mappedBy = "pinnedComment")
     @Setter(AccessLevel.NONE)
     private Post postPinnedComment;
-
-    @OneToOne(orphanRemoval = true)
-    @JoinColumn(name = "pinned_reply_id")
-    private Reply pinnedReply;
 }

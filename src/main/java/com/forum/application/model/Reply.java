@@ -63,10 +63,7 @@ public class Reply {
     @Setter(AccessLevel.NONE)
     private Set<ReplyLike> likes;
 
-    @OneToOne(
-            mappedBy = "pinnedReply",
-            orphanRemoval = true
-    )
+    @OneToOne(mappedBy = "pinnedReply")
     @Setter(AccessLevel.NONE)
     private Comment commentPinnedReply;
 }
