@@ -1,12 +1,14 @@
 package com.forum.application.controller;
 
 import com.forum.application.dto.CommentDTO;
+import com.forum.application.dto.ReplyDTO;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -21,6 +23,11 @@ public class CommentController {
     public List<CommentDTO> getAllByPost(@PathVariable("currentUserId") int currentUserId,
                                              @PathVariable("postId") int postId) {
         return forumService.getAllByPost(currentUserId, postId);
+    }
+
+    @GetMapping("/getPinnedReply/{commentId}")
+    public Optional<ReplyDTO> getPinnedReply(@PathVariable("commentId") int commentId) {
+        return forumService.getPinnedReply(commentId);
     }
 
     @PostMapping

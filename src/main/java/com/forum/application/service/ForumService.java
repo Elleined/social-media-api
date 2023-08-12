@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -402,5 +403,23 @@ public class ForumService {
         if (StringValidator.isNotValidBody(UUID)) throw new IllegalArgumentException("UUID cannot be empty, null, or blank");
         User user = userService.getByUUID(UUID);
         return userMapper.toDTO(user);
+    }
+
+    public Optional<CommentDTO> getPinnedComment(int postId) throws ResourceNotFoundException {
+        Post post = postService.getById(postId);
+        Comment pinnedComment = post.getPinnedComment();
+        if (postService.isDeleted(post)) throw new ResourceNotFoundException("Post with id of " + postId + " might already been deleted or does not exists anymore!");
+
+        if (pinnedComment == null) return Optional.empty();
+        return Optional.of( commentMapper.toDTO(pinnedComment) );
+    }
+
+    public Optional<ReplyDTO> getPinnedReply(int commentId) throws ResourceNotFoundException {
+        Comment comment = commentService.getById(commentId);
+        Reply pinnedReply = comment.getPinnedReply();
+        if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("Comment with id of " + commentId + " might already been deleted or does not exists!");
+
+        if (pinnedReply == null) return Optional.empty();
+        return Optional.of( replyMapper.toDTO(pinnedReply) );
     }
 }

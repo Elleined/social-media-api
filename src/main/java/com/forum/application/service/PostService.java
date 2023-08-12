@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,7 +46,9 @@ public class PostService {
 
     void delete(Post post) {
         post.setStatus(Status.INACTIVE);
+        post.setPinnedComment(null);
         postRepository.save(post);
+
         log.debug("Post with id of {} are now inactive", post.getId());
         post.getComments().forEach(commentService::delete);
     }
