@@ -1,9 +1,11 @@
 package com.forum.application.controller;
 
 import com.forum.application.dto.PostDTO;
+import com.forum.application.dto.ResponseMessage;
 import com.forum.application.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,5 +65,12 @@ public class PostController {
                             @PathVariable("postId") int postId) {
 
         return forumService.likePost(respondentId, postId);
+    }
+
+    @PatchMapping("/{postId}/pinComment/{commentId}")
+    public PostDTO pinComment(@PathVariable("postId") int postId,
+                                      @PathVariable("commentId") int commentId) {
+
+        return forumService.pinComment(postId, commentId);
     }
 }

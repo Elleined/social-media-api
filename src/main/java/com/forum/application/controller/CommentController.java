@@ -57,8 +57,15 @@ public class CommentController {
 
     @PatchMapping("/like/{commentId}")
     public CommentDTO likeComment(@PathVariable("currentUserId") int respondentId,
-                                                     @PathVariable("commentId") int commentId) {
+                                  @PathVariable("commentId") int commentId) {
 
         return forumService.likeComment(respondentId, commentId);
+    }
+
+    @PatchMapping("/{commentId}/pinReply/{replyId}")
+    public CommentDTO pinReply(@PathVariable("commentId") int commentId,
+                               @PathVariable("replyId") int replyId) {
+
+        return forumService.pinReply(commentId, replyId);
     }
 }

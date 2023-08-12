@@ -244,16 +244,20 @@ public class ForumService {
         return replyMapper.toDTO(reply);
     }
 
-    public void pinComment(int postId, int commentId) throws ResourceNotFoundException {
+    public PostDTO pinComment(int postId, int commentId) throws ResourceNotFoundException {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         postService.pinComment(post, comment);
+
+        return postMapper.toDTO(post);
     }
 
-    public void pinReply(int commentId, int replyId) throws ResourceNotFoundException {
+    public CommentDTO pinReply(int commentId, int replyId) throws ResourceNotFoundException {
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
+
         commentService.pinReply(comment, reply);
+        return commentMapper.toDTO(comment);
     }
 
     public List<UserDTO> getAllUser(int currentUserId) throws ResourceNotFoundException {
