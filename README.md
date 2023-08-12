@@ -5,10 +5,11 @@ An API that supports social media functionality.
 - Create, Edit, and Delete a Post
 - Create, Edit, and Delete a Comment in a post real time
 - Create, Edit, and Delete a Reply in a comment real time
-- Can Like in Post, Comment, and Reply
+- Like in Post, Comment, and Reply
 - Mention another user in Post, Comment, and Reply
 - Author can close the comment section for his/her every post
 - Comment upvote
+- Pin comment and reply
 - Block another user
 - Notification for comment and reply
 - Notification for mention in post, comment, and reply
