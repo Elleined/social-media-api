@@ -9,7 +9,10 @@ import com.forum.application.mapper.CommentMapper;
 import com.forum.application.mapper.PostMapper;
 import com.forum.application.mapper.ReplyMapper;
 import com.forum.application.mapper.UserMapper;
-import com.forum.application.model.*;
+import com.forum.application.model.Comment;
+import com.forum.application.model.Post;
+import com.forum.application.model.Reply;
+import com.forum.application.model.User;
 import com.forum.application.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -223,7 +226,7 @@ public class ForumService {
         if (comment.getBody().equals(newBody)) return commentMapper.toDTO(comment);
         if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
 
-        commentService.updateCommentBody(comment, newBody);
+        commentService.updateBody(comment, newBody);
         return commentMapper.toDTO(comment);
     }
 
@@ -239,6 +242,18 @@ public class ForumService {
 
         replyService.updateReplyBody(reply, newReplyBody);
         return replyMapper.toDTO(reply);
+    }
+
+    public void pinComment(int postId, int commentId) throws ResourceNotFoundException {
+        Post post = postService.getById(postId);
+        Comment comment = commentService.getById(commentId);
+        postService.pinComment(post, comment);
+    }
+
+    public void pinReply(int commentId, int replyId) throws ResourceNotFoundException {
+        Comment comment = commentService.getById(commentId);
+        Reply reply = replyService.getById(replyId);
+        commentService.pinReply(comment, reply);
     }
 
     public List<UserDTO> getAllUser(int currentUserId) throws ResourceNotFoundException {

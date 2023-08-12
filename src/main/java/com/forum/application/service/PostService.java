@@ -54,8 +54,10 @@ public class PostService {
         post.getComments().forEach(commentService::delete);
     }
 
-    void pinComment(Comment comment) {
-
+    void pinComment(Post post, Comment comment) {
+        post.setPinnedComment(comment);
+        postRepository.save(post);
+        log.debug("Author with id of {} pinned comment with id {} in his/her post with id of {}", post.getAuthor().getId(), comment.getId(), post.getId());
     }
 
     void updateBody(Post post, String newBody) {

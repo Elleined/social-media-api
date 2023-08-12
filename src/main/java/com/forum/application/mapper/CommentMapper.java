@@ -30,7 +30,8 @@ public abstract class CommentMapper {
             @Mapping(target = "likers", source = "comment.likes"),
             @Mapping(target = "mentionedUsers", source = "comment.mentions"),
             @Mapping(target = "totalLikes", expression = "java(comment.getLikes().size())"),
-            @Mapping(target = "authorId", source = "comment.post.author.id")
+            @Mapping(target = "authorId", source = "comment.post.author.id"),
+            @Mapping(target = "pinnedReplyId", source = "comment.pinnedReply.id")
     })
     public abstract CommentDTO toDTO(Comment comment);
 }

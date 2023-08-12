@@ -29,7 +29,8 @@ public abstract class PostMapper {
             @Mapping(target = "likers", source = "post.likes"),
             @Mapping(target = "mentionedUsers", source = "post.mentions"),
             @Mapping(target = "totalLikes", expression = "java(post.getLikes().size())"),
-            @Mapping(target = "attachedPicture", source = "post.attachedPicture")
+            @Mapping(target = "attachedPicture", source = "post.attachedPicture"),
+            @Mapping(target = "pinnedCommentId", source = "post.pinnedComment.id")
     })
     public abstract PostDTO toDTO(Post post);
 }

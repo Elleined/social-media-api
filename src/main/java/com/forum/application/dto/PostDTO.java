@@ -24,4 +24,5 @@ public class PostDTO {
     private String attachedPicture;
     private Set<UserDTO> likers;
     private Set<UserDTO> mentionedUsers;
+    private int pinnedCommentId;
 }

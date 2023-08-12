@@ -29,4 +29,5 @@ public class CommentDTO {
     private int authorId;
     private Set<UserDTO> likers;
     private Set<UserDTO> mentionedUsers;
+    private int pinnedReplyId;
 }

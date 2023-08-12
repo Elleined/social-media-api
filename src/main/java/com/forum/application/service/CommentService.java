@@ -57,9 +57,16 @@ public class CommentService {
         comment.getReplies().forEach(replyService::delete);
     }
 
+    void pinReply(Comment comment, Reply reply) {
+        comment.setPinnedReply(reply);
+        commentRepository.save(comment);
+        log.debug("Comment author with id of {} pinned reply with id of {} in his/her comment with id of {}", comment.getCommenter().getId(), reply.getId(), comment.getId());
+    }
+
     boolean isUserNotOwnedComment(User currentUser, Comment comment) {
         return currentUser.getComments().stream().noneMatch(comment::equals);
     }
+
 
     boolean isDeleted(Comment comment) {
         return comment.getStatus() == Status.INACTIVE;
@@ -120,11 +127,12 @@ public class CommentService {
         log.debug("User with id of {} upvoted the Comment with id of {} successfully", respondent.getId(), comment.getId());
     }
 
-    void updateCommentBody(Comment comment, String newBody) throws ResourceNotFoundException {
+    void updateBody(Comment comment, String newBody) throws ResourceNotFoundException {
         comment.setBody(newBody);
         commentRepository.save(comment);
         log.debug("Comment with id of {} updated with the new body of {}", comment.getId(), newBody);
     }
+
 
     private void readComment(Comment comment) {
         comment.setNotificationStatus(NotificationStatus.READ);
