@@ -79,7 +79,7 @@ public class CommentService {
                 .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
                 .sorted(Comparator.comparingInt(Comment::getUpvote).reversed())
-                .toList();
+                .toList());
         if (pinnedComment != null) comments.add(0, pinnedComment); // Prioritizing pinned comment
         return comments;
     }
