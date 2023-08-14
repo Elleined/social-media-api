@@ -153,10 +153,11 @@ public class ForumService {
     }
 
     public List<PostDTO> getAllPost(int currentUserId) throws ResourceNotFoundException {
-        modalTrackerService.saveTrackerOfUserById(currentUserId, 0, "POST");
         User currentUser = userService.getById(currentUserId);
         likeService.readLikes(currentUser);
         mentionService.readMentions(currentUser);
+
+        modalTrackerService.saveTrackerOfUserById(currentUserId, 0, "POST");
         return postService.getAll(currentUser)
                 .stream()
                 .map(postMapper::toDTO)
@@ -166,7 +167,6 @@ public class ForumService {
     public List<CommentDTO> getAllByPost(int currentUserId, int postId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-
         if (postService.isDeleted(post)) throw new ResourceNotFoundException("Post with id of " + postId + " might already been deleted or does not exists anymore!");
 
         commentService.readAllComments(currentUser, post);
@@ -182,12 +182,12 @@ public class ForumService {
     public List<ReplyDTO> getAllByComment(int currentUserId, int commentId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
-
         if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("Comment with id of " + commentId + " might already been deleted or does not exists anymore!");
 
         replyService.readAllReplies(currentUser, comment);
         likeService.readLikes(currentUser, comment);
         mentionService.readMentions(currentUser, comment);
+
         modalTrackerService.saveTrackerOfUserById(currentUserId, commentId, "REPLY");
         return replyService.getAllByComment(currentUser, comment).stream()
                 .map(replyMapper::toDTO)

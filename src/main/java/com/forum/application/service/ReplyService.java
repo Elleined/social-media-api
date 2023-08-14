@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -92,7 +89,7 @@ public class ReplyService {
 
     List<Reply> getAllByComment(User currentUser, Comment comment) {
         Reply pinnedReply = comment.getPinnedReply();
-        List<Reply> replies = new java.util.ArrayList<>(comment.getReplies()
+        List<Reply> replies = new ArrayList<>(comment.getReplies()
                 .stream()
                 .filter(reply -> reply.getStatus() == Status.ACTIVE)
                 .filter(reply -> !reply.equals(pinnedReply))
@@ -100,7 +97,7 @@ public class ReplyService {
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
                 .sorted(Comparator.comparing(Reply::getDateCreated))
                 .toList());
-        replies.add(0, pinnedReply); // Prioeitizing pinned reply
+        if (pinnedReply != null) replies.add(0, pinnedReply); // Prioritizing pinned reply
         return replies;
     }
 
