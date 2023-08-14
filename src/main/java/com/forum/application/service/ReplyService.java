@@ -91,13 +91,17 @@ public class ReplyService {
     }
 
     List<Reply> getAllByComment(User currentUser, Comment comment) {
-        return comment.getReplies()
+        Reply pinnedReply = comment.getPinnedReply();
+        List<Reply> replies = new java.util.ArrayList<>(comment.getReplies()
                 .stream()
                 .filter(reply -> reply.getStatus() == Status.ACTIVE)
+                .filter(reply -> !reply.equals(pinnedReply))
                 .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
                 .sorted(Comparator.comparing(Reply::getDateCreated))
-                .toList();
+                .toList());
+        replies.add(0, pinnedReply); // Prioeitizing pinned reply
+        return replies;
     }
 
     public Reply getById(int replyId) throws ResourceNotFoundException {

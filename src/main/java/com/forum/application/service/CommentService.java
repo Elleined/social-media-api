@@ -71,13 +71,17 @@ public class CommentService {
     }
 
     List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException {
-        return post.getComments()
+        Comment pinnedComment = post.getPinnedComment();
+        List<Comment> comments = new ArrayList<>(post.getComments()
                 .stream()
+                .filter(comment -> !comment.equals(pinnedComment))
                 .filter(comment -> comment.getStatus() == Status.ACTIVE)
                 .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
                 .sorted(Comparator.comparingInt(Comment::getUpvote).reversed())
-                .toList();
+                .toList());
+        comments.add(0, pinnedComment); // Prioritizing pinned comment
+        return comments;
     }
 
     public Comment getById(int commentId) throws ResourceNotFoundException {
