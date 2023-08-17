@@ -1,6 +1,6 @@
-package com.forum.application.service;
+package com.elleined.forumapi.service;
 
-import com.forum.application.model.User;
+import com.elleined.forumapi.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
