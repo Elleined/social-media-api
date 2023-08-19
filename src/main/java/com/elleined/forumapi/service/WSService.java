@@ -1,6 +1,5 @@
 package com.elleined.forumapi.service;
 
-
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.ReplyDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ public class WSService {
     void broadcastComment(CommentDTO commentDTO) {
         commentDTO.setBody(HtmlUtils.htmlEscape(commentDTO.getBody()));
 
-        final String destination = "/forum/posts/" + commentDTO.getPostId() + "/comments";
+        final String destination = "/discussion/posts/" + commentDTO.getPostId() + "/comments";
         simpMessagingTemplate.convertAndSend(destination, commentDTO);
         log.debug("Comment with id of {} and body of {} broadcast successfully to {}", commentDTO.getId(), commentDTO.getBody(), destination);
     }
@@ -26,7 +25,7 @@ public class WSService {
     void broadcastReply(ReplyDTO replyDTO) {
         replyDTO.setBody(HtmlUtils.htmlEscape(replyDTO.getBody()));
 
-        final String destination = "/forum/posts/comments/" + replyDTO.getCommentId() + "/replies";
+        final String destination = "/discussion/posts/comments/" + replyDTO.getCommentId() + "/replies";
         simpMessagingTemplate.convertAndSend(destination, replyDTO);
         log.debug("Reply with id of {} and body of {} broadcast successfully to {}", replyDTO.getId(), replyDTO.getBody(), destination);
     }

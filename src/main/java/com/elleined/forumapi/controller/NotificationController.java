@@ -1,9 +1,6 @@
 package com.elleined.forumapi.controller;
 
-import com.elleined.forumapi.dto.notification.CommentNotification;
 import com.elleined.forumapi.dto.notification.Notification;
-import com.elleined.forumapi.dto.notification.PostNotification;
-import com.elleined.forumapi.dto.notification.ReplyNotification;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.NotificationService;
 import com.elleined.forumapi.service.UserService;
@@ -33,52 +30,4 @@ public class NotificationController {
         User currentUser = userService.getById(currentUserId);
         return notificationService.getTotalNotificationCount(currentUser);
     }
-
-//    @GetMapping("/getCommentNotification/{commentId}")
-//    public CommentNotification getCommentNotification(@PathVariable("commentId") int commentId) {
-//        return notificationService.getCommentNotification(commentId);
-//    }
-//
-//    @GetMapping("/getReplyNotification/{replyId}")
-//    public ReplyNotification getReplyNotification(@PathVariable("replyId") int replyId) {
-//        return notificationService.getReplyNotification(replyId);
-//    }
-//
-//    @GetMapping("/getPostMentionsNotification/{postId}")
-//    public Set<PostNotification> getPostMentionsNotification(@PathVariable("currentUserId") int currentUserId,
-//                                                             @PathVariable("postId") int postId) {
-//        return notificationService.getPostMentionsNotification(currentUserId, postId);
-//    }
-//
-//
-//    @GetMapping("/getCommentMentionsNotification/{commentId}")
-//    public Set<CommentNotification> getCommentMentionsNotification(@PathVariable("currentUserId") int currentUserId,
-//                                                                   @PathVariable("commentId") int commentId) {
-//        return notificationService.getCommentMentionsNotification(currentUserId, commentId);
-//    }
-//
-//    @GetMapping("/getReplyMentionsNotification/{replyId}")
-//    public Set<ReplyNotification> getReplyMentionsNotification(@PathVariable("currentUserId") int currentUserId,
-//                                                               @PathVariable("replyId") int replyId) {
-//        return notificationService.getReplyMentionsNotification(currentUserId, replyId);
-//    }
-//
-//    @GetMapping("/getPostLikeNotification/{postId}")
-//    public Set<PostNotification> getPostLikeNotification(@PathVariable("currentUserId") int currentUserId,
-//                                                         @PathVariable("postId") int postId) {
-//        return notificationService.getPostLikeNotification(currentUserId, postId);
-//    }
-//
-//    @GetMapping("/getCommentLikeNotification/{commentId}")
-//    public Set<CommentNotification> getCommentLikeNotification(@PathVariable("currentUserId") int currentUserId,
-//                                                                    @PathVariable("commentId") int commentId) {
-//
-//        return notificationService.getCommentLikeNotification(currentUserId, commentId);
-//    }
-//
-//    @GetMapping("/getReplyLikeNotification/{replyId}")
-//    public Set<ReplyNotification> getReplyLikeNotification(@PathVariable("currentUserId") int currentUserId,
-//                                                                @PathVariable("replyId") int replyId) {
-//        return notificationService.getReplyLikeNotification(currentUserId, replyId);
-//    }
 }

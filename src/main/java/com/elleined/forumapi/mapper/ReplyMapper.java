@@ -1,9 +1,9 @@
 
 package com.elleined.forumapi.mapper;
 
-import com.elleined.forumapi.service.Formatter;
 import com.elleined.forumapi.dto.ReplyDTO;
 import com.elleined.forumapi.model.Reply;
+import com.elleined.forumapi.service.Formatter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

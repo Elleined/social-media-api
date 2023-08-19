@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class MentionService {
     private final ReplyService replyService;
     private final BlockService blockService;
 
-    void addMention(User currentUser, int mentionedUserId, Post post) throws ResourceNotFoundException,
+    private PostMention addMention(User currentUser, int mentionedUserId, Post post) throws ResourceNotFoundException,
             BlockedException,
             MentionException {
 
@@ -63,9 +64,10 @@ public class MentionService {
         post.getMentions().add(postMention);
         mentionRepository.save(postMention);
         log.debug("User with id of {} mentioned user with id of {} in post with id of {}", currentUser.getId(), mentionedUserId, post.getId());
+        return postMention;
     }
 
-    void addMention(User currentUser, int mentionedUserId, Comment comment) throws ResourceNotFoundException,
+    private CommentMention addMention(User currentUser, int mentionedUserId, Comment comment) throws ResourceNotFoundException,
             BlockedException,
             MentionException {
 
@@ -93,9 +95,10 @@ public class MentionService {
         comment.getMentions().add(commentMention);
         mentionRepository.save(commentMention);
         log.debug("User with id of {} mentioned user with id of {} in comment with id of {}", currentUser.getId(), mentionedUserId, comment.getId());
+        return commentMention;
     }
 
-    void addMention(User currentUser, int mentionedUserId, Reply reply) throws ResourceNotFoundException,
+    private ReplyMention addMention(User currentUser, int mentionedUserId, Reply reply) throws ResourceNotFoundException,
             BlockedException,
             MentionException {
 
@@ -123,36 +126,37 @@ public class MentionService {
         reply.getMentions().add(replyMention);
         mentionRepository.save(replyMention);
         log.debug("User with id of {} mentioned user with id of {} in reply with id of {}", currentUser.getId(), mentionedUserId, reply.getId());
+        return replyMention;
+    }
+
+    List<PostMention> addAllMention(User currentUser, Set<Integer> mentionedUserIds, Post post) {
+        return mentionedUserIds.stream()
+                .map(mentionedUserId -> addMention(currentUser, mentionedUserId, post))
+                .toList();
+    }
+
+    List<CommentMention> addAllMention(User currentUser, Set<Integer> mentionedUserIds, Comment comment) {
+        return mentionedUserIds.stream()
+                .map(mentionedUserId -> addMention(currentUser, mentionedUserId, comment))
+                .toList();
+    }
+
+    List<ReplyMention> addAllMention(User currentUser, Set<Integer> mentionedUserIds, Reply reply) {
+        return mentionedUserIds.stream()
+                .map(mentionedUserId -> addMention(currentUser, mentionedUserId, reply))
+                .toList();
     }
 
     Set<PostMention> getUnreadPostMentions(User currentUser) {
         return mentionNotificationService.getUnreadPostMentions(currentUser);
     }
 
-    Set<PostMention> getUnreadMentions(User currentUser, Post post) {
-        return mentionNotificationService.getUnreadPostMentions(currentUser).stream()
-                .filter(postMention -> postMention.getPost().equals(post))
-                .collect(Collectors.toSet());
-    }
-
     Set<CommentMention> getUnreadCommentMentions(User currentUser) {
         return mentionNotificationService.getUnreadCommentMentions(currentUser);
     }
 
-    Set<CommentMention> getUnreadMentions(User currentUser, Comment comment) {
-        return mentionNotificationService.getUnreadCommentMentions(currentUser).stream()
-                .filter(commentMention -> commentMention.getComment().equals(comment))
-                .collect(Collectors.toSet());
-    }
-
     Set<ReplyMention> getUnreadReplyMentions(User currentUser) {
         return mentionNotificationService.getUnreadReplyMentions(currentUser);
-    }
-
-    Set<ReplyMention> getUnreadMentions(User currentUser, Reply reply) {
-        return mentionNotificationService.getUnreadReplyMentions(currentUser).stream()
-                .filter(replyMention -> replyMention.getReply().equals(reply))
-                .collect(Collectors.toSet());
     }
 
     void readMentions(User currentUser) {

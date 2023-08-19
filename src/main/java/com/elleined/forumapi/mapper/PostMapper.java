@@ -1,10 +1,10 @@
 package com.elleined.forumapi.mapper;
 
 
-import com.elleined.forumapi.service.Formatter;
-import com.elleined.forumapi.service.PostService;
 import com.elleined.forumapi.dto.PostDTO;
 import com.elleined.forumapi.model.Post;
+import com.elleined.forumapi.service.Formatter;
+import com.elleined.forumapi.service.PostService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

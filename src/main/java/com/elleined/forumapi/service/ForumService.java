@@ -13,6 +13,12 @@ import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.like.CommentLike;
+import com.elleined.forumapi.model.like.PostLike;
+import com.elleined.forumapi.model.like.ReplyLike;
+import com.elleined.forumapi.model.mention.CommentMention;
+import com.elleined.forumapi.model.mention.PostMention;
+import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +43,8 @@ public class ForumService {
     private final LikeService likeService;
     private final MentionService mentionService;
     private final ModalTrackerService modalTrackerService;
+    private final WSNotificationService wsNotificationService;
+    private final WSService wsService;
 
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
@@ -50,8 +58,10 @@ public class ForumService {
         if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
         Post post = postService.save(currentUser, body, attachedPicture);
-        if (mentionedUserIds != null)
-            mentionedUserIds.forEach(mentionedUserId -> mentionService.addMention(currentUser, mentionedUserId, post));
+        if (mentionedUserIds != null) {
+            List<PostMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, post);
+            wsNotificationService.broadcastPostMentions(mentions);
+        }
         return postMapper.toDTO(post);
     }
 
@@ -71,9 +81,15 @@ public class ForumService {
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture);
-        if (mentionedUserIds != null)
-            mentionedUserIds.forEach(mentionedUserId -> mentionService.addMention(currentUser, mentionedUserId, comment));
-        return commentMapper.toDTO(comment);
+        if (mentionedUserIds != null) {
+            List<CommentMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, comment);
+            wsNotificationService.broadcastCommentMentions(mentions);
+        }
+
+        CommentDTO commentDTO = commentMapper.toDTO(comment);
+        wsNotificationService.broadcastCommentNotification(comment);
+        wsService.broadcastComment(commentDTO);
+        return commentDTO;
     }
 
     public ReplyDTO saveReply(int currentUserId, int commentId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
@@ -92,10 +108,15 @@ public class ForumService {
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
 
         Reply reply = replyService.save(currentUser, comment, body, attachedPicture);
-        if (mentionedUserIds != null)
-            mentionedUserIds.forEach(mentionedUserId -> mentionService.addMention(currentUser, mentionedUserId, reply));
+        if (mentionedUserIds != null) {
+            List<ReplyMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, reply);
+            wsNotificationService.broadcastReplyMentions(mentions);
+        }
 
-        return replyMapper.toDTO(reply);
+        ReplyDTO replyDTO = replyMapper.toDTO(reply);
+        wsNotificationService.broadcastReplyNotification(reply);
+        wsService.broadcastReply(replyDTO);
+        return replyDTO;
     }
 
 
@@ -329,7 +350,8 @@ public class ForumService {
             return postMapper.toDTO(post);
         }
 
-        likeService.like(currentUser, post);
+        PostLike postLike = likeService.like(currentUser, post);
+        wsNotificationService.broadcastLike(postLike);
         return postMapper.toDTO(post);
     }
 
@@ -347,7 +369,8 @@ public class ForumService {
             return commentMapper.toDTO(comment);
         }
 
-        likeService.like(currentUser, comment);
+        CommentLike commentLike = likeService.like(currentUser, comment);
+        wsNotificationService.broadcastLike(commentLike);
         return commentMapper.toDTO(comment);
     }
 
@@ -365,7 +388,8 @@ public class ForumService {
             return replyMapper.toDTO(reply);
         }
 
-        likeService.like(currentUser, reply);
+        ReplyLike replyLike = likeService.like(currentUser, reply);
+        wsNotificationService.broadcastLike(replyLike);
         return replyMapper.toDTO(reply);
     }
 
