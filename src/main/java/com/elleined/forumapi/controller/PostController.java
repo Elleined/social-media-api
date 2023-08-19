@@ -16,6 +16,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/{currentUserId}/posts")
+@CrossOrigin(origins = "*") // Allow other ports to access these endpoints
 public class PostController {
     private final ForumService forumService;
     @GetMapping

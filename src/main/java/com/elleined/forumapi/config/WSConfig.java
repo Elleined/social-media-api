@@ -16,14 +16,15 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/forum-api-websocket")
-                .setHandshakeHandler(userHandshakeHandler)
+        registry.addEndpoint("/ws")
+                // .setHandshakeHandler(userHandshakeHandler)
+                .setAllowedOriginPatterns("*") // Used to allow other ports to connect in this websocket
                 .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/forum", "/notification");
-        registry.setApplicationDestinationPrefixes("/app");
+            registry.enableSimpleBroker("/forum", "/notification");
+            registry.setApplicationDestinationPrefixes("/app");
     }
 }

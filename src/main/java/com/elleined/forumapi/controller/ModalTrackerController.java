@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/{currentUserId}/modalTracker")
+@CrossOrigin(origins = "*") // Allow other ports to access these endpoints
 public class ModalTrackerController {
 
     private final ModalTrackerService modalTrackerService;
