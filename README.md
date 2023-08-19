@@ -1,4 +1,4 @@
-# post-comment-reply-api
+# forum-api
 An API that supports social media functionality.
 
 # Features
