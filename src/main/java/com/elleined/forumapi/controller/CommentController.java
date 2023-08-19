@@ -15,6 +15,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/{currentUserId}/posts/{postId}/comments")
+@CrossOrigin(origins = "*") // Allow other ports to access these endpoints
 public class CommentController {
 
     private final ForumService forumService;

@@ -12,6 +12,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/blocking/{currentUserId}")
+@CrossOrigin(origins = "*") // Allow other ports to access these endpoints
 public class BlockController {
     private final ForumService forumService;
 
