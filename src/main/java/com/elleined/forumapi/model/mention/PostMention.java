@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_mention_post")
+@Table(name = "tbl_post_mention")
 @NoArgsConstructor
 public final class PostMention extends Mention {
 

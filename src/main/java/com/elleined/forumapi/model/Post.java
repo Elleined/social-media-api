@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "tbl_forum_post")
+@Table(name = "tbl_post")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

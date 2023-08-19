@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_liked_comment")
+@Table(name = "tbl_comment_like")
 @NoArgsConstructor
 public final class CommentLike extends Like {
 

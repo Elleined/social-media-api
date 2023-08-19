@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_liked_reply")
+@Table(name = "tbl_reply_like")
 @NoArgsConstructor
 public final class ReplyLike extends Like {
 

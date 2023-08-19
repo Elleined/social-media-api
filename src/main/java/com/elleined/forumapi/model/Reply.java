@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name = "tbl_forum_reply")
+@Table(name = "tbl_reply")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

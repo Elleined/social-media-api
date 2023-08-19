@@ -3,7 +3,9 @@ package com.elleined.forumapi.service;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.repository.UserRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,9 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final BlockService blockService;
+
+    @Getter @Setter
+    private User user;
 
     void save(User user) {
         userRepository.save(user);

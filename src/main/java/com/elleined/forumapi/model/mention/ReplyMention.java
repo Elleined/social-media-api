@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_mention_reply")
+@Table(name = "tbl_reply_mention")
 @NoArgsConstructor
 public final class ReplyMention extends Mention {
 
