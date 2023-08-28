@@ -1,6 +1,60 @@
 # forum-api
 An API that supports social media functionality.
 
+# Configuration(Optional)
+ - For my front end project im using Jquery and Ajax
+ - To receive notification make sure to connect and subscribe to websocket URI
+ - First connect in websocket endpoint
+   ```
+   const socket = new SockJS("http://localhost:8081/forum/api/ws");
+   const stompClient = Stomp.over(socket);
+   stompClient.connect({}, onConnected,
+   () => console.log("Could not connect to WebSocket server. Please refresh this page to try again!"));
+   ```
+## For real-time communications of forum subscribe to this topics
+  - for comments
+  ```
+  const commentsTopic = `/discussion/posts/${postId}/comments`;
+  let commentSubscription = stompClient.subscribe(commentsTopic, function (commentDto) {
+      const json = JSON.parse(commentDto.body);
+      // Execute code here
+  });
+  ```
+  - for replies
+  ```
+  const repliesTopic = `/discussion/posts/comments/${commentId}/replies`;
+  let replySubscription = stompClient.subscribe(repliesTopic, function (replyDto) {
+      const json = JSON.parse(replyDto.body);
+      // Execute code here
+  });
+  ```
+## For real time notification subcribe to this topics 
+   - for comment notification
+     ```
+       const commentNotificationTopic = "/user/notification/comments";
+     ```
+   - for reply notification
+     ```
+        const replyNotificationTopic = "/user/notification/replies";
+     ```
+   - for like notification
+     ```
+        const likeNotificationTopic = "/user/notification/likes";
+     ```
+   - for mention notification
+     ```
+        const mentionNotificationTopic = "/user/notification/mentions";
+     ```
+   - sample code
+     ```
+     stompClient.subscribe(commentNotificationTopic, function (payloadToBeAutomaticallyReceive) {
+        const json = JSON.parse(payloadToBeAutomaticallyReceive.body); 
+        // Execute code here
+        // dto/notification folder contains the notification payloads
+        // Feel free to replication block of code to subscribe in all the notifications topic
+     });
+     ```
+     
 # Features
 - Create, Edit, and Delete a Post
 - Create, Edit, and Delete a Comment in a post real time
@@ -18,6 +72,7 @@ An API that supports social media functionality.
 # Technologies used
 - Spring boot
 - Spring mvc
+- Spring websocket
 - Spring data jpa
  - Softwares used
    - MySQL
