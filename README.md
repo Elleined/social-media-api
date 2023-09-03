@@ -6,7 +6,7 @@ An API that supports social media functionality.
  - To receive notification make sure to connect and subscribe to websocket URI
  - First connect in websocket endpoint
    ```
-   const socket = new SockJS("http://localhost:8081/forum/api/ws");
+   const socket = new SockJS("http://localhost:8081/api/v1/forum/ws");
    const stompClient = Stomp.over(socket);
    stompClient.connect({}, onConnected,
    () => console.log("Could not connect to WebSocket server. Please refresh this page to try again!"));
