@@ -175,7 +175,6 @@ public class ForumService {
 
     public List<PostDTO> getAllPost(int currentUserId) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
-        userService.setUser(currentUser); // Setting user to use for user handshake handler to receive private notification
         
         likeService.readLikes(currentUser);
         mentionService.readMentions(currentUser);

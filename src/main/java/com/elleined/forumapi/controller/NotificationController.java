@@ -12,7 +12,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("/{currentUserId}/notifications")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // Allow other ports to access these endpoints
 public class NotificationController {
 
     private final UserService userService;

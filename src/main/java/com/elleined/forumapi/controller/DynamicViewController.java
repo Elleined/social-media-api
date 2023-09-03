@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/{currentUserId}/views")
-@CrossOrigin(origins = "*") // Allow other ports to access these endpoints
 public class DynamicViewController {
 
     private final UserService userService;

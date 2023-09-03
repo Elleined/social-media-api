@@ -3,6 +3,7 @@ package com.elleined.forumapi.controller;
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.PostDTO;
 import com.elleined.forumapi.service.ForumService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,13 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/{currentUserId}/posts")
-@CrossOrigin(origins = "*") // Allow other ports to access these endpoints
 public class PostController {
+
     private final ForumService forumService;
     @GetMapping
-    public List<PostDTO> getAllPost(@PathVariable("currentUserId") int currentUserId) {
+    public List<PostDTO> getAllPost(@PathVariable("currentUserId") int currentUserId,
+                                    HttpSession session) {
+        session.setAttribute("currentUserId", currentUserId);
         return forumService.getAllPost(currentUserId);
     }
 
