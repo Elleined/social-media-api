@@ -143,7 +143,7 @@ public class ForumService {
         if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
 
         commentService.delete(comment);
-        commentService.unpin(comment);
+        if (post.getPinnedComment() != null && post.getPinnedComment().equals(comment)) commentService.unpin(comment);
 
         return commentMapper.toDTO(comment);
     }
@@ -255,12 +255,15 @@ public class ForumService {
         return postMapper.toDTO(post);
     }
 
-    public CommentDTO updateCommentBody(int currentUserId, int commentId, String newBody)
+    public CommentDTO updateCommentBody(int currentUserId, int postId, int commentId, String newBody)
             throws ResourceNotFoundException,
             NotOwnedException {
 
         User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
+
+        if (!postService.isHasComment(post, comment)) throw new ResourceNotFoundException("Comment with id of " + commentId + " are not associated with post with id of " + postId);
         if (comment.getBody().equals(newBody)) return commentMapper.toDTO(comment);
         if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
 
@@ -354,11 +357,14 @@ public class ForumService {
         return postMapper.toDTO(post);
     }
 
-    public CommentDTO likeComment(int respondentId, int commentId)
+    public CommentDTO likeComment(int respondentId, int postId, int commentId)
             throws ResourceNotFoundException, BlockedException {
 
         User currentUser = userService.getById(respondentId);
+        Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
+
+        if (!postService.isHasComment(post, comment)) throw new ResourceNotFoundException("Post with id of " + postId + " doesn't have comment with id of " + commentId);
         if (commentService.isDeleted(comment)) throw new ResourceNotFoundException("Cannot like/unlike! The comment with id of " + comment.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
         if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! You blocked the author of this comment with id of !" + comment.getCommenter().getId());
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! The author of this comment with id of " + comment.getCommenter().getId() + " already blocked you");
