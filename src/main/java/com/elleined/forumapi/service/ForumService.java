@@ -145,7 +145,9 @@ public class ForumService {
         commentService.delete(comment);
         if (post.getPinnedComment() != null && post.getPinnedComment().equals(comment)) commentService.unpin(comment);
 
-        return commentMapper.toDTO(comment);
+        CommentDTO commentDTO = commentMapper.toDTO(comment);
+        wsService.broadcastComment(commentDTO);
+        return commentDTO;
     }
 
     public ReplyDTO deleteReply(int currentUserId, int commentId, int replyId)
@@ -162,7 +164,9 @@ public class ForumService {
         replyService.delete(reply);
         if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) replyService.unpin(reply);
 
-        return replyMapper.toDTO(reply);
+        ReplyDTO replyDTO = replyMapper.toDTO(reply);
+        wsService.broadcastReply(replyDTO);
+        return replyDTO;
     }
 
     public List<PostDTO> getAllByAuthorId(int authorId) throws ResourceNotFoundException {
@@ -268,7 +272,9 @@ public class ForumService {
         if (commentService.isUserNotOwnedComment(currentUser, comment)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have comment with id of " + commentId);
 
         commentService.updateBody(comment, newBody);
-        return commentMapper.toDTO(comment);
+        CommentDTO commentDTO = commentMapper.toDTO(comment);
+        wsService.broadcastComment(commentDTO);
+        return commentDTO;
     }
 
     public ReplyDTO updateReplyBody(int currentUserId, int replyId, String newReplyBody)
@@ -282,7 +288,9 @@ public class ForumService {
         if (replyService.isUserNotOwnedReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
 
         replyService.updateReplyBody(reply, newReplyBody);
-        return replyMapper.toDTO(reply);
+        ReplyDTO replyDTO = replyMapper.toDTO(reply);
+        wsService.broadcastReply(replyDTO);
+        return replyDTO;
     }
 
     public List<UserDTO> getAllUser(int currentUserId) throws ResourceNotFoundException {

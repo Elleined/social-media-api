@@ -2,6 +2,7 @@ package com.elleined.forumapi.service;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.ReplyDTO;
+import com.elleined.forumapi.model.Comment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
