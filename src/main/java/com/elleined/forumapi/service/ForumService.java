@@ -160,7 +160,7 @@ public class ForumService {
         if (replyService.isUserNotOwnedReply(currentUser, reply)) throw new NotOwnedException("User with id of " + currentUserId + " doesn't have reply with id of " + replyId);
 
         replyService.delete(reply);
-        replyService.unpin(reply);
+        if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) replyService.unpin(reply);
 
         return replyMapper.toDTO(reply);
     }
