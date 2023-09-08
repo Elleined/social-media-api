@@ -1,6 +1,8 @@
 package com.elleined.forumapi.controller;
 
 import com.elleined.forumapi.dto.UserDTO;
+import com.elleined.forumapi.mapper.UserMapper;
+import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.ForumService;
 import com.elleined.forumapi.service.UserService;
 import jakarta.validation.Valid;
@@ -16,14 +18,17 @@ public class UserController {
     private final ForumService forumService;
 
     private final UserService userService;
+    private final UserMapper userMapper;
+
     @PostMapping
     public UserDTO save(@Valid @RequestBody UserDTO userDTO) {
         return forumService.saveUser(userDTO);
     }
 
-    @GetMapping("/{currentUserId}/getAllUser")
-    public List<UserDTO> getAllUser(@PathVariable("currentUserId") int currentUserId) {
-        return forumService.getAllUser(currentUserId);
+    @GetMapping("/{id}")
+    public UserDTO getById(@PathVariable("id") int id) {
+        User user = userService.getById(id);
+        return userMapper.toDTO(user);
     }
 
     @GetMapping("/{currentUserId}/getSuggestedMentions")
@@ -32,18 +37,9 @@ public class UserController {
         return forumService.getSuggestedMentions(currentUserId, name);
     }
 
-    @GetMapping("/getByUUID/{UUID}")
-    public UserDTO UserDTO(@PathVariable("UUID") String UUID) {
-        return forumService.getByUUID(UUID);
-    }
-
-    @GetMapping("/{currentUserId}/getIdByEmail")
-    public int getIdByEmail(@RequestParam("email") String email) {
-        return userService.getIdByEmail(email);
-    }
-
-    @GetMapping("/{currentUserId}/isUserExists")
-    public boolean isUserExists(@RequestParam("email") String email) {
-        return userService.isEmailExists(email);
+    @GetMapping("/uuid/{uuid}")
+    public UserDTO getByUUID(@PathVariable("uuid") String uuid) {
+        User user = userService.getByUUID(uuid);
+        return userMapper.toDTO(user);
     }
 }

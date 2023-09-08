@@ -293,13 +293,6 @@ public class ForumService {
         return replyDTO;
     }
 
-    public List<UserDTO> getAllUser(int currentUserId) throws ResourceNotFoundException {
-        User currentUser = userService.getById(currentUserId);
-        return userService.getAllUser(currentUser)
-                .stream()
-                .map(userMapper::toDTO)
-                .toList();
-    }
 
     public List<UserDTO> getSuggestedMentions(int currentUserId, String name) throws ResourceNotFoundException {
         User currentUser = userService.getById(currentUserId);
@@ -415,12 +408,6 @@ public class ForumService {
                 .build();
 
         userService.save(user);
-        return userMapper.toDTO(user);
-    }
-
-    public UserDTO getByUUID(String UUID) {
-        if (StringValidator.isNotValidBody(UUID)) throw new IllegalArgumentException("UUID cannot be empty, null, or blank");
-        User user = userService.getByUUID(UUID);
         return userMapper.toDTO(user);
     }
 
