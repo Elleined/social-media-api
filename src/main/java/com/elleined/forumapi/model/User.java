@@ -32,7 +32,7 @@ public class User {
     @Column(name = "email_address", unique = true)
     private String email;
 
-    @Column(name = "picture")
+    @Column(name = "picture", columnDefinition = "MEDIUMTEXT")
     private String picture;
 
     @Column(name = "uuid")
