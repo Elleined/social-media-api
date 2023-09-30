@@ -12,12 +12,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
 public class WSConfig implements WebSocketMessageBrokerConfigurer {
-
-    private final UserHandshakeHandler userHandshakeHandler;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setHandshakeHandler(userHandshakeHandler)
                 .setAllowedOriginPatterns("*") // Used to allow other ports to connect in this websocket
                 .withSockJS();
     }

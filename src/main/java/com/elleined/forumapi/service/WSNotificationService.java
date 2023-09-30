@@ -28,54 +28,50 @@ public class WSNotificationService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final NotificationMapper notificationMapper;
 
-    private static final String LIKE_NOTIFICATION_DESTINATION = "/notification/likes";
-    private static final String MENTION_NOTIFICATION_DESTINATION = "/notification/mentions";
+    private static final String LIKE_NOTIFICATION_DESTINATION = "/notification/likes/";
+    private static final String MENTION_NOTIFICATION_DESTINATION = "/notification/mentions/";
 
 
     void broadcastCommentNotification(Comment comment) throws ResourceNotFoundException {
         if (comment.getNotificationStatus() == NotificationStatus.READ) return; // If the post author replied in his own post it will not generate a notification block
-
-        var commentNotificationResponse = notificationMapper.toNotification(comment);
+        CommentNotification commentNotificationResponse = notificationMapper.toNotification(comment);
         int authorId = comment.getPost().getAuthor().getId();
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(authorId), "/notification/comments", commentNotificationResponse);
+        final String destination = "/notification/comments/" + authorId;
+        simpMessagingTemplate.convertAndSend(destination, commentNotificationResponse);
         log.debug("Comment notification successfully sent to author with id of {}", authorId);
     }
 
     void broadcastReplyNotification(Reply reply) throws ResourceNotFoundException {
         if (reply.getNotificationStatus() == NotificationStatus.READ) return;
-
-        var replyNotificationResponse = notificationMapper.toNotification(reply);
+        ReplyNotification replyNotificationResponse = notificationMapper.toNotification(reply);
         int commenterId = reply.getComment().getCommenter().getId();
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(commenterId), "/notification/replies", replyNotificationResponse);
-
+        final String destination = "/notification/replies/" + commenterId;
+        simpMessagingTemplate.convertAndSend(destination, replyNotificationResponse);
         log.debug("Reply notification successfully sent to commenter with id of {}", commenterId);
     }
 
 
     public void broadcastLike(PostLike postLike) {
         if (postLike.getNotificationStatus() == NotificationStatus.READ) return;
-
         PostNotification postNotification = notificationMapper.toLikeNotification(postLike);
-        int receiverId = postLike.getReceiverId();
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(receiverId), LIKE_NOTIFICATION_DESTINATION, postNotification);
+        simpMessagingTemplate.convertAndSend(LIKE_NOTIFICATION_DESTINATION + postLike.getReceiverId(), postNotification);
+        log.debug("Post like notification successfully sent to post author with id of {}", postLike.getReceiverId());
     }
 
 
     public void broadcastLike(CommentLike commentLike) {
         if (commentLike.getNotificationStatus() == NotificationStatus.READ) return;
-
         CommentNotification commentNotification = notificationMapper.toLikeNotification(commentLike);
-        int receiverId = commentLike.getReceiverId();
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(receiverId), LIKE_NOTIFICATION_DESTINATION, commentNotification);
+        simpMessagingTemplate.convertAndSend(LIKE_NOTIFICATION_DESTINATION + commentLike.getReceiverId());
+        log.debug("Comment like notification successfully sent to comment author with id of {}", commentLike.getReceiverId());
     }
 
 
     public void broadcastLike(ReplyLike replyLike) {
         if (replyLike.getNotificationStatus() == NotificationStatus.READ) return;
-
         ReplyNotification replyNotification = notificationMapper.toLikeNotification(replyLike);
-        int receiverId = replyLike.getReceiverId();
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(receiverId), LIKE_NOTIFICATION_DESTINATION, replyNotification);
+        simpMessagingTemplate.convertAndSend(LIKE_NOTIFICATION_DESTINATION + replyNotification.getReceiverId(), replyNotification);
+        log.debug("Reply like notification successfully sent to reply author with id of {}", replyNotification.getReceiverId());
     }
 
     void broadcastPostMentions(List<PostMention> postMentions) {
@@ -84,14 +80,10 @@ public class WSNotificationService {
 
     private void broadcastMention(PostMention postMention) {
         if (postMention.getNotificationStatus() == NotificationStatus.READ) return;
-
         PostNotification postNotification = notificationMapper.toMentionNotification(postMention);
-        int receiverId = postMention.getReceiverId();
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(receiverId), MENTION_NOTIFICATION_DESTINATION, postNotification);
-
-        log.debug("");
+        simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + postNotification.getReceiverId(), postNotification);
+        log.debug("Post mention notification successfully sent to mentioned user with id of {}", postNotification.getReceiverId());
     }
-
 
     void broadcastCommentMentions(List<CommentMention> commentMentions) {
         commentMentions.forEach(this::broadcastMention);
@@ -99,10 +91,9 @@ public class WSNotificationService {
 
     private void broadcastMention(CommentMention commentMention) {
         if (commentMention.getNotificationStatus() == NotificationStatus.READ) return;
-
         CommentNotification commentNotification = notificationMapper.toMentionNotification(commentMention);
-        int receiverId = commentMention.getReceiverId();
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(receiverId), MENTION_NOTIFICATION_DESTINATION, commentNotification);
+        simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + commentNotification.getReceiverId(), commentNotification);
+        log.debug("Comment mention notification successfully sent to mentioned user with id of {}", commentMention.getReceiverId());
     }
 
     void broadcastReplyMentions(List<ReplyMention> replyMentions) {
@@ -111,9 +102,8 @@ public class WSNotificationService {
 
     private void broadcastMention(ReplyMention replyMention) {
         if (replyMention.getNotificationStatus() == NotificationStatus.READ) return;
-
         ReplyNotification replyNotification = notificationMapper.toMentionNotification(replyMention);
-        int receiverId = replyMention.getReceiverId();
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(receiverId), MENTION_NOTIFICATION_DESTINATION, replyNotification);
+        simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + replyNotification.getReceiverId(), replyNotification);
+        log.debug("Reply mention notification successfully sent to mentioned user with id of {}", replyNotification.getReceiverId());
     }
 }

@@ -28,22 +28,22 @@ An API that supports social media functionality.
       // Execute code here
   });
   ```
-## For real time notification subcribe to this topics 
+## For real time notification subscribe to this topics 
    - for comment notification
      ```
-       const commentNotificationTopic = "/user/notification/comments";
+       const commentNotificationTopic = "/notification/comments/${yourId}";
      ```
    - for reply notification
      ```
-        const replyNotificationTopic = "/user/notification/replies";
+        const replyNotificationTopic = "/notification/replies/${yourId}";
      ```
    - for like notification
      ```
-        const likeNotificationTopic = "/user/notification/likes";
+        const likeNotificationTopic = "/notification/likes/${yourId}";
      ```
    - for mention notification
      ```
-        const mentionNotificationTopic = "/user/notification/mentions";
+        const mentionNotificationTopic = "/notification/mentions/${yourId}";
      ```
    - sample code
      ```
