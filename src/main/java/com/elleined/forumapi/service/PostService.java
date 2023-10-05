@@ -39,7 +39,7 @@ public class PostService {
                 .mentions(new HashSet<>())
                 .likes(new HashSet<>())
                 .comments(new ArrayList<>())
-                .attachedPicture(attachedPicture.isEmpty() ? null : attachedPicture.getOriginalFilename())
+                .attachedPicture(attachedPicture == null ? null : attachedPicture.getOriginalFilename())
                 .build();
 
         currentUser.getPosts().add(post);
