@@ -35,7 +35,7 @@ public class CommentService {
                 .dateCreated(LocalDateTime.now())
                 .post(post)
                 .commenter(currentUser)
-                .attachedPicture(attachedPicture.getOriginalFilename())
+                .attachedPicture(attachedPicture.isEmpty() ? null : attachedPicture.getOriginalFilename())
                 .notificationStatus(status)
                 .status(Status.ACTIVE)
                 .replies(new ArrayList<>())

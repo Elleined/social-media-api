@@ -30,7 +30,7 @@ public class ReplyService {
                 .dateCreated(LocalDateTime.now())
                 .replier(currentUser)
                 .comment(comment)
-                .attachedPicture(attachedPicture.getOriginalFilename())
+                .attachedPicture(attachedPicture.isEmpty() ? null : attachedPicture.getOriginalFilename())
                 .status(Status.ACTIVE)
                 .notificationStatus(status)
                 .mentions(new HashSet<>())
