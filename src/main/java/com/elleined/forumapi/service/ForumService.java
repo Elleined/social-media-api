@@ -19,12 +19,18 @@ import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
+import com.elleined.forumapi.service.image.ImageUploader;
+import com.elleined.forumapi.utils.DirectoryFolders;
 import com.elleined.forumapi.validator.StringValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -51,25 +57,33 @@ public class ForumService {
     private final ReplyMapper replyMapper;
     private final UserMapper userMapper;
 
-    public PostDTO savePost(int currentUserId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
-            throws EmptyBodyException, BlockedException, ResourceNotFoundException {
+    private final ImageUploader imageUploader;
+
+    @Value("${cropTrade.img.directory}")
+    private String cropTradeImgDirectory;
+
+    public PostDTO savePost(int currentUserId, String body, MultipartFile attachedPicture, Set<Integer> mentionedUserIds)
+            throws EmptyBodyException, BlockedException, ResourceNotFoundException, IOException {
 
         User currentUser = userService.getById(currentUserId);
         if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
         Post post = postService.save(currentUser, body, attachedPicture);
+        if (!attachedPicture.isEmpty()) imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.POST_PICTURES_FOLDER, attachedPicture);
+
         if (mentionedUserIds != null) {
             List<PostMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, post);
             wsNotificationService.broadcastPostMentions(mentions);
         }
+
         return postMapper.toDTO(post);
     }
 
-    public CommentDTO saveComment(int currentUserId, int postId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
+    public CommentDTO saveComment(int currentUserId, int postId, String body, MultipartFile attachedPicture, Set<Integer> mentionedUserIds)
             throws ResourceNotFoundException,
             ClosedCommentSectionException,
             BlockedException,
-            EmptyBodyException {
+            EmptyBodyException, IOException {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
@@ -81,6 +95,7 @@ public class ForumService {
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture);
+        imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.COMMENT_PICTURE_FOLDER, attachedPicture);
         if (mentionedUserIds != null) {
             List<CommentMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, comment);
             wsNotificationService.broadcastCommentMentions(mentions);
@@ -92,11 +107,11 @@ public class ForumService {
         return commentDTO;
     }
 
-    public ReplyDTO saveReply(int currentUserId, int commentId, String body, String attachedPicture, Set<Integer> mentionedUserIds)
+    public ReplyDTO saveReply(int currentUserId, int commentId, String body, MultipartFile attachedPicture, Set<Integer> mentionedUserIds)
             throws EmptyBodyException,
             ClosedCommentSectionException,
             ResourceNotFoundException,
-            BlockedException {
+            BlockedException, IOException {
 
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
@@ -108,6 +123,8 @@ public class ForumService {
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
 
         Reply reply = replyService.save(currentUser, comment, body, attachedPicture);
+        imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.REPLY_PICTURE_FOLDER, attachedPicture);
+
         if (mentionedUserIds != null) {
             List<ReplyMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, reply);
             wsNotificationService.broadcastReplyMentions(mentions);

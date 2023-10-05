@@ -5,7 +5,9 @@ import com.elleined.forumapi.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -28,8 +30,8 @@ public class ReplyController {
     public ReplyDTO saveReply(@PathVariable("currentUserId") int currentUserId,
                               @PathVariable("commentId") int commentId,
                               @RequestParam("body") String body,
-                              @RequestParam(required = false, name = "attachedPicture") String attachedPicture,
-                              @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) {
+                              @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
+                              @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
         return forumService.saveReply(currentUserId, commentId, body, attachedPicture, mentionedUserIds);
     }

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -24,7 +25,7 @@ public class CommentService {
     private final ModalTrackerService modalTrackerService;
     private final CommentRepository commentRepository;
 
-    Comment save(User currentUser, Post post, String body, String attachedPicture) throws ResourceNotFoundException {
+    Comment save(User currentUser, Post post, String body, MultipartFile attachedPicture) throws ResourceNotFoundException {
         NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.COMMENT)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
@@ -34,7 +35,7 @@ public class CommentService {
                 .dateCreated(LocalDateTime.now())
                 .post(post)
                 .commenter(currentUser)
-                .attachedPicture(attachedPicture)
+                .attachedPicture(attachedPicture.getOriginalFilename())
                 .notificationStatus(status)
                 .status(Status.ACTIVE)
                 .replies(new ArrayList<>())

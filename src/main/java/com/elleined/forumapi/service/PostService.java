@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentService commentService;
 
-    Post save(User currentUser, String body, String attachedPicture) {
+    Post save(User currentUser, String body, MultipartFile attachedPicture) {
         Post post = Post.builder()
                 .body(body)
                 .dateCreated(LocalDateTime.now())
@@ -38,7 +39,7 @@ public class PostService {
                 .mentions(new HashSet<>())
                 .likes(new HashSet<>())
                 .comments(new ArrayList<>())
-                .attachedPicture(attachedPicture)
+                .attachedPicture(attachedPicture.getOriginalFilename())
                 .build();
 
         currentUser.getPosts().add(post);

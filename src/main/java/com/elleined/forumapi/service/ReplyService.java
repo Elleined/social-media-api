@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -22,14 +23,14 @@ public class ReplyService {
     private final ModalTrackerService modalTrackerService;
     private final BlockService blockService;
 
-    Reply save(User currentUser, Comment comment, String body,String attachedPicture) throws ResourceNotFoundException {
+    Reply save(User currentUser, Comment comment, String body, MultipartFile attachedPicture) throws ResourceNotFoundException {
         NotificationStatus status = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getId(), ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
         Reply reply = Reply.builder()
                 .body(body)
                 .dateCreated(LocalDateTime.now())
                 .replier(currentUser)
                 .comment(comment)
-                .attachedPicture(attachedPicture)
+                .attachedPicture(attachedPicture.getOriginalFilename())
                 .status(Status.ACTIVE)
                 .notificationStatus(status)
                 .mentions(new HashSet<>())
