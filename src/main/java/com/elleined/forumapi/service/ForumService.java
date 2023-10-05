@@ -69,7 +69,7 @@ public class ForumService {
         if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
         Post post = postService.save(currentUser, body, attachedPicture);
-        if (!attachedPicture.isEmpty()) imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.POST_PICTURES_FOLDER, attachedPicture);
+        if (attachedPicture != null) imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.POST_PICTURES_FOLDER, attachedPicture);
 
         if (mentionedUserIds != null) {
             List<PostMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, post);
@@ -95,7 +95,7 @@ public class ForumService {
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture);
-        imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.COMMENT_PICTURE_FOLDER, attachedPicture);
+        if (attachedPicture != null) imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.COMMENT_PICTURE_FOLDER, attachedPicture);
         if (mentionedUserIds != null) {
             List<CommentMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, comment);
             wsNotificationService.broadcastCommentMentions(mentions);
@@ -123,7 +123,7 @@ public class ForumService {
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
 
         Reply reply = replyService.save(currentUser, comment, body, attachedPicture);
-        imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.REPLY_PICTURE_FOLDER, attachedPicture);
+        if (attachedPicture != null) imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.REPLY_PICTURE_FOLDER, attachedPicture);
 
         if (mentionedUserIds != null) {
             List<ReplyMention> mentions = mentionService.addAllMention(currentUser, mentionedUserIds, reply);
