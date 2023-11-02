@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +26,10 @@ public class UserService {
 
     public User getById(int userId) throws ResourceNotFoundException {
         return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with id of " + userId +  " does not exists"));
+    }
+
+    public Set<User> getAllById(Set<Integer> userIds) {
+        return new HashSet<>(userRepository.findAllById(userIds));
     }
 
     public User getByUUID(String UUID) throws ResourceNotFoundException {

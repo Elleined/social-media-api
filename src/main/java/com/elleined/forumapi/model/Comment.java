@@ -83,4 +83,14 @@ public class Comment {
     @OneToMany(mappedBy = "comment")
     @Setter(AccessLevel.NONE)
     private Set<CommentLike> likes;
+
+    public boolean isCommentSectionClosed() {
+        return this.getPost().getCommentSectionStatus() == Post.CommentSectionStatus.CLOSED;
+    }
+    public boolean doesNotHave(Reply reply) {
+        return this.getReplies().stream().noneMatch(reply::equals);
+    }
+    public boolean isDeleted() {
+        return this.getStatus() == Status.INACTIVE;
+    }
 }

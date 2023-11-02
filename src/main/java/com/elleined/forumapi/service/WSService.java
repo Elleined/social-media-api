@@ -2,6 +2,10 @@ package com.elleined.forumapi.service;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.ReplyDTO;
+import com.elleined.forumapi.mapper.CommentMapper;
+import com.elleined.forumapi.mapper.ReplyMapper;
+import com.elleined.forumapi.model.Comment;
+import com.elleined.forumapi.model.Reply;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,7 +18,11 @@ import org.springframework.web.util.HtmlUtils;
 public class WSService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    void broadcastComment(CommentDTO commentDTO) {
+    private final CommentMapper commentMapper;
+    private final ReplyMapper replyMapper;
+
+    public void broadcastComment(Comment comment) {
+        CommentDTO commentDTO = commentMapper.toDTO(comment);
         commentDTO.setBody(HtmlUtils.htmlEscape(commentDTO.getBody()));
 
         final String destination = "/discussion/posts/" + commentDTO.getPostId() + "/comments";
@@ -22,7 +30,8 @@ public class WSService {
         log.debug("Comment with id of {} and body of {} broadcast successfully to {}", commentDTO.getId(), commentDTO.getBody(), destination);
     }
 
-    void broadcastReply(ReplyDTO replyDTO) {
+    public void broadcastReply(Reply reply) {
+        ReplyDTO replyDTO = replyMapper.toDTO(reply);
         replyDTO.setBody(HtmlUtils.htmlEscape(replyDTO.getBody()));
 
         final String destination = "/discussion/posts/comments/" + replyDTO.getCommentId() + "/replies";

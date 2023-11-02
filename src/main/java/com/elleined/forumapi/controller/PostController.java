@@ -2,7 +2,12 @@ package com.elleined.forumapi.controller;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.PostDTO;
-import com.elleined.forumapi.service.ForumService;
+import com.elleined.forumapi.mapper.PostMapper;
+import com.elleined.forumapi.model.Post;
+import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.service.*;
+import com.elleined.forumapi.service.notification.reader.post.PostLikeNotificationReader;
+import com.elleined.forumapi.service.notification.reader.post.PostMentionNotificationReader;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +25,28 @@ import java.util.Set;
 @RestController
 @RequestMapping("/{currentUserId}/posts")
 public class PostController {
+    private final UserService userService;
+    private final PostService postService;
 
-    private final ForumService forumService;
+    private final WSNotificationService wsNotificationService;
+
+    private final PostMapper postMapper;
+
+    private final ModalTrackerService modalTrackerService;
+
+    private final PostLikeNotificationReader postLikeNotificationReader;
+    private final PostMentionNotificationReader postMentionNotificationReader;
     @GetMapping
-    public List<PostDTO> getAllPost(@PathVariable("currentUserId") int currentUserId,
-                                    HttpSession session) {
-        session.setAttribute("currentUserId", currentUserId);
-        return forumService.getAllPost(currentUserId);
+    public List<PostDTO> getAllPost(@PathVariable("currentUserId") int currentUserId) {
+        User currentUser = userService.getById(currentUserId);
+
+        postLikeNotificationReader.readAll(currentUser);
+        postLikeNotificationReader.readAll(currentUser);
+
+        modalTrackerService.saveTrackerOfUserById(currentUserId, 0, "POST");
+        return postService.getAll(currentUser).stream()
+                .map(postMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/author")
@@ -45,14 +65,21 @@ public class PostController {
                             @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
                             @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
-        return forumService.savePost(currentUserId, body, attachedPicture, mentionedUserIds);
+        User currentUser = userService.getById(currentUserId);
+        Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
+        Post post = postService.save(currentUser, body, attachedPicture, mentionedUsers);
+        if (mentionedUsers != null) wsNotificationService.broadcastPostMentions(post.getMentions());
+
+        return postMapper.toDTO(post);
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<PostDTO> deletePost(@PathVariable("currentUserId") int currentUserId,
                                               @PathVariable("postId") int postId) {
 
-        forumService.deletePost(currentUserId, postId);
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        postService.delete(currentUser, post);
         return ResponseEntity.noContent().build();
     }
 

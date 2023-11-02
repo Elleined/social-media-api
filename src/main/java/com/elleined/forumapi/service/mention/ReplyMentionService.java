@@ -35,7 +35,7 @@ public class ReplyMentionService implements MentionService<ReplyMention, Reply> 
     private final ModalTrackerService modalTrackerService;
     @Override
     public ReplyMention mention(User mentioningUser, User mentionedUser, Reply reply) {
-        if (replyService.isDeleted(reply)) throw new ResourceNotFoundException("Cannot mention! The reply with id of " + reply.getId() + " you are trying to mention might already be deleted or does not exists!");
+        if (reply.isDeleted()) throw new ResourceNotFoundException("Cannot mention! The reply with id of " + reply.getId() + " you are trying to mention might already be deleted or does not exists!");
         if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
         if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! Mentioned userwith id of " + mentionedUser.getId() + " already blocked you");
         if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");

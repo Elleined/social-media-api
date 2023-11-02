@@ -3,6 +3,7 @@ package com.elleined.forumapi.controller;
 import com.elleined.forumapi.dto.notification.Notification;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.UserService;
+import com.elleined.forumapi.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +18,13 @@ import java.util.Set;
 public class NotificationController {
 
     private final UserService userService;
-    private final NotificationService notificationService;
+    private final NotificationService<Notification> notificationService;
 
 
     @GetMapping("/getAllNotification")
     public Set<Notification> getAllNotification(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return notificationService.getAllNotification(currentUser);
+        return notificationService.getAllUnreadNotification(currentUser);
     }
 
     @GetMapping("/getTotalNotificationCount")

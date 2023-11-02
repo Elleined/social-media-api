@@ -71,4 +71,15 @@ public class Post {
     private Set<PostLike> likes;
 
     public enum CommentSectionStatus {OPEN, CLOSED}
+    public boolean isDeleted() {
+        return this.getStatus() == Status.INACTIVE;
+    }
+
+    public boolean isCommentSectionClosed() {
+        return this.getCommentSectionStatus() == CommentSectionStatus.CLOSED;
+    }
+
+    public boolean doesNotHave(Comment comment) {
+        return this.getComments().stream().noneMatch(comment::equals);
+    }
 }

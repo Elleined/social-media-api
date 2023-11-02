@@ -1,7 +1,11 @@
 package com.elleined.forumapi.controller;
 
 import com.elleined.forumapi.dto.ReplyDTO;
-import com.elleined.forumapi.service.ForumService;
+import com.elleined.forumapi.mapper.ReplyMapper;
+import com.elleined.forumapi.model.Comment;
+import com.elleined.forumapi.model.Reply;
+import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +21,25 @@ import java.util.Set;
 @RequestMapping("/{currentUserId}/posts/comments/{commentId}/replies")
 public class ReplyController {
 
-    private final ForumService forumService;
+    private final UserService userService;
+    private final CommentService commentService;
+
+    private final ReplyService replyService;
+    private final ReplyMapper replyMapper;
+
+    private final WSNotificationService wsNotificationService;
+    private final WSService wsService;
+
 
     @GetMapping
     public List<ReplyDTO> getAllByComment(@PathVariable("currentUserId") int currentUserId,
                                           @PathVariable("commentId") int commentId) {
+        User currentUser = userService.getById(currentUserId);
+        Comment comment = commentService.getById(commentId);
 
-        return forumService.getAllByComment(currentUserId, commentId);
+        return replyService.getAllByComment(currentUser, comment).stream()
+                .map(replyMapper::toDTO)
+                .toList();
     }
 
     @PostMapping
@@ -33,7 +49,16 @@ public class ReplyController {
                               @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
                               @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
-        return forumService.saveReply(currentUserId, commentId, body, attachedPicture, mentionedUserIds);
+        User currentUser = userService.getById(currentUserId);
+        Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
+        Comment comment = commentService.getById(commentId);
+        Reply reply = replyService.save(currentUser, comment, body, attachedPicture, mentionedUsers);
+
+        if (mentionedUsers != null) wsNotificationService.broadcastReplyMentions(reply.getMentions());
+        wsNotificationService.broadcastReplyNotification(reply);
+        wsService.broadcastReply(reply);
+
+        return replyMapper.toDTO(reply);
     }
 
     @DeleteMapping("/{replyId}")
@@ -41,7 +66,13 @@ public class ReplyController {
                            @PathVariable("commentId") int commentId,
                            @PathVariable("replyId") int replyId) {
 
-        return forumService.deleteReply(currentUserId, commentId, replyId);
+        User currentUser = userService.getById(currentUserId);
+        Comment comment = commentService.getById(commentId);
+        Reply reply = replyService.getById(replyId);
+
+        replyService.delete(currentUser, comment, reply);
+        wsService.broadcastReply(reply);
+        return replyMapper.toDTO(reply);
     }
 
     @PatchMapping("/body/{replyId}")

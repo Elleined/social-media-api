@@ -124,4 +124,19 @@ public class User {
     @OneToMany(mappedBy = "mentionedUser")
     @Setter(AccessLevel.NONE)
     private Set<ReplyMention> receiveReplyMentions;
+
+    public boolean notOwned(Post post) {
+        return this.getPosts().stream().noneMatch(post::equals);
+    }
+    public boolean notOwned(Comment comment) {
+        return this.getComments().stream().noneMatch(comment::equals);
+    }
+    public boolean notOwned(Reply reply) {
+        return this.getReplies().stream().noneMatch(reply::equals);
+    }
+
+    public boolean isAlreadyUpvoted(Comment comment) {
+        return this.getUpvotedComments().stream().anyMatch(comment::equals);
+    }
+
 }

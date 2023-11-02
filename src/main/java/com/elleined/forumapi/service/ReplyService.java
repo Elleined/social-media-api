@@ -1,19 +1,24 @@
 package com.elleined.forumapi.service;
 
-import com.elleined.forumapi.exception.ResourceNotFoundException;
+import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.model.*;
+import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.repository.ReplyRepository;
+import com.elleined.forumapi.service.image.ImageUploader;
+import com.elleined.forumapi.service.mention.MentionService;
+import com.elleined.forumapi.service.pin.PinService;
+import com.elleined.forumapi.utils.DirectoryFolders;
+import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,9 +28,28 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
 
     private final ModalTrackerService modalTrackerService;
+
     private final BlockService blockService;
 
-    Reply save(User currentUser, Comment comment, String body, MultipartFile attachedPicture) throws ResourceNotFoundException {
+    private final ImageUploader imageUploader;
+
+    private final MentionService<ReplyMention, Reply> replyMentionService;
+
+    private final PinService<Comment, Reply> commentReplyPinService;
+    @Value("${cropTrade.img.directory}")
+    private String cropTradeImgDirectory;
+
+    public Reply save(User currentUser, Comment comment, String body, MultipartFile attachedPicture, Set<User> mentionedUsers) throws EmptyBodyException,
+            ClosedCommentSectionException,
+            ResourceNotFoundException,
+            BlockedException, IOException {
+
+        if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Reply body cannot be empty!");
+        if (comment.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
+        if (comment.isDeleted()) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
+        if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
+
         NotificationStatus status = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getId(), ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
         Reply reply = Reply.builder()
                 .body(body)
@@ -42,55 +66,32 @@ public class ReplyService {
         currentUser.getReplies().add(reply);
         comment.getReplies().add(reply);
         replyRepository.save(reply);
+
+        if (attachedPicture != null) imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.REPLY_PICTURE_FOLDER, attachedPicture);
+
+        if (mentionedUsers != null) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);
         log.debug("Reply with id of {} saved successfully!", reply.getId());
         return reply;
     }
 
-    public void delete(Reply reply) {
+    public void delete(User currentUser, Comment comment, Reply reply) throws NotOwnedException {
+        if (comment.doesNotHave(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() +  " does not have reply with id of " + reply.getId());
+        if (currentUser.notOwned(reply)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
+
         reply.setStatus(Status.INACTIVE);
         replyRepository.save(reply);
+        if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) commentReplyPinService.unpin(reply);
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 
-    void unpin(Reply reply) {
-        reply.getComment().setPinnedReply(null);
-        replyRepository.save(reply);
-        log.debug("Comment pinned reply unpinned successfully");
-    }
-
-    boolean isUserNotOwnedReply(User currentUser, Reply reply) {
-        return currentUser.getReplies().stream().noneMatch(reply::equals);
-    }
-
-    void updateReplyBody(Reply reply, String newReplyBody) {
+    Reply updateBody(Reply reply, String newReplyBody) {
         reply.setBody(newReplyBody);
         replyRepository.save(reply);
         log.debug("Reply with id of {} updated with the new body of {}", reply.getId(), newReplyBody);
+        return reply;
     }
 
-    private void readReply(Reply reply) {
-        reply.setNotificationStatus(NotificationStatus.READ);
-    }
-
-    public void readAllReplies(User currentUser, Comment comment) {
-        if (!currentUser.equals(comment.getCommenter())) {
-            log.trace("Will not mark as unread because the current user with id of {} are not the commenter of the comment {}", currentUser.getId(), comment.getCommenter().getId());
-            return;
-        }
-        log.trace("Will mark all as read because the current user with id of {} is the commenter of the comment {}", currentUser.getId(), comment.getCommenter().getId());
-        List<Reply> replies = comment.getReplies()
-                .stream()
-                .filter(reply -> reply.getStatus() == Status.ACTIVE)
-                .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
-                .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
-                .toList();
-
-        replies.forEach(this::readReply);
-        replyRepository.saveAll(replies);
-        log.debug("Replies in comment with id of {} read successfully!", comment.getId());
-    }
-
-    List<Reply> getAllByComment(User currentUser, Comment comment) {
+    public List<Reply> getAllByComment(User currentUser, Comment comment) {
         Reply pinnedReply = comment.getPinnedReply();
         List<Reply> replies = new ArrayList<>(comment.getReplies()
                 .stream()
@@ -106,13 +107,5 @@ public class ReplyService {
 
     public Reply getById(int replyId) throws ResourceNotFoundException {
         return replyRepository.findById(replyId).orElseThrow(() -> new ResourceNotFoundException("Reply with id of " + replyId + " does not exists!"));
-    }
-
-    /**
-     * @param commenter alias for currentUser
-     */
-
-    public boolean isDeleted(Reply reply) {
-        return reply.getStatus() == Status.INACTIVE;
     }
 }

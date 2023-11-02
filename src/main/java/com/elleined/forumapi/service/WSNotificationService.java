@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class WSNotificationService {
     private static final String MENTION_NOTIFICATION_DESTINATION = "/notification/mentions/";
 
 
-    void broadcastCommentNotification(Comment comment) throws ResourceNotFoundException {
+    public void broadcastCommentNotification(Comment comment) throws ResourceNotFoundException {
         if (comment.getNotificationStatus() == NotificationStatus.READ) return; // If the post author replied in his own post it will not generate a notification block
         CommentNotification commentNotificationResponse = notificationMapper.toNotification(comment);
         int authorId = comment.getPost().getAuthor().getId();
@@ -41,7 +41,7 @@ public class WSNotificationService {
         log.debug("Comment notification successfully sent to author with id of {}", authorId);
     }
 
-    void broadcastReplyNotification(Reply reply) throws ResourceNotFoundException {
+    public void broadcastReplyNotification(Reply reply) throws ResourceNotFoundException {
         if (reply.getNotificationStatus() == NotificationStatus.READ) return;
         ReplyNotification replyNotificationResponse = notificationMapper.toNotification(reply);
         int commenterId = reply.getComment().getCommenter().getId();
@@ -74,7 +74,7 @@ public class WSNotificationService {
         log.debug("Reply like notification successfully sent to reply author with id of {}", replyNotification.getReceiverId());
     }
 
-    void broadcastPostMentions(List<PostMention> postMentions) {
+    public void broadcastPostMentions(Set<PostMention> postMentions) {
         postMentions.forEach(this::broadcastMention);
     }
 
@@ -85,7 +85,7 @@ public class WSNotificationService {
         log.debug("Post mention notification successfully sent to mentioned user with id of {}", postNotification.getReceiverId());
     }
 
-    void broadcastCommentMentions(List<CommentMention> commentMentions) {
+   public void broadcastCommentMentions(Set<CommentMention> commentMentions) {
         commentMentions.forEach(this::broadcastMention);
     }
 
@@ -96,7 +96,7 @@ public class WSNotificationService {
         log.debug("Comment mention notification successfully sent to mentioned user with id of {}", commentMention.getReceiverId());
     }
 
-    void broadcastReplyMentions(List<ReplyMention> replyMentions) {
+    public void broadcastReplyMentions(Set<ReplyMention> replyMentions) {
         replyMentions.forEach(this::broadcastMention);
     }
 

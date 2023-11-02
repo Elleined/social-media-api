@@ -62,4 +62,7 @@ public class Reply {
     @OneToMany(mappedBy = "reply")
     @Setter(AccessLevel.NONE)
     private Set<ReplyLike> likes;
+    public boolean isDeleted() {
+        return this.getStatus() == Status.INACTIVE;
+    }
 }

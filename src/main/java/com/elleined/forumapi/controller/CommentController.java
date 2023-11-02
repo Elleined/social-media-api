@@ -2,7 +2,14 @@ package com.elleined.forumapi.controller;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.ReplyDTO;
-import com.elleined.forumapi.service.ForumService;
+import com.elleined.forumapi.mapper.CommentMapper;
+import com.elleined.forumapi.model.Comment;
+import com.elleined.forumapi.model.Post;
+import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.service.*;
+import com.elleined.forumapi.service.notification.reader.comment.CommentLikeNotificationReader;
+import com.elleined.forumapi.service.notification.reader.comment.CommentMentionNotificationReader;
+import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +25,37 @@ import java.util.Set;
 @RestController
 @RequestMapping("/{currentUserId}/posts/{postId}/comments")
 public class CommentController {
+    private final UserService userService;
 
-    private final ForumService forumService;
+    private final PostService postService;
+
+    private final CommentService commentService;
+    private final CommentMapper commentMapper;
+
+    private final WSNotificationService wsNotificationService;
+    private final WSService wsService;
+
+    private final CommentLikeNotificationReader commentLikeNotificationReader;
+    private final CommentMentionNotificationReader commentMentionNotificationReader;
+    private final CommentNotificationReader commentNotificationReader;
+
+    private final ModalTrackerService modalTrackerService;
 
     @GetMapping
     public List<CommentDTO> getAllByPost(@PathVariable("currentUserId") int currentUserId,
                                          @PathVariable("postId") int postId) {
-        return forumService.getAllByPost(currentUserId, postId);
+
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+
+        commentNotificationReader.readAll(currentUser, post);
+        commentLikeNotificationReader.readAll(currentUser, post);
+        commentMentionNotificationReader.readAll(currentUser, post);
+
+        modalTrackerService.saveTrackerOfUserById(currentUserId, postId, "COMMENT");
+        return commentService.getAllByPost(currentUser, post).stream()
+                .map(commentMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/getPinnedReply/{commentId}")
@@ -39,7 +70,16 @@ public class CommentController {
                                   @RequestPart(required = false, value = "attachedPicture") MultipartFile attachedPicture,
                                   @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
-        return forumService.saveComment(currentUserId, postId, body, attachedPicture, mentionedUserIds);
+        User currentUser = userService.getById(currentUserId);
+        Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
+        Post post = postService.getById(postId);
+
+        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers);
+        if (mentionedUsers != null) wsNotificationService.broadcastCommentMentions(comment.getMentions());
+        wsNotificationService.broadcastCommentNotification(comment);
+        wsService.broadcastComment(comment);
+
+        return commentMapper.toDTO(comment);
     }
 
     @DeleteMapping("/{commentId}")
@@ -47,7 +87,13 @@ public class CommentController {
                              @PathVariable("postId") int postId,
                              @PathVariable("commentId") int commentId) {
 
-        return forumService.deleteComment(currentUserId, postId, commentId);
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        Comment comment = commentService.getById(commentId);
+
+        commentService.delete(currentUser, post, comment);
+        wsService.broadcastComment(comment);
+        return commentMapper.toDTO(comment);
     }
 
     @PatchMapping("/upvote/{commentId}")

@@ -1,20 +1,28 @@
 package com.elleined.forumapi.service;
 
-import com.elleined.forumapi.exception.ResourceNotFoundException;
+import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.model.*;
+import com.elleined.forumapi.model.mention.CommentMention;
+import com.elleined.forumapi.model.mention.Mention;
 import com.elleined.forumapi.repository.CommentRepository;
+import com.elleined.forumapi.repository.PostRepository;
+import com.elleined.forumapi.repository.ReplyRepository;
+import com.elleined.forumapi.service.image.ImageUploader;
+import com.elleined.forumapi.service.mention.MentionService;
+import com.elleined.forumapi.service.pin.PinService;
+import com.elleined.forumapi.utils.DirectoryFolders;
+import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,12 +30,35 @@ import java.util.List;
 @Transactional
 public class CommentService {
     private final UserService userService;
-    private final ReplyService replyService;
-    private final BlockService blockService;
-    private final ModalTrackerService modalTrackerService;
-    private final CommentRepository commentRepository;
 
-    Comment save(User currentUser, Post post, String body, MultipartFile attachedPicture) throws ResourceNotFoundException {
+    private final BlockService blockService;
+
+    private final ModalTrackerService modalTrackerService;
+
+    private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
+
+    private final ImageUploader imageUploader;
+
+    private final MentionService<CommentMention, Comment> commentMentionService;
+    private final PinService<Post, Comment> commentPinService;
+
+    @Value("${cropTrade.img.directory}")
+    private String cropTradeImgDirectory;
+
+    public Comment save(User currentUser, Post post, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
+            throws ResourceNotFoundException,
+            ClosedCommentSectionException,
+            BlockedException,
+            EmptyBodyException,
+            IOException {
+
+        if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
+        if (post.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot comment because author already closed the comment section for this post!");
+        if (post.isDeleted()) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
+        if (blockService.isBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
+
         NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.COMMENT)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
@@ -48,32 +79,33 @@ public class CommentService {
         currentUser.getComments().add(comment);
         post.getComments().add(comment);
         commentRepository.save(comment);
+
+        if (attachedPicture != null)
+            imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.COMMENT_PICTURE_FOLDER, attachedPicture);
+
+        if (mentionedUsers != null)
+            commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
+
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
     }
 
-    void delete(Comment comment) {
+    public void delete(User currentUser, Post post, Comment comment) {
+        if (post.doesNotHave(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " does not have comment with id of " + comment.getId());
+        if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
+
         comment.setStatus(Status.INACTIVE);
         commentRepository.save(comment);
 
+        if (post.getPinnedComment() != null && post.getPinnedComment().equals(comment)) commentPinService.unpin(comment);
+
+        List<Reply> replies = comment.getReplies();
+        replies.forEach(reply -> reply.setStatus(Status.INACTIVE));
+        replyRepository.saveAll(replies);
         log.debug("Comment with id of {} are now inactive!", comment.getId());
-        comment.getReplies().forEach(replyService::delete);
     }
 
-    void unpin(Comment comment) {
-        comment.getPost().setPinnedComment(null);
-        commentRepository.save(comment);
-
-        log.debug("Post pinned comment unpinned successfully");
-    }
-
-    void pinReply(Comment comment, Reply reply) {
-        comment.setPinnedReply(reply);
-        commentRepository.save(comment);
-        log.debug("Comment author with id of {} pinned reply with id of {} in his/her comment with id of {}", comment.getCommenter().getId(), reply.getId(), comment.getId());
-    }
-
-    List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException {
+    public List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException {
         Comment pinnedComment = post.getPinnedComment();
         List<Comment> comments = new ArrayList<>(post.getComments()
                 .stream()
@@ -91,43 +123,21 @@ public class CommentService {
         return commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment with id of " + commentId + " does not exists!"));
     }
 
-    void updateUpvote(User respondent, Comment comment) {
+    public Comment updateUpvote(User respondent, Comment comment) {
         comment.setUpvote(comment.getUpvote() + 1);
         commentRepository.save(comment);
 
         respondent.getUpvotedComments().add(comment);
         userService.save(respondent);
         log.debug("User with id of {} upvoted the Comment with id of {} successfully", respondent.getId(), comment.getId());
+        return comment;
     }
 
-    void updateBody(Comment comment, String newBody) throws ResourceNotFoundException {
+    public Comment updateBody(Comment comment, String newBody) throws ResourceNotFoundException {
         comment.setBody(newBody);
         commentRepository.save(comment);
         log.debug("Comment with id of {} updated with the new body of {}", comment.getId(), newBody);
-    }
-
-
-    boolean isUserAlreadyUpvoteComment(User respondent, int commentId) throws ResourceNotFoundException {
-        return respondent.getUpvotedComments()
-                .stream()
-                .anyMatch(upvotedComment -> upvotedComment.getId() == commentId);
-    }
-
-    boolean isCommentSectionClosed(Comment comment) {
-        Post post = comment.getPost();
-        return post.getCommentSectionStatus() == Post.CommentSectionStatus.CLOSED;
-    }
-
-    boolean isUserNotOwnedComment(User currentUser, Comment comment) {
-        return currentUser.getComments().stream().noneMatch(comment::equals);
-    }
-
-    boolean isHasReply(Comment comment, Reply reply) {
-        return comment.getReplies().stream().anyMatch(reply::equals);
-    }
-
-    public boolean isDeleted(Comment comment) {
-        return comment.getStatus() == Status.INACTIVE;
+        return comment;
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -135,5 +145,14 @@ public class CommentService {
         return (int) comment.getReplies().stream()
                 .filter(reply -> reply.getStatus() == Status.ACTIVE)
                 .count();
+    }
+
+    public Optional<Reply> getPinnedReply(Comment comment) throws ResourceNotFoundException {
+        Reply pinnedReply = comment.getPinnedReply();
+        if (comment.isDeleted())
+            throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists!");
+
+        if (pinnedReply == null) return Optional.empty();
+        return Optional.of( pinnedReply );
     }
 }
