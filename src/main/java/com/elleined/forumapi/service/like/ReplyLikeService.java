@@ -17,10 +17,9 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ReplyLikeService implements LikeService<ReplyLike, Reply> {
+public class ReplyLikeService implements LikeService<Reply> {
     private final ModalTrackerService modalTrackerService;
     private final LikeRepository likeRepository;
-    private final BlockService blockService;
 
     @Override
     public ReplyLike like(User respondent, Reply reply) {
@@ -61,18 +60,5 @@ public class ReplyLikeService implements LikeService<ReplyLike, Reply> {
         return respondent.getLikedReplies().stream()
                 .map(ReplyLike::getReply)
                 .anyMatch(reply::equals);
-    }
-
-    @Override
-    public List<ReplyLike> getAllUnreadNotification(User currentUser) {
-        return currentUser.getReplies()
-                .stream()
-                .map(Reply::getLikes)
-                .flatMap(likes -> likes.stream()
-                        .filter(like -> like.getReply().getStatus() == Status.ACTIVE)
-                        .filter(like -> like.getNotificationStatus() == NotificationStatus.UNREAD)
-                        .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
-                        .filter(like -> !blockService.isYouBeenBlockedBy(currentUser, like.getRespondent())))
-                .toList();
     }
 }

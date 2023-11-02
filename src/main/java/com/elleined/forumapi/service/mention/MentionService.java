@@ -9,5 +9,4 @@ import java.util.Set;
 public interface MentionService<MENTION extends Mention, T>  {
     MENTION mention(User mentioningUser, User mentionedUser, T t);
     List<MENTION> mentionAll(User mentioningUser, Set<User> mentionedUsers, T t);
-    List<MENTION> getAllUnreadNotification(User currentUser);
 }

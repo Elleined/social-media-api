@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service.mention;
+package com.elleined.forumapi.service.notification.reader;
 
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.NotificationStatus;
@@ -9,7 +9,9 @@ import com.elleined.forumapi.model.mention.Mention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.repository.MentionRepository;
-import com.elleined.forumapi.service.NotificationReader;
+import com.elleined.forumapi.service.mention.CommentMentionService;
+import com.elleined.forumapi.service.mention.PostMentionService;
+import com.elleined.forumapi.service.mention.ReplyMentionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;

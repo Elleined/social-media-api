@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service;
+package com.elleined.forumapi.service.notification.reader;
 
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;

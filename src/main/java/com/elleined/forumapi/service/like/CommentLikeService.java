@@ -17,10 +17,9 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CommentLikeService implements LikeService<CommentLike, Comment> {
+public class CommentLikeService implements LikeService<Comment> {
     private final ModalTrackerService modalTrackerService;
     private final LikeRepository likeRepository;
-    private final BlockService blockService;
 
     @Override
     public CommentLike like(User respondent, Comment comment) {
@@ -60,18 +59,5 @@ public class CommentLikeService implements LikeService<CommentLike, Comment> {
         return respondent.getLikedComments().stream()
                 .map(CommentLike::getComment)
                 .anyMatch(comment::equals);
-    }
-
-    @Override
-    public List<CommentLike> getAllUnreadNotification(User currentUser) {
-        return currentUser.getComments()
-                .stream()
-                .map(Comment::getLikes)
-                .flatMap(likes -> likes.stream()
-                        .filter(like -> like.getComment().getStatus() == Status.ACTIVE)
-                        .filter(like -> like.getNotificationStatus() == NotificationStatus.UNREAD)
-                        .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
-                        .filter(like -> !blockService.isYouBeenBlockedBy(currentUser, like.getRespondent())))
-                .toList();
     }
 }

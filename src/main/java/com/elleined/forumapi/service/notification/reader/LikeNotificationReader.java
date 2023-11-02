@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service.like;
+package com.elleined.forumapi.service.notification.reader;
 
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.NotificationStatus;
@@ -9,7 +9,9 @@ import com.elleined.forumapi.model.like.Like;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.repository.LikeRepository;
-import com.elleined.forumapi.service.NotificationReader;
+import com.elleined.forumapi.service.like.CommentLikeService;
+import com.elleined.forumapi.service.like.PostLikeService;
+import com.elleined.forumapi.service.like.ReplyLikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
