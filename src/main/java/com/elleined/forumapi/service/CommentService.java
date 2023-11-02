@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -89,38 +91,6 @@ public class CommentService {
         return commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment with id of " + commentId + " does not exists!"));
     }
 
-    /**
-     * @param author alias for currentUser
-     */
-    public int getNotificationCountForRespondent(User author, int postId, int respondentId) throws ResourceNotFoundException {
-        Post post = author.getPosts().stream()
-                .filter(userPost -> userPost.getId() == postId)
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Author with id of " + author.getId() + " does not have post with id of " + postId));
-
-        return (int) post.getComments()
-                .stream()
-                .filter(comment -> comment.getStatus() == Status.ACTIVE)
-                .filter(comment -> comment.getNotificationStatus() == NotificationStatus.UNREAD)
-                .filter(comment -> !blockService.isBlockedBy(author, comment.getCommenter()))
-                .filter(comment -> !blockService.isYouBeenBlockedBy(author, comment.getCommenter()))
-                .filter(comment -> comment.getCommenter().getId() == respondentId)
-                .count();
-    }
-
-    public Set<Comment> getUnreadCommentsOfAllPost(User currentUser) {
-        List<Post> posts = currentUser.getPosts();
-
-        return posts.stream()
-                .map(Post::getComments)
-                .flatMap(comments -> comments.stream()
-                        .filter(comment -> comment.getStatus() == Status.ACTIVE)
-                        .filter(comment -> comment.getNotificationStatus() == NotificationStatus.UNREAD)
-                        .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
-                        .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())))
-                .collect(Collectors.toSet());
-    }
-
     void updateUpvote(User respondent, Comment comment) {
         comment.setUpvote(comment.getUpvote() + 1);
         commentRepository.save(comment);
@@ -134,29 +104,6 @@ public class CommentService {
         comment.setBody(newBody);
         commentRepository.save(comment);
         log.debug("Comment with id of {} updated with the new body of {}", comment.getId(), newBody);
-    }
-
-
-    private void readComment(Comment comment) {
-        comment.setNotificationStatus(NotificationStatus.READ);
-    }
-
-    void readAllComments(User currentUser, Post post) {
-        if (!currentUser.equals(post.getAuthor())) {
-            log.trace("Will not mark as unread because the current user with id of {} are not the author of the post who is {}", currentUser.getId(), post.getAuthor().getId());
-            return;
-        }
-        log.trace("Will mark all as read becuase the current user with id of {} is the author of the post {}", currentUser.getId(), post.getAuthor().getId());
-        List<Comment> comments = post.getComments()
-                .stream()
-                .filter(comment -> comment.getStatus() == Status.ACTIVE)
-                .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
-                .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
-                .toList();
-
-        comments.forEach(this::readComment);
-        commentRepository.saveAll(comments);
-        log.debug("Comments in post with id of {} read successfully!", post.getId());
     }
 
 

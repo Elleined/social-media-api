@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -106,37 +108,9 @@ public class ReplyService {
         return replyRepository.findById(replyId).orElseThrow(() -> new ResourceNotFoundException("Reply with id of " + replyId + " does not exists!"));
     }
 
-    Set<Reply> getUnreadRepliesOfAllComments(User currentUser) {
-        List<Comment> comments = currentUser.getComments();
-        return comments.stream()
-                .map(Comment::getReplies)
-                .flatMap(replies -> replies.stream()
-                        .filter(reply -> reply.getStatus() == Status.ACTIVE)
-                        .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
-                        .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
-                        .filter(reply -> reply.getNotificationStatus() == NotificationStatus.UNREAD))
-                .collect(Collectors.toSet());
-    }
-
     /**
      * @param commenter alias for currentUser
      */
-    public int getNotificationCountForRespondent(User commenter, int commentId, int respondentId) throws ResourceNotFoundException {
-        Comment comment = commenter.getComments()
-                .stream()
-                .filter(userComment -> userComment.getId() == commentId)
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Commenter with id of " + commenter.getId() + " does not have a comment with id of " + commentId));
-
-        return (int) comment.getReplies()
-                .stream()
-                .filter(reply -> reply.getStatus() == Status.ACTIVE)
-                .filter(reply -> reply.getNotificationStatus() == NotificationStatus.UNREAD)
-                .filter(reply -> !blockService.isBlockedBy(commenter, reply.getReplier()))
-                .filter(reply -> !blockService.isYouBeenBlockedBy(commenter, reply.getReplier()))
-                .filter(reply -> reply.getReplier().getId() == respondentId)
-                .count();
-    }
 
     public boolean isDeleted(Reply reply) {
         return reply.getStatus() == Status.INACTIVE;

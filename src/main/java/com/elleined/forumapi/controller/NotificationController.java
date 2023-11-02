@@ -2,7 +2,6 @@ package com.elleined.forumapi.controller;
 
 import com.elleined.forumapi.dto.notification.Notification;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.service.NotificationService;
 import com.elleined.forumapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

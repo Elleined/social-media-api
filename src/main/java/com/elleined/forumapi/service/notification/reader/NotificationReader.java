@@ -1,11 +1,10 @@
 package com.elleined.forumapi.service.notification.reader;
 
-import com.elleined.forumapi.model.Comment;
-import com.elleined.forumapi.model.Post;
-import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReaderService;
+import com.elleined.forumapi.service.notification.reader.post.PostNotificationReaderService;
+import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReaderService;
 
-public interface NotificationReader {
-    void read(User currentUser);
-    void read(User currentUser, Post post);
-    void read(User currentUser, Comment comment);
+public interface NotificationReader extends PostNotificationReaderService,
+        CommentNotificationReaderService,
+        ReplyNotificationReaderService {
 }
