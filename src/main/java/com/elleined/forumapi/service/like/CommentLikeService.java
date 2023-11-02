@@ -1,11 +1,9 @@
 package com.elleined.forumapi.service.like;
 
-import com.elleined.forumapi.model.Comment;
-import com.elleined.forumapi.model.ModalTracker;
-import com.elleined.forumapi.model.NotificationStatus;
-import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.repository.LikeRepository;
+import com.elleined.forumapi.service.BlockService;
 import com.elleined.forumapi.service.ModalTrackerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,14 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CommentLikeService implements LikeService<Comment> {
+public class CommentLikeService implements LikeService<CommentLike, Comment> {
     private final ModalTrackerService modalTrackerService;
     private final LikeRepository likeRepository;
+    private final BlockService blockService;
 
     @Override
     public CommentLike like(User respondent, Comment comment) {
@@ -60,5 +60,18 @@ public class CommentLikeService implements LikeService<Comment> {
         return respondent.getLikedComments().stream()
                 .map(CommentLike::getComment)
                 .anyMatch(comment::equals);
+    }
+
+    @Override
+    public List<CommentLike> getAllUnreadNotification(User currentUser) {
+        return currentUser.getComments()
+                .stream()
+                .map(Comment::getLikes)
+                .flatMap(likes -> likes.stream()
+                        .filter(like -> like.getComment().getStatus() == Status.ACTIVE)
+                        .filter(like -> like.getNotificationStatus() == NotificationStatus.UNREAD)
+                        .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
+                        .filter(like -> !blockService.isYouBeenBlockedBy(currentUser, like.getRespondent())))
+                .toList();
     }
 }

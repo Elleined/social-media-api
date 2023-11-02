@@ -179,7 +179,7 @@ public class CommentService {
         return comment.getReplies().stream().anyMatch(reply::equals);
     }
 
-    boolean isDeleted(Comment comment) {
+    public boolean isDeleted(Comment comment) {
         return comment.getStatus() == Status.INACTIVE;
     }
 

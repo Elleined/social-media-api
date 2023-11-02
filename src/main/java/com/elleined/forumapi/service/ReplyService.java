@@ -138,7 +138,7 @@ public class ReplyService {
                 .count();
     }
 
-    boolean isDeleted(Reply reply) {
+    public boolean isDeleted(Reply reply) {
         return reply.getStatus() == Status.INACTIVE;
     }
 }

@@ -1,11 +1,9 @@
 package com.elleined.forumapi.service.like;
 
-import com.elleined.forumapi.model.ModalTracker;
-import com.elleined.forumapi.model.NotificationStatus;
-import com.elleined.forumapi.model.Post;
-import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.repository.LikeRepository;
+import com.elleined.forumapi.service.BlockService;
 import com.elleined.forumapi.service.ModalTrackerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class PostLikeService implements LikeService<Post> {
+public class PostLikeService implements LikeService<PostLike, Post> {
     private final ModalTrackerService modalTrackerService;
     private final LikeRepository likeRepository;
+    private final BlockService blockService;
 
     @Override
     public PostLike like(User respondent, Post post) {
@@ -62,5 +62,18 @@ public class PostLikeService implements LikeService<Post> {
         return respondent.getLikedPosts().stream()
                 .map(PostLike::getPost)
                 .anyMatch(post::equals);
+    }
+
+    @Override
+    public List<PostLike> getAllUnreadNotification(User currentUser) {
+        return currentUser.getPosts()
+                .stream()
+                .map(Post::getLikes)
+                .flatMap(likes -> likes.stream()
+                        .filter(like -> like.getPost().getStatus() == Status.ACTIVE)
+                        .filter(like -> like.getNotificationStatus() == NotificationStatus.UNREAD)
+                        .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
+                        .filter(like -> !blockService.isYouBeenBlockedBy(currentUser, like.getRespondent())))
+                .toList();
     }
 }

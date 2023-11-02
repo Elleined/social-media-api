@@ -9,11 +9,10 @@ import com.elleined.forumapi.model.like.Like;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.repository.LikeRepository;
-import com.elleined.forumapi.service.like.notification.CommentLikeNotificationService;
-import com.elleined.forumapi.service.like.notification.PostLikeNotificationService;
-import com.elleined.forumapi.service.like.notification.ReplyLikeNotificationService;
+import com.elleined.forumapi.service.NotificationReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,38 +22,42 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-class LikeNotificationReaderService {
-    private final PostLikeNotificationService postLikeNotificationService;
-    private final CommentLikeNotificationService commentLikeNotificationService;
-    private final ReplyLikeNotificationService replyLikeNotificationService;
+@Qualifier("likeNotificationReaderService")
+class LikeNotificationReader implements NotificationReader {
+    private final PostLikeService postLikeService;
+    private final CommentLikeService commentLikeService;
+    private final ReplyLikeService replyLikeService;
     private final LikeRepository likeRepository;
 
-    void readLikes(User currentUser) {
-        List<PostLike> postLikes = postLikeNotificationService.getAllUnreadLikeNotification(currentUser);
-        postLikes.forEach(this::readLikeNotification);
+    private void readNotification(Like like) {
+        like.setNotificationStatus(NotificationStatus.READ);
+    }
+
+    @Override
+    public void read(User currentUser) {
+        List<PostLike> postLikes = postLikeService.getAllUnreadNotification(currentUser);
+        postLikes.forEach(this::readNotification);
         likeRepository.saveAll(postLikes);
         log.debug("Reading all unread post like for current user with id of {} success", currentUser.getId());
     }
 
-    void readLikes(User currentUser, Post post) {
-        List<CommentLike> commentLikes = commentLikeNotificationService.getAllUnreadLikeNotification(currentUser);
+    @Override
+    public void read(User currentUser, Post post) {
+        List<CommentLike> commentLikes = commentLikeService.getAllUnreadNotification(currentUser);
         commentLikes.stream()
                 .filter(like -> like.getComment().getPost().equals(post))
-                .forEach(this::readLikeNotification);
+                .forEach(this::readNotification);
         likeRepository.saveAll(commentLikes);
         log.debug("Reading all unread comment like for current user with id of {} success", currentUser.getId());
     }
 
-    void readLikes(User currentUser, Comment comment) {
-        List<ReplyLike> replyLikes = replyLikeNotificationService.getAllUnreadLikeNotification(currentUser);
+    @Override
+    public void read(User currentUser, Comment comment) {
+        List<ReplyLike> replyLikes = replyLikeService.getAllUnreadNotification(currentUser);
         replyLikes.stream()
                 .filter(like -> like.getReply().getComment().equals(comment))
-                .forEach(this::readLikeNotification);
+                .forEach(this::readNotification);
         likeRepository.saveAll(replyLikes);
         log.debug("Reading all unread reply like for current user with id of {} success", currentUser.getId());
-    }
-
-    private void readLikeNotification(Like like) {
-        like.setNotificationStatus(NotificationStatus.READ);
     }
 }

@@ -1,11 +1,9 @@
 package com.elleined.forumapi.service.like;
 
-import com.elleined.forumapi.model.ModalTracker;
-import com.elleined.forumapi.model.NotificationStatus;
-import com.elleined.forumapi.model.Reply;
-import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.repository.LikeRepository;
+import com.elleined.forumapi.service.BlockService;
 import com.elleined.forumapi.service.ModalTrackerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ReplyLikeService implements LikeService<Reply> {
+public class ReplyLikeService implements LikeService<ReplyLike, Reply> {
     private final ModalTrackerService modalTrackerService;
     private final LikeRepository likeRepository;
-
+    private final BlockService blockService;
 
     @Override
     public ReplyLike like(User respondent, Reply reply) {
@@ -62,5 +61,18 @@ public class ReplyLikeService implements LikeService<Reply> {
         return respondent.getLikedReplies().stream()
                 .map(ReplyLike::getReply)
                 .anyMatch(reply::equals);
+    }
+
+    @Override
+    public List<ReplyLike> getAllUnreadNotification(User currentUser) {
+        return currentUser.getReplies()
+                .stream()
+                .map(Reply::getLikes)
+                .flatMap(likes -> likes.stream()
+                        .filter(like -> like.getReply().getStatus() == Status.ACTIVE)
+                        .filter(like -> like.getNotificationStatus() == NotificationStatus.UNREAD)
+                        .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
+                        .filter(like -> !blockService.isYouBeenBlockedBy(currentUser, like.getRespondent())))
+                .toList();
     }
 }

@@ -44,7 +44,7 @@ public class ModalTrackerService {
     }
 
     public boolean isModalOpen(int receiverId, int associatedTypeId, ModalTracker.Type type) {
-        ModalTracker modalTracker = this.getTrackerOfUserById(receiverId);
+        ModalTracker modalTracker = getTrackerOfUserById(receiverId);
         if (modalTracker == null) return false;
         return modalTracker.getType() == type &&
                 modalTracker.getAssociatedTypeIdOpened() == associatedTypeId &&
