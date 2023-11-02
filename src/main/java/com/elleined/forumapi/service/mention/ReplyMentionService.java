@@ -62,15 +62,4 @@ public class ReplyMentionService implements MentionService<ReplyMention, Reply> 
     public List<ReplyMention> mentionAll(User mentioningUser, Set<User> mentionedUsers, Reply reply) {
         return null;
     }
-
-    @Override
-    public List<ReplyMention> getAllUnreadNotification(User currentUser) {
-        return currentUser.getReceiveReplyMentions()
-                .stream()
-                .filter(mention -> !blockService.isBlockedBy(currentUser, mention.getMentionedUser()))
-                .filter(mention -> !blockService.isYouBeenBlockedBy(currentUser, mention.getMentionedUser()))
-                .filter(mention -> mention.getReply().getStatus() == Status.ACTIVE)
-                .filter(mention -> mention.getNotificationStatus() == NotificationStatus.UNREAD)
-                .toList();
-    }
 }

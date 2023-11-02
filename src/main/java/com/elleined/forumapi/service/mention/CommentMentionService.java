@@ -63,15 +63,4 @@ public class CommentMentionService implements MentionService<CommentMention, Com
                 .map(mentionedUser -> mention(mentioningUser, mentionedUser, comment))
                 .toList();
     }
-
-    @Override
-    public List<CommentMention> getAllUnreadNotification(User currentUser) {
-        return currentUser.getReceiveCommentMentions()
-                .stream()
-                .filter(mention -> !blockService.isBlockedBy(currentUser, mention.getMentionedUser()))
-                .filter(mention -> !blockService.isYouBeenBlockedBy(currentUser, mention.getMentionedUser()))
-                .filter(mention -> mention.getComment().getStatus() == Status.ACTIVE)
-                .filter(mention -> mention.getNotificationStatus() == NotificationStatus.UNREAD)
-                .toList();
-    }
 }

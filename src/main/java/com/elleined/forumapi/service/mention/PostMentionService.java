@@ -64,15 +64,4 @@ public class PostMentionService implements MentionService<PostMention, Post> {
                 .map(mentionedUser -> mention(mentioningUser, mentionedUser, post))
                 .toList();
     }
-
-    @Override
-    public List<PostMention> getAllUnreadNotification(User currentUser) {
-        return currentUser.getReceivePostMentions()
-                .stream()
-                .filter(mention -> !blockService.isBlockedBy(currentUser, mention.getMentionedUser()))
-                .filter(mention -> !blockService.isYouBeenBlockedBy(currentUser, mention.getMentionedUser()))
-                .filter(mention -> mention.getPost().getStatus() == Status.ACTIVE)
-                .filter(mention -> mention.getNotificationStatus() == NotificationStatus.UNREAD)
-                .toList();
-    }
 }
