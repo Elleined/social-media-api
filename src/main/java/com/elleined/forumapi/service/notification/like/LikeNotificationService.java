@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface LikeNotificationService<T extends Like> extends NotificationService<T> {
     @Override
-    List<T> getAllNotification(User currentUser);
+    List<T> getAllUnreadNotification(User currentUser);
 }

@@ -19,7 +19,7 @@ import java.util.List;
 public class CommentLikeNotificationService implements LikeNotificationService<CommentLike> {
     private final BlockService blockService;
     @Override
-    public List<CommentLike> getAllNotification(User currentUser) {
+    public List<CommentLike> getAllUnreadNotification(User currentUser) {
         return currentUser.getComments()
                 .stream()
                 .map(Comment::getLikes)
@@ -29,5 +29,10 @@ public class CommentLikeNotificationService implements LikeNotificationService<C
                         .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
                         .filter(like -> !blockService.isYouBeenBlockedBy(currentUser, like.getRespondent())))
                 .toList();
+    }
+
+    @Override
+    public int getNotificationCount(User currentUser) {
+        return getAllUnreadNotification(currentUser).size();
     }
 }

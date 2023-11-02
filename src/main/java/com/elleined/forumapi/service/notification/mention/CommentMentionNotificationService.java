@@ -18,7 +18,7 @@ import java.util.List;
 public class CommentMentionNotificationService implements MentionNotificationService<CommentMention> {
     private final BlockService blockService;
     @Override
-    public List<CommentMention> getAllNotification(User currentUser) {
+    public List<CommentMention> getAllUnreadNotification(User currentUser) {
         return currentUser.getReceiveCommentMentions()
                 .stream()
                 .filter(mention -> !blockService.isBlockedBy(currentUser, mention.getMentionedUser()))
@@ -26,5 +26,10 @@ public class CommentMentionNotificationService implements MentionNotificationSer
                 .filter(mention -> mention.getComment().getStatus() == Status.ACTIVE)
                 .filter(mention -> mention.getNotificationStatus() == NotificationStatus.UNREAD)
                 .toList();
+    }
+
+    @Override
+    public int getNotificationCount(User currentUser) {
+        return getAllUnreadNotification(currentUser).size();
     }
 }

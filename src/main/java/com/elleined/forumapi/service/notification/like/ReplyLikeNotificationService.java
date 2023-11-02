@@ -6,7 +6,6 @@ import com.elleined.forumapi.model.Status;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.service.BlockService;
-import com.elleined.forumapi.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class ReplyLikeNotificationService implements LikeNotificationService<Rep
     private final BlockService blockService;
 
     @Override
-    public List<ReplyLike> getAllNotification(User currentUser) {
+    public List<ReplyLike> getAllUnreadNotification(User currentUser) {
         return currentUser.getReplies()
                 .stream()
                 .map(Reply::getLikes)
@@ -31,5 +30,10 @@ public class ReplyLikeNotificationService implements LikeNotificationService<Rep
                         .filter(like -> !blockService.isBlockedBy(currentUser, like.getRespondent()))
                         .filter(like -> !blockService.isYouBeenBlockedBy(currentUser, like.getRespondent())))
                 .toList();
+    }
+
+    @Override
+    public int getNotificationCount(User currentUser) {
+        return getAllUnreadNotification(currentUser).size();
     }
 }

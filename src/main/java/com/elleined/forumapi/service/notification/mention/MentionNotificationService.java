@@ -9,5 +9,5 @@ import java.util.List;
 public interface MentionNotificationService<T extends Mention> extends NotificationService<T> {
 
     @Override
-    List<T> getAllNotification(User currentUser);
+    List<T> getAllUnreadNotification(User currentUser);
 }
