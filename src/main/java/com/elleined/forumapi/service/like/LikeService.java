@@ -1,6 +1,5 @@
 package com.elleined.forumapi.service.like;
 
-import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.Like;
 

@@ -5,7 +5,6 @@ import com.elleined.forumapi.model.ModalTracker;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.CommentLike;
-import com.elleined.forumapi.model.like.Like;
 import com.elleined.forumapi.repository.LikeRepository;
 import com.elleined.forumapi.service.ModalTrackerService;
 import lombok.RequiredArgsConstructor;

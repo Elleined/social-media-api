@@ -4,7 +4,6 @@ import com.elleined.forumapi.model.ModalTracker;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.like.Like;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.repository.LikeRepository;
 import com.elleined.forumapi.service.ModalTrackerService;
