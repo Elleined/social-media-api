@@ -44,7 +44,7 @@ public class ReplyService {
         return reply;
     }
 
-    void delete(Reply reply) {
+    public void delete(Reply reply) {
         reply.setStatus(Status.INACTIVE);
         replyRepository.save(reply);
         log.debug("Reply with id of {} are now inactive!", reply.getId());

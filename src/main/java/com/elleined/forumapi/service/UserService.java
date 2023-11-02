@@ -18,7 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
-    void save(User user) {
+    public void save(User user) {
         userRepository.save(user);
     }
 
