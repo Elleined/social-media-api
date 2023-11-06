@@ -3,10 +3,9 @@ package com.elleined.forumapi.service;
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.mention.CommentMention;
-import com.elleined.forumapi.model.mention.Mention;
 import com.elleined.forumapi.repository.CommentRepository;
-import com.elleined.forumapi.repository.PostRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
+import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.image.ImageUploader;
 import com.elleined.forumapi.service.mention.MentionService;
 import com.elleined.forumapi.service.pin.PinService;
@@ -29,7 +28,7 @@ import java.util.*;
 @Service
 @Transactional
 public class CommentService {
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     private final BlockService blockService;
 
@@ -123,17 +122,30 @@ public class CommentService {
         return commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment with id of " + commentId + " does not exists!"));
     }
 
-    public Comment updateUpvote(User respondent, Comment comment) {
+    public Comment updateUpvote(User respondent, Comment comment)
+            throws ResourceNotFoundException,
+            UpvoteException {
+
+        if (comment.isDeleted()) throw new ResourceNotFoundException("The comment you trying to upvote might be deleted by the author or does not exists anymore!");
+        if (respondent.isAlreadyUpvoted(comment)) throw new UpvoteException("You can only up vote and down vote a comment once!");
+
         comment.setUpvote(comment.getUpvote() + 1);
         commentRepository.save(comment);
 
         respondent.getUpvotedComments().add(comment);
-        userService.save(respondent);
+        userRepository.save(respondent);
         log.debug("User with id of {} upvoted the Comment with id of {} successfully", respondent.getId(), comment.getId());
         return comment;
     }
 
-    public Comment updateBody(Comment comment, String newBody) throws ResourceNotFoundException {
+    public Comment updateBody(User currentUser, Post post, Comment comment, String newBody)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        if (post.doesNotHave(comment)) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
+        if (comment.getBody().equals(newBody)) return comment;
+        if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
+
         comment.setBody(newBody);
         commentRepository.save(comment);
         log.debug("Comment with id of {} updated with the new body of {}", comment.getId(), newBody);

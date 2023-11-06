@@ -1,5 +1,6 @@
 package com.elleined.forumapi.service;
 
+import com.elleined.forumapi.dto.UserDTO;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.repository.UserRepository;
@@ -20,8 +21,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
-    public void save(User user) {
+    public User save(UserDTO userDTO) {
+        User user = User.builder()
+                .picture(userDTO.picture())
+                .name(userDTO.name())
+                .email(userDTO.email())
+                .UUID(userDTO.UUID())
+                .build();
+
         userRepository.save(user);
+        log.debug("User with id of {} saved successfully!", userDTO.id());
+        return user;
     }
 
     public User getById(int userId) throws ResourceNotFoundException {
@@ -37,11 +47,11 @@ public class UserService {
     }
 
     public List<User> getSuggestedMentions(User currentUser, String name) {
-        return userRepository.fetchAllByProperty(name)
-                .stream()
+        return userRepository.fetchAllByProperty(name).stream()
                 .filter(suggestedUser -> !suggestedUser.equals(currentUser))
                 .filter(suggestedUser -> !blockService.isBlockedBy(currentUser, suggestedUser))
                 .filter(suggestedUser -> !blockService.isYouBeenBlockedBy(currentUser, suggestedUser))
                 .toList();
     }
+
 }

@@ -3,13 +3,18 @@ package com.elleined.forumapi.controller;
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.ReplyDTO;
 import com.elleined.forumapi.mapper.CommentMapper;
+import com.elleined.forumapi.mapper.ReplyMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
+import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.service.*;
+import com.elleined.forumapi.service.like.CommentLikeService;
 import com.elleined.forumapi.service.notification.reader.comment.CommentLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReader;
+import com.elleined.forumapi.service.pin.PinService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +37,15 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentMapper commentMapper;
 
+    private final ReplyMapper replyMapper;
+    private final ReplyService replyService;
+
     private final WSNotificationService wsNotificationService;
     private final WSService wsService;
+
+    private final CommentLikeService commentLikeService;
+
+    private final PinService<Comment, Reply> replyPinService;
 
     private final CommentLikeNotificationReader commentLikeNotificationReader;
     private final CommentMentionNotificationReader commentMentionNotificationReader;
@@ -60,11 +72,14 @@ public class CommentController {
 
     @GetMapping("/getPinnedReply/{commentId}")
     public Optional<ReplyDTO> getPinnedReply(@PathVariable("commentId") int commentId) {
-        return forumService.getPinnedReply(commentId);
+        Comment comment = commentService.getById(commentId);
+        Optional<Reply> reply = commentService.getPinnedReply(comment);
+
+        return Optional.of( replyMapper.toDTO(reply.orElseThrow()) );
     }
 
     @PostMapping
-    public CommentDTO saveComment(@PathVariable("currentUserId") int currentUserId,
+    public CommentDTO save(@PathVariable("currentUserId") int currentUserId,
                                   @PathVariable("postId") int postId,
                                   @RequestParam("body") String body,
                                   @RequestPart(required = false, value = "attachedPicture") MultipartFile attachedPicture,
@@ -97,27 +112,47 @@ public class CommentController {
     }
 
     @PatchMapping("/upvote/{commentId}")
-    public CommentDTO updateCommentUpvote(@PathVariable("currentUserId") int currentUserId,
+    public CommentDTO updateUpvote(@PathVariable("currentUserId") int currentUserId,
                                           @PathVariable("commentId") int commentId) {
+        User respondent = userService.getById(currentUserId);
+        Comment comment = commentService.getById(commentId);
 
-        return forumService.updateUpvote(currentUserId, commentId);
+        Comment updatedComment = commentService.updateUpvote(respondent, comment);
+        return commentMapper.toDTO(updatedComment);
     }
 
     @PatchMapping("/body/{commentId}")
-    public CommentDTO updateCommentBody(@PathVariable("currentUserId") int currentUserId,
+    public CommentDTO updateBody(@PathVariable("currentUserId") int currentUserId,
                                         @PathVariable("postId") int postId,
                                         @PathVariable("commentId") int commentId,
                                         @RequestParam("newCommentBody") String newCommentBody) {
 
-        return forumService.updateCommentBody(currentUserId, postId, commentId, newCommentBody);
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        Comment comment = commentService.getById(commentId);
+
+        Comment updatedComment = commentService.updateBody(currentUser, post, comment, newCommentBody);
+        wsService.broadcastComment(updatedComment);
+
+        return commentMapper.toDTO(updatedComment);
     }
 
     @PatchMapping("/like/{commentId}")
-    public CommentDTO likeComment(@PathVariable("currentUserId") int respondentId,
-                                  @PathVariable("postId") int postId,
-                                  @PathVariable("commentId") int commentId) {
+    public CommentDTO like(@PathVariable("currentUserId") int respondentId,
+                           @PathVariable("commentId") int commentId) {
 
-        return forumService.likeComment(respondentId, postId, commentId);
+        User respondent = userService.getById(respondentId);
+        Comment comment = commentService.getById(commentId);
+
+        if (commentLikeService.isLiked(respondent, comment)) {
+            commentLikeService.unLike(respondent, comment);
+            return commentMapper.toDTO(comment);
+        }
+
+        CommentLike commentLike = commentLikeService.like(respondent, comment);
+        wsNotificationService.broadcastLike(commentLike);
+
+        return commentMapper.toDTO(comment);
     }
 
     @PatchMapping("/{commentId}/pinReply/{replyId}")
@@ -125,6 +160,11 @@ public class CommentController {
                                @PathVariable("commentId") int commentId,
                                @PathVariable("replyId") int replyId) {
 
-        return forumService.pinReply(currentUserId, commentId, replyId);
+        User currentUSer = userService.getById(currentUserId);
+        Comment comment = commentService.getById(commentId);
+        Reply reply = replyService.getById(replyId);
+
+        replyPinService.pin(currentUSer, comment, reply);
+        return commentMapper.toDTO(comment);
     }
 }

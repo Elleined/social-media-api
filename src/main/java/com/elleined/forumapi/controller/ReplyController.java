@@ -5,7 +5,12 @@ import com.elleined.forumapi.mapper.ReplyMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.service.*;
+import com.elleined.forumapi.service.like.ReplyLikeService;
+import com.elleined.forumapi.service.notification.reader.reply.ReplyLikeNotificationReader;
+import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotificationReader;
+import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +31,16 @@ public class ReplyController {
 
     private final ReplyService replyService;
     private final ReplyMapper replyMapper;
+    private final ReplyLikeService replyLikeService;
+
+    private final ModalTrackerService modalTrackerService;
 
     private final WSNotificationService wsNotificationService;
     private final WSService wsService;
+
+    private final ReplyLikeNotificationReader replyLikeNotificationReader;
+    private final ReplyMentionNotificationReader replyMentionNotificationReader;
+    private final ReplyNotificationReader replyNotificationReader;
 
 
     @GetMapping
@@ -37,13 +49,18 @@ public class ReplyController {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
 
+        replyNotificationReader.readAll(currentUser, comment);
+        replyLikeNotificationReader.readAll(currentUser, comment);
+        replyMentionNotificationReader.readAll(currentUser, comment);
+
+        modalTrackerService.saveTrackerOfUserById(currentUserId, commentId, "REPLY");
         return replyService.getAllByComment(currentUser, comment).stream()
                 .map(replyMapper::toDTO)
                 .toList();
     }
 
     @PostMapping
-    public ReplyDTO saveReply(@PathVariable("currentUserId") int currentUserId,
+    public ReplyDTO save(@PathVariable("currentUserId") int currentUserId,
                               @PathVariable("commentId") int commentId,
                               @RequestParam("body") String body,
                               @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
@@ -76,17 +93,32 @@ public class ReplyController {
     }
 
     @PatchMapping("/body/{replyId}")
-    public ReplyDTO updateReplyBody(@PathVariable("currentUserId") int currentUserId,
-                                    @PathVariable("replyId") int replyId,
-                                    @RequestParam("newReplyBody") String newReplyBody) {
+    public ReplyDTO updateBody(@PathVariable("currentUserId") int currentUserId,
+                               @PathVariable("replyId") int replyId,
+                               @RequestParam("newReplyBody") String newReplyBody) {
 
-        return forumService.updateReplyBody(currentUserId, replyId, newReplyBody);
+        User currentUser = userService.getById(currentUserId);
+        Reply reply = replyService.getById(replyId);
+
+        Reply updatedReply = replyService.updateBody(currentUser, reply, newReplyBody);
+        wsService.broadcastReply(updatedReply);
+        return replyMapper.toDTO(updatedReply);
     }
 
     @PatchMapping("/like/{replyId}")
-    public ReplyDTO likeReply(@PathVariable("currentUserId") int respondentId,
-                              @PathVariable("replyId") int replyId) {
+    public ReplyDTO like(@PathVariable("currentUserId") int respondentId,
+                         @PathVariable("replyId") int replyId) {
 
-        return forumService.likeReply(respondentId, replyId);
+        User respondent = userService.getById(respondentId);
+        Reply reply = replyService.getById(replyId);
+
+        if (replyLikeService.isLiked(respondent, reply)) {
+            replyLikeService.unLike(respondent, reply);
+            return replyMapper.toDTO(reply);
+        }
+
+        ReplyLike replyLike = replyLikeService.like(respondent, reply);
+        wsNotificationService.broadcastLike(replyLike);
+        return replyMapper.toDTO(reply);
     }
 }

@@ -2,13 +2,17 @@ package com.elleined.forumapi.controller;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.PostDTO;
+import com.elleined.forumapi.mapper.CommentMapper;
 import com.elleined.forumapi.mapper.PostMapper;
+import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.service.*;
+import com.elleined.forumapi.service.like.PostLikeService;
 import com.elleined.forumapi.service.notification.reader.post.PostLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.post.PostMentionNotificationReader;
-import jakarta.servlet.http.HttpSession;
+import com.elleined.forumapi.service.pin.PinService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,22 +30,30 @@ import java.util.Set;
 @RequestMapping("/{currentUserId}/posts")
 public class PostController {
     private final UserService userService;
-    private final PostService postService;
 
     private final WSNotificationService wsNotificationService;
 
+    private final PostService postService;
     private final PostMapper postMapper;
+
+    private final CommentService commentService;
+    private final CommentMapper commentMapper;
 
     private final ModalTrackerService modalTrackerService;
 
     private final PostLikeNotificationReader postLikeNotificationReader;
     private final PostMentionNotificationReader postMentionNotificationReader;
+
+    private final PostLikeService postLikeService;
+
+    private final PinService<Post, Comment> commentPinService;
+
     @GetMapping
-    public List<PostDTO> getAllPost(@PathVariable("currentUserId") int currentUserId) {
+    public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
 
         postLikeNotificationReader.readAll(currentUser);
-        postLikeNotificationReader.readAll(currentUser);
+        postMentionNotificationReader.readAll(currentUser);
 
         modalTrackerService.saveTrackerOfUserById(currentUserId, 0, "POST");
         return postService.getAll(currentUser).stream()
@@ -49,32 +61,30 @@ public class PostController {
                 .toList();
     }
 
-    @GetMapping("/author")
-    public List<PostDTO> getAllByAuthorId(@PathVariable("currentUserId") int authorId) {
-        return forumService.getAllByAuthorId(authorId);
-    }
-
     @GetMapping("/getPinnedComment/{postId}")
     public Optional<CommentDTO> getPinnedComment(@PathVariable("postId") int postId) {
-        return forumService.getPinnedComment(postId);
+        Post post = postService.getById(postId);
+        Optional<Comment> pinnedComment = postService.getPinnedComment(post);
+
+        return Optional.of( commentMapper.toDTO(pinnedComment.orElseThrow()) );
     }
 
     @PostMapping
-    public PostDTO savePost(@PathVariable("currentUserId") int currentUserId,
-                            @RequestParam("body") String body,
-                            @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
-                            @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
+    public PostDTO save(@PathVariable("currentUserId") int currentUserId,
+                        @RequestParam("body") String body,
+                        @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
+                        @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
         Post post = postService.save(currentUser, body, attachedPicture, mentionedUsers);
-        if (mentionedUsers != null) wsNotificationService.broadcastPostMentions(post.getMentions());
 
+        if (mentionedUsers != null) wsNotificationService.broadcastPostMentions(post.getMentions());
         return postMapper.toDTO(post);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<PostDTO> deletePost(@PathVariable("currentUserId") int currentUserId,
+    public ResponseEntity<PostDTO> delete(@PathVariable("currentUserId") int currentUserId,
                                               @PathVariable("postId") int postId) {
 
         User currentUser = userService.getById(currentUserId);
@@ -87,22 +97,40 @@ public class PostController {
     public PostDTO updateCommentSectionStatus(@PathVariable("currentUserId") int currentUserId,
                                               @PathVariable("postId") int postId) {
 
-        return forumService.updateCommentSectionStatus(currentUserId, postId);
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+
+        Post updatedPost = postService.updateCommentSectionStatus(currentUser, post);
+        return postMapper.toDTO(updatedPost);
     }
 
     @PatchMapping("/body/{postId}")
-    public PostDTO updatePostBody(@PathVariable("currentUserId") int currentUserId,
+    public PostDTO updateBody(@PathVariable("currentUserId") int currentUserId,
                                   @PathVariable("postId") int postId,
                                   @RequestParam("newPostBody") String newPostBody) {
 
-        return forumService.updatePostBody(currentUserId, postId, newPostBody);
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+
+        Post updatedPost = postService.updateBody(currentUser, post, newPostBody);
+        return postMapper.toDTO(updatedPost);
     }
 
     @PatchMapping("/like/{postId}")
-    public PostDTO likePost(@PathVariable("currentUserId") int respondentId,
+    public PostDTO like(@PathVariable("currentUserId") int respondentId,
                             @PathVariable("postId") int postId) {
 
-        return forumService.likePost(respondentId, postId);
+        User respondent = userService.getById(respondentId);
+        Post post = postService.getById(postId);
+
+        if (postLikeService.isLiked(respondent, post)) {
+            postLikeService.unLike(respondent, post);
+            return postMapper.toDTO(post);
+        }
+
+        PostLike postLike = postLikeService.like(respondent, post);
+        wsNotificationService.broadcastLike(postLike);
+        return postMapper.toDTO(post);
     }
 
     @PatchMapping("/{postId}/pinComment/{commentId}")
@@ -110,6 +138,11 @@ public class PostController {
                               @PathVariable("postId") int postId,
                               @PathVariable("commentId") int commentId) {
 
-        return forumService.pinComment(currentUserId, postId, commentId);
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        Comment comment = commentService.getById(commentId);
+
+        commentPinService.pin(currentUser, post, comment);
+        return postMapper.toDTO(post);
     }
 }

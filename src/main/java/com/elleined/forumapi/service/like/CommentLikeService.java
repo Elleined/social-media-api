@@ -1,11 +1,11 @@
 package com.elleined.forumapi.service.like;
 
-import com.elleined.forumapi.model.Comment;
-import com.elleined.forumapi.model.ModalTracker;
-import com.elleined.forumapi.model.NotificationStatus;
-import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.exception.BlockedException;
+import com.elleined.forumapi.exception.ResourceNotFoundException;
+import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.repository.LikeRepository;
+import com.elleined.forumapi.service.BlockService;
 import com.elleined.forumapi.service.ModalTrackerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +21,16 @@ import java.time.LocalDateTime;
 public class CommentLikeService implements LikeService<Comment> {
     private final ModalTrackerService modalTrackerService;
     private final LikeRepository likeRepository;
+    private final BlockService blockService;
 
     @Override
-    public CommentLike like(User respondent, Comment comment) {
+    public CommentLike like(User respondent, Comment comment)
+            throws ResourceNotFoundException, BlockedException {
+
+        if (comment.isDeleted()) throw new ResourceNotFoundException("Cannot like/unlike! The comment with id of " + comment.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
+        if (blockService.isBlockedBy(respondent, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! You blocked the author of this comment with id of !" + comment.getCommenter().getId());
+        if (blockService.isYouBeenBlockedBy(respondent, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! The author of this comment with id of " + comment.getCommenter().getId() + " already blocked you");
+
         NotificationStatus notificationStatus = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getPost().getId(), ModalTracker.Type.COMMENT)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;

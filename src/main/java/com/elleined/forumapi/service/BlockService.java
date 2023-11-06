@@ -1,5 +1,6 @@
 package com.elleined.forumapi.service;
 
+import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,15 @@ public class BlockService {
 
     private final UserRepository userRepository;
 
-    void blockUser(User currentUser, User userToBeBlocked) {
+    public void blockUser(User currentUser, User userToBeBlocked) throws BlockedException {
+        if (currentUser.getId() == userToBeBlocked.getId()) throw new BlockedException("You cannot blocked yourself!");
+
         currentUser.getBlockedUsers().add(userToBeBlocked);
         userRepository.save(currentUser);
         log.debug("User {} blocked User {} successfully", currentUser.getId(), userToBeBlocked.getId());
     }
 
-    void unBlockUser(User currentUser, User userToBeUnblocked) {
+    public void unBlockUser(User currentUser, User userToBeUnblocked) {
         currentUser.getBlockedUsers().remove(userToBeUnblocked);
         userRepository.save(currentUser);
         log.debug("User {} unblocked user {} successfully", currentUser.getId(), userToBeUnblocked.getId());

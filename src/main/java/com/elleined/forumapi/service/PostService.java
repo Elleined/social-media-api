@@ -24,11 +24,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -87,14 +85,22 @@ public class PostService {
         log.debug("Post with id of {} are now inactive", post.getId());
     }
 
-    public Post updateBody(Post post, String newBody) {
+    public Post updateBody(User currentUser, Post post, String newBody)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        if (post.getBody().equals(newBody)) return post;
+        if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+
         post.setBody(newBody);
         postRepository.save(post);
         log.debug("Post with id of {} updated with the new body of {}", post.getId(), newBody);
         return post;
     }
 
-    public Post updateCommentSectionStatus(Post post) {
+    public Post updateCommentSectionStatus(User currentUser, Post post) {
+        if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+
         if (post.getCommentSectionStatus() == CommentSectionStatus.OPEN) {
             post.setCommentSectionStatus(CommentSectionStatus.CLOSED);
         } else {

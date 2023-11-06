@@ -15,6 +15,8 @@ import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.Formatter;
 import com.elleined.forumapi.service.ReplyService;
+import com.elleined.forumapi.service.notification.comment.CommentNotificationService;
+import com.elleined.forumapi.service.notification.reply.ReplyNotificationService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -27,6 +29,9 @@ public abstract class NotificationMapper {
     @Autowired
     @Lazy
     protected CommentService commentService;
+
+    protected CommentNotificationService commentNotificationService;
+    protected ReplyNotificationService replyNotificationService;
     @Autowired @Lazy
     protected ReplyService replyService;
 
@@ -168,11 +173,11 @@ public abstract class NotificationMapper {
     }
 
     protected int getNotificationCount(Comment comment) {
-        return commentService.getNotificationCountForRespondent(comment.getPost().getAuthor(), comment.getPost().getId(), comment.getCommenter().getId());
+        return commentNotificationService.notificationCountForCommenter(comment.getPost().getAuthor(), comment.getPost(), comment.getCommenter());
     }
 
     protected int getNotificationCount(Reply reply) {
-        return replyService.getNotificationCountForRespondent(reply.getComment().getCommenter(), reply.getComment().getId(), reply.getReplier().getId());
+        return replyNotificationService.notificationCountForReplier(reply.getComment().getCommenter(), reply.getComment(), reply.getReplier());
     }
 }
 

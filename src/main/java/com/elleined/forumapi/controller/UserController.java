@@ -3,7 +3,6 @@ package com.elleined.forumapi.controller;
 import com.elleined.forumapi.dto.UserDTO;
 import com.elleined.forumapi.mapper.UserMapper;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.service.ForumService;
 import com.elleined.forumapi.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +14,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-    private final ForumService forumService;
-
     private final UserService userService;
     private final UserMapper userMapper;
 
     @PostMapping
     public UserDTO save(@Valid @RequestBody UserDTO userDTO) {
-        return forumService.saveUser(userDTO);
+        User user = userService.save(userDTO);
+        return userMapper.toDTO(user);
     }
 
     @GetMapping("/{id}")
@@ -34,7 +32,10 @@ public class UserController {
     @GetMapping("/{currentUserId}/getSuggestedMentions")
     public List<UserDTO> getSuggestedMentions(@PathVariable("currentUserId") int currentUserId,
                                               @RequestParam("name") String name) {
-        return forumService.getSuggestedMentions(currentUserId, name);
+        User currentUser = userService.getById(currentUserId);
+        return userService.getSuggestedMentions(currentUser, name).stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/uuid/{uuid}")

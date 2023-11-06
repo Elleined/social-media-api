@@ -84,14 +84,22 @@ public class ReplyService {
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 
-    Reply updateBody(Reply reply, String newReplyBody) {
+    public Reply updateBody(User currentUser, Reply reply, String newReplyBody)
+            throws ResourceNotFoundException,
+            NotOwnedException {
+
+        if (reply.getBody().equals(newReplyBody)) return reply;
+        if (currentUser.notOwned(reply)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
+
         reply.setBody(newReplyBody);
         replyRepository.save(reply);
         log.debug("Reply with id of {} updated with the new body of {}", reply.getId(), newReplyBody);
         return reply;
     }
 
-    public List<Reply> getAllByComment(User currentUser, Comment comment) {
+    public List<Reply> getAllByComment(User currentUser, Comment comment) throws ResourceNotFoundException {
+        if (comment.isDeleted()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists anymore!");
+
         Reply pinnedReply = comment.getPinnedReply();
         List<Reply> replies = new ArrayList<>(comment.getReplies()
                 .stream()

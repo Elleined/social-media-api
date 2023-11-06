@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/{currentUserId}/notifications")
@@ -20,16 +20,15 @@ public class NotificationController {
     private final UserService userService;
     private final NotificationService<Notification> notificationService;
 
-
     @GetMapping("/getAllNotification")
-    public Set<Notification> getAllNotification(@PathVariable("currentUserId") int currentUserId) {
+    public Collection<Notification> getAllUnreadNotification(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         return notificationService.getAllUnreadNotification(currentUser);
     }
 
     @GetMapping("/getTotalNotificationCount")
-    public long getTotalNotificationCount(@PathVariable("currentUserId") int currentUserId) {
+    public long getNotificationCount(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return notificationService.getTotalNotificationCount(currentUser);
+        return notificationService.getNotificationCount(currentUser);
     }
 }
