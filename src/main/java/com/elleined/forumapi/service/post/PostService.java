@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service;
+package com.elleined.forumapi.service.post;
 
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.model.*;
@@ -9,6 +9,7 @@ import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.LikeRepository;
 import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.repository.PostRepository;
+import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.image.ImageUploader;
 import com.elleined.forumapi.utils.DirectoryFolders;
@@ -30,9 +31,8 @@ import java.util.*;
 @Service
 @Transactional
 public class PostService
-        implements PinService<Post, Comment>,
-        MentionService<Post>,
-        LikeService<Post> {
+        implements
+        PostServiceImpl {
 
     private final BlockService blockService;
 
@@ -50,6 +50,7 @@ public class PostService
     @Value("${cropTrade.img.directory}")
     private String cropTradeImgDirectory;
 
+    @Override
     public Post save(User currentUser, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
             throws EmptyBodyException,
             BlockedException,
@@ -79,6 +80,7 @@ public class PostService
         return post;
     }
 
+    @Override
     public void delete(User currentUser, Post post) throws NotOwnedException {
         if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
         post.setStatus(Status.INACTIVE);
@@ -91,6 +93,7 @@ public class PostService
         log.debug("Post with id of {} are now inactive", post.getId());
     }
 
+    @Override
     public Post updateBody(User currentUser, Post post, String newBody)
             throws ResourceNotFoundException,
             NotOwnedException {
@@ -104,6 +107,7 @@ public class PostService
         return post;
     }
 
+    @Override
     public Post updateCommentSectionStatus(User currentUser, Post post) {
         if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
@@ -117,10 +121,12 @@ public class PostService
         return post;
     }
 
+    @Override
     public Post getById(int postId) throws ResourceNotFoundException {
         return postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post with id of " + postId + " does not exists!"));
     }
 
+    @Override
     public List<Post> getAll(User currentUser) {
         return postRepository.findAll()
                 .stream()
@@ -131,6 +137,7 @@ public class PostService
                 .toList();
     }
 
+    @Override
     public Optional<Comment> getPinnedComment(Post post) throws ResourceNotFoundException {
         Comment pinnedComment = post.getPinnedComment();
         if (post.isDeleted())
@@ -140,6 +147,7 @@ public class PostService
         return Optional.of( pinnedComment );
     }
 
+    @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalCommentsAndReplies(Post post) {
         int commentCount = (int) post.getComments()

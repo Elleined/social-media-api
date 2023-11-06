@@ -13,6 +13,7 @@ import com.elleined.forumapi.service.*;
 import com.elleined.forumapi.service.notification.reader.comment.CommentLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReader;
+import com.elleined.forumapi.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
