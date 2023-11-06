@@ -25,7 +25,9 @@ public interface PostServiceImpl
         extends PinService<Post, Comment>,
         MentionService<Post>,
         LikeService<Post>,
-        SavedPostService {
+        SavedPostService,
+        SharePostService {
+
 
     Post save(User currentUser, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
             throws EmptyBodyException,

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SavedPostService {
     Post savedPost(User currentUser, Post postToSaved);
-    Post unSavedPost(User currentUser, Post postToUnSave);
+    void unSavedPost(User currentUser, Post postToUnSave);
 
     List<Post> getAllSavedPosts(User currentUser);
 }
