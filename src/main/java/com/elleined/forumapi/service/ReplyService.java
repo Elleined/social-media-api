@@ -7,6 +7,7 @@ import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.repository.LikeRepository;
 import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
+import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.image.ImageUploader;
 import com.elleined.forumapi.utils.DirectoryFolders;
 import com.elleined.forumapi.validator.StringValidator;

@@ -5,6 +5,7 @@ import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.repository.*;
+import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.image.ImageUploader;
 import com.elleined.forumapi.utils.DirectoryFolders;
 import com.elleined.forumapi.validator.StringValidator;

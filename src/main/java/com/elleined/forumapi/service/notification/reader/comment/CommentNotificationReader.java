@@ -2,7 +2,7 @@ package com.elleined.forumapi.service.notification.reader.comment;
 
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.repository.CommentRepository;
-import com.elleined.forumapi.service.BlockService;
+import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;

@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service;
+package com.elleined.forumapi.service.block;
 
 import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.model.User;
@@ -14,10 +14,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class BlockService {
-
+public class BlockServiceImpl implements BlockService {
     private final UserRepository userRepository;
 
+    @Override
     public void blockUser(User currentUser, User userToBeBlocked) throws BlockedException {
         if (currentUser.getId() == userToBeBlocked.getId()) throw new BlockedException("You cannot blocked yourself!");
 
@@ -26,20 +26,24 @@ public class BlockService {
         log.debug("User {} blocked User {} successfully", currentUser.getId(), userToBeBlocked.getId());
     }
 
+    @Override
     public void unBlockUser(User currentUser, User userToBeUnblocked) {
         currentUser.getBlockedUsers().remove(userToBeUnblocked);
         userRepository.save(currentUser);
         log.debug("User {} unblocked user {} successfully", currentUser.getId(), userToBeUnblocked.getId());
     }
 
+    @Override
     public boolean isBlockedBy(User currentUser, User userToCheck) {
         return currentUser.getBlockedUsers().stream().anyMatch(userToCheck::equals);
     }
 
+    @Override
     public boolean isYouBeenBlockedBy(User currentUser, User suspectedUser) {
         return suspectedUser.getBlockedUsers().stream().anyMatch(currentUser::equals);
     }
 
+    @Override
     public Set<User> getAllBlockedUsers(User currentUser) {
         return currentUser.getBlockedUsers();
     }

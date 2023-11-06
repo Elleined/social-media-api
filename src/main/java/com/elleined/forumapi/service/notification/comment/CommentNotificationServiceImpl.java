@@ -1,7 +1,7 @@
 package com.elleined.forumapi.service.notification.comment;
 
 import com.elleined.forumapi.model.*;
-import com.elleined.forumapi.service.BlockService;
+import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

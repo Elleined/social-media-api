@@ -4,6 +4,7 @@ import com.elleined.forumapi.dto.UserDTO;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.repository.UserRepository;
+import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

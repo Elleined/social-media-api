@@ -4,7 +4,7 @@ import com.elleined.forumapi.dto.ResponseMessage;
 import com.elleined.forumapi.dto.UserDTO;
 import com.elleined.forumapi.mapper.UserMapper;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.service.BlockService;
+import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

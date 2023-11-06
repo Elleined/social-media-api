@@ -5,7 +5,7 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.Status;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.PostLike;
-import com.elleined.forumapi.service.BlockService;
+import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
