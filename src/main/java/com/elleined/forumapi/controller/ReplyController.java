@@ -10,6 +10,8 @@ import com.elleined.forumapi.service.*;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
+import com.elleined.forumapi.service.ws.WSNotificationService;
+import com.elleined.forumapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

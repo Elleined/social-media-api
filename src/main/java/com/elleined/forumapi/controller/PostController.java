@@ -12,6 +12,7 @@ import com.elleined.forumapi.service.*;
 import com.elleined.forumapi.service.notification.reader.post.PostLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.post.PostMentionNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
+import com.elleined.forumapi.service.ws.WSNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

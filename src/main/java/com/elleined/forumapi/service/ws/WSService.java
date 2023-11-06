@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service;
+package com.elleined.forumapi.service.ws;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.ReplyDTO;
