@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model;
 
+import com.elleined.forumapi.model.emoji.Emoji;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import jakarta.persistence.*;
@@ -81,8 +82,10 @@ public class Comment {
     private Set<User> upvotingUsers;
 
     @OneToMany(mappedBy = "comment")
-    @Setter(AccessLevel.NONE)
     private Set<CommentLike> likes;
+
+    @ManyToMany(mappedBy = "commentEmojis")
+    private List<Emoji> emojis;
 
     public boolean isCommentSectionClosed() {
         return this.getPost().getCommentSectionStatus() == Post.CommentSectionStatus.CLOSED;
