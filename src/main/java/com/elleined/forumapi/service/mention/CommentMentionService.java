@@ -26,7 +26,6 @@ import java.util.Set;
 @Transactional
 @RequiredArgsConstructor
 public class CommentMentionService implements MentionService<CommentMention, Comment> {
-    private final CommentService commentService;
     private final MentionRepository mentionRepository;
 
     private final BlockService blockService;
@@ -38,7 +37,6 @@ public class CommentMentionService implements MentionService<CommentMention, Com
         if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
         if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw  new BlockedException("Cannot mention! Mentioned user with id of " + mentionedUser.getId() + " already blocked you");
         if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");
-
 
         NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), comment.getPost().getId(), ModalTracker.Type.COMMENT)
                 ? NotificationStatus.READ

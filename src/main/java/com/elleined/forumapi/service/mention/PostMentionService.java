@@ -26,8 +26,6 @@ import java.util.Set;
 @Transactional
 @RequiredArgsConstructor
 public class PostMentionService implements MentionService<PostMention, Post> {
-    private final PostService postService;
-
     private final MentionRepository mentionRepository;
 
     private final BlockService blockService;

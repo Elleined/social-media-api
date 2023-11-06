@@ -27,7 +27,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ReplyMentionService implements MentionService<ReplyMention, Reply> {
 
-    private final ReplyService replyService;
     private final MentionRepository mentionRepository;
 
     private final BlockService blockService;
@@ -63,6 +62,8 @@ public class ReplyMentionService implements MentionService<ReplyMention, Reply> 
 
     @Override
     public List<ReplyMention> mentionAll(User mentioningUser, Set<User> mentionedUsers, Reply reply) {
-        return null;
+        return mentionedUsers.stream()
+                .map(mentionedUser -> mention(mentioningUser, mentionedUser, reply))
+                .toList();
     }
 }
