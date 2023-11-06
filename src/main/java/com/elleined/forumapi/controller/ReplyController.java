@@ -7,7 +7,6 @@ import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.service.*;
-import com.elleined.forumapi.service.like.ReplyLikeService;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
@@ -31,7 +30,6 @@ public class ReplyController {
 
     private final ReplyService replyService;
     private final ReplyMapper replyMapper;
-    private final ReplyLikeService replyLikeService;
 
     private final ModalTrackerService modalTrackerService;
 
@@ -112,12 +110,12 @@ public class ReplyController {
         User respondent = userService.getById(respondentId);
         Reply reply = replyService.getById(replyId);
 
-        if (replyLikeService.isLiked(respondent, reply)) {
-            replyLikeService.unLike(respondent, reply);
+        if (replyService.isLiked(respondent, reply)) {
+            replyService.unLike(respondent, reply);
             return replyMapper.toDTO(reply);
         }
 
-        ReplyLike replyLike = replyLikeService.like(respondent, reply);
+        ReplyLike replyLike = replyService.like(respondent, reply);
         wsNotificationService.broadcastLike(replyLike);
         return replyMapper.toDTO(reply);
     }

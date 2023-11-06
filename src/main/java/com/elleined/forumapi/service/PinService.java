@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service.pin;
+package com.elleined.forumapi.service;
 
 import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;

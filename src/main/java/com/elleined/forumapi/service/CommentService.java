@@ -2,13 +2,10 @@ package com.elleined.forumapi.service;
 
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.model.*;
+import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.mention.CommentMention;
-import com.elleined.forumapi.repository.CommentRepository;
-import com.elleined.forumapi.repository.ReplyRepository;
-import com.elleined.forumapi.repository.UserRepository;
+import com.elleined.forumapi.repository.*;
 import com.elleined.forumapi.service.image.ImageUploader;
-import com.elleined.forumapi.service.mention.MentionService;
-import com.elleined.forumapi.service.pin.PinService;
 import com.elleined.forumapi.utils.DirectoryFolders;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +24,11 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class CommentService {
+public class CommentService
+        implements PinService<Comment, Reply>,
+        MentionService<Comment>,
+        LikeService<Comment> {
+
     private final UserRepository userRepository;
 
     private final BlockService blockService;
@@ -39,8 +40,11 @@ public class CommentService {
 
     private final ImageUploader imageUploader;
 
-    private final MentionService<CommentMention, Comment> commentMentionService;
     private final PinService<Post, Comment> commentPinService;
+
+    private final MentionRepository mentionRepository;
+
+    private final LikeRepository likeRepository;
 
     @Value("${cropTrade.img.directory}")
     private String cropTradeImgDirectory;
@@ -82,8 +86,7 @@ public class CommentService {
         if (attachedPicture != null)
             imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.COMMENT_PICTURE_FOLDER, attachedPicture);
 
-        if (mentionedUsers != null)
-            commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
+        if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, comment);
 
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
@@ -166,5 +169,101 @@ public class CommentService {
 
         if (pinnedReply == null) return Optional.empty();
         return Optional.of( pinnedReply );
+    }
+
+    @Override
+    public void pin(User currentUser, Comment comment, Reply reply) throws NotOwnedException, ResourceNotFoundException {
+        if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " does not owned comment with id of " + comment.getId() + " for him/her to pin a reply in this comment!");
+        if (comment.doesNotHave(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() + " doesnt have reply of " + reply.getId());
+        if (reply.isDeleted()) throw new ResourceNotFoundException("Reply with id of " + reply.getId() + " you specify is already deleted or does not exists anymore!");
+
+        comment.setPinnedReply(reply);
+        commentRepository.save(comment);
+        log.debug("Comment author with id of {} pinned reply with id of {} in his/her comment with id of {}", comment.getCommenter().getId(), reply.getId(), comment.getId());
+    }
+
+    @Override
+    public void unpin(Reply reply) {
+        reply.getComment().setPinnedReply(null);
+        replyRepository.save(reply);
+        log.debug("Comment pinned reply unpinned successfully");
+    }
+
+    @Override
+    public CommentMention mention(User mentioningUser, User mentionedUser, Comment comment) {
+        if (comment.isDeleted()) throw new ResourceNotFoundException("Cannot mention! The comment with id of " + comment.getId() + " you are trying to mention might already been deleted or does not exists!");
+        if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
+        if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw  new BlockedException("Cannot mention! Mentioned user with id of " + mentionedUser.getId() + " already blocked you");
+        if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");
+
+        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), comment.getPost().getId(), ModalTracker.Type.COMMENT)
+                ? NotificationStatus.READ
+                : NotificationStatus.UNREAD;
+
+        CommentMention commentMention = CommentMention.commentMentionBuilder()
+                .mentioningUser(mentioningUser)
+                .mentionedUser(mentionedUser)
+                .createdAt(LocalDateTime.now())
+                .comment(comment)
+                .notificationStatus(notificationStatus)
+                .build();
+
+        mentioningUser.getSentCommentMentions().add(commentMention);
+        mentionedUser.getReceiveCommentMentions().add(commentMention);
+        comment.getMentions().add(commentMention);
+        mentionRepository.save(commentMention);
+        log.debug("User with id of {} mentioned user with id of {} in comment with id of {}", mentioningUser.getId(), mentionedUser.getId(), comment.getId());
+        return commentMention;
+    }
+
+    @Override
+    public void mentionAll(User mentioningUser, Set<User> mentionedUsers, Comment comment) {
+        mentionedUsers.forEach(mentionedUser -> mention(mentioningUser, mentionedUser, comment));
+    }
+
+    @Override
+    public CommentLike like(User respondent, Comment comment)
+            throws ResourceNotFoundException, BlockedException {
+
+        if (comment.isDeleted()) throw new ResourceNotFoundException("Cannot like/unlike! The comment with id of " + comment.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
+        if (blockService.isBlockedBy(respondent, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! You blocked the author of this comment with id of !" + comment.getCommenter().getId());
+        if (blockService.isYouBeenBlockedBy(respondent, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! The author of this comment with id of " + comment.getCommenter().getId() + " already blocked you");
+
+        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getPost().getId(), ModalTracker.Type.COMMENT)
+                ? NotificationStatus.READ
+                : NotificationStatus.UNREAD;
+
+        CommentLike commentLike = CommentLike.commentLikeBuilder()
+                .respondent(respondent)
+                .comment(comment)
+                .notificationStatus(notificationStatus)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        respondent.getLikedComments().add(commentLike);
+        comment.getLikes().add(commentLike);
+        likeRepository.save(commentLike);
+        log.debug("User with id of {} liked comment with id of {}", respondent.getId(), comment.getId());
+        return commentLike;
+    }
+
+    @Override
+    public void unLike(User respondent, Comment comment) {
+        CommentLike commentLike = respondent.getLikedComments().stream()
+                .filter(likedComment -> likedComment.getComment().equals(comment))
+                .findFirst()
+                .orElseThrow();
+
+        respondent.getLikedComments().remove(commentLike);
+        comment.getLikes().remove(commentLike);
+        likeRepository.delete(commentLike);
+        log.debug("User with id of {} unlike comment with id of {}", respondent.getId(), comment.getId());
+    }
+
+    @Override
+    public boolean isLiked(User respondent, Comment comment) {
+        return respondent.getLikedComments().stream()
+                .map(CommentLike::getComment)
+                .anyMatch(comment::equals);
     }
 }

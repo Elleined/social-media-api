@@ -9,10 +9,8 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.service.*;
-import com.elleined.forumapi.service.like.PostLikeService;
 import com.elleined.forumapi.service.notification.reader.post.PostLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.post.PostMentionNotificationReader;
-import com.elleined.forumapi.service.pin.PinService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -43,10 +41,6 @@ public class PostController {
 
     private final PostLikeNotificationReader postLikeNotificationReader;
     private final PostMentionNotificationReader postMentionNotificationReader;
-
-    private final PostLikeService postLikeService;
-
-    private final PinService<Post, Comment> commentPinService;
 
     @GetMapping
     public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
@@ -123,12 +117,12 @@ public class PostController {
         User respondent = userService.getById(respondentId);
         Post post = postService.getById(postId);
 
-        if (postLikeService.isLiked(respondent, post)) {
-            postLikeService.unLike(respondent, post);
+        if (postService.isLiked(respondent, post)) {
+            postService.unLike(respondent, post);
             return postMapper.toDTO(post);
         }
 
-        PostLike postLike = postLikeService.like(respondent, post);
+        PostLike postLike = postService.like(respondent, post);
         wsNotificationService.broadcastLike(postLike);
         return postMapper.toDTO(post);
     }
@@ -142,7 +136,7 @@ public class PostController {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        commentPinService.pin(currentUser, post, comment);
+        postService.pin(currentUser, post, comment);
         return postMapper.toDTO(post);
     }
 }

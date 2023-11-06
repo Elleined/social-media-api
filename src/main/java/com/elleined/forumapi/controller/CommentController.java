@@ -10,11 +10,9 @@ import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.service.*;
-import com.elleined.forumapi.service.like.CommentLikeService;
 import com.elleined.forumapi.service.notification.reader.comment.CommentLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReader;
-import com.elleined.forumapi.service.pin.PinService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +40,6 @@ public class CommentController {
 
     private final WSNotificationService wsNotificationService;
     private final WSService wsService;
-
-    private final CommentLikeService commentLikeService;
-
-    private final PinService<Comment, Reply> replyPinService;
 
     private final CommentLikeNotificationReader commentLikeNotificationReader;
     private final CommentMentionNotificationReader commentMentionNotificationReader;
@@ -144,12 +138,12 @@ public class CommentController {
         User respondent = userService.getById(respondentId);
         Comment comment = commentService.getById(commentId);
 
-        if (commentLikeService.isLiked(respondent, comment)) {
-            commentLikeService.unLike(respondent, comment);
+        if (commentService.isLiked(respondent, comment)) {
+            commentService.unLike(respondent, comment);
             return commentMapper.toDTO(comment);
         }
 
-        CommentLike commentLike = commentLikeService.like(respondent, comment);
+        CommentLike commentLike = commentService.like(respondent, comment);
         wsNotificationService.broadcastLike(commentLike);
 
         return commentMapper.toDTO(comment);
@@ -164,7 +158,7 @@ public class CommentController {
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
 
-        replyPinService.pin(currentUSer, comment, reply);
+        commentService.pin(currentUSer, comment, reply);
         return commentMapper.toDTO(comment);
     }
 }
