@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service;
+package com.elleined.forumapi.service.mention;
 
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.Mention;
