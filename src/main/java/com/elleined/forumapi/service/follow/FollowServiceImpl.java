@@ -1,7 +1,9 @@
 package com.elleined.forumapi.service.follow;
 
+import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.repository.UserRepository;
+import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,13 @@ import java.util.Set;
 @Transactional
 public class FollowServiceImpl implements FollowService {
     private final UserRepository userRepository;
+    private final BlockService blockService;
 
     @Override
     public void follow(User currentUser, User userToFollow) {
+        if (blockService.isBlockedBy(currentUser, userToFollow)) throw new BlockedException("Cannot follow because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, userToFollow)) throw new BlockedException("Cannot follow because this user block you already!");
+        
         currentUser.getFollowing().add(userToFollow);
         userToFollow.getFollowers().add(currentUser);
 
