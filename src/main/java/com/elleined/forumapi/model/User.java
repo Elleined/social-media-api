@@ -91,6 +91,32 @@ public class User {
     )
     private Set<Post> savedPosts;
 
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_user_follower",
+            joinColumns = @JoinColumn(name = "user_id",
+                    referencedColumnName = "user_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "follower_user_id",
+                    referencedColumnName = "user_id"
+            )
+    )
+    private Set<User> followers;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_user_following",
+            joinColumns = @JoinColumn(name = "user_id",
+                    referencedColumnName = "user_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "following_user_id",
+                    referencedColumnName = "user_id"
+            )
+    )
+    private Set<User> following;
+
     // user id reference is in tbl liked post
     @OneToMany(mappedBy = "respondent")
     @Setter(AccessLevel.NONE)
