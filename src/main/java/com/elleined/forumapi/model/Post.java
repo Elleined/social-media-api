@@ -69,11 +69,14 @@ public class Post {
     @OneToMany(mappedBy = "post")
     @Setter(AccessLevel.NONE)
     private Set<PostLike> likes;
-
-
+    
     @ManyToMany(mappedBy = "savedPost")
     @Setter(AccessLevel.NONE)
     private Set<User> savingUsers;
+
+    @ManyToMany(mappedBy = "sharedPost")
+    @Setter(AccessLevel.NONE)
+    private Set<User> sharers;
 
     public enum CommentSectionStatus {OPEN, CLOSED}
     public boolean isDeleted() {
