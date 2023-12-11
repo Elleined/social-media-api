@@ -70,6 +70,11 @@ public class Post {
     @Setter(AccessLevel.NONE)
     private Set<PostLike> likes;
 
+
+    @ManyToMany(mappedBy = "savedPost")
+    @Setter(AccessLevel.NONE)
+    private Set<User> savingUsers;
+
     public enum CommentSectionStatus {OPEN, CLOSED}
     public boolean isDeleted() {
         return this.getStatus() == Status.INACTIVE;

@@ -4,10 +4,7 @@ import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.mention.PostMention;
-import com.elleined.forumapi.repository.CommentRepository;
-import com.elleined.forumapi.repository.LikeRepository;
-import com.elleined.forumapi.repository.MentionRepository;
-import com.elleined.forumapi.repository.PostRepository;
+import com.elleined.forumapi.repository.*;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.image.ImageUploader;
@@ -30,6 +27,7 @@ import java.util.*;
 @Service
 @Transactional
 public class PostServiceImpl implements PostService {
+    private final UserRepository userRepository;
     private final BlockService blockService;
 
     private final PostRepository postRepository;
@@ -262,7 +260,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post savedPost(User currentUser, Post postToSaved) {
         currentUser.getSavedPost().add(postToSaved);
+        postToSaved.getSavingUsers().add(currentUser);
+
         postRepository.save(postToSaved);
+        userRepository.save(currentUser);
         log.debug("User with id of {} saved post successfully with id of {}", currentUser.getId(), postToSaved.getId());
         return postToSaved;
     }
@@ -270,7 +271,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public void unSavedPost(User currentUser, Post postToUnSave) {
         currentUser.getSavedPost().remove(postToUnSave);
+        postToUnSave.getSavingUsers().remove(currentUser);
+
         postRepository.save(postToUnSave);
+        userRepository.save(currentUser);
         log.debug("User with id of {} unsaved post successfully with id of {}", currentUser.getId(), postToUnSave.getId());
     }
 
