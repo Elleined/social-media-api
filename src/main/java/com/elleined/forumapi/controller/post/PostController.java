@@ -1,4 +1,4 @@
-package com.elleined.forumapi.controller;
+package com.elleined.forumapi.controller.post;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.PostDTO;
@@ -141,59 +141,5 @@ public class PostController {
 
         postService.pin(currentUser, post, comment);
         return postMapper.toDTO(post);
-    }
-
-    @PostMapping("/saved-posts/{postId}")
-    public PostDTO savedPost(@PathVariable("currentUserId") int currentUserId,
-                             @PathVariable("postId") int postId) {
-        User currentUser = userService.getById(currentUserId);
-        Post post = postService.getById(postId);
-        postService.savedPost(currentUser, post);
-        return postMapper.toDTO(post);
-    }
-
-    @DeleteMapping("/saved-posts/{postId}")
-    public void unSavedPost(@PathVariable("currentUserId") int currentUserId,
-                            @PathVariable("postId") int postId) {
-
-        User currentUser = userService.getById(currentUserId);
-        Post post = postService.getById(postId);
-        postService.unSavedPost(currentUser, post);
-    }
-
-    @GetMapping("/saved-posts")
-    public Set<PostDTO> getAllSavedPost(@PathVariable("currentUserId") int currentUserId) {
-        User currentUser = userService.getById(currentUserId);
-        return postService.getAllSavedPosts(currentUser).stream()
-                .map(postMapper::toDTO)
-                .collect(Collectors.toSet());
-    }
-
-    @PostMapping("/shared-posts/{postId}")
-    public PostDTO sharePost(@PathVariable("currentUserId") int currentUserId,
-                             @PathVariable("postId") int postId) {
-        User currentUser = userService.getById(currentUserId);
-        Post post = postService.getById(postId);
-
-        Post sharedPost = postService.sharePost(currentUser, post);
-        return postMapper.toDTO(sharedPost);
-    }
-
-    @DeleteMapping("/shared-posts/{postId}")
-    public ResponseEntity<PostDTO> unSharePost(@PathVariable("currentUserId") int currentUserId,
-                                               @PathVariable("postId") int postId) {
-        User currentUser = userService.getById(currentUserId);
-        Post post = postService.getById(postId);
-
-        postService.unSharePost(currentUser, post);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/shared-posts")
-    public Set<PostDTO> getAllSharedPost(@PathVariable("currentUserId") int currentUserId) {
-        User currentUser = userService.getById(currentUserId);
-        return postService.getAllSharedPosts(currentUser).stream()
-                .map(postMapper::toDTO)
-                .collect(Collectors.toSet());
     }
 }
