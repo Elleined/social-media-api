@@ -25,5 +25,6 @@ public class PostDTO {
     private Set<UserDTO> likers;
     private Set<UserDTO> mentionedUsers;
     private Set<UserDTO> savingUsers;
+    private Set<UserDTO> sharers;
     private int pinnedCommentId;
 }

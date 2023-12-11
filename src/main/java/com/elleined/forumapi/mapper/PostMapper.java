@@ -28,7 +28,6 @@ public abstract class PostMapper {
             @Mapping(target = "commentSectionStatus", source = "post.commentSectionStatus"),
             @Mapping(target = "likers", source = "post.likes"),
             @Mapping(target = "mentionedUsers", source = "post.mentions"),
-            @Mapping(target = "savingUsers", source = "post.savingUsers"),
             @Mapping(target = "totalLikes", expression = "java(post.getLikes().size())"),
             @Mapping(target = "attachedPicture", source = "post.attachedPicture"),
             @Mapping(target = "pinnedCommentId", source = "post.pinnedComment.id"),

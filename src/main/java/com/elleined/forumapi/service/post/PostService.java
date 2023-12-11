@@ -90,5 +90,5 @@ public interface PostService
     void unSharePost(User currentUser, Post postToUnShare);
 
     @Override
-    List<Post> getAllSharedPosts(User currentUser);
+    Set<Post> getAllSharedPosts(User currentUser);
 }

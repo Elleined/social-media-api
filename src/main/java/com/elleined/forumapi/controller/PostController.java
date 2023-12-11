@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -142,18 +143,57 @@ public class PostController {
         return postMapper.toDTO(post);
     }
 
-    @PatchMapping("/{postId}/save-or-unsave-post")
-    public PostDTO savedOrUnsavedPost(@PathVariable("currentUserId") int currentUserId,
-                                       @PathVariable("postId") int postId) {
+    @PostMapping("/saved-posts/{postId}")
+    public PostDTO savedPost(@PathVariable("currentUserId") int currentUserId,
+                             @PathVariable("postId") int postId) {
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        postService.savedPost(currentUser, post);
+        return postMapper.toDTO(post);
+    }
+
+    @DeleteMapping("/saved-posts/{postId}")
+    public void unSavedPost(@PathVariable("currentUserId") int currentUserId,
+                            @PathVariable("postId") int postId) {
+
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        postService.unSavedPost(currentUser, post);
+    }
+
+    @GetMapping("/saved-posts")
+    public Set<PostDTO> getAllSavedPost(@PathVariable("currentUserId") int currentUserId) {
+        User currentUser = userService.getById(currentUserId);
+        return postService.getAllSavedPosts(currentUser).stream()
+                .map(postMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
+
+    @PostMapping("/shared-posts/{postId}")
+    public PostDTO sharePost(@PathVariable("currentUserId") int currentUserId,
+                             @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        if (currentUser.getSavedPost().contains(post)) {
-            postService.unSavedPost(currentUser, post);
-            return postMapper.toDTO(post);
-        }
+        Post sharedPost = postService.sharePost(currentUser, post);
+        return postMapper.toDTO(sharedPost);
+    }
 
-        postService.savedPost(currentUser, post);
-        return postMapper.toDTO(post);
+    @DeleteMapping("/shared-posts/{postId}")
+    public ResponseEntity<PostDTO> unSharePost(@PathVariable("currentUserId") int currentUserId,
+                                               @PathVariable("postId") int postId) {
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+
+        postService.unSharePost(currentUser, post);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/shared-posts")
+    public Set<PostDTO> getAllSharedPost(@PathVariable("currentUserId") int currentUserId) {
+        User currentUser = userService.getById(currentUserId);
+        return postService.getAllSharedPosts(currentUser).stream()
+                .map(postMapper::toDTO)
+                .collect(Collectors.toSet());
     }
 }

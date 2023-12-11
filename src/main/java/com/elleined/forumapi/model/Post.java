@@ -69,12 +69,12 @@ public class Post {
     @OneToMany(mappedBy = "post")
     @Setter(AccessLevel.NONE)
     private Set<PostLike> likes;
-    
-    @ManyToMany(mappedBy = "savedPost")
+
+    @ManyToMany(mappedBy = "savedPosts")
     @Setter(AccessLevel.NONE)
     private Set<User> savingUsers;
 
-    @ManyToMany(mappedBy = "sharedPost")
+    @ManyToMany(mappedBy = "sharedPosts")
     @Setter(AccessLevel.NONE)
     private Set<User> sharers;
 

@@ -76,7 +76,7 @@ public class User {
                     referencedColumnName = "post_id"
             )
     )
-    private Set<Post> sharedPost;
+    private Set<Post> sharedPosts;
 
     @ManyToMany
     @JoinTable(
@@ -89,7 +89,7 @@ public class User {
                     referencedColumnName = "post_id"
             )
     )
-    private Set<Post> savedPost;
+    private Set<Post> savedPosts;
 
     // user id reference is in tbl liked post
     @OneToMany(mappedBy = "respondent")

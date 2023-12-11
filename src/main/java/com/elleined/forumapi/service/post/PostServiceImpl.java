@@ -259,7 +259,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post savedPost(User currentUser, Post postToSaved) {
-        currentUser.getSavedPost().add(postToSaved);
+        currentUser.getSavedPosts().add(postToSaved);
         postToSaved.getSavingUsers().add(currentUser);
 
         postRepository.save(postToSaved);
@@ -270,7 +270,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void unSavedPost(User currentUser, Post postToUnSave) {
-        currentUser.getSavedPost().remove(postToUnSave);
+        currentUser.getSavedPosts().remove(postToUnSave);
         postToUnSave.getSavingUsers().remove(currentUser);
 
         postRepository.save(postToUnSave);
@@ -280,21 +280,32 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Set<Post> getAllSavedPosts(User currentUser) {
-        return currentUser.getSavedPost();
+        return currentUser.getSavedPosts();
     }
 
     @Override
     public Post sharePost(User currentUser, Post postToShare) {
-        return null;
+        currentUser.getSharedPosts().add(postToShare);
+        postToShare.getSharers().add(currentUser);
+
+        postRepository.save(postToShare);
+        userRepository.save(currentUser);
+        log.debug("User with id of {} shared post with id of {} successfully", currentUser.getId(), postToShare.getId());
+        return postToShare;
     }
 
     @Override
     public void unSharePost(User currentUser, Post postToUnShare) {
+        currentUser.getSharedPosts().remove(postToUnShare);
+        postToUnShare.getSharers().remove(currentUser);
 
+        postRepository.save(postToUnShare);
+        userRepository.save(currentUser);
+        log.debug("User with id of {} shared post with id of {} successfully", currentUser.getId(), postToUnShare.getId());
     }
 
     @Override
-    public List<Post> getAllSharedPosts(User currentUser) {
-        return null;
+    public Set<Post> getAllSharedPosts(User currentUser) {
+        return currentUser.getSharedPosts();
     }
 }
