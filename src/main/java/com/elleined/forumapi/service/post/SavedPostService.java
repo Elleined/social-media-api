@@ -4,10 +4,11 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface SavedPostService {
     Post savedPost(User currentUser, Post postToSaved);
     void unSavedPost(User currentUser, Post postToUnSave);
 
-    List<Post> getAllSavedPosts(User currentUser);
+    Set<Post> getAllSavedPosts(User currentUser);
 }

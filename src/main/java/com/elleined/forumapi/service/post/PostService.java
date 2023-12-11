@@ -81,7 +81,7 @@ public interface PostService
     void unSavedPost(User currentUser, Post postToUnSave);
 
     @Override
-    List<Post> getAllSavedPosts(User currentUser);
+    Set<Post> getAllSavedPosts(User currentUser);
 
     @Override
     Post sharePost(User currentUser, Post postToShare);

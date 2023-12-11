@@ -261,17 +261,28 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post savedPost(User currentUser, Post postToSaved) {
-        return null;
+        if (currentUser.getSavedPost().contains(postToSaved)) {
+            unSavedPost(currentUser, postToSaved);
+            return postToSaved;
+        }
+
+        currentUser.getSavedPost().add(postToSaved);
+        postRepository.save(postToSaved);
+        log.debug("User with id of {} saved post successfully with id of {}", currentUser.getId(), postToSaved.getId());
+        return postToSaved;
     }
 
     @Override
     public void unSavedPost(User currentUser, Post postToUnSave) {
+        currentUser.getSavedPost().remove(postToUnSave);
 
+        postRepository.save(postToUnSave);
+        log.debug("User with id of {} unsaved post successfully with id of {}", currentUser.getId(), postToUnSave.getId());
     }
 
     @Override
-    public List<Post> getAllSavedPosts(User currentUser) {
-        return null;
+    public Set<Post> getAllSavedPosts(User currentUser) {
+        return currentUser.getSavedPost();
     }
 
     @Override
