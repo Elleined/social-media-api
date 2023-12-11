@@ -141,4 +141,19 @@ public class PostController {
         postService.pin(currentUser, post, comment);
         return postMapper.toDTO(post);
     }
+
+    @PatchMapping("/{postId}/save-or-unsave-post")
+    public PostDTO savedOrUnsavedPost(@PathVariable("currentUserId") int currentUserId,
+                                       @PathVariable("postId") int postId) {
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+
+        if (currentUser.getSavedPost().contains(post)) {
+            postService.unSavedPost(currentUser, post);
+            return postMapper.toDTO(post);
+        }
+
+        postService.savedPost(currentUser, post);
+        return postMapper.toDTO(post);
+    }
 }

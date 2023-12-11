@@ -261,11 +261,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post savedPost(User currentUser, Post postToSaved) {
-        if (currentUser.getSavedPost().contains(postToSaved)) {
-            unSavedPost(currentUser, postToSaved);
-            return postToSaved;
-        }
-
         currentUser.getSavedPost().add(postToSaved);
         postRepository.save(postToSaved);
         log.debug("User with id of {} saved post successfully with id of {}", currentUser.getId(), postToSaved.getId());
@@ -275,7 +270,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public void unSavedPost(User currentUser, Post postToUnSave) {
         currentUser.getSavedPost().remove(postToUnSave);
-
         postRepository.save(postToUnSave);
         log.debug("User with id of {} unsaved post successfully with id of {}", currentUser.getId(), postToUnSave.getId());
     }
