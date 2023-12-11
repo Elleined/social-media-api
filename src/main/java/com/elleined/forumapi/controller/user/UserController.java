@@ -1,4 +1,4 @@
-package com.elleined.forumapi.controller;
+package com.elleined.forumapi.controller.user;
 
 import com.elleined.forumapi.dto.UserDTO;
 import com.elleined.forumapi.mapper.UserMapper;

@@ -23,8 +23,8 @@ public class FollowServiceImpl implements FollowService {
     public void follow(User currentUser, User userToFollow) {
         if (blockService.isBlockedBy(currentUser, userToFollow)) throw new BlockedException("Cannot follow because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, userToFollow)) throw new BlockedException("Cannot follow because this user block you already!");
-        
-        currentUser.getFollowing().add(userToFollow);
+
+        currentUser.getFollowings().add(userToFollow);
         userToFollow.getFollowers().add(currentUser);
 
         userRepository.save(currentUser);
@@ -34,7 +34,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public void unFollow(User currentUser, User userToUnFollow) {
-        currentUser.getFollowing().remove(userToUnFollow);
+        currentUser.getFollowings().remove(userToUnFollow);
         userToUnFollow.getFollowers().remove(currentUser);
 
         userRepository.save(currentUser);
@@ -49,6 +49,6 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public Set<User> getAllFollowing(User currentUser) {
-        return currentUser.getFollowing();
+        return currentUser.getFollowings();
     }
 }

@@ -115,7 +115,7 @@ public class User {
                     referencedColumnName = "user_id"
             )
     )
-    private Set<User> following;
+    private Set<User> followings;
 
     // user id reference is in tbl liked post
     @OneToMany(mappedBy = "respondent")
