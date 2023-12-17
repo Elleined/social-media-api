@@ -259,6 +259,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post savedPost(User currentUser, Post postToSaved) {
+        if (postToSaved.isDeleted()) throw new ResourceNotFoundException("Post with id of " + postToSaved.getId() + " does not exists or already deleted!") ;
+
         currentUser.getSavedPosts().add(postToSaved);
         postToSaved.getSavingUsers().add(currentUser);
 
@@ -285,6 +287,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post sharePost(User currentUser, Post postToShare) {
+        if (postToShare.isDeleted()) throw new ResourceNotFoundException("Post with id of " + postToShare.getId() + " does not exists or already deleted!") ;
+
         currentUser.getSharedPosts().add(postToShare);
         postToShare.getSharers().add(currentUser);
 
