@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model;
 
+import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.like.ReplyLike;
@@ -116,6 +117,30 @@ public class User {
             )
     )
     private Set<User> followings;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_user_friend",
+            joinColumns = @JoinColumn(name = "user_id",
+                    referencedColumnName = "user_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "friend_id",
+                    referencedColumnName = "user_id"
+            )
+    )
+    private Set<User> friends;
+
+    // user id reference is in tbl  user friend
+    @OneToMany(mappedBy = "requestedUser")
+    @Setter(AccessLevel.NONE)
+    private Set<FriendRequest> sentFriendRequest;
+
+    // user id reference is in tbl  user friend
+    @OneToMany(mappedBy = "requestingUser")
+    @Setter(AccessLevel.NONE)
+    private Set<FriendRequest> receiveFriendRequest;
+
 
     // user id reference is in tbl liked post
     @OneToMany(mappedBy = "respondent")
