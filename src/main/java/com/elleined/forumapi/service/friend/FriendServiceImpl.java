@@ -30,17 +30,17 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void acceptFriendRequest(User currentUser, int friendRequestId) {
         FriendRequest friendRequest = friendRequestRepository.findById(friendRequestId).orElseThrow(() -> new ResourceNotFoundException("Friend request with id of " + friendRequestId + " does not exists!"));
-        if (!currentUser.getSentFriendRequest().contains(friendRequest))
+        if (!currentUser.getReceiveFriendRequest().contains(friendRequest))
             throw new NotOwnedException("Cannot accept friend request! because you don't have sent this friend request.");
 
-        User requestedUser = friendRequest.getRequestedUser();
-        currentUser.getFriends().add(requestedUser);
-        requestedUser.getFriends().add(currentUser);
+        User requestingUser = friendRequest.getRequestingUser();
+        currentUser.getFriends().add(requestingUser);
+        requestingUser.getFriends().add(currentUser);
 
         friendRequestRepository.delete(friendRequest);
         userRepository.save(currentUser);
-        userRepository.save(requestedUser);
-        log.debug("User with id of {} accepted friend request of user with id of {}", requestedUser.getId(), currentUser.getId());
+        userRepository.save(requestingUser);
+        log.debug("User with id of {} accepted friend request of user with id of {}", requestingUser.getId(), currentUser.getId());
     }
 
     @Override
