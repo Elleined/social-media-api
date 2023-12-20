@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -29,8 +28,7 @@ public class FriendServiceImpl implements FriendService {
 
 
     @Override
-    public void acceptFriendRequest(User currentUser, int friendRequestId) {
-        FriendRequest friendRequest = friendRequestRepository.findById(friendRequestId).orElseThrow(() -> new ResourceNotFoundException("Friend request with id of " + friendRequestId + " does not exists!"));
+    public void acceptFriendRequest(User currentUser, FriendRequest friendRequest) {
         if (!currentUser.getReceiveFriendRequest().contains(friendRequest))
             throw new NotOwnedException("Cannot accept friend request! because you don't have sent this friend request.");
 
@@ -82,5 +80,10 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public Set<FriendRequest> getAllFriendRequests(User currentUser) {
         return currentUser.getReceiveFriendRequest();
+    }
+
+    @Override
+    public FriendRequest getById(int id) throws ResourceNotFoundException {
+        return friendRequestRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Friend request with id of " + id + " does not exists!"));
     }
 }
