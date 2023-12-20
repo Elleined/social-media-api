@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -65,16 +66,21 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void unFriend(User currentUser, User userToUnFriend) {
+        currentUser.getFriends().remove(userToUnFriend);
+        userToUnFriend.getFriends().remove(currentUser);
 
+        userRepository.save(currentUser);
+        userRepository.save(userToUnFriend);
+        log.debug("User with id of {} unfriended user with id of {}", currentUser.getId(), userToUnFriend.getId());
     }
 
     @Override
-    public List<User> getAllFriends(User currentUser) {
-        return null;
+    public Set<User> getAllFriends(User currentUser) {
+        return currentUser.getFriends();
     }
 
     @Override
-    public List<User> getAllFriendRequests(User currentUser) {
-        return null;
+    public Set<FriendRequest> getAllFriendRequests(User currentUser) {
+        return currentUser.getReceiveFriendRequest();
     }
 }
