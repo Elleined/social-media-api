@@ -4,8 +4,6 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public interface SharePostService {
     Post sharePost(User currentUser, Post postToShare);

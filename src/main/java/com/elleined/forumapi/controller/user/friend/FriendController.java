@@ -1,7 +1,6 @@
 package com.elleined.forumapi.controller.user.friend;
 
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.friend.FriendService;
 import lombok.RequiredArgsConstructor;

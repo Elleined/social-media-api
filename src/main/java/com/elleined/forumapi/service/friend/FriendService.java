@@ -4,7 +4,6 @@ import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
 
-import java.util.List;
 import java.util.Set;
 
 public interface FriendService {

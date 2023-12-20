@@ -2,7 +2,6 @@ package com.elleined.forumapi.service.follow;
 
 import com.elleined.forumapi.model.User;
 
-import java.util.List;
 import java.util.Set;
 
 public interface FollowService {

@@ -1,6 +1,5 @@
 package com.elleined.forumapi;
 
-import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.ModalTrackerService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

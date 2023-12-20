@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.post;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.repository.*;
 import com.elleined.forumapi.service.ModalTrackerService;
@@ -14,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
