@@ -44,4 +44,12 @@ public class FriendRequestController {
         FriendRequest friendRequest = friendService.getById(friendRequestId);
         friendService.acceptFriendRequest(currentUser, friendRequest);
     }
+
+    @DeleteMapping("/{friendRequestId}/cancel")
+    public void deleteFriendRequest(@PathVariable("currentUserId") int currentUserId,
+                                    @PathVariable("friendRequestId") int friendRequestId) {
+        User currentUser = userService.getById(currentUserId);
+        FriendRequest friendRequest = friendService.getById(friendRequestId);
+        friendService.deleteFriendRequest(currentUser, friendRequest);
+    }
 }
