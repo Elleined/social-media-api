@@ -48,6 +48,19 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    public void deleteFriendRequest(User currentUser, FriendRequest friendRequest) {
+        if (!currentUser.getReceiveFriendRequest().contains(friendRequest))
+            throw new NotOwnedException("Cannot delete friend request! because you don't have sent this friend request.");
+
+        int friendRequestId = friendRequest.getId();
+        currentUser.getReceiveFriendRequest().remove(friendRequest);
+
+        userRepository.save(currentUser);
+        friendRequestRepository.delete(friendRequest);
+        log.debug("User with id of {} delete friend request with id of {}", currentUser.getId(), friendRequestId);
+    }
+
+    @Override
     public void sendFriendRequest(User currentUser, User userToAdd) {
         if (currentUser.hasAlreadySentFriendRequestTo(userToAdd))
             throw new FriendRequestException("Cannot sent friend request! becuase you already sent friend request to this user");
