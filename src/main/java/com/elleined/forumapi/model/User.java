@@ -216,4 +216,7 @@ public class User {
         return this.getUpvotedComments().stream().anyMatch(comment::equals);
     }
 
+    public boolean isFriendsWith(User anotherUser) {
+        return this.getFriends().contains(anotherUser);
+    }
 }

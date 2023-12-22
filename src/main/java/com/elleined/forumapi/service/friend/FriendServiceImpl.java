@@ -1,6 +1,7 @@
 package com.elleined.forumapi.service.friend;
 
 import com.elleined.forumapi.exception.BlockedException;
+import com.elleined.forumapi.exception.FriendException;
 import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.User;
@@ -29,10 +30,13 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void acceptFriendRequest(User currentUser, FriendRequest friendRequest) {
+        User requestingUser = friendRequest.getRequestingUser();
+
+        if (currentUser.isFriendsWith(requestingUser))
+            throw new FriendException("Cannot accept friend request! because you're already friends.");
         if (!currentUser.getReceiveFriendRequest().contains(friendRequest))
             throw new NotOwnedException("Cannot accept friend request! because you don't have sent this friend request.");
 
-        User requestingUser = friendRequest.getRequestingUser();
         currentUser.getFriends().add(requestingUser);
         requestingUser.getFriends().add(currentUser);
 
@@ -44,8 +48,12 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void sendFriendRequest(User currentUser, User userToAdd) {
-        if (blockService.isBlockedBy(currentUser, userToAdd)) throw new BlockedException("Cannot sent friend request! because you blocked the author of this post with id of !" + userToAdd.getId());
-        if (blockService.isYouBeenBlockedBy(currentUser, userToAdd)) throw  new BlockedException("Cannot sent friend request! because this user with id of " + userToAdd.getId() + " already blocked you");
+        if (currentUser.isFriendsWith(userToAdd))
+            throw new FriendException("Cannot accept friend request! because you're already friends.");
+        if (blockService.isBlockedBy(currentUser, userToAdd))
+            throw new BlockedException("Cannot sent friend request! because you blocked the author of this post with id of !" + userToAdd.getId());
+        if (blockService.isYouBeenBlockedBy(currentUser, userToAdd))
+            throw  new BlockedException("Cannot sent friend request! because this user with id of " + userToAdd.getId() + " already blocked you");
 
         FriendRequest friendRequest = FriendRequest.builder()
                 .createdAt(LocalDateTime.now())
@@ -64,6 +72,8 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void unFriend(User currentUser, User userToUnFriend) {
+        if (!currentUser.isFriendsWith(userToUnFriend))
+            throw new FriendException("Cannot accept friend request! because you're not friends.");
         currentUser.getFriends().remove(userToUnFriend);
         userToUnFriend.getFriends().remove(currentUser);
 
