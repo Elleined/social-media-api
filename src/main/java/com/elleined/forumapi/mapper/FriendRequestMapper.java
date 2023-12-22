@@ -11,9 +11,6 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface FriendRequestMapper {
 
-    @Mappings({
-
-    })
     FriendRequestDTO toDTO(FriendRequest friendRequest);
 
     @Mappings({
