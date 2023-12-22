@@ -13,5 +13,4 @@ public class FriendRequestDTO {
     private int id;
     private LocalDateTime createdAt;
     private UserDTO requestingUser;
-    private UserDTO requestedUser;
 }

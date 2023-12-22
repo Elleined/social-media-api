@@ -219,4 +219,10 @@ public class User {
     public boolean isFriendsWith(User anotherUser) {
         return this.getFriends().contains(anotherUser);
     }
+
+    public boolean hasAlreadySentFriendRequestTo(User userToAdd) {
+        return this.getSentFriendRequest().stream()
+                .map(FriendRequest::getRequestedUser)
+                .anyMatch(userToAdd::equals);
+    }
 }

@@ -26,7 +26,9 @@ public class ExceptionController {
             EmptyBodyException.class,
             ClosedCommentSectionException.class,
             UpvoteException.class,
-            MentionException.class
+            MentionException.class,
+            FriendException.class,
+            FriendRequestException.class
     })
     public ResponseEntity<ResponseMessage> handleBadRequestExceptions(RuntimeException ex) {
         var responseMessage = new ResponseMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
