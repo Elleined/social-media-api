@@ -67,6 +67,8 @@ public class FriendServiceImpl implements FriendService {
     public void sendFriendRequest(User currentUser, User userToAdd) {
         if (currentUser.hasAlreadySentFriendRequestTo(userToAdd))
             throw new FriendRequestException("Cannot sent friend request! becuase you already sent friend request to this user");
+        // user to add hnd narin dpt
+
         if (currentUser.isFriendsWith(userToAdd))
             throw new FriendException("Cannot sent friend request! because you're already friends.");
         if (blockService.isBlockedBy(currentUser, userToAdd))

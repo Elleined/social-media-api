@@ -132,12 +132,12 @@ public class User {
     private Set<User> friends;
 
     // user id reference is in tbl  user friend
-    @OneToMany(mappedBy = "requestedUser")
+    @OneToMany(mappedBy = "requestingUser")
     @Setter(AccessLevel.NONE)
     private Set<FriendRequest> sentFriendRequest;
 
     // user id reference is in tbl  user friend
-    @OneToMany(mappedBy = "requestingUser")
+    @OneToMany(mappedBy = "requestedUser")
     @Setter(AccessLevel.NONE)
     private Set<FriendRequest> receiveFriendRequest;
 
