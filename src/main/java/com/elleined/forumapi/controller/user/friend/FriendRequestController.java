@@ -9,6 +9,7 @@ import com.elleined.forumapi.service.friend.FriendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,11 +23,11 @@ public class FriendRequestController {
     private final FriendRequestMapper friendRequestMapper;
 
     @GetMapping
-    public Set<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId) {
+    public List<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         return friendService.getAllFriendRequests(currentUser).stream()
                 .map(friendRequestMapper::toDTO)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @PostMapping("/send/{userToAddId}")
