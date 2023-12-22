@@ -4,6 +4,7 @@ import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
 
+import java.util.List;
 import java.util.Set;
 
 public interface FriendService {
@@ -17,7 +18,7 @@ public interface FriendService {
     void unFriend(User currentUser, User userToUnFriend);
 
     Set<User> getAllFriends(User currentUser);
-    Set<FriendRequest> getAllFriendRequests(User currentUser);
+    List<FriendRequest> getAllFriendRequests(User currentUser);
 
     FriendRequest getById(int id) throws ResourceNotFoundException;
 }

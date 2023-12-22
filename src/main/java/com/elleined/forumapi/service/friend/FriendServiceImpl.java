@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -72,7 +75,6 @@ public class FriendServiceImpl implements FriendService {
             throw  new BlockedException("Cannot sent friend request! because this user with id of " + userToAdd.getId() + " already blocked you");
 
         FriendRequest friendRequest = friendRequestMapper.toEntity(currentUser, userToAdd);
-
         currentUser.getSentFriendRequest().add(friendRequest);
         userToAdd.getReceiveFriendRequest().add(friendRequest);
 
@@ -100,8 +102,10 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public Set<FriendRequest> getAllFriendRequests(User currentUser) {
-        return currentUser.getReceiveFriendRequest();
+    public List<FriendRequest> getAllFriendRequests(User currentUser) {
+        return currentUser.getReceiveFriendRequest().stream()
+                .sorted(Comparator.comparing(FriendRequest::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override
