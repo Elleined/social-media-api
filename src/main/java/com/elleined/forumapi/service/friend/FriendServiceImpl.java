@@ -39,7 +39,7 @@ public class FriendServiceImpl implements FriendService {
         if (currentUser.isFriendsWith(requestingUser))
             throw new FriendException("Cannot accept friend request! because you're already friends.");
         if (!currentUser.getReceiveFriendRequest().contains(friendRequest))
-            throw new NotOwnedException("Cannot accept friend request! because you don't have sent this friend request.");
+            throw new NotOwnedException("Cannot accept friend request! because you don't receive this friend request.");
 
         currentUser.getFriends().add(requestingUser);
         requestingUser.getFriends().add(currentUser);
