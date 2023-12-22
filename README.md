@@ -56,9 +56,9 @@ An API that supports social media functionality.
      ```
      
 # Features
-- Create, Edit, and Delete a Post
-- Create, Edit, and Delete a Comment in a post real time
-- Create, Edit, and Delete a Reply in a comment real time
+- Create, Edit, and Delete a Post with or wthout picture
+- Create, Edit, and Delete a Comment with or wthout picture in a post real time
+- Create, Edit, and Delete a Reply with or wthout picture in a comment real time
 - Like in Post, Comment, and Reply
 - Mention another user in Post, Comment, and Reply
 - Author can close the comment section for his/her every post
@@ -69,6 +69,7 @@ An API that supports social media functionality.
 - Share and Unshare post
 - Send, Accept, and Cancel friend request
 - Follow and Unfollow users
+- Web Socket for real time communication in comments and replies
 - Notification for comment and reply
 - Notification for mention in post, comment, and reply
 - Notification for like in post, comment, and reply
