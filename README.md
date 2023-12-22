@@ -65,10 +65,10 @@ An API that supports social media functionality.
 - Comment upvote
 - Pin comment and reply
 - Block another user
-- Saved Post
-- Share Post
-- Friends
-- Followers
+- Save and Unsave post
+- Share and Unshare post
+- Send, Accept, and Cancel friend request
+- Follow and Unfollow users
 - Notification for comment and reply
 - Notification for mention in post, comment, and reply
 - Notification for like in post, comment, and reply
