@@ -226,9 +226,9 @@ public class User {
                 .anyMatch(userToAdd::equals);
     }
 
-    public boolean hasAlreadyReceiveFriendRequestTo(User currentUser) {
-        return this.getReceiveFriendRequest().stream()
-                .map(FriendRequest::getRequestingUser)
-                .anyMatch(currentUser::equals);
+    public boolean hasAlreadyReceiveFriendRequestTo(User userToAdd) {
+        return userToAdd.getSentFriendRequest().stream()
+                .map(FriendRequest::getRequestedUser)
+                .anyMatch(this::equals);
     }
 }
