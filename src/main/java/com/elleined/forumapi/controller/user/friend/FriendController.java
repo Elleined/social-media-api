@@ -1,5 +1,7 @@
 package com.elleined.forumapi.controller.user.friend;
 
+import com.elleined.forumapi.dto.UserDTO;
+import com.elleined.forumapi.mapper.UserMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.friend.FriendService;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -14,12 +17,16 @@ import java.util.Set;
 public class FriendController {
 
     private final FriendService friendService;
+
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @GetMapping
-    public Set<User> getAllFriends(@PathVariable("currentUserId") int currentUserId) {
+    public Set<UserDTO> getAllFriends(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return friendService.getAllFriends(currentUser);
+        return friendService.getAllFriends(currentUser).stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toSet());
     }
 
     @DeleteMapping("/{userToUnFriendId}")

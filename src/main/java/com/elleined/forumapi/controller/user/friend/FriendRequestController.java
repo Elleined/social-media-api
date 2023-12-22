@@ -1,5 +1,7 @@
 package com.elleined.forumapi.controller.user.friend;
 
+import com.elleined.forumapi.dto.friend.FriendRequestDTO;
+import com.elleined.forumapi.mapper.FriendRequestMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.service.UserService;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,11 +19,14 @@ public class FriendRequestController {
 
     private final FriendService friendService;
     private final UserService userService;
+    private final FriendRequestMapper friendRequestMapper;
 
     @GetMapping
-    public Set<FriendRequest> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId) {
+    public Set<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return friendService.getAllFriendRequests(currentUser);
+        return friendService.getAllFriendRequests(currentUser).stream()
+                .map(friendRequestMapper::toDTO)
+                .collect(Collectors.toSet());
     }
 
     @PostMapping("/send/{userToAddId}")
