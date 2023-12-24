@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CommentWSMentionNotificationService extends WSMentionBaseNotificationService implements WSMentionNotificationService<CommentMention> {
 
-    public CommentWSMentionNotificationService(SimpMessagingTemplate simpMessagingTemplate, MentionNotificationMapper mentionNotificationMapper) {
+    protected CommentWSMentionNotificationService(SimpMessagingTemplate simpMessagingTemplate, MentionNotificationMapper mentionNotificationMapper) {
         super(simpMessagingTemplate, mentionNotificationMapper);
     }
 
