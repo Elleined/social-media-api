@@ -1,5 +1,7 @@
 package com.elleined.forumapi;
 
+import com.elleined.forumapi.populator.EmojiPopulator;
+import com.elleined.forumapi.repository.EmojiRepository;
 import com.elleined.forumapi.service.ModalTrackerService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +12,14 @@ import org.springframework.stereotype.Component;
 public class AfterStartUp {
 
     private final ModalTrackerService modalTrackerService;
+    private final EmojiPopulator emojiPopulator;
+    private final EmojiRepository emojiRepository;
+
     @PostConstruct
     void init() {
         modalTrackerService.deleteAll();
+
+        if (emojiRepository.existsById(1)) return;
+        emojiPopulator.populate();
     }
 }

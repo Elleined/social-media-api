@@ -14,11 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Emoji {
-    // createdAt
-    // notificationStatus
-    // respondent == user
-    // saan may emoji sa post, comment, or reply ba
-    // !!!! This is not yet finish
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +45,10 @@ public class Emoji {
             )
     )
     private List<Comment> commentEmojis;
+
+    public Emoji(Type type) {
+        this.type = type;
+    }
 
     public enum Type {
         LIKE,
