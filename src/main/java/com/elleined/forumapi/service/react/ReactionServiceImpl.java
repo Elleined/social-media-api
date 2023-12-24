@@ -8,6 +8,10 @@ import com.elleined.forumapi.model.emoji.Emoji;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.react.ReplyReact;
+import com.elleined.forumapi.repository.react.CommentReactRepository;
+import com.elleined.forumapi.repository.react.PostReactRepository;
+import com.elleined.forumapi.repository.react.ReactRepository;
+import com.elleined.forumapi.repository.react.ReplyReactRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +24,11 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ReactionServiceImpl implements ReactionService {
-
+    private final ReactRepository repository;
+    private final PostReactRepository postReactRepository;
+    private final CommentReactRepository commentReactRepository;
+    private final ReplyReactRepository replyReactRepository;
+    
     @Override
     public List<PostReact> getAll(User currentUser, Post post) {
         return null;
