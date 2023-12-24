@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FriendRequestNotificationServiceImpl implements FriendNotificationService {
+public class FriendRequestRequestNotificationServiceImpl implements FriendRequestNotificationService {
     @Override
     public int getNotificationCount(User currentUser) {
         return getAllUnreadNotification(currentUser).size();

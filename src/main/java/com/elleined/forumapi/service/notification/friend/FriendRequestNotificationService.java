@@ -6,7 +6,7 @@ import com.elleined.forumapi.service.notification.NotificationService;
 
 import java.util.List;
 
-public interface FriendNotificationService extends NotificationService<FriendRequest> {
+public interface FriendRequestNotificationService extends NotificationService<FriendRequest> {
     @Override
     List<FriendRequest> getAllUnreadNotification(User currentUser);
 }

@@ -1,6 +1,7 @@
 package com.elleined.forumapi.mapper;
 
 import com.elleined.forumapi.dto.friend.FriendRequestDTO;
+import com.elleined.forumapi.dto.notification.FriendRequestNotification;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
@@ -24,4 +25,8 @@ public interface FriendRequestMapper {
     })
     FriendRequest toEntity(User requestingUser,
                            @Context User requestedUser);
+
+    default FriendRequestNotification toNotification(FriendRequest friendRequest) {
+        return null;
+    }
 }

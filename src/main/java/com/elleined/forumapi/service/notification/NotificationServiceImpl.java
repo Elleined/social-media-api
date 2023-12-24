@@ -1,9 +1,7 @@
 package com.elleined.forumapi.service.notification;
 
-import com.elleined.forumapi.dto.notification.CommentNotification;
-import com.elleined.forumapi.dto.notification.Notification;
-import com.elleined.forumapi.dto.notification.PostNotification;
-import com.elleined.forumapi.dto.notification.ReplyNotification;
+import com.elleined.forumapi.dto.notification.*;
+import com.elleined.forumapi.mapper.FriendRequestMapper;
 import com.elleined.forumapi.mapper.notification.comment.CommentNotificationMapper;
 import com.elleined.forumapi.mapper.notification.reply.ReplyNotificationMapper;
 import com.elleined.forumapi.mapper.notification.like.LikeNotificationMapper;
@@ -16,6 +14,7 @@ import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.service.notification.comment.CommentNotificationService;
+import com.elleined.forumapi.service.notification.friend.FriendRequestNotificationService;
 import com.elleined.forumapi.service.notification.like.LikeNotificationService;
 import com.elleined.forumapi.service.notification.mention.MentionNotificationService;
 import com.elleined.forumapi.service.notification.reply.ReplyNotificationService;
@@ -46,6 +45,8 @@ public class NotificationServiceImpl implements NotificationService<Notification
     private final CommentNotificationService commentNotificationService;
     private final ReplyNotificationService replyNotificationService;
 
+    private final FriendRequestNotificationService friendRequestNotificationService;
+
     // Mappers
     private final CommentNotificationMapper commentNotificationMapper;
     private final ReplyNotificationMapper replyNotificationMapper;
@@ -53,6 +54,7 @@ public class NotificationServiceImpl implements NotificationService<Notification
     private final LikeNotificationMapper likeNotificationMapper;
     private final MentionNotificationMapper mentionNotificationMapper;
 
+    private final FriendRequestMapper friendRequestMapper;
 
     @Override
     public Set<Notification> getAllUnreadNotification(User currentUser) {
@@ -86,6 +88,10 @@ public class NotificationServiceImpl implements NotificationService<Notification
         Set<ReplyNotification> unreadReplyMentions = replyMentionNotificationService.getAllUnreadNotification(currentUser).stream()
                 .map(mentionNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
+
+        Set<FriendRequestNotification> unreadFriendRequests = friendRequestNotificationService.getAllUnreadNotification(currentUser).stream()
+                .map(friendRequestMapper::toNotification)
+                .collect(Collectors.toSet());
         
         return Stream.of(
                         unreadComments,
@@ -95,7 +101,8 @@ public class NotificationServiceImpl implements NotificationService<Notification
                         unreadReplyLikes,
                         unreadPostMentions,
                         unreadCommentMentions,
-                        unreadReplyMentions)
+                        unreadReplyMentions,
+                        unreadFriendRequests)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
     }
