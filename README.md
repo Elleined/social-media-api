@@ -76,6 +76,7 @@ An API that supports social media functionality.
 - Receive real-time notification for comment and reply
 - Receive real-time notification for mention in post, comment, and reply
 - Receive real-time notification for like in post, comment, and reply
+- Receive real-time notification for send and accept friend request
 
 # Technologies used
 - Spring boot
