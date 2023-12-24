@@ -45,6 +45,10 @@ An API that supports social media functionality.
      ```
         const mentionNotificationTopic = "/notification/mentions/${yourId}";
      ```
+   - for friend request notification
+     ```
+        const friendRequestNotificationTopic = "/notification/friend-request/${yourId}";
+     ```
    - sample code
      ```
      stompClient.subscribe(commentNotificationTopic, function (payloadToBeAutomaticallyReceive) {
