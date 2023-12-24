@@ -1,6 +1,7 @@
 package com.elleined.forumapi.model;
 
 import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.emoji.react.CommentReact;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import jakarta.persistence.*;
@@ -77,6 +78,11 @@ public class Comment {
     @OneToMany(mappedBy = "comment")
     @Setter(AccessLevel.NONE)
     private Set<CommentMention> mentions;
+
+    // comment id refernce is in tbl comment emoji
+    @OneToMany(mappedBy = "comment")
+    @Setter(AccessLevel.NONE)
+    private Set<CommentReact> reactions;
 
     @ManyToMany(mappedBy = "upvotedComments")
     private Set<User> upvotingUsers;

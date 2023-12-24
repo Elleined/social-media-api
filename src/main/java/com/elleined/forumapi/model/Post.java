@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model;
 
+import com.elleined.forumapi.model.emoji.react.PostReact;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.mention.PostMention;
 import jakarta.persistence.*;
@@ -70,6 +71,11 @@ public class Post {
     @Setter(AccessLevel.NONE)
     private Set<PostLike> likes;
 
+    // post id reference is in tbl post emoji
+    @OneToMany(mappedBy = "post")
+    @Setter(AccessLevel.NONE)
+    private Set<PostReact> reactions;
+
     @ManyToMany(mappedBy = "savedPosts")
     @Setter(AccessLevel.NONE)
     private Set<User> savingUsers;
@@ -77,6 +83,7 @@ public class Post {
     @ManyToMany(mappedBy = "sharedPosts")
     @Setter(AccessLevel.NONE)
     private Set<User> sharers;
+
 
     public enum CommentSectionStatus {OPEN, CLOSED}
     public boolean isDeleted() {
