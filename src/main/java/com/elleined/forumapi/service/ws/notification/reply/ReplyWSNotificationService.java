@@ -1,7 +1,7 @@
 package com.elleined.forumapi.service.ws.notification.reply;
 
 import com.elleined.forumapi.dto.notification.ReplyNotification;
-import com.elleined.forumapi.mapper.notification.ReplyNotificationMapper;
+import com.elleined.forumapi.mapper.notification.reply.ReplyNotificationMapper;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.service.ws.notification.BaseWSNotificationService;

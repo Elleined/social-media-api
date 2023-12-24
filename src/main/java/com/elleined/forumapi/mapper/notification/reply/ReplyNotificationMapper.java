@@ -1,6 +1,7 @@
-package com.elleined.forumapi.mapper.notification;
+package com.elleined.forumapi.mapper.notification.reply;
 
 import com.elleined.forumapi.dto.notification.ReplyNotification;
+import com.elleined.forumapi.mapper.notification.NotificationMapper;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.service.Formatter;
 import com.elleined.forumapi.service.notification.reply.ReplyNotificationService;

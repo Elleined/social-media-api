@@ -1,6 +1,7 @@
-package com.elleined.forumapi.mapper.notification;
+package com.elleined.forumapi.mapper.notification.comment;
 
 import com.elleined.forumapi.dto.notification.CommentNotification;
+import com.elleined.forumapi.mapper.notification.NotificationMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.service.Formatter;
 import com.elleined.forumapi.service.notification.comment.CommentNotificationService;

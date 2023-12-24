@@ -1,7 +1,7 @@
 package com.elleined.forumapi.service.ws.notification.comment;
 
 import com.elleined.forumapi.dto.notification.CommentNotification;
-import com.elleined.forumapi.mapper.notification.CommentNotificationMapper;
+import com.elleined.forumapi.mapper.notification.comment.CommentNotificationMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.service.ws.notification.BaseWSNotificationService;
