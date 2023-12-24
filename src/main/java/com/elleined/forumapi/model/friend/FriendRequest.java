@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model.friend;
 
+import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,4 +48,11 @@ public class FriendRequest {
             nullable = false
     )
     private User requestingUser;
+
+    @Enumerated(EnumType.STRING)
+    @Column(
+            name = "notification_status",
+            nullable = false
+    )
+    private NotificationStatus notificationStatus;
 }
