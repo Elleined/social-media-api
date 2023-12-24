@@ -14,7 +14,8 @@ import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.reader.post.PostLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.post.PostMentionNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
-import com.elleined.forumapi.service.ws.WSNotificationService;
+import com.elleined.forumapi.service.ws.notification.like.PostLikeWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.mention.PostMentionWSNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,6 @@ import java.util.Set;
 public class PostController {
     private final UserService userService;
 
-    private final WSNotificationService wsNotificationService;
-
     private final PostService postService;
     private final PostMapper postMapper;
 
@@ -42,6 +41,9 @@ public class PostController {
     private final CommentMapper commentMapper;
 
     private final ModalTrackerService modalTrackerService;
+
+    private final PostLikeWSNotificationService postLikeWSNotificationService;
+    private final PostMentionWSNotificationService postMentionWSNotificationService;
 
     private final PostLikeNotificationReader postLikeNotificationReader;
     private final PostMentionNotificationReader postMentionNotificationReader;
@@ -77,7 +79,7 @@ public class PostController {
         Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
         Post post = postService.save(currentUser, body, attachedPicture, mentionedUsers);
 
-        if (mentionedUsers != null) wsNotificationService.broadcastPostMentions(post.getMentions());
+        if (mentionedUsers != null) postMentionWSNotificationService.broadcastMentions(post.getMentions());
         return postMapper.toDTO(post);
     }
 
@@ -127,7 +129,7 @@ public class PostController {
         }
 
         PostLike postLike = postService.like(respondent, post);
-        wsNotificationService.broadcastLike(postLike);
+        postLikeWSNotificationService.broadcast(postLike);
         return postMapper.toDTO(post);
     }
 

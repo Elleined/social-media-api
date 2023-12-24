@@ -1,6 +1,5 @@
 package com.elleined.forumapi.service.ws.notification.mention;
 
-import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.Mention;
 import com.elleined.forumapi.service.ws.notification.WSNotificationService;
 

@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Service
 @Slf4j
 public class ReplyMentionWSNotificationService extends BaseWSNotificationService implements MentionWSNotificationService<ReplyMention> {

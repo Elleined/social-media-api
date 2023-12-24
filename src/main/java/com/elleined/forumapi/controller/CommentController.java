@@ -17,8 +17,10 @@ import com.elleined.forumapi.service.notification.reader.comment.CommentLikeNoti
 import com.elleined.forumapi.service.notification.reader.comment.CommentMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
-import com.elleined.forumapi.service.ws.WSNotificationService;
 import com.elleined.forumapi.service.ws.WSService;
+import com.elleined.forumapi.service.ws.notification.CommentWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.like.CommentLikeWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.mention.CommentMentionWSNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +46,12 @@ public class CommentController {
     private final ReplyMapper replyMapper;
     private final ReplyService replyService;
 
-    private final WSNotificationService wsNotificationService;
     private final WSService wsService;
+
+    private final CommentWSNotificationService commentWSNotificationService;
+
+    private final CommentLikeWSNotificationService commentLikeWSNotificationService;
+    private final CommentMentionWSNotificationService commentMentionWSNotificationService;
 
     private final CommentLikeNotificationReader commentLikeNotificationReader;
     private final CommentMentionNotificationReader commentMentionNotificationReader;
@@ -90,10 +96,10 @@ public class CommentController {
         Post post = postService.getById(postId);
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers);
-        if (mentionedUsers != null) wsNotificationService.broadcastCommentMentions(comment.getMentions());
-        wsNotificationService.broadcastCommentNotification(comment);
-        wsService.broadcastComment(comment);
+        if (mentionedUsers != null) commentMentionWSNotificationService.broadcastMentions(comment.getMentions());
 
+        commentWSNotificationService.broadcast(comment);
+        wsService.broadcastComment(comment);
         return commentMapper.toDTO(comment);
     }
 
@@ -150,7 +156,7 @@ public class CommentController {
         }
 
         CommentLike commentLike = commentService.like(respondent, comment);
-        wsNotificationService.broadcastLike(commentLike);
+        commentLikeWSNotificationService.broadcast(commentLike);
 
         return commentMapper.toDTO(comment);
     }

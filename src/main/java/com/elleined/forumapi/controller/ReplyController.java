@@ -13,8 +13,10 @@ import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
-import com.elleined.forumapi.service.ws.WSNotificationService;
 import com.elleined.forumapi.service.ws.WSService;
+import com.elleined.forumapi.service.ws.notification.ReplyWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.like.ReplyLikeWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.mention.ReplyMentionWSNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,11 @@ public class ReplyController {
 
     private final ModalTrackerService modalTrackerService;
 
-    private final WSNotificationService wsNotificationService;
+    private final ReplyWSNotificationService replyWSNotificationService;
+
+    private final ReplyLikeWSNotificationService replyLikeWSNotificationService;
+    private final ReplyMentionWSNotificationService replyMentionWSNotificationService;
+
     private final WSService wsService;
 
     private final ReplyLikeNotificationReader replyLikeNotificationReader;
@@ -74,10 +80,10 @@ public class ReplyController {
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.save(currentUser, comment, body, attachedPicture, mentionedUsers);
 
-        if (mentionedUsers != null) wsNotificationService.broadcastReplyMentions(reply.getMentions());
-        wsNotificationService.broadcastReplyNotification(reply);
-        wsService.broadcastReply(reply);
+        if (mentionedUsers != null) replyMentionWSNotificationService.broadcastMentions(reply.getMentions());
 
+        replyWSNotificationService.broadcast(reply);
+        wsService.broadcastReply(reply);
         return replyMapper.toDTO(reply);
     }
 
@@ -121,7 +127,7 @@ public class ReplyController {
         }
 
         ReplyLike replyLike = replyService.like(respondent, reply);
-        wsNotificationService.broadcastLike(replyLike);
+        replyLikeWSNotificationService.broadcast(replyLike);
         return replyMapper.toDTO(reply);
     }
 }
