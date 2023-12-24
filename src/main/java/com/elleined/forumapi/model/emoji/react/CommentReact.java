@@ -1,6 +1,6 @@
-package com.elleined.forumapi.model.emoji;
+package com.elleined.forumapi.model.emoji.react;
 
-import com.elleined.forumapi.model.Reply;
+import com.elleined.forumapi.model.Comment;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -10,24 +10,24 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tbl_comment_emoji")
 @NoArgsConstructor
-public class ReplyEmoji extends EntityEmoji {
+public class CommentReact extends React {
 
     @ManyToOne(optional = false)
     @JoinColumn(
-            name = "reply_id",
-            referencedColumnName = "reply_id",
+            name = "comment_id",
+            referencedColumnName = "comment_id",
             nullable = false,
             updatable = false
     )
-    private Reply reply;
+    private Comment comment;
 
     @Override
     public String getMessage() {
-        return this.getRespondent().getName() + " reacted " + this.getEmoji().getType().name() + " to you're reply " + reply.getBody();
+        return this.getRespondent().getName() + " reacted " + this.getEmoji().getType().name() + " to you're comment " + comment.getBody();
     }
 
     @Override
     public int getReceiverId() {
-        return this.reply.getReplier().getId();
+        return comment.getCommenter().getId();
     }
 }

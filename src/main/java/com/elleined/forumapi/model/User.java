@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model;
 
+import com.elleined.forumapi.model.emoji.react.PostReact;
 import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.like.PostLike;
@@ -201,6 +202,21 @@ public class User {
     @OneToMany(mappedBy = "mentionedUser")
     @Setter(AccessLevel.NONE)
     private Set<ReplyMention> receiveReplyMentions;
+
+    // user id reference is in tbl post emoji
+    @OneToMany(mappedBy = "respondent")
+    @Setter(AccessLevel.NONE)
+    private Set<PostReact> createdPostReactions;
+
+    // user id reference is in tbl comment emoji
+    @OneToMany(mappedBy = "respondent")
+    @Setter(AccessLevel.NONE)
+    private Set<PostReact> createdCommentReactions;
+
+    // user id reference is in tbl reply emoji
+    @OneToMany(mappedBy = "respondent")
+    @Setter(AccessLevel.NONE)
+    private Set<PostReact> createdReplyReactions;
 
     public boolean notOwned(Post post) {
         return this.getPosts().stream().noneMatch(post::equals);

@@ -1,8 +1,9 @@
-package com.elleined.forumapi.model.emoji;
+package com.elleined.forumapi.model.emoji.react;
 
 
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.emoji.Emoji;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class EntityEmoji {
+public abstract class React {
 
     @Id
     @GeneratedValue(

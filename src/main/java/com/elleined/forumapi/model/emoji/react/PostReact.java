@@ -1,8 +1,9 @@
-package com.elleined.forumapi.model.emoji;
+package com.elleined.forumapi.model.emoji.react;
 
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.emoji.Emoji;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "tbl_post_emoji")
 @NoArgsConstructor
-public class PostEmoji extends EntityEmoji {
+public class PostReact extends React {
 
     @ManyToOne(optional = false)
     @JoinColumn(
@@ -27,7 +28,7 @@ public class PostEmoji extends EntityEmoji {
     private Post post;
 
     @Builder(builderMethodName = "postEmojiBuilder")
-    public PostEmoji(int id, LocalDateTime createdAt, User respondent, NotificationStatus notificationStatus, Emoji emoji, Post post) {
+    public PostReact(int id, LocalDateTime createdAt, User respondent, NotificationStatus notificationStatus, Emoji emoji, Post post) {
         super(id, createdAt, respondent, notificationStatus, emoji);
         this.post = post;
     }
