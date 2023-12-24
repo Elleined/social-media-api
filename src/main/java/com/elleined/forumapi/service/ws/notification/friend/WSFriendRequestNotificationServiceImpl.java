@@ -22,7 +22,6 @@ public class WSFriendRequestNotificationServiceImpl extends BaseWSNotificationSe
 
     @Override
     public void broadcastSendFriendRequest(FriendRequest friendRequest) {
-        if (friendRequest.isRead()) return;
         FriendRequestNotification friendRequestNotification = friendRequestNotificationMapper.toSendNotification(friendRequest);
         int requestedUserId = friendRequest.getRequestedUser().getId();
         final String destination = "/notification/friend-requests/" + requestedUserId;
