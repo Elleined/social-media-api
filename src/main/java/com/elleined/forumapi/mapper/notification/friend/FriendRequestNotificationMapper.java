@@ -3,11 +3,12 @@ package com.elleined.forumapi.mapper.notification.friend;
 import com.elleined.forumapi.dto.notification.FriendRequestNotification;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.friend.FriendRequest;
+import com.elleined.forumapi.service.Formatter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", imports = NotificationStatus.class)
+@Mapper(componentModel = "spring", imports = {NotificationStatus.class, Formatter.class})
 public interface FriendRequestNotificationMapper {
     @Mappings({
             @Mapping(target = "id", source = "id"),
@@ -15,8 +16,8 @@ public interface FriendRequestNotificationMapper {
             @Mapping(target = "message", expression = "java(getSendMessage(friendRequest))"),
             @Mapping(target = "respondentPicture", source = "requestingUser.picture"),
             @Mapping(target = "respondentId", source = "requestingUser.id"),
-            @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(friendRequest.getDateCreated()))"),
-            @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(friendRequest.getDateCreated()))"),
+            @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(friendRequest.getCreatedAt()))"),
+            @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(friendRequest.getCreatedAt()))"),
             @Mapping(target = "notificationStatus", source = "friendRequest.notificationStatus"),
     })
     FriendRequestNotification toSendNotification(FriendRequest friendRequest);
