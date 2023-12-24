@@ -55,4 +55,12 @@ public class FriendRequest {
             nullable = false
     )
     private NotificationStatus notificationStatus;
+
+    public boolean isRead() {
+        return this.notificationStatus == NotificationStatus.READ;
+    }
+
+    public boolean isUnRead() {
+        return this.notificationStatus == NotificationStatus.UNREAD;
+    }
 }
