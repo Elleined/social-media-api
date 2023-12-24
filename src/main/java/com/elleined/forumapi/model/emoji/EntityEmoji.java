@@ -31,7 +31,7 @@ public abstract class EntityEmoji {
             sequenceName = "postEmojiAutoIncrement"
     )
     @Column(
-            name = "post_emoji_id",
+            name = "id",
             nullable = false,
             unique = true,
             updatable = false

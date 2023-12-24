@@ -34,7 +34,7 @@ public class PostEmoji extends EntityEmoji {
 
     @Override
     public String getMessage() {
-        return this.getRespondent().getName() + " reacted " + getEmoji().getType().name() + " to your post";
+        return this.getRespondent().getName() + " reacted " + getEmoji().getType().name() + " to your post " + post.getBody();
     }
 
     @Override
