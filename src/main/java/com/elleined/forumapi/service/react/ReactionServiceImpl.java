@@ -3,6 +3,7 @@ package com.elleined.forumapi.service.react;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.Reply;
+import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.PostReact;
@@ -21,47 +22,47 @@ import java.util.List;
 public class ReactionServiceImpl implements ReactionService {
 
     @Override
-    public List<PostReact> getAll(Post post) {
+    public List<PostReact> getAll(User currentUser, Post post) {
         return null;
     }
 
     @Override
-    public List<CommentReact> getAll(Comment comment) {
+    public List<CommentReact> getAll(User currentUser, Comment comment) {
         return null;
     }
 
     @Override
-    public List<ReplyReact> getAll(Reply reply) {
+    public List<ReplyReact> getAll(User currentUser, Reply reply) {
         return null;
     }
 
     @Override
-    public List<PostReact> getAllReactionByEmojiType(Post post, Emoji.Type type) {
+    public List<PostReact> getAllReactionByEmojiType(User currentUser, Post post, Emoji.Type type) {
         return null;
     }
 
     @Override
-    public List<CommentReact> getAllReactionByEmojiType(Comment comment, Emoji.Type type) {
+    public List<CommentReact> getAllReactionByEmojiType(User currentUser, Comment comment, Emoji.Type type) {
         return null;
     }
 
     @Override
-    public List<ReplyReact> getAllReactionByEmojiType(Reply reply, Emoji.Type type) {
+    public List<ReplyReact> getAllReactionByEmojiType(User currentUser, Reply reply, Emoji.Type type) {
         return null;
     }
 
     @Override
-    public PostReact save(Post post, Emoji emoji) {
+    public PostReact save(User currentUser, Post post, Emoji emoji) {
         return null;
     }
 
     @Override
-    public CommentReact save(Comment comment, Emoji emoji) {
+    public CommentReact save(User currentUser, Comment comment, Emoji emoji) {
         return null;
     }
 
     @Override
-    public ReplyReact save(Reply reply, Emoji emoji) {
+    public ReplyReact save(User currentUser, Reply reply, Emoji emoji) {
         return null;
     }
 }
