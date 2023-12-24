@@ -1,9 +1,11 @@
-package com.elleined.forumapi.service.ws.notification;
+package com.elleined.forumapi.service.ws.notification.reply;
 
 import com.elleined.forumapi.dto.notification.ReplyNotification;
 import com.elleined.forumapi.mapper.notification.ReplyNotificationMapper;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Reply;
+import com.elleined.forumapi.service.ws.notification.BaseWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.WSNotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

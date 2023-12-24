@@ -14,7 +14,7 @@ import com.elleined.forumapi.service.notification.reader.reply.ReplyLikeNotifica
 import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
 import com.elleined.forumapi.service.ws.WSService;
-import com.elleined.forumapi.service.ws.notification.ReplyWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.reply.ReplyWSNotificationService;
 import com.elleined.forumapi.service.ws.notification.like.ReplyWSLikeNotificationService;
 import com.elleined.forumapi.service.ws.notification.mention.ReplyWSMentionNotificationService;
 import lombok.RequiredArgsConstructor;
