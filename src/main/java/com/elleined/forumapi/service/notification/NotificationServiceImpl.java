@@ -4,7 +4,10 @@ import com.elleined.forumapi.dto.notification.CommentNotification;
 import com.elleined.forumapi.dto.notification.Notification;
 import com.elleined.forumapi.dto.notification.PostNotification;
 import com.elleined.forumapi.dto.notification.ReplyNotification;
-import com.elleined.forumapi.mapper.NotificationMapper;
+import com.elleined.forumapi.mapper.notification.CommentNotificationMapper;
+import com.elleined.forumapi.mapper.notification.ReplyNotificationMapper;
+import com.elleined.forumapi.mapper.notification.like.LikeNotificationMapper;
+import com.elleined.forumapi.mapper.notification.mention.MentionNotificationMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.like.PostLike;
@@ -31,6 +34,7 @@ import java.util.stream.Stream;
 @Transactional
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService<Notification> {
+    // Notification Services
     private final LikeNotificationService<PostLike> postLikeNotificationService;
     private final LikeNotificationService<CommentLike> commentLikeNotificationService;
     private final LikeNotificationService<ReplyLike> replyLikeNotificationService;
@@ -42,39 +46,45 @@ public class NotificationServiceImpl implements NotificationService<Notification
     private final CommentNotificationService commentNotificationService;
     private final ReplyNotificationService replyNotificationService;
 
-    private final NotificationMapper notificationMapper;
+    // Mappers
+    private final CommentNotificationMapper commentNotificationMapper;
+    private final ReplyNotificationMapper replyNotificationMapper;
+
+    private final LikeNotificationMapper likeNotificationMapper;
+    private final MentionNotificationMapper mentionNotificationMapper;
+
 
     @Override
     public Set<Notification> getAllUnreadNotification(User currentUser) {
         Set<CommentNotification> unreadComments = commentNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(notificationMapper::toNotification)
+                .map(commentNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
         Set<ReplyNotification> unreadReply = replyNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(notificationMapper::toNotification)
+                .map(replyNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
         Set<PostNotification> unreadPostLikes = postLikeNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(notificationMapper::toLikeNotification)
+                .map(likeNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
         Set<CommentNotification> unreadCommentLikes = commentLikeNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(notificationMapper::toLikeNotification)
+                .map(likeNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
         Set<ReplyNotification> unreadReplyLikes = replyLikeNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(notificationMapper::toLikeNotification)
+                .map(likeNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
         Set<PostNotification> unreadPostMentions = postMentionNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(notificationMapper::toMentionNotification)
+                .map(mentionNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
         Set<CommentNotification> unreadCommentMentions = commentMentionNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(notificationMapper::toMentionNotification)
+                .map(mentionNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
         Set<ReplyNotification> unreadReplyMentions = replyMentionNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(notificationMapper::toMentionNotification)
+                .map(mentionNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
         
         return Stream.of(

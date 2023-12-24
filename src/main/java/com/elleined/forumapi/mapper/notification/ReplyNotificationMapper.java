@@ -3,12 +3,19 @@ package com.elleined.forumapi.mapper.notification;
 import com.elleined.forumapi.dto.notification.ReplyNotification;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.service.Formatter;
+import com.elleined.forumapi.service.notification.reply.ReplyNotificationService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 @Mapper(componentModel = "spring", imports = Formatter.class)
-public interface ReplyNotificationMapper extends NotificationMapper<Reply, ReplyNotification> {
+public abstract class ReplyNotificationMapper implements NotificationMapper<Reply, ReplyNotification> {
+
+    @Autowired
+    @Lazy
+    private ReplyNotificationService replyNotificationService;
 
     @Override
     @Mappings(value = {
@@ -27,13 +34,13 @@ public interface ReplyNotificationMapper extends NotificationMapper<Reply, Reply
 
             @Mapping(target = "count", expression = "java(getNotificationCount(reply))"),
     })
-    ReplyNotification toNotification(Reply reply);
+    public abstract ReplyNotification toNotification(Reply reply);
 
-    default String getMessage(Reply reply) {
+    protected String getMessage(Reply reply) {
         return reply.getReplier().getName() + " replied to your comment: " + "\"" + reply.getComment().getBody() + "\"";
     }
 
-    default int getNotificationCount(Reply reply) {
+    protected int getNotificationCount(Reply reply) {
         return replyNotificationService.notificationCountForReplier(reply.getComment().getCommenter(), reply.getComment(), reply.getReplier());
     }
 }

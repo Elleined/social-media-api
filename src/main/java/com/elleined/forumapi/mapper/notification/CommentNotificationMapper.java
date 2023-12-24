@@ -3,12 +3,19 @@ package com.elleined.forumapi.mapper.notification;
 import com.elleined.forumapi.dto.notification.CommentNotification;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.service.Formatter;
+import com.elleined.forumapi.service.notification.comment.CommentNotificationService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 @Mapper(componentModel = "spring", imports = Formatter.class)
-public interface CommentNotificationMapper extends NotificationMapper<Comment, CommentNotification> {
+public abstract class CommentNotificationMapper implements NotificationMapper<Comment, CommentNotification> {
+
+    @Autowired
+    @Lazy
+    private CommentNotificationService commentNotificationService;
 
     @Override
     @Mappings(value = {
@@ -26,13 +33,13 @@ public interface CommentNotificationMapper extends NotificationMapper<Comment, C
 
             @Mapping(target = "count", expression = "java(getNotificationCount(comment))"),
     })
-    CommentNotification toNotification(Comment comment);
+    public abstract CommentNotification toNotification(Comment comment);
 
-    default int getNotificationCount(Comment comment) {
+    protected int getNotificationCount(Comment comment) {
         return commentNotificationService.notificationCountForCommenter(comment.getPost().getAuthor(), comment.getPost(), comment.getCommenter());
     }
 
-    default String getMessage(Comment comment) {
+    protected String getMessage(Comment comment) {
         return comment.getCommenter().getName() + " commented in your post: " + "\"" + comment.getPost().getBody() + "\"";
     }
 }

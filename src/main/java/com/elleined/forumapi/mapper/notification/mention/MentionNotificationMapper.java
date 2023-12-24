@@ -1,34 +1,18 @@
-package com.elleined.forumapi.mapper;
+package com.elleined.forumapi.mapper.notification.mention;
 
 import com.elleined.forumapi.dto.notification.CommentNotification;
 import com.elleined.forumapi.dto.notification.PostNotification;
 import com.elleined.forumapi.dto.notification.ReplyNotification;
-import com.elleined.forumapi.model.ModalTracker;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
-import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.Formatter;
-import com.elleined.forumapi.service.ReplyService;
-import com.elleined.forumapi.service.notification.comment.CommentNotificationService;
-import com.elleined.forumapi.service.notification.reply.ReplyNotificationService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 
-@Mapper(componentModel = "spring", imports = {Formatter.class, ModalTracker.Type.class})
-public abstract class NotificationMapper {
-
-    @Autowired
-    @Lazy
-    protected CommentService commentService;
-
-    protected CommentNotificationService commentNotificationService;
-    protected ReplyNotificationService replyNotificationService;
-    @Autowired @Lazy
-    protected ReplyService replyService;
+@Mapper(componentModel = "spring", imports = Formatter.class)
+public interface MentionNotificationMapper {
 
     @Mappings({
             @Mapping(target = "id", source = "postMention.id"),
@@ -42,7 +26,7 @@ public abstract class NotificationMapper {
 
             @Mapping(target = "postId", source = "postMention.post.id"),
     })
-    public abstract PostNotification toMentionNotification(PostMention postMention);
+    PostNotification toNotification(PostMention postMention);
 
     @Mappings({
             @Mapping(target = "id", source = "commentMention.id"),
@@ -58,7 +42,7 @@ public abstract class NotificationMapper {
             @Mapping(target = "commentId", source = "commentMention.comment.id"),
             @Mapping(target = "count", expression = "java(1)")
     })
-    public abstract CommentNotification toMentionNotification(CommentMention commentMention);
+    CommentNotification toNotification(CommentMention commentMention);
 
     @Mappings({
             @Mapping(target = "id", source = "replyMention.id"),
@@ -75,7 +59,7 @@ public abstract class NotificationMapper {
             @Mapping(target = "replyId", source = "replyMention.reply.id"),
             @Mapping(target = "count", expression = "java(1)")
     })
-    public abstract ReplyNotification toMentionNotification(ReplyMention replyMention);
+    ReplyNotification toNotification(ReplyMention replyMention);
 
 }
 

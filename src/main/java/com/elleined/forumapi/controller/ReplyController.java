@@ -15,8 +15,8 @@ import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotif
 import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
 import com.elleined.forumapi.service.ws.WSService;
 import com.elleined.forumapi.service.ws.notification.ReplyWSNotificationService;
-import com.elleined.forumapi.service.ws.notification.like.ReplyLikeWSNotificationService;
-import com.elleined.forumapi.service.ws.notification.mention.ReplyMentionWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.like.ReplyWSLikeNotificationService;
+import com.elleined.forumapi.service.ws.notification.mention.ReplyWSMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +42,8 @@ public class ReplyController {
 
     private final ReplyWSNotificationService replyWSNotificationService;
 
-    private final ReplyLikeWSNotificationService replyLikeWSNotificationService;
-    private final ReplyMentionWSNotificationService replyMentionWSNotificationService;
+    private final ReplyWSLikeNotificationService replyLikeWSNotificationService;
+    private final ReplyWSMentionNotificationService replyMentionWSNotificationService;
 
     private final WSService wsService;
 

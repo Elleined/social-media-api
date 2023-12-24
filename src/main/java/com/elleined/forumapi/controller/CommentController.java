@@ -19,8 +19,8 @@ import com.elleined.forumapi.service.notification.reader.comment.CommentNotifica
 import com.elleined.forumapi.service.post.PostService;
 import com.elleined.forumapi.service.ws.WSService;
 import com.elleined.forumapi.service.ws.notification.CommentWSNotificationService;
-import com.elleined.forumapi.service.ws.notification.like.CommentLikeWSNotificationService;
-import com.elleined.forumapi.service.ws.notification.mention.CommentMentionWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.like.CommentWSLikeNotificationService;
+import com.elleined.forumapi.service.ws.notification.mention.CommentWSMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +50,8 @@ public class CommentController {
 
     private final CommentWSNotificationService commentWSNotificationService;
 
-    private final CommentLikeWSNotificationService commentLikeWSNotificationService;
-    private final CommentMentionWSNotificationService commentMentionWSNotificationService;
+    private final CommentWSLikeNotificationService commentLikeWSNotificationService;
+    private final CommentWSMentionNotificationService commentMentionWSNotificationService;
 
     private final CommentLikeNotificationReader commentLikeNotificationReader;
     private final CommentMentionNotificationReader commentMentionNotificationReader;

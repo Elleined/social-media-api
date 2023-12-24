@@ -14,8 +14,8 @@ import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.reader.post.PostLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.post.PostMentionNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
-import com.elleined.forumapi.service.ws.notification.like.PostLikeWSNotificationService;
-import com.elleined.forumapi.service.ws.notification.mention.PostMentionWSNotificationService;
+import com.elleined.forumapi.service.ws.notification.like.PostWSLikeNotificationService;
+import com.elleined.forumapi.service.ws.notification.mention.PostWSMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +42,8 @@ public class PostController {
 
     private final ModalTrackerService modalTrackerService;
 
-    private final PostLikeWSNotificationService postLikeWSNotificationService;
-    private final PostMentionWSNotificationService postMentionWSNotificationService;
+    private final PostWSLikeNotificationService postLikeWSNotificationService;
+    private final PostWSMentionNotificationService postMentionWSNotificationService;
 
     private final PostLikeNotificationReader postLikeNotificationReader;
     private final PostMentionNotificationReader postMentionNotificationReader;

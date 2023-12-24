@@ -5,7 +5,7 @@ import com.elleined.forumapi.service.ws.notification.WSNotificationService;
 
 import java.util.Set;
 
-public interface MentionWSNotificationService<T extends Mention> extends WSNotificationService<T> {
+public interface WSMentionNotificationService<T extends Mention> extends WSNotificationService<T> {
     String MENTION_NOTIFICATION_DESTINATION = "/notification/mentions/";
 
     default void broadcastMentions(Set<T> mentions) {
