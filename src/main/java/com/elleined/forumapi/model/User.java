@@ -1,6 +1,6 @@
 package com.elleined.forumapi.model;
 
-import com.elleined.forumapi.model.emoji.react.PostReact;
+import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.like.PostLike;

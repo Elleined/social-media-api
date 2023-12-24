@@ -1,7 +1,6 @@
 package com.elleined.forumapi.model;
 
-import com.elleined.forumapi.model.emoji.Emoji;
-import com.elleined.forumapi.model.emoji.react.CommentReact;
+import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import jakarta.persistence.*;

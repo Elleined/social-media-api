@@ -1,10 +1,7 @@
 package com.elleined.forumapi.model.emoji;
 
-import com.elleined.forumapi.model.Comment;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "tbl_emoji")
