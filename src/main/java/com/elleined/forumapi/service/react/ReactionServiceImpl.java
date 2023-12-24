@@ -19,6 +19,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ReactionServiceImpl implements ReactionService {
+
     @Override
     public List<PostReact> getAll(Post post) {
         return null;
@@ -35,17 +36,17 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public List<PostReact> getAllEmojiByType(Post post, Emoji.Type type) {
+    public List<PostReact> getAllReactionByEmojiType(Post post, Emoji.Type type) {
         return null;
     }
 
     @Override
-    public List<CommentReact> getAllEmojiByType(Comment comment, Emoji.Type type) {
+    public List<CommentReact> getAllReactionByEmojiType(Comment comment, Emoji.Type type) {
         return null;
     }
 
     @Override
-    public List<ReplyReact> getAllEmojiByType(Reply reply, Emoji.Type type) {
+    public List<ReplyReact> getAllReactionByEmojiType(Reply reply, Emoji.Type type) {
         return null;
     }
 

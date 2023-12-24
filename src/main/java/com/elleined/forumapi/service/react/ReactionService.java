@@ -16,9 +16,9 @@ public interface ReactionService {
     List<CommentReact> getAll(Comment comment);
     List<ReplyReact> getAll(Reply reply);
 
-    List<PostReact> getAllEmojiByType(Post post, Emoji.Type type);
-    List<CommentReact> getAllEmojiByType(Comment comment, Emoji.Type type);
-    List<ReplyReact> getAllEmojiByType(Reply reply, Emoji.Type type);
+    List<PostReact> getAllReactionByEmojiType(Post post, Emoji.Type type);
+    List<CommentReact> getAllReactionByEmojiType(Comment comment, Emoji.Type type);
+    List<ReplyReact> getAllReactionByEmojiType(Reply reply, Emoji.Type type);
 
     PostReact save(Post post, Emoji emoji);
     CommentReact save(Comment comment, Emoji emoji);
