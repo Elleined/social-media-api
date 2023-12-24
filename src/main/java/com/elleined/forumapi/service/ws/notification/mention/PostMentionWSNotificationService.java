@@ -26,9 +26,4 @@ public class PostMentionWSNotificationService extends BaseWSNotificationService 
         simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + postNotification.getReceiverId(), postNotification);
         log.debug("Post mention notification successfully sent to mentioned user with id of {}", postNotification.getReceiverId());
     }
-
-    @Override
-    public void broadcastMentions(Set<PostMention> mentions) {
-        mentions.forEach(this::broadcast);
-    }
 }

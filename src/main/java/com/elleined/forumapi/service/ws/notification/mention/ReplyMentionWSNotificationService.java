@@ -26,9 +26,4 @@ public class ReplyMentionWSNotificationService extends BaseWSNotificationService
         simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + replyNotification.getReceiverId(), replyNotification);
         log.debug("Reply mention notification successfully sent to mentioned user with id of {}", replyNotification.getReceiverId());
     }
-
-    @Override
-    public void broadcastMentions(Set<ReplyMention> mentions) {
-        mentions.forEach(this::broadcast);
-    }
 }

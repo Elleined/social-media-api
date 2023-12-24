@@ -26,9 +26,4 @@ public class CommentMentionWSNotificationService extends BaseWSNotificationServi
         simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + commentNotification.getReceiverId(), commentNotification);
         log.debug("Comment mention notification successfully sent to mentioned user with id of {}", commentMention.getReceiverId());
     }
-
-    @Override
-    public void broadcastMentions(Set<CommentMention> mentions) {
-        mentions.forEach(this::broadcast);
-    }
 }

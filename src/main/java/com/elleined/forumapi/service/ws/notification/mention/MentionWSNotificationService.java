@@ -9,5 +9,7 @@ import java.util.Set;
 public interface MentionWSNotificationService<T extends Mention> extends WSNotificationService<T> {
     String MENTION_NOTIFICATION_DESTINATION = "/notification/mentions/";
 
-    void broadcastMentions(Set<T> mentions);
+    default void broadcastMentions(Set<T> mentions) {
+        mentions.forEach(this::broadcast);
+    }
 }
