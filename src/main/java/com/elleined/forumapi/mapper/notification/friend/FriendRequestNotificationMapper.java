@@ -28,8 +28,8 @@ public interface FriendRequestNotificationMapper {
             @Mapping(target = "message", expression = "java(getAcceptedMessage(friendRequest))"),
             @Mapping(target = "respondentPicture", source = "requestedUser.picture"),
             @Mapping(target = "respondentId", source = "requestedUser.id"),
-            @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(friendRequest.getDateCreated()))"),
-            @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(friendRequest.getDateCreated()))"),
+            @Mapping(target = "formattedDate", expression = "java(Formatter.formatDate(friendRequest.getCreatedAt()))"),
+            @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(friendRequest.getCreatedAt()))"),
             @Mapping(target = "notificationStatus", source = "friendRequest.notificationStatus"),
     })
     FriendRequestNotification toAcceptedNotification(FriendRequest friendRequest);
