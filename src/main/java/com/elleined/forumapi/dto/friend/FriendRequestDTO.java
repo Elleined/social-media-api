@@ -13,4 +13,5 @@ public class FriendRequestDTO {
     private LocalDateTime createdAt;
     private UserDTO requestingUser;
     private UserDTO requestedUser;
+    private String notificationStatus;
 }
