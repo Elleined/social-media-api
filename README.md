@@ -61,6 +61,9 @@ An API that supports social media functionality.
 - Create, Edit, and Delete a Reply with or wthout picture in a comment real time
 - Like in Post, Comment, and Reply
 - Mention another user in Post, Comment, and Reply
+- Create, Update, Delete Reaction in Post
+- Create, Update, Delete Reaction in Comment
+- Create, Update, Delete Reaction in Reply
 - Author can close the comment section for his/her every post
 - Comment upvote
 - Pin comment and reply
@@ -70,9 +73,9 @@ An API that supports social media functionality.
 - Send, Accept, and Cancel friend request
 - Follow and Unfollow users
 - Web Socket for real time communication in comments and replies
-- Notification for comment and reply
-- Notification for mention in post, comment, and reply
-- Notification for like in post, comment, and reply
+- Receive real-time notification for comment and reply
+- Receive real-time notification for mention in post, comment, and reply
+- Receive real-time notification for like in post, comment, and reply
 
 # Technologies used
 - Spring boot
