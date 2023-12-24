@@ -62,7 +62,7 @@ public class WSNotificationService {
     public void broadcastLike(CommentLike commentLike) {
         if (commentLike.getNotificationStatus() == NotificationStatus.READ) return;
         CommentNotification commentNotification = notificationMapper.toLikeNotification(commentLike);
-        simpMessagingTemplate.convertAndSend(LIKE_NOTIFICATION_DESTINATION + commentLike.getReceiverId());
+        simpMessagingTemplate.convertAndSend(LIKE_NOTIFICATION_DESTINATION + commentLike.getReceiverId(), commentNotification);
         log.debug("Comment like notification successfully sent to comment author with id of {}", commentLike.getReceiverId());
     }
 
