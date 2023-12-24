@@ -3,6 +3,7 @@ package com.elleined.forumapi.service.notification;
 import com.elleined.forumapi.dto.notification.*;
 import com.elleined.forumapi.mapper.FriendRequestMapper;
 import com.elleined.forumapi.mapper.notification.comment.CommentNotificationMapper;
+import com.elleined.forumapi.mapper.notification.friend.FriendRequestNotificationMapper;
 import com.elleined.forumapi.mapper.notification.reply.ReplyNotificationMapper;
 import com.elleined.forumapi.mapper.notification.like.LikeNotificationMapper;
 import com.elleined.forumapi.mapper.notification.mention.MentionNotificationMapper;
@@ -54,7 +55,7 @@ public class NotificationServiceImpl implements NotificationService<Notification
     private final LikeNotificationMapper likeNotificationMapper;
     private final MentionNotificationMapper mentionNotificationMapper;
 
-    private final FriendRequestMapper friendRequestMapper;
+    private final FriendRequestNotificationMapper friendRequestNotificationMapper;
 
     @Override
     public Set<Notification> getAllUnreadNotification(User currentUser) {
@@ -90,7 +91,7 @@ public class NotificationServiceImpl implements NotificationService<Notification
                 .collect(Collectors.toSet());
 
         Set<FriendRequestNotification> unreadFriendRequests = friendRequestNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(friendRequestMapper::toNotification)
+                .map(friendRequestNotificationMapper::toSendNotification)
                 .collect(Collectors.toSet());
         
         return Stream.of(

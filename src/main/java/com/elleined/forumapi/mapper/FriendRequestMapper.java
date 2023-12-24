@@ -25,8 +25,4 @@ public interface FriendRequestMapper {
     })
     FriendRequest toEntity(User requestingUser,
                            @Context User requestedUser);
-
-    default FriendRequestNotification toNotification(FriendRequest friendRequest) {
-        return null;
-    }
 }

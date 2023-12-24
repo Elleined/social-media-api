@@ -13,7 +13,7 @@ public interface FriendService {
     void acceptFriendRequest(User currentUser, FriendRequest friendRequest);
     void deleteFriendRequest(User currentUser, FriendRequest friendRequest);
 
-    void sendFriendRequest(User currentUser, User userToAdd);
+    FriendRequest sendFriendRequest(User currentUser, User userToAdd);
 
     void unFriend(User currentUser, User userToUnFriend);
 
