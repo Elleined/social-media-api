@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class ReplyWSNotificationService extends BaseWSNotificationService implements WSNotificationService<Reply> {
-    protected ReplyWSNotificationService(SimpMessagingTemplate simpMessagingTemplate, NotificationMapper notificationMapper) {
+    public ReplyWSNotificationService(SimpMessagingTemplate simpMessagingTemplate, NotificationMapper notificationMapper) {
         super(simpMessagingTemplate, notificationMapper);
     }
 
