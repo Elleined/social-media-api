@@ -84,9 +84,6 @@ public class Comment {
     @OneToMany(mappedBy = "comment")
     private Set<CommentLike> likes;
 
-    @ManyToMany(mappedBy = "commentEmojis")
-    private List<Emoji> emojis;
-
     public boolean isCommentSectionClosed() {
         return this.getPost().getCommentSectionStatus() == Post.CommentSectionStatus.CLOSED;
     }

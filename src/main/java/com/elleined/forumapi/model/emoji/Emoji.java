@@ -32,20 +32,6 @@ public class Emoji {
     )
     private Type type;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_comment_emoji",
-            joinColumns = @JoinColumn(
-                    name = "emoji_id",
-                    referencedColumnName = "id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "comment_id",
-                    referencedColumnName = "comment_id"
-            )
-    )
-    private List<Comment> commentEmojis;
-
     public Emoji(Type type) {
         this.type = type;
     }
