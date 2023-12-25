@@ -1,4 +1,4 @@
-package com.elleined.forumapi.dto.react;
+package com.elleined.forumapi.dto;
 
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.emoji.Emoji;

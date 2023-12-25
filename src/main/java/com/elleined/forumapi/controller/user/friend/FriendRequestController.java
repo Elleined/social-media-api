@@ -1,6 +1,6 @@
 package com.elleined.forumapi.controller.user.friend;
 
-import com.elleined.forumapi.dto.friend.FriendRequestDTO;
+import com.elleined.forumapi.dto.FriendRequestDTO;
 import com.elleined.forumapi.mapper.FriendRequestMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;

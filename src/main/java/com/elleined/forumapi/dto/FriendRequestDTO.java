@@ -1,4 +1,4 @@
-package com.elleined.forumapi.dto.friend;
+package com.elleined.forumapi.dto;
 
 import com.elleined.forumapi.dto.UserDTO;
 import lombok.Builder;
