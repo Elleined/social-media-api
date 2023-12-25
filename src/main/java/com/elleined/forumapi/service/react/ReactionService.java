@@ -24,4 +24,12 @@ public interface ReactionService {
     PostReact save(User currentUser, Post post, Emoji emoji);
     CommentReact save(User currentUser, Comment comment, Emoji emoji);
     ReplyReact save(User currentUser, Reply reply, Emoji emoji);
+
+    PostReact update(User currentUser, PostReact postReact, Emoji emoji);
+    CommentReact update(User currentUser, CommentReact commentReact, Emoji emoji);
+    ReplyReact update(User currentUser, ReplyReact replyReact, Emoji emoji);
+
+    PostReact delete(User currentUser, PostReact postReact);
+    CommentReact delete(User currentUser, CommentReact commentReact);
+    ReplyReact delete(User currentUser, ReplyReact replyReact);
 }
