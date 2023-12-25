@@ -8,6 +8,9 @@ import com.elleined.forumapi.model.emoji.Emoji;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.react.ReplyReact;
+import com.elleined.forumapi.repository.CommentRepository;
+import com.elleined.forumapi.repository.PostRepository;
+import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
 import com.elleined.forumapi.repository.react.PostReactRepository;
 import com.elleined.forumapi.repository.react.ReplyReactRepository;
@@ -25,11 +28,11 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ReactionServiceImpl implements ReactionService {
+    private final BlockService blockService;
+
     private final PostReactRepository postReactRepository;
     private final CommentReactRepository commentReactRepository;
     private final ReplyReactRepository replyReactRepository;
-
-    private final BlockService blockService;
 
     @Override
     public List<PostReact> getAll(Post post) {
@@ -188,17 +191,20 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public PostReact delete(User currentUser, PostReact postReact) {
-        return null;
+    public void delete(Post post, PostReact postReact) {
+        postReactRepository.delete(postReact);
+        log.debug("Reaction with id of {} removed successfully with post with id of {}", postReact.getId(), post.getId());
     }
 
     @Override
-    public CommentReact delete(User currentUser, CommentReact commentReact) {
-        return null;
+    public void delete(Comment comment, CommentReact commentReact) {
+        commentReactRepository.delete(commentReact);
+        log.debug("Reaction with id of {} removed successfully with comment with id of {}", commentReact.getId(), comment.getId());
     }
 
     @Override
-    public ReplyReact delete(User currentUser, ReplyReact replyReact) {
-        return null;
+    public void delete(Reply reply, ReplyReact replyReact) {
+        replyReactRepository.delete(replyReact);
+        log.debug("Reaction with id of {} removed successfully with post with id of {}", replyReact.getId(), reply.getId());
     }
 }

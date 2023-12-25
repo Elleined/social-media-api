@@ -29,7 +29,7 @@ public interface ReactionService {
     CommentReact update(User currentUser, CommentReact commentReact, Emoji emoji);
     ReplyReact update(User currentUser, ReplyReact replyReact, Emoji emoji);
 
-    PostReact delete(User currentUser, PostReact postReact);
-    CommentReact delete(User currentUser, CommentReact commentReact);
-    ReplyReact delete(User currentUser, ReplyReact replyReact);
+    void delete(Post post, PostReact postReact);
+    void delete(Comment comment, CommentReact commentReact);
+    void delete(Reply reply, ReplyReact replyReact);
 }
