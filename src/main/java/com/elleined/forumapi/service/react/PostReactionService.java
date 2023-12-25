@@ -32,6 +32,14 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
     }
 
     @Override
+    public PostReact getByUserReaction(User currentUser, Post post) {
+        return post.getReactions().stream()
+                .filter(postReact -> postReact.getRespondent().equals(currentUser))
+                .findFirst()
+                .orElseThrow();
+    }
+
+    @Override
     public List<PostReact> getAll(Post post) {
         return post.getReactions();
     }

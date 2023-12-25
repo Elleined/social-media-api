@@ -3,10 +3,12 @@ package com.elleined.forumapi.service.react;
 import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
+import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.ReplyReact;
 import com.elleined.forumapi.repository.react.ReplyReactRepository;
 import com.elleined.forumapi.service.block.BlockService;
@@ -29,6 +31,14 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
     @Override
     public ReplyReact getById(int id) throws ResourceNotFoundException {
         return replyReactRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reaction with id of " + id + " doesn't exists!"));
+    }
+
+    @Override
+    public ReplyReact getByUserReaction(User currentUser, Reply reply) {
+        return reply.getReactions().stream()
+                .filter(replyReact -> replyReact.getRespondent().equals(currentUser))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Override

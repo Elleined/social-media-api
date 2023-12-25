@@ -242,6 +242,24 @@ public class User {
         return this.getCreatedReplyReactions().stream().noneMatch(replyReact::equals);
     }
 
+    public boolean isAlreadyReactedTo(Post post) {
+        return this.getCreatedPostReactions().stream()
+                .map(PostReact::getPost)
+                .anyMatch(post::equals);
+    }
+
+    public boolean isAlreadyReactedTo(Comment comment) {
+        return this.getCreatedCommentReactions().stream()
+                .map(CommentReact::getComment)
+                .anyMatch(comment::equals);
+    }
+
+    public boolean isAlreadyReactedTo(Reply reply) {
+        return this.getCreatedReplyReactions().stream()
+                .map(ReplyReact::getReply)
+                .anyMatch(reply::equals);
+    }
+
     public boolean isAlreadyUpvoted(Comment comment) {
         return this.getUpvotedComments().stream().anyMatch(comment::equals);
     }

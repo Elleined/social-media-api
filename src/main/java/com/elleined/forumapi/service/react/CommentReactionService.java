@@ -5,9 +5,11 @@ import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.NotificationStatus;
+import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
 import com.elleined.forumapi.model.react.CommentReact;
+import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,14 @@ public class CommentReactionService implements ReactionService<Comment, CommentR
     @Override
     public CommentReact getById(int id) throws ResourceNotFoundException {
         return commentReactRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reaction with id of " + id + " doesn't exists!"));
+    }
+
+    @Override
+    public CommentReact getByUserReaction(User currentUser, Comment comment) {
+        return comment.getReactions().stream()
+                .filter(commentReact -> commentReact.getRespondent().equals(currentUser))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Override

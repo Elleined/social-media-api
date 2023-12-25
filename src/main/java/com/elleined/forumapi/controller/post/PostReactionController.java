@@ -10,6 +10,7 @@ import com.elleined.forumapi.service.post.PostService;
 import com.elleined.forumapi.service.react.ReactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,19 +40,28 @@ public class PostReactionController {
 
     @PostMapping
     public PostReact save(@PathVariable("currentUserId") int currentUserId,
-                          Post post, Emoji emoji) {
-        return null;
+                                          @PathVariable("postId") int postId,
+                                          @RequestParam("emojiType") Emoji.Type type) {
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        Emoji emoji = emojiService.getByType(type);
+
+        if (currentUser.isAlreadyReactedTo(post)) {
+            PostReact postReact = postReactionService.getByUserReaction(currentUser, post);
+            return postReactionService.update(currentUser, post, postReact, emoji);
+        }
+        return postReactionService.save(currentUser, post, emoji);
     }
 
-    @PatchMapping("/{reactionId}/replace-emoji/{emojiId}")
+    @PatchMapping("/{reactionId}/emoji")
     public PostReact update(@PathVariable("currentUserId") int currentUserId,
-                            @PathVariable("postId") int postId,
-                            @PathVariable("reactionId") int reactionId,
-                            @RequestParam("emojiId") int emojiId) {
+                                            @PathVariable("postId") int postId,
+                                            @PathVariable("reactionId") int reactionId,
+                                            @RequestParam("type") Emoji.Type type) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         PostReact postReact = postReactionService.getById(reactionId);
-        Emoji emoji = emojiService.getById(emojiId);
-        return postReactionService.update(currentUser, post, postReact, emoji);
+        Emoji newEmoji = emojiService.getByType(type);
+        return postReactionService.update(currentUser, post, postReact, newEmoji);
     }
 }
