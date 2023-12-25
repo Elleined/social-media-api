@@ -1,4 +1,4 @@
-package com.elleined.forumapi.controller;
+package com.elleined.forumapi.controller.reply;
 
 import com.elleined.forumapi.dto.ReplyDTO;
 import com.elleined.forumapi.mapper.ReplyMapper;

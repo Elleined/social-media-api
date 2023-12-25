@@ -1,4 +1,4 @@
-package com.elleined.forumapi.controller;
+package com.elleined.forumapi.controller.comment;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.dto.ReplyDTO;
