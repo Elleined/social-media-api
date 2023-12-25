@@ -42,7 +42,6 @@ public class PostController {
 
     private final ModalTrackerService modalTrackerService;
 
-    private final PostWSLikeNotificationService postLikeWSNotificationService;
     private final PostWSMentionNotificationService postMentionWSNotificationService;
 
     private final PostLikeNotificationReader postLikeNotificationReader;
@@ -114,23 +113,6 @@ public class PostController {
 
         Post updatedPost = postService.updateBody(currentUser, post, newPostBody);
         return postMapper.toDTO(updatedPost);
-    }
-
-    @PatchMapping("/like/{postId}")
-    public PostDTO like(@PathVariable("currentUserId") int respondentId,
-                            @PathVariable("postId") int postId) {
-
-        User respondent = userService.getById(respondentId);
-        Post post = postService.getById(postId);
-
-        if (postService.isLiked(respondent, post)) {
-            postService.unLike(respondent, post);
-            return postMapper.toDTO(post);
-        }
-
-        PostLike postLike = postService.like(respondent, post);
-        postLikeWSNotificationService.broadcast(postLike);
-        return postMapper.toDTO(post);
     }
 
     @PatchMapping("/{postId}/pinComment/{commentId}")

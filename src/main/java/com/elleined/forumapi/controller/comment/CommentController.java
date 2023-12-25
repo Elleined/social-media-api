@@ -49,8 +49,7 @@ public class CommentController {
     private final WSService wsService;
 
     private final CommentWSNotificationService commentWSNotificationService;
-
-    private final CommentWSLikeNotificationService commentLikeWSNotificationService;
+    
     private final CommentWSMentionNotificationService commentMentionWSNotificationService;
 
     private final CommentLikeNotificationReader commentLikeNotificationReader;
@@ -141,24 +140,6 @@ public class CommentController {
         wsService.broadcastComment(updatedComment);
 
         return commentMapper.toDTO(updatedComment);
-    }
-
-    @PatchMapping("/like/{commentId}")
-    public CommentDTO like(@PathVariable("currentUserId") int respondentId,
-                           @PathVariable("commentId") int commentId) {
-
-        User respondent = userService.getById(respondentId);
-        Comment comment = commentService.getById(commentId);
-
-        if (commentService.isLiked(respondent, comment)) {
-            commentService.unLike(respondent, comment);
-            return commentMapper.toDTO(comment);
-        }
-
-        CommentLike commentLike = commentService.like(respondent, comment);
-        commentLikeWSNotificationService.broadcast(commentLike);
-
-        return commentMapper.toDTO(comment);
     }
 
     @PatchMapping("/{commentId}/pinReply/{replyId}")

@@ -42,7 +42,6 @@ public class ReplyController {
 
     private final ReplyWSNotificationService replyWSNotificationService;
 
-    private final ReplyWSLikeNotificationService replyLikeWSNotificationService;
     private final ReplyWSMentionNotificationService replyMentionWSNotificationService;
 
     private final WSService wsService;
@@ -112,22 +111,5 @@ public class ReplyController {
         Reply updatedReply = replyService.updateBody(currentUser, reply, newReplyBody);
         wsService.broadcastReply(updatedReply);
         return replyMapper.toDTO(updatedReply);
-    }
-
-    @PatchMapping("/like/{replyId}")
-    public ReplyDTO like(@PathVariable("currentUserId") int respondentId,
-                         @PathVariable("replyId") int replyId) {
-
-        User respondent = userService.getById(respondentId);
-        Reply reply = replyService.getById(replyId);
-
-        if (replyService.isLiked(respondent, reply)) {
-            replyService.unLike(respondent, reply);
-            return replyMapper.toDTO(reply);
-        }
-
-        ReplyLike replyLike = replyService.like(respondent, reply);
-        replyLikeWSNotificationService.broadcast(replyLike);
-        return replyMapper.toDTO(reply);
     }
 }
