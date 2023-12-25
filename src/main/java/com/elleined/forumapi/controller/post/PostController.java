@@ -37,9 +37,6 @@ public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
 
-    private final CommentService commentService;
-    private final CommentMapper commentMapper;
-
     private final ModalTrackerService modalTrackerService;
 
     private final PostWSMentionNotificationService postMentionWSNotificationService;
@@ -58,14 +55,6 @@ public class PostController {
         return postService.getAll(currentUser).stream()
                 .map(postMapper::toDTO)
                 .toList();
-    }
-
-    @GetMapping("/getPinnedComment/{postId}")
-    public Optional<CommentDTO> getPinnedComment(@PathVariable("postId") int postId) {
-        Post post = postService.getById(postId);
-        Optional<Comment> pinnedComment = postService.getPinnedComment(post);
-
-        return Optional.of( commentMapper.toDTO(pinnedComment.orElseThrow()) );
     }
 
     @PostMapping
@@ -113,18 +102,5 @@ public class PostController {
 
         Post updatedPost = postService.updateBody(currentUser, post, newPostBody);
         return postMapper.toDTO(updatedPost);
-    }
-
-    @PatchMapping("/{postId}/pinComment/{commentId}")
-    public PostDTO pinComment(@PathVariable("currentUserId") int currentUserId,
-                              @PathVariable("postId") int postId,
-                              @PathVariable("commentId") int commentId) {
-
-        User currentUser = userService.getById(currentUserId);
-        Post post = postService.getById(postId);
-        Comment comment = commentService.getById(commentId);
-
-        postService.pin(currentUser, post, comment);
-        return postMapper.toDTO(post);
     }
 }

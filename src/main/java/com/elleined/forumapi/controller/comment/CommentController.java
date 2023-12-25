@@ -43,13 +43,10 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentMapper commentMapper;
 
-    private final ReplyMapper replyMapper;
-    private final ReplyService replyService;
-
     private final WSService wsService;
 
     private final CommentWSNotificationService commentWSNotificationService;
-    
+
     private final CommentWSMentionNotificationService commentMentionWSNotificationService;
 
     private final CommentLikeNotificationReader commentLikeNotificationReader;
@@ -73,14 +70,6 @@ public class CommentController {
         return commentService.getAllByPost(currentUser, post).stream()
                 .map(commentMapper::toDTO)
                 .toList();
-    }
-
-    @GetMapping("/getPinnedReply/{commentId}")
-    public Optional<ReplyDTO> getPinnedReply(@PathVariable("commentId") int commentId) {
-        Comment comment = commentService.getById(commentId);
-        Optional<Reply> reply = commentService.getPinnedReply(comment);
-
-        return Optional.of( replyMapper.toDTO(reply.orElseThrow()) );
     }
 
     @PostMapping
@@ -140,18 +129,5 @@ public class CommentController {
         wsService.broadcastComment(updatedComment);
 
         return commentMapper.toDTO(updatedComment);
-    }
-
-    @PatchMapping("/{commentId}/pinReply/{replyId}")
-    public CommentDTO pinReply(@PathVariable("currentUserId") int currentUserId,
-                               @PathVariable("commentId") int commentId,
-                               @PathVariable("replyId") int replyId) {
-
-        User currentUSer = userService.getById(currentUserId);
-        Comment comment = commentService.getById(commentId);
-        Reply reply = replyService.getById(replyId);
-
-        commentService.pin(currentUSer, comment, reply);
-        return commentMapper.toDTO(comment);
     }
 }
