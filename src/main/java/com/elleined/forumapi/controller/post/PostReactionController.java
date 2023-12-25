@@ -10,7 +10,6 @@ import com.elleined.forumapi.service.post.PostService;
 import com.elleined.forumapi.service.react.ReactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,8 +39,8 @@ public class PostReactionController {
 
     @PostMapping
     public PostReact save(@PathVariable("currentUserId") int currentUserId,
-                                          @PathVariable("postId") int postId,
-                                          @RequestParam("emojiType") Emoji.Type type) {
+                          @PathVariable("postId") int postId,
+                          @RequestParam("emojiType") Emoji.Type type) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Emoji emoji = emojiService.getByType(type);
@@ -53,15 +52,13 @@ public class PostReactionController {
         return postReactionService.save(currentUser, post, emoji);
     }
 
-    @PatchMapping("/{reactionId}/emoji")
-    public PostReact update(@PathVariable("currentUserId") int currentUserId,
-                                            @PathVariable("postId") int postId,
-                                            @PathVariable("reactionId") int reactionId,
-                                            @RequestParam("type") Emoji.Type type) {
+    @DeleteMapping("/{reactionId}")
+    public void delete(@PathVariable("currentUserId") int currentUserId,
+                       @PathVariable("postId") int postId,
+                       @PathVariable("reactionId") int reactionId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         PostReact postReact = postReactionService.getById(reactionId);
-        Emoji newEmoji = emojiService.getByType(type);
-        return postReactionService.update(currentUser, post, postReact, newEmoji);
+        postReactionService.delete(currentUser, post, postReact);
     }
 }

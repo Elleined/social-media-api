@@ -93,7 +93,9 @@ public class CommentReactionService implements ReactionService<Comment, CommentR
     }
 
     @Override
-    public void delete(Comment comment, CommentReact commentReact) {
+    public void delete(User currentUser, Comment comment, CommentReact commentReact) {
+        if (currentUser.notOwned(commentReact))
+            throw new NotOwnedException("Cannot delete this comment reaction! because you don't owned this reaction!");
         commentReactRepository.delete(commentReact);
         log.debug("Reaction with id of {} removed successfully with comment with id of {}", commentReact.getId(), comment.getId());
     }

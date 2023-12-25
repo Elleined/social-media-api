@@ -15,5 +15,5 @@ public interface ReactionService<ENTITY, REACT extends React> {
     List<REACT> getAllReactionByEmojiType(ENTITY entity, Emoji.Type type);
     REACT save(User currentUser, ENTITY entity, Emoji emoji);
     REACT update(User currentUser, ENTITY entity, REACT postReact, Emoji emoji);
-    void delete(ENTITY entity, REACT postReact);
+    void delete(User currentUser, ENTITY entity, REACT postReact);
 }
