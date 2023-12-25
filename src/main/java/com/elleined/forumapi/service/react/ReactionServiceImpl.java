@@ -8,6 +8,7 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.PostReact;
+import com.elleined.forumapi.model.react.React;
 import com.elleined.forumapi.model.react.ReplyReact;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
 import com.elleined.forumapi.repository.react.PostReactRepository;
@@ -31,38 +32,44 @@ public class ReactionServiceImpl implements ReactionService {
     private final ReplyReactRepository replyReactRepository;
 
     @Override
-    public List<PostReact> getAll(User currentUser, Post post) {
+    public List<PostReact> getAll(Post post) {
         return post.getReactions();
     }
 
     @Override
-    public List<CommentReact> getAll(User currentUser, Comment comment) {
+    public List<CommentReact> getAll(Comment comment) {
         return comment.getReactions();
     }
 
     @Override
-    public List<ReplyReact> getAll(User currentUser, Reply reply) {
+    public List<ReplyReact> getAll(Reply reply) {
         return reply.getReactions();
     }
 
     @Override
-    public List<PostReact> getAllReactionByEmojiType(User currentUser, Post post, Emoji.Type type) {
-        return null;
+    public List<PostReact> getAllReactionByEmojiType(Post post, Emoji.Type type) {
+        return post.getReactions().stream()
+                .filter(postReact -> postReact.getEmoji().getType().equals(type))
+                .toList();
     }
 
     @Override
-    public List<CommentReact> getAllReactionByEmojiType(User currentUser, Comment comment, Emoji.Type type) {
-        return null;
+    public List<CommentReact> getAllReactionByEmojiType(Comment comment, Emoji.Type type) {
+        return comment.getReactions().stream()
+                .filter(commentReact -> commentReact.getEmoji().getType().equals(type))
+                .toList();
     }
 
     @Override
-    public List<ReplyReact> getAllReactionByEmojiType(User currentUser, Reply reply, Emoji.Type type) {
-        return null;
+    public List<ReplyReact> getAllReactionByEmojiType(Reply reply, Emoji.Type type) {
+        return reply.getReactions().stream()
+                .filter(replyReact -> replyReact.getEmoji().getType().equals(type))
+                .toList();
     }
 
     @Override
     public PostReact save(User currentUser, Post post, Emoji emoji) {
-        return null;
+        React react = PostReact.postEmojiBuilder().build();
     }
 
     @Override

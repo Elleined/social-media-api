@@ -13,13 +13,13 @@ import java.util.List;
 
 public interface ReactionService {
 
-    List<PostReact> getAll(User currentUser, Post post);
-    List<CommentReact> getAll(User currentUser, Comment comment);
-    List<ReplyReact> getAll(User currentUser, Reply reply);
+    List<PostReact> getAll(Post post);
+    List<CommentReact> getAll(Comment comment);
+    List<ReplyReact> getAll(Reply reply);
 
-    List<PostReact> getAllReactionByEmojiType(User currentUser, Post post, Emoji.Type type);
-    List<CommentReact> getAllReactionByEmojiType(User currentUser, Comment comment, Emoji.Type type);
-    List<ReplyReact> getAllReactionByEmojiType(User currentUser, Reply reply, Emoji.Type type);
+    List<PostReact> getAllReactionByEmojiType(Post post, Emoji.Type type);
+    List<CommentReact> getAllReactionByEmojiType(Comment comment, Emoji.Type type);
+    List<ReplyReact> getAllReactionByEmojiType(Reply reply, Emoji.Type type);
 
     PostReact save(User currentUser, Post post, Emoji emoji);
     CommentReact save(User currentUser, Comment comment, Emoji emoji);

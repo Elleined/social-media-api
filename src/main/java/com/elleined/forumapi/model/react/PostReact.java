@@ -27,7 +27,7 @@ public class PostReact extends React {
     )
     private Post post;
 
-    @Builder(builderMethodName = "postEmojiBuilder")
+    @Builder(builderMethodName = "postReactBuilder")
     public PostReact(int id, LocalDateTime createdAt, User respondent, NotificationStatus notificationStatus, Emoji emoji, Post post) {
         super(id, createdAt, respondent, notificationStatus, emoji);
         this.post = post;
