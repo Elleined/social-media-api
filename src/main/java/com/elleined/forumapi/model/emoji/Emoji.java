@@ -34,7 +34,6 @@ public class Emoji {
     }
 
     public enum Type {
-        LIKE,
         HEART,
         CARE,
         HAHA,
