@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "tbl_post_emoji")
 @NoArgsConstructor
@@ -26,7 +27,6 @@ public class PostReact extends React {
             nullable = false,
             updatable = false
     )
-    @Getter
     private Post post;
 
     @Builder(builderMethodName = "postReactBuilder")
