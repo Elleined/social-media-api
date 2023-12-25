@@ -32,15 +32,15 @@ public class PostReactionController {
 
     @GetMapping("/type")
     public List<PostReact> getAllReactionByEmojiType(@PathVariable("postId") int postId,
-                                                     @RequestParam("emojiType") Emoji.Type emojiType) {
+                                                     @RequestParam("type") Emoji.Type type) {
         Post post = postService.getById(postId);
-        return postReactionService.getAllReactionByEmojiType(post, emojiType);
+        return postReactionService.getAllReactionByEmojiType(post, type);
     }
 
     @PostMapping
     public PostReact save(@PathVariable("currentUserId") int currentUserId,
                           @PathVariable("postId") int postId,
-                          @RequestParam("emojiType") Emoji.Type type) {
+                          @RequestParam("type") Emoji.Type type) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Emoji emoji = emojiService.getByType(type);
