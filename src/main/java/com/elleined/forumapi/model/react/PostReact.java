@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class PostReact extends React {
             nullable = false,
             updatable = false
     )
+    @Getter
     private Post post;
 
     @Builder(builderMethodName = "postReactBuilder")

@@ -134,17 +134,26 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public PostReact update(User currentUser, PostReact postReact, Emoji emoji) {
-        return null;
+        postReact.setEmoji(emoji);
+        postReactRepository.save(postReact);
+        log.debug("User with id of {} updated his/her reaction to post with id of {} to emoji with id of {}", currentUser.getId(), postReact.getPost().getId(), emoji.getId());
+        return postReact;
     }
 
     @Override
     public CommentReact update(User currentUser, CommentReact commentReact, Emoji emoji) {
-        return null;
+        commentReact.setEmoji(emoji);
+        commentReactRepository.save(commentReact);
+        log.debug("User with id of {} updated his/her reaction to comment with id of {} to emoji with id of {}", currentUser.getId(), commentReact.getComment().getId(), emoji.getId());
+        return commentReact;
     }
 
     @Override
     public ReplyReact update(User currentUser, ReplyReact replyReact, Emoji emoji) {
-        return null;
+        replyReact.setEmoji(emoji);
+        replyReactRepository.save(replyReact);
+        log.debug("User with id of {} updated his/her reaction to reply with id of {} to emoji with id of {}", currentUser.getId(), replyReact.getReply().getId(), emoji.getId());
+        return replyReact;
     }
 
     @Override
