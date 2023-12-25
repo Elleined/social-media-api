@@ -1,6 +1,7 @@
 package com.elleined.forumapi.service.react;
 
 import com.elleined.forumapi.exception.BlockedException;
+import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.emoji.Emoji;
@@ -135,12 +136,14 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public PostReact update(User currentUser, PostReact postReact, Emoji emoji) {
         Post post = postReact.getPost();
+        if (currentUser.notOwned(postReact))
+            throw new NotOwnedException("Cannot update react to this post! because you don't own this reaction");
         if (post.isDeleted())
-            throw new ResourceNotFoundException("Cannot react to this post! because this might be already deleted or doesn't exists!");
+            throw new ResourceNotFoundException("Cannot update react to this post! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, post.getAuthor()))
-            throw new BlockedException("Cannot react to this post! because you blocked this user already!");
+            throw new BlockedException("Cannot update react to this post! because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor()))
-            throw new BlockedException("Cannot react to this post! because this user block you already!");
+            throw new BlockedException("Cannot update react to this post! because this user block you already!");
 
         postReact.setEmoji(emoji);
         postReactRepository.save(postReact);
@@ -151,12 +154,14 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public CommentReact update(User currentUser, CommentReact commentReact, Emoji emoji) {
         Comment comment = commentReact.getComment();
+        if (currentUser.notOwned(commentReact))
+            throw new NotOwnedException("Cannot update react to this comment! because you don't own this reaction");
         if (comment.isDeleted())
-            throw new ResourceNotFoundException("Cannot react to this comment! because this might be already deleted or doesn't exists!");
+            throw new ResourceNotFoundException("Cannot update react to this comment! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, comment.getCommenter()))
-            throw new BlockedException("Cannot react to this comment! because you blocked this user already!");
+            throw new BlockedException("Cannot update react to this comment! because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
-            throw new BlockedException("Cannot react to this comment! because this user block you already!");
+            throw new BlockedException("Cannot update react to this comment! because this user block you already!");
 
         commentReact.setEmoji(emoji);
         commentReactRepository.save(commentReact);
@@ -167,12 +172,14 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public ReplyReact update(User currentUser, ReplyReact replyReact, Emoji emoji) {
         Reply reply = replyReact.getReply();
+        if (currentUser.notOwned(replyReact))
+            throw new NotOwnedException("Cannot update react to this reply! because you don't own this reaction");
         if (reply.isDeleted())
-            throw new ResourceNotFoundException("Cannot react to this reply! because this might be already deleted or doesn't exists!");
+            throw new ResourceNotFoundException("Cannot update react to this reply! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, reply.getReplier()))
-            throw new BlockedException("Cannot react to this reply! because you blocked this user already!");
+            throw new BlockedException("Cannot update react to this reply! because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
-            throw new BlockedException("Cannot react to this reply! because this user block you already!");
+            throw new BlockedException("Cannot update react to this reply! because this user block you already!");
 
         replyReact.setEmoji(emoji);
         replyReactRepository.save(replyReact);

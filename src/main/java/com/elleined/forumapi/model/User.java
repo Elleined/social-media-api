@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model;
 
+import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.model.like.CommentLike;
@@ -8,6 +9,7 @@ import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
+import com.elleined.forumapi.model.react.ReplyReact;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -211,12 +213,12 @@ public class User {
     // user id reference is in tbl comment emoji
     @OneToMany(mappedBy = "respondent")
     @Setter(AccessLevel.NONE)
-    private Set<PostReact> createdCommentReactions;
+    private Set<CommentReact> createdCommentReactions;
 
     // user id reference is in tbl reply emoji
     @OneToMany(mappedBy = "respondent")
     @Setter(AccessLevel.NONE)
-    private Set<PostReact> createdReplyReactions;
+    private Set<ReplyReact> createdReplyReactions;
 
     public boolean notOwned(Post post) {
         return this.getPosts().stream().noneMatch(post::equals);
@@ -226,6 +228,18 @@ public class User {
     }
     public boolean notOwned(Reply reply) {
         return this.getReplies().stream().noneMatch(reply::equals);
+    }
+
+    public boolean notOwned(PostReact postReact) {
+        return this.getCreatedPostReactions().stream().noneMatch(postReact::equals);
+    }
+
+    public boolean notOwned(CommentReact commentReact) {
+        return this.getCreatedCommentReactions().stream().noneMatch(commentReact::equals);
+    }
+
+    public boolean notOwned(ReplyReact replyReact) {
+        return this.getCreatedReplyReactions().stream().noneMatch(replyReact::equals);
     }
 
     public boolean isAlreadyUpvoted(Comment comment) {
