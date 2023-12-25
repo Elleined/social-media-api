@@ -2,13 +2,11 @@ package com.elleined.forumapi.service.friend;
 
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.mapper.FriendRequestMapper;
-import com.elleined.forumapi.mapper.notification.friend.FriendRequestNotificationMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.repository.FriendRequestRepository;
 import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.ws.notification.friend.WSFriendRequestNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

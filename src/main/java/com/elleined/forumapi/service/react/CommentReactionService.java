@@ -25,6 +25,12 @@ import java.util.List;
 public class CommentReactionService implements ReactionService<Comment, CommentReact> {
     private final BlockService blockService;
     private final CommentReactRepository commentReactRepository;
+
+    @Override
+    public CommentReact getById(int id) throws ResourceNotFoundException {
+        return commentReactRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reaction with id of " + id + " doesn't exists!"));
+    }
+
     @Override
     public List<CommentReact> getAll(Comment comment) {
         return comment.getReactions();
@@ -60,8 +66,7 @@ public class CommentReactionService implements ReactionService<Comment, CommentR
     }
 
     @Override
-    public CommentReact update(User currentUser, CommentReact commentReact, Emoji emoji) {
-        Comment comment = commentReact.getComment();
+    public CommentReact update(User currentUser, Comment comment, CommentReact commentReact, Emoji emoji) {
         if (currentUser.notOwned(commentReact))
             throw new NotOwnedException("Cannot update react to this comment! because you don't own this reaction");
         if (comment.isDeleted())

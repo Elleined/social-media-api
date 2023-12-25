@@ -1,12 +1,11 @@
 package com.elleined.forumapi.service.notification;
 
 import com.elleined.forumapi.dto.notification.*;
-import com.elleined.forumapi.mapper.FriendRequestMapper;
 import com.elleined.forumapi.mapper.notification.comment.CommentNotificationMapper;
 import com.elleined.forumapi.mapper.notification.friend.FriendRequestNotificationMapper;
-import com.elleined.forumapi.mapper.notification.reply.ReplyNotificationMapper;
 import com.elleined.forumapi.mapper.notification.like.LikeNotificationMapper;
 import com.elleined.forumapi.mapper.notification.mention.MentionNotificationMapper;
+import com.elleined.forumapi.mapper.notification.reply.ReplyNotificationMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.like.PostLike;

@@ -7,7 +7,6 @@ import com.elleined.forumapi.repository.FriendRequestRepository;
 import com.elleined.forumapi.service.notification.friend.FriendRequestNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

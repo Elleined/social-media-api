@@ -1,8 +1,8 @@
 package com.elleined.forumapi.model;
 
-import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.mention.PostMention;
+import com.elleined.forumapi.model.react.PostReact;
 import jakarta.persistence.*;
 import lombok.*;
 

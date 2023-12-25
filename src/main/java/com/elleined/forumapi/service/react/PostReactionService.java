@@ -27,6 +27,11 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
     private final PostReactRepository postReactRepository;
 
     @Override
+    public PostReact getById(int id) throws ResourceNotFoundException {
+        return postReactRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reaction with id of " + id + " doesn't exists!"));
+    }
+
+    @Override
     public List<PostReact> getAll(Post post) {
         return post.getReactions();
     }
@@ -61,8 +66,7 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
     }
 
     @Override
-    public PostReact update(User currentUser, PostReact postReact, Emoji emoji) {
-        Post post = postReact.getPost();
+    public PostReact update(User currentUser, Post post, PostReact postReact, Emoji emoji) {
         if (currentUser.notOwned(postReact))
             throw new NotOwnedException("Cannot update react to this post! because you don't own this reaction");
         if (post.isDeleted())

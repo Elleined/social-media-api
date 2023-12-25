@@ -1,17 +1,12 @@
 package com.elleined.forumapi.controller.comment;
 
 import com.elleined.forumapi.dto.CommentDTO;
-import com.elleined.forumapi.dto.ReplyDTO;
 import com.elleined.forumapi.mapper.CommentMapper;
-import com.elleined.forumapi.mapper.ReplyMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
-import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.ModalTrackerService;
-import com.elleined.forumapi.service.ReplyService;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.reader.comment.CommentLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentMentionNotificationReader;
@@ -19,7 +14,6 @@ import com.elleined.forumapi.service.notification.reader.comment.CommentNotifica
 import com.elleined.forumapi.service.post.PostService;
 import com.elleined.forumapi.service.ws.WSService;
 import com.elleined.forumapi.service.ws.notification.comment.CommentWSNotificationService;
-import com.elleined.forumapi.service.ws.notification.like.CommentWSLikeNotificationService;
 import com.elleined.forumapi.service.ws.notification.mention.CommentWSMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j

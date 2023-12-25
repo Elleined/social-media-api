@@ -5,7 +5,6 @@ import com.elleined.forumapi.mapper.ReplyMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.ReplyService;
@@ -14,9 +13,8 @@ import com.elleined.forumapi.service.notification.reader.reply.ReplyLikeNotifica
 import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
 import com.elleined.forumapi.service.ws.WSService;
-import com.elleined.forumapi.service.ws.notification.reply.ReplyWSNotificationService;
-import com.elleined.forumapi.service.ws.notification.like.ReplyWSLikeNotificationService;
 import com.elleined.forumapi.service.ws.notification.mention.ReplyWSMentionNotificationService;
+import com.elleined.forumapi.service.ws.notification.reply.ReplyWSNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

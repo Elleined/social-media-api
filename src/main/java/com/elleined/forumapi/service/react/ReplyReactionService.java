@@ -27,6 +27,11 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
     private final ReplyReactRepository replyReactRepository;
 
     @Override
+    public ReplyReact getById(int id) throws ResourceNotFoundException {
+        return replyReactRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reaction with id of " + id + " doesn't exists!"));
+    }
+
+    @Override
     public List<ReplyReact> getAll(Reply reply) {
         return reply.getReactions();
     }
@@ -61,8 +66,7 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
     }
 
     @Override
-    public ReplyReact update(User currentUser, ReplyReact replyReact, Emoji emoji) {
-        Reply reply = replyReact.getReply();
+    public ReplyReact update(User currentUser, Reply reply, ReplyReact replyReact, Emoji emoji) {
         if (currentUser.notOwned(replyReact))
             throw new NotOwnedException("Cannot update react to this reply! because you don't own this reaction");
         if (reply.isDeleted())
