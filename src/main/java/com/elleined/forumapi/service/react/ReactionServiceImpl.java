@@ -1,5 +1,6 @@
 package com.elleined.forumapi.service.react;
 
+import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.Reply;
@@ -28,20 +29,20 @@ public class ReactionServiceImpl implements ReactionService {
     private final PostReactRepository postReactRepository;
     private final CommentReactRepository commentReactRepository;
     private final ReplyReactRepository replyReactRepository;
-    
+
     @Override
     public List<PostReact> getAll(User currentUser, Post post) {
-        return null;
+        return post.getReactions();
     }
 
     @Override
     public List<CommentReact> getAll(User currentUser, Comment comment) {
-        return null;
+        return comment.getReactions();
     }
 
     @Override
     public List<ReplyReact> getAll(User currentUser, Reply reply) {
-        return null;
+        return reply.getReactions();
     }
 
     @Override

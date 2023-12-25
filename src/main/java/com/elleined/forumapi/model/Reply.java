@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -67,7 +68,7 @@ public class Reply {
     // reply id reference is in tbl reply emoji table
     @OneToMany(mappedBy = "reply")
     @Setter(AccessLevel.NONE)
-    private Set<ReplyReact> reactions;
+    private List<ReplyReact> reactions;
 
     public boolean isDeleted() {
         return this.getStatus() == Status.INACTIVE;

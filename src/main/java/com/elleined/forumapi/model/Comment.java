@@ -81,7 +81,7 @@ public class Comment {
     // comment id refernce is in tbl comment emoji
     @OneToMany(mappedBy = "comment")
     @Setter(AccessLevel.NONE)
-    private Set<CommentReact> reactions;
+    private List<CommentReact> reactions;
 
     @ManyToMany(mappedBy = "upvotedComments")
     private Set<User> upvotingUsers;

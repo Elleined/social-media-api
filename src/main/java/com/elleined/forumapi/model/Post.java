@@ -74,7 +74,7 @@ public class Post {
     // post id reference is in tbl post emoji
     @OneToMany(mappedBy = "post")
     @Setter(AccessLevel.NONE)
-    private Set<PostReact> reactions;
+    private List<PostReact> reactions;
 
     @ManyToMany(mappedBy = "savedPosts")
     @Setter(AccessLevel.NONE)
