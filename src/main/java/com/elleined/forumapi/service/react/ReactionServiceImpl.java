@@ -134,25 +134,49 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public PostReact update(User currentUser, PostReact postReact, Emoji emoji) {
+        Post post = postReact.getPost();
+        if (post.isDeleted())
+            throw new ResourceNotFoundException("Cannot react to this post! because this might be already deleted or doesn't exists!");
+        if (blockService.isBlockedBy(currentUser, post.getAuthor()))
+            throw new BlockedException("Cannot react to this post! because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor()))
+            throw new BlockedException("Cannot react to this post! because this user block you already!");
+
         postReact.setEmoji(emoji);
         postReactRepository.save(postReact);
-        log.debug("User with id of {} updated his/her reaction to post with id of {} to emoji with id of {}", currentUser.getId(), postReact.getPost().getId(), emoji.getId());
+        log.debug("User with id of {} updated his/her reaction to post with id of {} to emoji with id of {}", currentUser.getId(), post.getId(), emoji.getId());
         return postReact;
     }
 
     @Override
     public CommentReact update(User currentUser, CommentReact commentReact, Emoji emoji) {
+        Comment comment = commentReact.getComment();
+        if (comment.isDeleted())
+            throw new ResourceNotFoundException("Cannot react to this comment! because this might be already deleted or doesn't exists!");
+        if (blockService.isBlockedBy(currentUser, comment.getCommenter()))
+            throw new BlockedException("Cannot react to this comment! because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
+            throw new BlockedException("Cannot react to this comment! because this user block you already!");
+
         commentReact.setEmoji(emoji);
         commentReactRepository.save(commentReact);
-        log.debug("User with id of {} updated his/her reaction to comment with id of {} to emoji with id of {}", currentUser.getId(), commentReact.getComment().getId(), emoji.getId());
+        log.debug("User with id of {} updated his/her reaction to comment with id of {} to emoji with id of {}", currentUser.getId(), comment.getId(), emoji.getId());
         return commentReact;
     }
 
     @Override
     public ReplyReact update(User currentUser, ReplyReact replyReact, Emoji emoji) {
+        Reply reply = replyReact.getReply();
+        if (reply.isDeleted())
+            throw new ResourceNotFoundException("Cannot react to this reply! because this might be already deleted or doesn't exists!");
+        if (blockService.isBlockedBy(currentUser, reply.getReplier()))
+            throw new BlockedException("Cannot react to this reply! because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
+            throw new BlockedException("Cannot react to this reply! because this user block you already!");
+
         replyReact.setEmoji(emoji);
         replyReactRepository.save(replyReact);
-        log.debug("User with id of {} updated his/her reaction to reply with id of {} to emoji with id of {}", currentUser.getId(), replyReact.getReply().getId(), emoji.getId());
+        log.debug("User with id of {} updated his/her reaction to reply with id of {} to emoji with id of {}", currentUser.getId(), reply.getId(), emoji.getId());
         return replyReact;
     }
 
