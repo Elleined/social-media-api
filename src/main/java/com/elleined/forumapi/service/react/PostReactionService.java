@@ -8,6 +8,7 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
 import com.elleined.forumapi.model.react.PostReact;
+import com.elleined.forumapi.model.react.React;
 import com.elleined.forumapi.repository.react.PostReactRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -42,13 +44,16 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
 
     @Override
     public List<PostReact> getAll(Post post) {
-        return post.getReactions();
+        return post.getReactions().stream()
+                .sorted(Comparator.comparing(React::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override
     public List<PostReact> getAllReactionByEmojiType(Post post, Emoji.Type type) {
         return post.getReactions().stream()
                 .filter(postReact -> postReact.getEmoji().getType().equals(type))
+                .sorted(Comparator.comparing(React::getCreatedAt).reversed())
                 .toList();
     }
 
@@ -60,7 +65,7 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
             throw new BlockedException("Cannot react to this post! because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor()))
             throw new BlockedException("Cannot react to this post! because this user block you already!");
-        
+
         PostReact postReact = postReactionMapper.toEntity(currentUser, post, emoji);
         postReactRepository.save(postReact);
         log.debug("User with id of {} successfully reacted with id of {} in post with id of {}", currentUser.getId(), emoji.getId(), post.getId());

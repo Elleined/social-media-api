@@ -2,7 +2,6 @@ package com.elleined.forumapi.controller.post;
 
 import com.elleined.forumapi.dto.ReactionDTO;
 import com.elleined.forumapi.mapper.react.PostReactionMapper;
-import com.elleined.forumapi.mapper.react.ReactionMapper;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
