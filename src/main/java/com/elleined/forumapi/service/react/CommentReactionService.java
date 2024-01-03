@@ -3,6 +3,7 @@ package com.elleined.forumapi.service.react;
 import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
+import com.elleined.forumapi.mapper.react.CommentReactionMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
@@ -26,7 +27,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentReactionService implements ReactionService<Comment, CommentReact> {
     private final BlockService blockService;
+
     private final CommentReactRepository commentReactRepository;
+    private final CommentReactionMapper commentReactionMapper;
 
     @Override
     public CommentReact getById(int id) throws ResourceNotFoundException {
@@ -65,14 +68,7 @@ public class CommentReactionService implements ReactionService<Comment, CommentR
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
             throw new BlockedException("Cannot react to this comment! because this user block you already!");
 
-        CommentReact commentReact = CommentReact.commentReactBuilder()
-                .createdAt(LocalDateTime.now())
-                .respondent(currentUser)
-                .notificationStatus(NotificationStatus.UNREAD)
-                .emoji(emoji)
-                .comment(comment)
-                .build();
-
+        CommentReact commentReact = commentReactionMapper.toEntity(currentUser, comment, emoji);
         commentReactRepository.save(commentReact);
         log.debug("User with id of {} successfully reacted with id of {} in comment with id of {}", currentUser.getId(), emoji.getId(), comment.getId());
         return commentReact;
