@@ -8,6 +8,7 @@ import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
 import com.elleined.forumapi.model.react.CommentReact;
+import com.elleined.forumapi.model.react.React;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -41,13 +43,16 @@ public class CommentReactionService implements ReactionService<Comment, CommentR
 
     @Override
     public List<CommentReact> getAll(Comment comment) {
-        return comment.getReactions();
+        return comment.getReactions().stream()
+                .sorted(Comparator.comparing(React::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override
     public List<CommentReact> getAllReactionByEmojiType(Comment comment, Emoji.Type type) {
         return comment.getReactions().stream()
                 .filter(commentReact -> commentReact.getEmoji().getType().equals(type))
+                .sorted(Comparator.comparing(React::getCreatedAt).reversed())
                 .toList();
     }
 
