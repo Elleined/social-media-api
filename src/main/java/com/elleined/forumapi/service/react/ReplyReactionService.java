@@ -3,6 +3,7 @@ package com.elleined.forumapi.service.react;
 import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
+import com.elleined.forumapi.mapper.react.ReplyReactionMapper;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
@@ -26,7 +27,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReplyReactionService implements ReactionService<Reply, ReplyReact> {
     private final BlockService blockService;
+
     private final ReplyReactRepository replyReactRepository;
+    private final ReplyReactionMapper replyReactionMapper;
+
 
     @Override
     public ReplyReact getById(int id) throws ResourceNotFoundException {
@@ -65,14 +69,7 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
         if (blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
             throw new BlockedException("Cannot react to this reply! because this user block you already!");
 
-        ReplyReact replyReact = ReplyReact.replyReactBuilder()
-                .createdAt(LocalDateTime.now())
-                .respondent(currentUser)
-                .notificationStatus(NotificationStatus.UNREAD)
-                .emoji(emoji)
-                .reply(reply)
-                .build();
-
+        ReplyReact replyReact = replyReactionMapper.toEntity(currentUser, reply, emoji);
         replyReactRepository.save(replyReact);
         log.debug("User with id of {} successfully reacted with id of {} in reply with id of {}", currentUser.getId(), emoji.getId(), reply.getId());
         return replyReact;
