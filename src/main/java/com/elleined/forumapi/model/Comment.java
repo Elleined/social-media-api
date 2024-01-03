@@ -1,6 +1,5 @@
 package com.elleined.forumapi.model;
 
-import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.react.CommentReact;
 import jakarta.persistence.*;
@@ -85,9 +84,6 @@ public class Comment {
 
     @ManyToMany(mappedBy = "upvotedComments")
     private Set<User> upvotingUsers;
-
-    @OneToMany(mappedBy = "comment")
-    private Set<CommentLike> likes;
 
     public boolean isCommentSectionClosed() {
         return this.getPost().getCommentSectionStatus() == Post.CommentSectionStatus.CLOSED;

@@ -2,9 +2,11 @@ package com.elleined.forumapi.service.post;
 
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.model.*;
-import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.mention.PostMention;
-import com.elleined.forumapi.repository.*;
+import com.elleined.forumapi.repository.CommentRepository;
+import com.elleined.forumapi.repository.MentionRepository;
+import com.elleined.forumapi.repository.PostRepository;
+import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.image.ImageUploader;
@@ -39,8 +41,6 @@ public class PostServiceImpl implements PostService {
 
     private final MentionRepository mentionRepository;
 
-    private final LikeRepository likeRepository;
-
     @Value("${cropTrade.img.directory}")
     private String cropTradeImgDirectory;
 
@@ -61,7 +61,6 @@ public class PostServiceImpl implements PostService {
                 .status(Status.ACTIVE)
                 .commentSectionStatus(Post.CommentSectionStatus.OPEN)
                 .mentions(new HashSet<>())
-                .likes(new HashSet<>())
                 .comments(new ArrayList<>())
                 .attachedPicture(attachedPicture == null ? null : attachedPicture.getOriginalFilename())
                 .build();
@@ -207,54 +206,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public void mentionAll(User mentioningUser, Set<User> mentionedUsers, Post post) {
         mentionedUsers.forEach(mentionedUser -> mention(mentioningUser, mentionedUser, post));
-    }
-
-    @Override
-    public PostLike like(User respondent, Post post)
-            throws ResourceNotFoundException,
-            BlockedException {
-
-        if (post.isDeleted()) throw new ResourceNotFoundException("Cannot like/unlike! The post with id of " + post.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
-        if (blockService.isBlockedBy(respondent, post.getAuthor())) throw new BlockedException("Cannot like/unlike! You blocked the author of this post with id of !" + post.getAuthor().getId());
-        if (blockService.isYouBeenBlockedBy(respondent, post.getAuthor())) throw  new BlockedException("Cannot like/unlike! The author of this post with id of " + post.getAuthor().getId() + " already blocked you");
-
-        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.POST)
-                ? NotificationStatus.READ
-                : NotificationStatus.UNREAD;
-
-        PostLike postLike = PostLike.postLikeBuilder()
-                .respondent(respondent)
-                .post(post)
-                .notificationStatus(notificationStatus)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        respondent.getLikedPosts().add(postLike);
-        post.getLikes().add(postLike);
-        likeRepository.save(postLike);
-        log.debug("User with id of {} liked post with id of {}", respondent.getId(), post.getId());
-        return postLike;
-    }
-
-    @Override
-    public void unLike(User respondent, Post post) {
-        PostLike postLike = respondent.getLikedPosts()
-                .stream()
-                .filter(like -> like.getPost().equals(post))
-                .findFirst()
-                .orElseThrow();
-
-        respondent.getLikedPosts().remove(postLike);
-        post.getLikes().remove(postLike);
-        likeRepository.delete(postLike);
-        log.debug("User with id of {} unlike post with id of {}", respondent.getId(), post.getId());
-    }
-
-    @Override
-    public boolean isLiked(User respondent, Post post) {
-        return respondent.getLikedPosts().stream()
-                .map(PostLike::getPost)
-                .anyMatch(post::equals);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.elleined.forumapi.dto.ReactionDTO;
 import com.elleined.forumapi.mapper.react.CommentReactionMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.UserService;

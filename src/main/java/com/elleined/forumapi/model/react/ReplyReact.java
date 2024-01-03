@@ -3,7 +3,6 @@ package com.elleined.forumapi.model.react;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.emoji.Emoji;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

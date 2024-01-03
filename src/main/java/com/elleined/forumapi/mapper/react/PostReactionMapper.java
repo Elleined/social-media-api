@@ -4,7 +4,7 @@ import com.elleined.forumapi.dto.ReactionDTO;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.model.react.PostReact;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package com.elleined.forumapi.service.emoji;
 
 import com.elleined.forumapi.exception.ResourceNotFoundException;
-import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.repository.EmojiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

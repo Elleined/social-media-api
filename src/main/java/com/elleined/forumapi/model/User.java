@@ -1,9 +1,6 @@
 package com.elleined.forumapi.model;
 
 import com.elleined.forumapi.model.friend.FriendRequest;
-import com.elleined.forumapi.model.like.CommentLike;
-import com.elleined.forumapi.model.like.PostLike;
-import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
@@ -143,22 +140,6 @@ public class User {
     @OneToMany(mappedBy = "requestedUser")
     @Setter(AccessLevel.NONE)
     private Set<FriendRequest> receiveFriendRequest;
-
-
-    // user id reference is in tbl liked post
-    @OneToMany(mappedBy = "respondent")
-    @Setter(AccessLevel.NONE)
-    private Set<PostLike> likedPosts;
-
-    // user id reference is in tbl liked comment
-    @OneToMany(mappedBy = "respondent")
-    @Setter(AccessLevel.NONE)
-    private Set<CommentLike> likedComments;
-
-    // user id reference is in tbl liked reply
-    @OneToMany(mappedBy = "respondent")
-    @Setter(AccessLevel.NONE)
-    private Set<ReplyLike> likedReplies;
 
     // user id reference is in post table
     @OneToMany(mappedBy = "author")

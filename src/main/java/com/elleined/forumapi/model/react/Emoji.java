@@ -1,4 +1,4 @@
-package com.elleined.forumapi.model.emoji;
+package com.elleined.forumapi.model.react;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +34,7 @@ public class Emoji {
     }
 
     public enum Type {
+        LIKE,
         HEART,
         CARE,
         HAHA,

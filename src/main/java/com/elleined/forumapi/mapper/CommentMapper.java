@@ -27,9 +27,7 @@ public abstract class CommentMapper {
             @Mapping(target = "totalReplies", expression = "java(commentService.getTotalReplies(comment))"),
             @Mapping(target = "notificationStatus", source = "comment.notificationStatus"),
             @Mapping(target = "postBody", source = "comment.post.body"),
-            @Mapping(target = "likers", source = "comment.likes"),
             @Mapping(target = "mentionedUsers", source = "comment.mentions"),
-            @Mapping(target = "totalLikes", expression = "java(comment.getLikes().size())"),
             @Mapping(target = "authorId", source = "comment.post.author.id"),
             @Mapping(target = "pinnedReplyId", source = "comment.pinnedReply.id")
     })

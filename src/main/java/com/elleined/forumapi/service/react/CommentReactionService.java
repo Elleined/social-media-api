@@ -5,9 +5,8 @@ import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.mapper.react.CommentReactionMapper;
 import com.elleined.forumapi.model.Comment;
-import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.React;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
@@ -17,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 

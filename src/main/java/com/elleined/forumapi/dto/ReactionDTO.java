@@ -1,7 +1,7 @@
 package com.elleined.forumapi.dto;
 
 import com.elleined.forumapi.model.NotificationStatus;
-import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.react.Emoji;
 import lombok.Builder;
 import lombok.Data;
 

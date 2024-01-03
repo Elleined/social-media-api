@@ -1,7 +1,7 @@
 package com.elleined.forumapi.service.emoji;
 
 import com.elleined.forumapi.exception.ResourceNotFoundException;
-import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.react.Emoji;
 
 import java.util.List;
 

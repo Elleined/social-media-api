@@ -2,7 +2,7 @@ package com.elleined.forumapi.service.react;
 
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.emoji.Emoji;
+import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.model.react.React;
 
 import java.util.List;

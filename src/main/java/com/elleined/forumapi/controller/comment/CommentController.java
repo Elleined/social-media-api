@@ -8,7 +8,6 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.UserService;
-import com.elleined.forumapi.service.notification.reader.comment.CommentLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
@@ -42,7 +41,6 @@ public class CommentController {
 
     private final CommentWSMentionNotificationService commentMentionWSNotificationService;
 
-    private final CommentLikeNotificationReader commentLikeNotificationReader;
     private final CommentMentionNotificationReader commentMentionNotificationReader;
     private final CommentNotificationReader commentNotificationReader;
 
@@ -56,7 +54,6 @@ public class CommentController {
         Post post = postService.getById(postId);
 
         commentNotificationReader.readAll(currentUser, post);
-        commentLikeNotificationReader.readAll(currentUser, post);
         commentMentionNotificationReader.readAll(currentUser, post);
 
         modalTrackerService.saveTrackerOfUserById(currentUserId, postId, "COMMENT");

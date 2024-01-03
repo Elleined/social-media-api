@@ -9,7 +9,6 @@ import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.ReplyService;
 import com.elleined.forumapi.service.UserService;
-import com.elleined.forumapi.service.notification.reader.reply.ReplyLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
 import com.elleined.forumapi.service.ws.WSService;
@@ -44,7 +43,6 @@ public class ReplyController {
 
     private final WSService wsService;
 
-    private final ReplyLikeNotificationReader replyLikeNotificationReader;
     private final ReplyMentionNotificationReader replyMentionNotificationReader;
     private final ReplyNotificationReader replyNotificationReader;
 
@@ -56,7 +54,6 @@ public class ReplyController {
         Comment comment = commentService.getById(commentId);
 
         replyNotificationReader.readAll(currentUser, comment);
-        replyLikeNotificationReader.readAll(currentUser, comment);
         replyMentionNotificationReader.readAll(currentUser, comment);
 
         modalTrackerService.saveTrackerOfUserById(currentUserId, commentId, "REPLY");

@@ -1,6 +1,5 @@
 package com.elleined.forumapi.model;
 
-import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.model.react.ReplyReact;
 import jakarta.persistence.*;
@@ -60,10 +59,6 @@ public class Reply {
     @OneToMany(mappedBy = "reply")
     @Setter(AccessLevel.NONE)
     private Set<ReplyMention> mentions;
-
-    @OneToMany(mappedBy = "reply")
-    @Setter(AccessLevel.NONE)
-    private Set<ReplyLike> likes;
 
     // reply id reference is in tbl reply emoji table
     @OneToMany(mappedBy = "reply")

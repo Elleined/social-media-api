@@ -6,7 +6,6 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.UserService;
-import com.elleined.forumapi.service.notification.reader.post.PostLikeNotificationReader;
 import com.elleined.forumapi.service.notification.reader.post.PostMentionNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
 import com.elleined.forumapi.service.ws.notification.mention.PostWSMentionNotificationService;
@@ -33,15 +32,11 @@ public class PostController {
     private final ModalTrackerService modalTrackerService;
 
     private final PostWSMentionNotificationService postMentionWSNotificationService;
-
-    private final PostLikeNotificationReader postLikeNotificationReader;
     private final PostMentionNotificationReader postMentionNotificationReader;
 
     @GetMapping
     public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-
-        postLikeNotificationReader.readAll(currentUser);
         postMentionNotificationReader.readAll(currentUser);
 
         modalTrackerService.saveTrackerOfUserById(currentUserId, 0, "POST");

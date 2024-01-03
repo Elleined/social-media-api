@@ -7,9 +7,7 @@ import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.mention.PostMention;
-import com.elleined.forumapi.service.like.LikeService;
 import com.elleined.forumapi.service.mention.MentionService;
 import com.elleined.forumapi.service.pin.PinService;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,7 +22,6 @@ import java.util.Set;
 public interface PostService
         extends PinService<Post, Comment>,
         MentionService<Post>,
-        LikeService<Post>,
         SavedPostService,
         SharePostService  {
 
@@ -62,17 +59,6 @@ public interface PostService
 
     @Override
     void mentionAll(User mentioningUser, Set<User> mentionedUsers, Post post);
-
-    @Override
-    PostLike like(User respondent, Post post)
-            throws ResourceNotFoundException,
-            BlockedException;
-
-    @Override
-    void unLike(User respondent, Post post);
-
-    @Override
-    boolean isLiked(User respondent, Post post);
 
     @Override
     Post savedPost(User currentUser, Post postToSaved);

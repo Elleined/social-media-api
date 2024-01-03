@@ -3,19 +3,14 @@ package com.elleined.forumapi.service.notification;
 import com.elleined.forumapi.dto.notification.*;
 import com.elleined.forumapi.mapper.notification.comment.CommentNotificationMapper;
 import com.elleined.forumapi.mapper.notification.friend.FriendRequestNotificationMapper;
-import com.elleined.forumapi.mapper.notification.like.LikeNotificationMapper;
 import com.elleined.forumapi.mapper.notification.mention.MentionNotificationMapper;
 import com.elleined.forumapi.mapper.notification.reply.ReplyNotificationMapper;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.like.CommentLike;
-import com.elleined.forumapi.model.like.PostLike;
-import com.elleined.forumapi.model.like.ReplyLike;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.service.notification.comment.CommentNotificationService;
 import com.elleined.forumapi.service.notification.friend.FriendRequestNotificationService;
-import com.elleined.forumapi.service.notification.like.LikeNotificationService;
 import com.elleined.forumapi.service.notification.mention.MentionNotificationService;
 import com.elleined.forumapi.service.notification.reply.ReplyNotificationService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +29,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService<Notification> {
     // Notification Services
-    private final LikeNotificationService<PostLike> postLikeNotificationService;
-    private final LikeNotificationService<CommentLike> commentLikeNotificationService;
-    private final LikeNotificationService<ReplyLike> replyLikeNotificationService;
 
     private final MentionNotificationService<PostMention> postMentionNotificationService;
     private final MentionNotificationService<CommentMention> commentMentionNotificationService;
@@ -51,7 +43,6 @@ public class NotificationServiceImpl implements NotificationService<Notification
     private final CommentNotificationMapper commentNotificationMapper;
     private final ReplyNotificationMapper replyNotificationMapper;
 
-    private final LikeNotificationMapper likeNotificationMapper;
     private final MentionNotificationMapper mentionNotificationMapper;
 
     private final FriendRequestNotificationMapper friendRequestNotificationMapper;
@@ -63,18 +54,6 @@ public class NotificationServiceImpl implements NotificationService<Notification
                 .collect(Collectors.toSet());
         Set<ReplyNotification> unreadReply = replyNotificationService.getAllUnreadNotification(currentUser).stream()
                 .map(replyNotificationMapper::toNotification)
-                .collect(Collectors.toSet());
-
-        Set<PostNotification> unreadPostLikes = postLikeNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(likeNotificationMapper::toNotification)
-                .collect(Collectors.toSet());
-
-        Set<CommentNotification> unreadCommentLikes = commentLikeNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(likeNotificationMapper::toNotification)
-                .collect(Collectors.toSet());
-
-        Set<ReplyNotification> unreadReplyLikes = replyLikeNotificationService.getAllUnreadNotification(currentUser).stream()
-                .map(likeNotificationMapper::toNotification)
                 .collect(Collectors.toSet());
 
         Set<PostNotification> unreadPostMentions = postMentionNotificationService.getAllUnreadNotification(currentUser).stream()
@@ -96,9 +75,6 @@ public class NotificationServiceImpl implements NotificationService<Notification
         return Stream.of(
                         unreadComments,
                         unreadReply,
-                        unreadPostLikes,
-                        unreadCommentLikes,
-                        unreadReplyLikes,
                         unreadPostMentions,
                         unreadCommentMentions,
                         unreadReplyMentions,

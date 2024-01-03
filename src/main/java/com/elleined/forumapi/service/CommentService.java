@@ -2,12 +2,13 @@ package com.elleined.forumapi.service;
 
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.model.*;
-import com.elleined.forumapi.model.like.CommentLike;
 import com.elleined.forumapi.model.mention.CommentMention;
-import com.elleined.forumapi.repository.*;
+import com.elleined.forumapi.repository.CommentRepository;
+import com.elleined.forumapi.repository.MentionRepository;
+import com.elleined.forumapi.repository.ReplyRepository;
+import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.image.ImageUploader;
-import com.elleined.forumapi.service.like.LikeService;
 import com.elleined.forumapi.service.mention.MentionService;
 import com.elleined.forumapi.service.pin.PinService;
 import com.elleined.forumapi.utils.DirectoryFolders;
@@ -30,8 +31,7 @@ import java.util.*;
 @Transactional
 public class CommentService
         implements PinService<Comment, Reply>,
-        MentionService<Comment>,
-        LikeService<Comment> {
+        MentionService<Comment> {
 
     private final UserRepository userRepository;
 
@@ -47,8 +47,6 @@ public class CommentService
     private final PinService<Post, Comment> commentPinService;
 
     private final MentionRepository mentionRepository;
-
-    private final LikeRepository likeRepository;
 
     @Value("${cropTrade.img.directory}")
     private String cropTradeImgDirectory;
@@ -79,7 +77,6 @@ public class CommentService
                 .notificationStatus(status)
                 .status(Status.ACTIVE)
                 .replies(new ArrayList<>())
-                .likes(new HashSet<>())
                 .mentions(new HashSet<>())
                 .build();
 
@@ -223,51 +220,5 @@ public class CommentService
     @Override
     public void mentionAll(User mentioningUser, Set<User> mentionedUsers, Comment comment) {
         mentionedUsers.forEach(mentionedUser -> mention(mentioningUser, mentionedUser, comment));
-    }
-
-    @Override
-    public CommentLike like(User respondent, Comment comment)
-            throws ResourceNotFoundException, BlockedException {
-
-        if (comment.isDeleted()) throw new ResourceNotFoundException("Cannot like/unlike! The comment with id of " + comment.getId() + " you are trying to like/unlike might already been deleted or does not exists!");
-        if (blockService.isBlockedBy(respondent, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! You blocked the author of this comment with id of !" + comment.getCommenter().getId());
-        if (blockService.isYouBeenBlockedBy(respondent, comment.getCommenter())) throw new BlockedException("Cannot like/unlike! The author of this comment with id of " + comment.getCommenter().getId() + " already blocked you");
-
-        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getPost().getId(), ModalTracker.Type.COMMENT)
-                ? NotificationStatus.READ
-                : NotificationStatus.UNREAD;
-
-        CommentLike commentLike = CommentLike.commentLikeBuilder()
-                .respondent(respondent)
-                .comment(comment)
-                .notificationStatus(notificationStatus)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        respondent.getLikedComments().add(commentLike);
-        comment.getLikes().add(commentLike);
-        likeRepository.save(commentLike);
-        log.debug("User with id of {} liked comment with id of {}", respondent.getId(), comment.getId());
-        return commentLike;
-    }
-
-    @Override
-    public void unLike(User respondent, Comment comment) {
-        CommentLike commentLike = respondent.getLikedComments().stream()
-                .filter(likedComment -> likedComment.getComment().equals(comment))
-                .findFirst()
-                .orElseThrow();
-
-        respondent.getLikedComments().remove(commentLike);
-        comment.getLikes().remove(commentLike);
-        likeRepository.delete(commentLike);
-        log.debug("User with id of {} unlike comment with id of {}", respondent.getId(), comment.getId());
-    }
-
-    @Override
-    public boolean isLiked(User respondent, Comment comment) {
-        return respondent.getLikedComments().stream()
-                .map(CommentLike::getComment)
-                .anyMatch(comment::equals);
     }
 }

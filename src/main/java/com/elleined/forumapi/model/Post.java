@@ -1,6 +1,5 @@
 package com.elleined.forumapi.model;
 
-import com.elleined.forumapi.model.like.PostLike;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.react.PostReact;
 import jakarta.persistence.*;
@@ -65,11 +64,6 @@ public class Post {
     @OneToMany(mappedBy = "post")
     @Setter(AccessLevel.NONE)
     private Set<PostMention> mentions;
-
-    // post id reference is in tbl post like
-    @OneToMany(mappedBy = "post")
-    @Setter(AccessLevel.NONE)
-    private Set<PostLike> likes;
 
     // post id reference is in tbl post emoji
     @OneToMany(mappedBy = "post")
