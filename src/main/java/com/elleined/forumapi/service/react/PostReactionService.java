@@ -3,7 +3,7 @@ package com.elleined.forumapi.service.react;
 import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
-import com.elleined.forumapi.model.NotificationStatus;
+import com.elleined.forumapi.mapper.react.PostReactionMapper;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,7 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostReactionService implements ReactionService<Post, PostReact> {
     private final BlockService blockService;
+
     private final PostReactRepository postReactRepository;
+    private final PostReactionMapper postReactionMapper;
 
     @Override
     public PostReact getById(int id) throws ResourceNotFoundException {
@@ -59,22 +60,15 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
             throw new BlockedException("Cannot react to this post! because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor()))
             throw new BlockedException("Cannot react to this post! because this user block you already!");
-
-        PostReact postReact = PostReact.postReactBuilder()
-                .createdAt(LocalDateTime.now())
-                .respondent(currentUser)
-                .notificationStatus(NotificationStatus.UNREAD)
-                .emoji(emoji)
-                .post(post)
-                .build();
-
+        
+        PostReact postReact = postReactionMapper.toEntity(currentUser, post, emoji);
         postReactRepository.save(postReact);
         log.debug("User with id of {} successfully reacted with id of {} in post with id of {}", currentUser.getId(), emoji.getId(), post.getId());
         return postReact;
     }
 
     @Override
-    public PostReact update(User currentUser, Post post, PostReact postReact, Emoji emoji) {
+    public void update(User currentUser, Post post, PostReact postReact, Emoji emoji) {
         if (currentUser.notOwned(postReact))
             throw new NotOwnedException("Cannot update react to this post! because you don't own this reaction");
         if (post.isDeleted())
@@ -87,7 +81,6 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
         postReact.setEmoji(emoji);
         postReactRepository.save(postReact);
         log.debug("User with id of {} updated his/her reaction to post with id of {} to emoji with id of {}", currentUser.getId(), post.getId(), emoji.getId());
-        return postReact;
     }
 
     @Override

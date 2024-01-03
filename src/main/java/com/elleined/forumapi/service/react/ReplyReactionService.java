@@ -3,12 +3,10 @@ package com.elleined.forumapi.service.react;
 import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
-import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.emoji.Emoji;
-import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.ReplyReact;
 import com.elleined.forumapi.repository.react.ReplyReactRepository;
 import com.elleined.forumapi.service.block.BlockService;
@@ -76,7 +74,7 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
     }
 
     @Override
-    public ReplyReact update(User currentUser, Reply reply, ReplyReact replyReact, Emoji emoji) {
+    public void update(User currentUser, Reply reply, ReplyReact replyReact, Emoji emoji) {
         if (currentUser.notOwned(replyReact))
             throw new NotOwnedException("Cannot update react to this reply! because you don't own this reaction");
         if (reply.isDeleted())
@@ -89,7 +87,6 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
         replyReact.setEmoji(emoji);
         replyReactRepository.save(replyReact);
         log.debug("User with id of {} updated his/her reaction to reply with id of {} to emoji with id of {}", currentUser.getId(), reply.getId(), emoji.getId());
-        return replyReact;
     }
 
     @Override
