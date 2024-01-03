@@ -38,7 +38,7 @@ public class PostReactionController {
 
     @GetMapping("/type")
     public List<ReactionDTO> getAllReactionByEmojiType(@PathVariable("postId") int postId,
-                                                     @RequestParam("type") Emoji.Type type) {
+                                                       @RequestParam("type") Emoji.Type type) {
         Post post = postService.getById(postId);
         return postReactionService.getAllReactionByEmojiType(post, type).stream()
                 .map(postReactionMapper::toDTO)
