@@ -18,7 +18,7 @@ public class ReplyWSMentionNotificationService extends WSMentionBaseNotification
 
     @Override
     public void broadcast(ReplyMention replyMention) {
-        if (replyMention.getNotificationStatus() == NotificationStatus.READ) return;
+        if (replyMention.isRead()) return;
         ReplyNotification replyNotification = mentionNotificationMapper.toNotification(replyMention);
         simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + replyNotification.getReceiverId(), replyNotification);
         log.debug("Reply mention notification successfully sent to mentioned user with id of {}", replyNotification.getReceiverId());

@@ -56,4 +56,14 @@ public abstract class Mention {
     public abstract String getMessage();
 
     public abstract int getReceiverId();
+
+    public abstract boolean isEntityActive();
+
+    public boolean isRead() {
+        return this.getNotificationStatus() == NotificationStatus.READ;
+    }
+
+    public boolean isUnread() {
+        return this.getNotificationStatus() == NotificationStatus.UNREAD;
+    }
 }

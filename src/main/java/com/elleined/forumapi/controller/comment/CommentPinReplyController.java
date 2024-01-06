@@ -30,11 +30,11 @@ public class CommentPinReplyController {
     private final ReplyService replyService;
 
     @GetMapping("/getPinnedReply/{commentId}")
-    public Optional<ReplyDTO> getPinnedReply(@PathVariable("commentId") int commentId) {
+    public ReplyDTO getPinnedReply(@PathVariable("commentId") int commentId) {
         Comment comment = commentService.getById(commentId);
-        Optional<Reply> reply = commentService.getPinnedReply(comment);
+        Reply pinnedReply = commentService.getPinnedReply(comment);
 
-        return Optional.of( replyMapper.toDTO(reply.orElseThrow()) );
+        return replyMapper.toDTO(pinnedReply);
     }
 
     @PatchMapping("/{commentId}/pinReply/{replyId}")

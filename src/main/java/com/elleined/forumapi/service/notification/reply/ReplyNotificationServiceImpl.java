@@ -21,10 +21,10 @@ public class ReplyNotificationServiceImpl implements ReplyNotificationService {
         return currentUser.getComments().stream()
                 .map(Comment::getReplies)
                 .flatMap(replies -> replies.stream()
-                        .filter(reply -> reply.getStatus() == Status.ACTIVE)
+                        .filter(Reply::isActive)
+                        .filter(Reply::isUnread))
                         .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
                         .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
-                        .filter(reply -> reply.getNotificationStatus() == NotificationStatus.UNREAD))
                 .toList();
     }
 
@@ -37,11 +37,11 @@ public class ReplyNotificationServiceImpl implements ReplyNotificationService {
     public int notificationCountForReplier(User commenter, Comment comment, User replier) {
         return (int) comment.getReplies()
                 .stream()
-                .filter(reply -> reply.getStatus() == Status.ACTIVE)
-                .filter(reply -> reply.getNotificationStatus() == NotificationStatus.UNREAD)
+                .filter(Reply::isActive)
+                .filter(Reply::isUnread)
+                .filter(reply -> reply.getReplier().equals(replier))
                 .filter(reply -> !blockService.isBlockedBy(commenter, reply.getReplier()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(commenter, reply.getReplier()))
-                .filter(reply -> reply.getReplier().equals(replier))
                 .count();
     }
 }

@@ -21,8 +21,8 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
         return currentUser.getPosts().stream()
                 .map(Post::getComments)
                 .flatMap(comments -> comments.stream()
-                        .filter(comment -> comment.getStatus() == Status.ACTIVE)
-                        .filter(comment -> comment.getNotificationStatus() == NotificationStatus.UNREAD)
+                        .filter(Comment::isActive)
+                        .filter(Comment::isUnread)
                         .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
                         .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())))
                 .toList();
@@ -37,11 +37,11 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
     public int notificationCountForCommenter(User author, Post post, User commenter) {
         return (int) post.getComments()
                 .stream()
-                .filter(comment -> comment.getStatus() == Status.ACTIVE)
-                .filter(comment -> comment.getNotificationStatus() == NotificationStatus.UNREAD)
+                .filter(Comment::isActive)
+                .filter(Comment::isUnread)
+                .filter(comment -> comment.getCommenter().equals(commenter))
                 .filter(comment -> !blockService.isBlockedBy(author, comment.getCommenter()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(author, comment.getCommenter()))
-                .filter(comment -> comment.getCommenter().equals(commenter))
                 .count();
     }
 }

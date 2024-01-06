@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "tbl_comment_mention")
 @NoArgsConstructor
@@ -23,7 +24,6 @@ public final class CommentMention extends Mention {
             name = "comment_id",
             referencedColumnName = "comment_id"
     )
-    @Getter
     private Comment comment;
 
     @Builder(builderMethodName = "commentMentionBuilder")
@@ -41,5 +41,10 @@ public final class CommentMention extends Mention {
     @Override
     public int getReceiverId() {
         return getMentionedUser().getId();
+    }
+
+    @Override
+    public boolean isEntityActive() {
+        return this.getComment().isActive();
     }
 }

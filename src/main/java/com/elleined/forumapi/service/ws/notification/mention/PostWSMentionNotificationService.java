@@ -18,7 +18,7 @@ public class PostWSMentionNotificationService extends WSMentionBaseNotificationS
 
     @Override
     public void broadcast(PostMention postMention) {
-        if (postMention.getNotificationStatus() == NotificationStatus.READ) return;
+        if (postMention.isRead()) return;
         PostNotification postNotification = mentionNotificationMapper.toNotification(postMention);
         simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + postNotification.getReceiverId(), postNotification);
         log.debug("Post mention notification successfully sent to mentioned user with id of {}", postNotification.getReceiverId());

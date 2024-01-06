@@ -100,8 +100,4 @@ public class Post {
     public boolean isCommentSectionOpen() {
         return this.getCommentSectionStatus() == CommentSectionStatus.OPEN;
     }
-
-    public boolean hasNoPinnedComment() {
-        return this.getPinnedComment() == null;
-    }
 }

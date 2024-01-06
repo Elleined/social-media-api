@@ -98,4 +98,12 @@ public class Comment {
     public int getUpvoteCount() {
         return this.getUpvotingUsers().size();
     }
+
+    public boolean isRead() {
+        return this.getNotificationStatus() == NotificationStatus.READ;
+    }
+
+    public boolean isUnread() {
+        return this.getNotificationStatus() == NotificationStatus.UNREAD;
+    }
 }

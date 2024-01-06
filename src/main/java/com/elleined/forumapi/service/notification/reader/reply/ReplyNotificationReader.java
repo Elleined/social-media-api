@@ -29,7 +29,7 @@ public class ReplyNotificationReader implements ReplyNotificationReaderService {
         log.trace("Will mark all as read because the current user with id of {} is the commenter of the comment {}", currentUser.getId(), comment.getCommenter().getId());
         List<Reply> replies = comment.getReplies()
                 .stream()
-                .filter(reply -> reply.getStatus() == Status.ACTIVE)
+                .filter(Reply::isActive)
                 .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
                 .toList();

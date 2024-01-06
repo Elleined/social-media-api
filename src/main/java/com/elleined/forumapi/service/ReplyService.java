@@ -92,9 +92,8 @@ public class ReplyService
         if (comment.isInactive()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists anymore!");
 
         Reply pinnedReply = comment.getPinnedReply();
-        List<Reply> replies = new ArrayList<>(comment.getReplies()
-                .stream()
-                .filter(reply -> reply.getStatus() == Status.ACTIVE)
+        List<Reply> replies = new ArrayList<>(comment.getReplies().stream()
+                .filter(Reply::isActive)
                 .filter(reply -> !reply.equals(pinnedReply))
                 .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
@@ -138,8 +137,6 @@ public class ReplyService
 
     @Override
     public void mentionAll(User mentioningUser, Set<User> mentionedUsers, Reply reply) {
-        mentionedUsers.stream()
-                .map(mentionedUser -> mention(mentioningUser, mentionedUser, reply))
-                .toList();
+        mentionedUsers.forEach(mentionedUser -> mention(mentioningUser, mentionedUser, reply));
     }
 }

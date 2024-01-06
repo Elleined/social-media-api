@@ -29,7 +29,6 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
     private final ReplyReactRepository replyReactRepository;
     private final ReplyReactionMapper replyReactionMapper;
 
-
     @Override
     public ReplyReact getById(int id) throws ResourceNotFoundException {
         return replyReactRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reaction with id of " + id + " doesn't exists!"));

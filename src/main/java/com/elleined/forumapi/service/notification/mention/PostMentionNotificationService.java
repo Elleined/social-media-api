@@ -3,6 +3,7 @@ package com.elleined.forumapi.service.notification.mention;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Status;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.mention.Mention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,8 @@ public class PostMentionNotificationService implements MentionNotificationServic
                 .stream()
                 .filter(mention -> !blockService.isBlockedBy(currentUser, mention.getMentionedUser()))
                 .filter(mention -> !blockService.isYouBeenBlockedBy(currentUser, mention.getMentionedUser()))
-                .filter(mention -> mention.getPost().getStatus() == Status.ACTIVE)
-                .filter(mention -> mention.getNotificationStatus() == NotificationStatus.UNREAD)
+                .filter(Mention::isEntityActive)
+                .filter(Mention::isUnread)
                 .toList();
     }
 

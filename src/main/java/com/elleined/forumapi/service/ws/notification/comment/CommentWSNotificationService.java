@@ -23,7 +23,7 @@ public class CommentWSNotificationService extends BaseWSNotificationService impl
 
     @Override
     public void broadcast(Comment comment) {
-        if (comment.getNotificationStatus() == NotificationStatus.READ) return; // If the post author replied in his own post it will not generate a notification block
+        if (comment.isRead()) return;
         CommentNotification commentNotificationResponse = commentNotificationMapper.toNotification(comment);
         int authorId = comment.getPost().getAuthor().getId();
         final String destination = "/notification/comments/" + authorId;

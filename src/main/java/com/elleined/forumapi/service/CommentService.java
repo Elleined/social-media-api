@@ -92,7 +92,7 @@ public class CommentService
         List<Comment> comments = new ArrayList<>(post.getComments()
                 .stream()
                 .filter(comment -> !comment.equals(pinnedComment))
-                .filter(comment -> comment.getStatus() == Status.ACTIVE)
+                .filter(Comment::isActive)
                 .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
                 .sorted(Comparator.comparingInt(Comment::getUpvoteCount).reversed())
@@ -125,8 +125,8 @@ public class CommentService
             throws ResourceNotFoundException,
             NotOwnedException {
 
-        if (post.doesNotHave(comment)) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
         if (comment.getBody().equals(newBody)) return comment;
+        if (post.doesNotHave(comment)) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
         if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
 
         comment.setBody(newBody);
@@ -138,17 +138,15 @@ public class CommentService
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalReplies(Comment comment) {
         return (int) comment.getReplies().stream()
-                .filter(reply -> reply.getStatus() == Status.ACTIVE)
+                .filter(Reply::isActive)
                 .count();
     }
 
-    public Optional<Reply> getPinnedReply(Comment comment) throws ResourceNotFoundException {
-        Reply pinnedReply = comment.getPinnedReply();
+    public Reply getPinnedReply(Comment comment) throws ResourceNotFoundException {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists!");
-
-        if (pinnedReply == null) return Optional.empty();
-        return Optional.of( pinnedReply );
+        
+        return comment.getPinnedReply();
     }
 
     @Override

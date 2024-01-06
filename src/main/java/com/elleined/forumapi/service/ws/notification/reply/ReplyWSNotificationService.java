@@ -23,7 +23,7 @@ public class ReplyWSNotificationService extends BaseWSNotificationService implem
 
     @Override
     public void broadcast(Reply reply) {
-        if (reply.getNotificationStatus() == NotificationStatus.READ) return;
+        if (reply.isRead()) return;
         ReplyNotification replyNotificationResponse = replyNotificationMapper.toNotification(reply);
         int commenterId = reply.getComment().getCommenter().getId();
         final String destination = "/notification/replies/" + commenterId;

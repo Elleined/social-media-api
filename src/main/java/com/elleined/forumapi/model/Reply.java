@@ -71,4 +71,12 @@ public class Reply {
     public boolean isActive() {
         return this.getStatus() == Status.ACTIVE;
     }
+
+    public boolean isRead() {
+        return this.getNotificationStatus() == NotificationStatus.READ;
+    }
+
+    public boolean isUnread() {
+        return this.getNotificationStatus() == NotificationStatus.UNREAD;
+    }
 }

@@ -18,7 +18,7 @@ public class CommentWSMentionNotificationService extends WSMentionBaseNotificati
 
     @Override
     public void broadcast(CommentMention commentMention) {
-        if (commentMention.getNotificationStatus() == NotificationStatus.READ) return;
+        if (commentMention.isRead()) return;
         CommentNotification commentNotification = mentionNotificationMapper.toNotification(commentMention);
         simpMessagingTemplate.convertAndSend(MENTION_NOTIFICATION_DESTINATION + commentNotification.getReceiverId(), commentNotification);
         log.debug("Comment mention notification successfully sent to mentioned user with id of {}", commentMention.getReceiverId());

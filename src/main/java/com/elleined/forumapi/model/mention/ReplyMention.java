@@ -42,4 +42,9 @@ public final class ReplyMention extends Mention {
     public int getReceiverId() {
         return getMentionedUser().getId();
     }
+
+    @Override
+    public boolean isEntityActive() {
+        return this.getReply().isActive();
+    }
 }
