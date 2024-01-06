@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/{currentUserId}/comments/{commentId}/reactions")
+@RequestMapping("/users/{currentUserId}/comments/{commentId}/reactions")
 public class CommentReactionController {
     private final UserService userService;
 

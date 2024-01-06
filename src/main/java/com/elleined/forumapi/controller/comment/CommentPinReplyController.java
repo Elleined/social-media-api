@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/{currentUserId}/posts/{postId}/comments")
+@RequestMapping("/users/{currentUserId}/posts/{postId}/comments")
 public class CommentPinReplyController {
     private final UserService userService;
 
@@ -29,7 +29,7 @@ public class CommentPinReplyController {
     private final ReplyMapper replyMapper;
     private final ReplyService replyService;
 
-    @GetMapping("/getPinnedReply/{commentId}")
+    @GetMapping("/{commentId}/pinned-reply")
     public ReplyDTO getPinnedReply(@PathVariable("commentId") int commentId) {
         Comment comment = commentService.getById(commentId);
         Reply pinnedReply = commentPinReplyService.getPinned(comment);
@@ -37,7 +37,7 @@ public class CommentPinReplyController {
         return replyMapper.toDTO(pinnedReply);
     }
 
-    @PatchMapping("/{commentId}/pinReply/{replyId}")
+    @PatchMapping("/{commentId}/pin-reply/{replyId}")
     public CommentDTO pinReply(@PathVariable("currentUserId") int currentUserId,
                                @PathVariable("commentId") int commentId,
                                @PathVariable("replyId") int replyId) {
