@@ -1,6 +1,7 @@
 package com.elleined.forumapi.service.post;
 
 import com.elleined.forumapi.exception.*;
+import com.elleined.forumapi.mapper.PostMapper;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.repository.CommentRepository;
@@ -33,6 +34,8 @@ public class PostServiceImpl implements PostService {
     private final BlockService blockService;
 
     private final PostRepository postRepository;
+    private final PostMapper postMapper;
+
     private final CommentRepository commentRepository;
 
     private final ImageUploader imageUploader;
@@ -54,20 +57,11 @@ public class PostServiceImpl implements PostService {
         if (StringValidator.isNotValidBody(body))
             throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
-        Post post = Post.builder()
-                .body(body)
-                .dateCreated(LocalDateTime.now())
-                .author(currentUser)
-                .status(Status.ACTIVE)
-                .commentSectionStatus(Post.CommentSectionStatus.OPEN)
-                .mentions(new HashSet<>())
-                .comments(new ArrayList<>())
-                .attachedPicture(attachedPicture == null ? null : attachedPicture.getOriginalFilename())
-                .build();
+        Post post = postMapper.toEntity(body, currentUser, attachedPicture.getOriginalFilename());
         currentUser.getPosts().add(post);
         postRepository.save(post);
 
-        if (attachedPicture != null) imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.POST_PICTURES_FOLDER, attachedPicture);
+        imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.POST_PICTURES_FOLDER, attachedPicture);
         if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, post);
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;
