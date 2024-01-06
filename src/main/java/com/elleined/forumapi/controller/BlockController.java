@@ -15,14 +15,22 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/blocking/{currentUserId}")
+@RequestMapping("/users/{currentUserId}")
 public class BlockController {
     private final BlockService blockService;
 
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @PatchMapping("/blockUser/{userToBeBlockedId}")
+    @GetMapping("/block")
+    public Set<UserDTO> getAllBlockedUserOf(@PathVariable("currentUserId") int currentUserId) {
+        User currentUser = userService.getById(currentUserId);
+        return blockService.getAllBlockedUsers(currentUser).stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
+
+    @PatchMapping("/block/{userToBeBlockedId}")
     public ResponseMessage blockUser(@PathVariable("currentUserId") int currentUserId,
                                      @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
 
@@ -33,7 +41,7 @@ public class BlockController {
         return new ResponseMessage(HttpStatus.OK, "User with id of " + userToBeBlockedId + " blocked successfully");
     }
 
-    @PatchMapping("/unblockUser/{userToBeUnblockedId}")
+    @PatchMapping("/unblock/{userToBeUnblockedId}")
     public ResponseMessage unblockUser(@PathVariable("currentUserId") int currentUserId,
                                        @PathVariable("userToBeUnblockedId") int userToBeUnblockedId) {
 
@@ -44,7 +52,7 @@ public class BlockController {
         return new ResponseMessage(HttpStatus.OK, "User with id of " + userToBeUnblockedId + " unblocked successfully");
     }
 
-    @GetMapping("/isBlockedBy/{userToCheckId}")
+    @GetMapping("/is-blocked-by/{userToCheckId}")
     public boolean isBlockedBy(@PathVariable("currentUserId") int currentUserId,
                                @PathVariable("userToCheckId") int userToCheckId) {
 
@@ -54,20 +62,12 @@ public class BlockController {
         return blockService.isBlockedBy(currentUser, userToCheck);
     }
 
-    @GetMapping("/isYouBeenBlockedBy/{suspectedBlockerId}")
+    @GetMapping("/is-you-been-blocked-by/{suspectedBlockerId}")
     public boolean isYouBeenBlockedBy(@PathVariable("currentUserId") int currentUserId,
                                       @PathVariable("suspectedBlockerId") int suspectedBlockerId) {
 
         User currentUser = userService.getById(currentUserId);
         User suspectedBlocker = userService.getById(suspectedBlockerId);
         return blockService.isYouBeenBlockedBy(currentUser, suspectedBlocker);
-    }
-
-    @GetMapping("/getAllBlockedUsers")
-    public Set<UserDTO> getAllBlockedUserOf(@PathVariable("currentUserId") int currentUserId) {
-        User currentUser = userService.getById(currentUserId);
-        return blockService.getAllBlockedUsers(currentUser).stream()
-                .map(userMapper::toDTO)
-                .collect(Collectors.toSet());
     }
 }
