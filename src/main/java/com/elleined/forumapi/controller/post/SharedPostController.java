@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/{currentUserId}/posts/shared-posts")
+@RequestMapping("/users/{currentUserId}/posts/shared-posts")
 public class SharedPostController {
     private final UserService userService;
     private final PostService postService;

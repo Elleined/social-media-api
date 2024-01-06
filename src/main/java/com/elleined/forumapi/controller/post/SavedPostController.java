@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/{currentUserId}/posts/saved-posts")
+@RequestMapping("/users/{currentUserId}/posts/saved-posts")
 public class SavedPostController {
     private final UserService userService;
 

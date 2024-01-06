@@ -22,7 +22,7 @@ import java.util.Set;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/{currentUserId}/posts")
+@RequestMapping("/users/{currentUserId}/posts")
 public class PostController {
     private final UserService userService;
 
@@ -69,7 +69,7 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/commentSectionStatus/{postId}")
+    @PatchMapping("/{postId}/comment-section-status")
     public PostDTO updateCommentSectionStatus(@PathVariable("currentUserId") int currentUserId,
                                               @PathVariable("postId") int postId) {
 
@@ -80,7 +80,7 @@ public class PostController {
         return postMapper.toDTO(updatedPost);
     }
 
-    @PatchMapping("/body/{postId}")
+    @PatchMapping("/{postId}/body")
     public PostDTO updateBody(@PathVariable("currentUserId") int currentUserId,
                                   @PathVariable("postId") int postId,
                                   @RequestParam("newPostBody") String newPostBody) {
