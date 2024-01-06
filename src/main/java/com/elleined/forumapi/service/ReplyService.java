@@ -6,7 +6,7 @@ import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.mention.ReplyMentionService;
-import com.elleined.forumapi.service.pin.PinService;
+import com.elleined.forumapi.service.pin.CommentPinReplyService;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class ReplyService {
 
     private final BlockService blockService;
 
-    private final PinService<Comment, Reply> replyPinService;
+    private final CommentPinReplyService commentPinReplyService;
 
     private final ReplyMentionService replyMentionService;
 
@@ -63,7 +63,7 @@ public class ReplyService {
 
         reply.setStatus(Status.INACTIVE);
         replyRepository.save(reply);
-        if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) replyPinService.unpin(reply);
+        if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) commentPinReplyService.unpin(reply);
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 

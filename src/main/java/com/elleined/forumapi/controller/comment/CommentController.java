@@ -11,6 +11,7 @@ import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.reader.comment.CommentMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
+import com.elleined.forumapi.service.upvote.CommentUpvoteService;
 import com.elleined.forumapi.service.ws.WSService;
 import com.elleined.forumapi.service.ws.notification.comment.CommentWSNotificationService;
 import com.elleined.forumapi.service.ws.notification.mention.CommentWSMentionNotificationService;
@@ -33,6 +34,7 @@ public class CommentController {
     private final PostService postService;
 
     private final CommentService commentService;
+    private final CommentUpvoteService commentUpvoteService;
     private final CommentMapper commentMapper;
 
     private final WSService wsService;
@@ -101,7 +103,7 @@ public class CommentController {
         User respondent = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
 
-        Comment updatedComment = commentService.updateUpvote(respondent, comment);
+        Comment updatedComment = commentUpvoteService.upvote(respondent, comment);
         return commentMapper.toDTO(updatedComment);
     }
 

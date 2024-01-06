@@ -5,7 +5,6 @@ import com.elleined.forumapi.mapper.CommentMapper;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
-import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.mention.CommentMentionService;
 import com.elleined.forumapi.service.pin.PostPinCommentService;
@@ -28,8 +27,6 @@ import java.util.Set;
 @Service
 @Transactional
 public class CommentService {
-
-    private final UserRepository userRepository;
     private final BlockService blockService;
 
     private final ModalTrackerService modalTrackerService;
@@ -39,7 +36,7 @@ public class CommentService {
 
     private final ReplyRepository replyRepository;
 
-    private final PostPinCommentService commentPinService;
+    private final PostPinCommentService postPinCommentService;
 
     private final CommentMentionService commentMentionService;
 
@@ -72,7 +69,7 @@ public class CommentService {
         comment.setStatus(Status.INACTIVE);
         commentRepository.save(comment);
 
-        if (post.getPinnedComment() != null && post.getPinnedComment().equals(comment)) commentPinService.unpin(comment);
+        if (post.getPinnedComment() != null && post.getPinnedComment().equals(comment)) postPinCommentService.unpin(comment);
 
         List<Reply> replies = comment.getReplies();
         replies.forEach(reply -> reply.setStatus(Status.INACTIVE));
@@ -96,22 +93,6 @@ public class CommentService {
 
     public Comment getById(int commentId) throws ResourceNotFoundException {
         return commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment with id of " + commentId + " does not exists!"));
-    }
-
-    public Comment updateUpvote(User respondent, Comment comment)
-            throws ResourceNotFoundException,
-            UpvoteException {
-
-        if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to upvote might be deleted by the author or does not exists anymore!");
-        if (respondent.isAlreadyUpvoted(comment)) throw new UpvoteException("You can only up vote and down vote a comment once!");
-
-        comment.getUpvotingUsers().add(respondent);
-        respondent.getUpvotedComments().add(comment);
-
-        commentRepository.save(comment);
-        userRepository.save(respondent);
-        log.debug("User with id of {} upvoted the Comment with id of {} successfully", respondent.getId(), comment.getId());
-        return comment;
     }
 
     public Comment updateBody(User currentUser, Post post, Comment comment, String newBody)
