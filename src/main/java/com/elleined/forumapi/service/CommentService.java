@@ -14,7 +14,6 @@ import com.elleined.forumapi.service.pin.PinService;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,15 +21,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class CommentService
-        implements PinService<Comment, Reply>,
-        MentionService<Comment> {
+public class CommentService implements MentionService<Comment> {
 
     private final UserRepository userRepository;
 
@@ -46,9 +46,6 @@ public class CommentService
     private final PinService<Post, Comment> commentPinService;
 
     private final MentionRepository mentionRepository;
-
-    @Value("${cropTrade.img.directory}")
-    private String cropTradeImgDirectory;
 
     public Comment save(User currentUser, Post post, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
             throws ResourceNotFoundException,
@@ -145,26 +142,8 @@ public class CommentService
     public Reply getPinnedReply(Comment comment) throws ResourceNotFoundException {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists!");
-        
+
         return comment.getPinnedReply();
-    }
-
-    @Override
-    public void pin(User currentUser, Comment comment, Reply reply) throws NotOwnedException, ResourceNotFoundException {
-        if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " does not owned comment with id of " + comment.getId() + " for him/her to pin a reply in this comment!");
-        if (comment.doesNotHave(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() + " doesnt have reply of " + reply.getId());
-        if (reply.isInactive()) throw new ResourceNotFoundException("Reply with id of " + reply.getId() + " you specify is already deleted or does not exists anymore!");
-
-        comment.setPinnedReply(reply);
-        commentRepository.save(comment);
-        log.debug("Comment author with id of {} pinned reply with id of {} in his/her comment with id of {}", comment.getCommenter().getId(), reply.getId(), comment.getId());
-    }
-
-    @Override
-    public void unpin(Reply reply) {
-        reply.getComment().setPinnedReply(null);
-        replyRepository.save(reply);
-        log.debug("Comment pinned reply unpinned successfully");
     }
 
     @Override

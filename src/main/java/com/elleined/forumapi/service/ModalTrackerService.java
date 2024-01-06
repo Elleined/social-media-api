@@ -1,7 +1,6 @@
 package com.elleined.forumapi.service;
 
 import com.elleined.forumapi.model.ModalTracker;
-import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.repository.ModalTrackerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

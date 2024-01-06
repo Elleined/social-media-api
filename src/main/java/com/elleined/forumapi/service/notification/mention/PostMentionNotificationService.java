@@ -1,7 +1,5 @@
 package com.elleined.forumapi.service.notification.mention;
 
-import com.elleined.forumapi.model.NotificationStatus;
-import com.elleined.forumapi.model.Status;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.Mention;
 import com.elleined.forumapi.model.mention.PostMention;

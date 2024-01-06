@@ -9,19 +9,15 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.service.mention.MentionService;
-import com.elleined.forumapi.service.pin.PinService;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
-public interface PostService
-        extends PinService<Post, Comment>,
-        MentionService<Post>,
+public interface PostService extends MentionService<Post>,
         SavedPostService,
         SharePostService  {
 
@@ -47,12 +43,6 @@ public interface PostService
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     int getTotalCommentsAndReplies(Post post);
-
-    @Override
-    void pin(User currentUser, Post post, Comment comment) throws NotOwnedException, ResourceNotFoundException;
-
-    @Override
-    void unpin(Comment comment);
 
     @Override
     PostMention mention(User mentioningUser, User mentionedUser, Post post);

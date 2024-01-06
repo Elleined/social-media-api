@@ -2,7 +2,6 @@ package com.elleined.forumapi.service.ws.notification.mention;
 
 import com.elleined.forumapi.dto.notification.CommentNotification;
 import com.elleined.forumapi.mapper.notification.mention.MentionNotificationMapper;
-import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.mention.CommentMention;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

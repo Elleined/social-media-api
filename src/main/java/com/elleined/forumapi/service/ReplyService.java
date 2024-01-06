@@ -12,7 +12,6 @@ import com.elleined.forumapi.service.pin.PinService;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,9 +40,6 @@ public class ReplyService
     private final PinService<Comment, Reply> replyPinService;
 
     private final MentionRepository mentionRepository;
-
-    @Value("${cropTrade.img.directory}")
-    private String cropTradeImgDirectory;
 
     public Reply save(User currentUser, Comment comment, String body, MultipartFile attachedPicture, Set<User> mentionedUsers) throws EmptyBodyException,
             ClosedCommentSectionException,

@@ -10,11 +10,10 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.ReplyService;
 import com.elleined.forumapi.service.UserService;
+import com.elleined.forumapi.service.pin.CommentPinReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +24,7 @@ public class CommentPinReplyController {
 
     private final CommentService commentService;
     private final CommentMapper commentMapper;
+    private final CommentPinReplyService commentPinReplyService;
 
     private final ReplyMapper replyMapper;
     private final ReplyService replyService;
@@ -46,7 +46,7 @@ public class CommentPinReplyController {
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
 
-        commentService.pin(currentUSer, comment, reply);
+        commentPinReplyService.pin(currentUSer, comment, reply);
         return commentMapper.toDTO(comment);
     }
 }

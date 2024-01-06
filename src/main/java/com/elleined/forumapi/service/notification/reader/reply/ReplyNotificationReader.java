@@ -1,6 +1,9 @@
 package com.elleined.forumapi.service.notification.reader.reply;
 
-import com.elleined.forumapi.model.*;
+import com.elleined.forumapi.model.Comment;
+import com.elleined.forumapi.model.NotificationStatus;
+import com.elleined.forumapi.model.Reply;
+import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;

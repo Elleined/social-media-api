@@ -1,6 +1,5 @@
 package com.elleined.forumapi.dto;
 
-import com.elleined.forumapi.dto.UserDTO;
 import lombok.Builder;
 import lombok.Data;
 
