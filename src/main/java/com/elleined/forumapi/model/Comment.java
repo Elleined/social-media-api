@@ -29,9 +29,6 @@ public class Comment {
     @Column(name = "date_created")
     private LocalDateTime dateCreated;
 
-    @Column(name = "upvote")
-    private int upvote;
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;

@@ -31,7 +31,6 @@ public abstract class PostMapper {
             // Required
             @Mapping(target = "author", expression = "java(currentUser)"),
             @Mapping(target = "body", expression = "java(body)"),
-            @Mapping(target = "attachedPicture", expression = "java(picture)"),
 
             // Required auto fill
             @Mapping(target = "dateCreated", expression = "java(java.time.LocalDateTime.now())"),
@@ -46,6 +45,7 @@ public abstract class PostMapper {
             @Mapping(target = "comments", expression = "java(new java.util.ArrayList<>())"),
 
             // Optional
+            @Mapping(target = "attachedPicture", expression = "java(picture)"),
             @Mapping(target = "pinnedComment", expression = "java(null)"),
     })
     public abstract Post toEntity(String body,

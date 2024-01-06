@@ -1,19 +1,51 @@
 package com.elleined.forumapi.mapper;
 
 import com.elleined.forumapi.dto.CommentDTO;
-import com.elleined.forumapi.model.Comment;
+import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.service.CommentService;
 import com.elleined.forumapi.service.Formatter;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-@Mapper(componentModel = "spring", imports = Formatter.class, uses = UserMapper.class)
+@Mapper(componentModel = "spring", imports = {
+        Formatter.class,
+        Status.class
+}, uses = UserMapper.class)
 public abstract class CommentMapper {
 
     @Autowired @Lazy
     protected CommentService commentService;
+
+    @Mappings({
+            // Should not be touched!
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "body", expression = "java(body)"),
+            @Mapping(target = "post", expression = "java(post)"),
+            @Mapping(target = "commenter", expression = "java(currentUser)"),
+
+            // Required auto fill
+            @Mapping(target = "dateCreated", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
+            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)"),
+
+            // Required list
+            @Mapping(target = "mentions", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "upvotingUsers", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "replies", expression = "java(new java.util.ArrayList<>())"),
+
+            // Optional
+            @Mapping(target = "attachedPicture", expression = "java(picture)"),
+            @Mapping(target = "pinnedReply", expression = "java(null)")
+    })
+    public abstract Comment toEntity(String body,
+                                     @Context Post post,
+                                     @Context User currentUser,
+                                     @Context String picture,
+                                     @Context NotificationStatus notificationStatus);
 
     @Mappings({
             @Mapping(target = "commenterName", source = "comment.commenter.name"),
