@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/{currentUserId}/posts/{postId}/comments")
+@RequestMapping("/users/{currentUserId}/posts/{postId}/comments")
 public class CommentUpvoteController {
     private final UserService userService;
 
@@ -23,7 +23,7 @@ public class CommentUpvoteController {
     private final CommentUpvoteService commentUpvoteService;
     private final CommentMapper commentMapper;
 
-    @PatchMapping("/upvote/{commentId}")
+    @PatchMapping("/{commentId}/upvote")
     public CommentDTO updateUpvote(@PathVariable("currentUserId") int currentUserId,
                                    @PathVariable("commentId") int commentId) {
         User respondent = userService.getById(currentUserId);

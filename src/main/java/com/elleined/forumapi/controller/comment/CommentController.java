@@ -24,7 +24,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/{currentUserId}/posts/{postId}/comments")
+@RequestMapping("/users/{currentUserId}/posts/{postId}/comments")
 public class CommentController {
     private final UserService userService;
 
@@ -92,7 +92,7 @@ public class CommentController {
         return commentMapper.toDTO(comment);
     }
 
-    @PatchMapping("/body/{commentId}")
+    @PatchMapping("/{commentId}/body")
     public CommentDTO updateBody(@PathVariable("currentUserId") int currentUserId,
                                         @PathVariable("postId") int postId,
                                         @PathVariable("commentId") int commentId,
