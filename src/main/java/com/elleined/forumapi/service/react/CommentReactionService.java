@@ -59,7 +59,7 @@ public class CommentReactionService implements ReactionService<Comment, CommentR
 
     @Override
     public CommentReact save(User currentUser, Comment comment, Emoji emoji) {
-        if (comment.isDeleted())
+        if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot react to this comment! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, comment.getCommenter()))
             throw new BlockedException("Cannot react to this comment! because you blocked this user already!");
@@ -76,7 +76,7 @@ public class CommentReactionService implements ReactionService<Comment, CommentR
     public void update(User currentUser, Comment comment, CommentReact commentReact, Emoji emoji) {
         if (currentUser.notOwned(commentReact))
             throw new NotOwnedException("Cannot update react to this comment! because you don't own this reaction");
-        if (comment.isDeleted())
+        if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot update react to this comment! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, comment.getCommenter()))
             throw new BlockedException("Cannot update react to this comment! because you blocked this user already!");

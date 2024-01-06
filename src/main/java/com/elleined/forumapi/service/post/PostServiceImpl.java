@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -95,11 +94,9 @@ public class PostServiceImpl implements PostService {
     public Post updateCommentSectionStatus(User currentUser, Post post) {
         if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
-        if (post.getCommentSectionStatus() == Post.CommentSectionStatus.OPEN) {
-            post.setCommentSectionStatus(Post.CommentSectionStatus.CLOSED);
-        } else {
-            post.setCommentSectionStatus(Post.CommentSectionStatus.OPEN);
-        }
+        if (post.isCommentSectionOpen()) post.setCommentSectionStatus(Post.CommentSectionStatus.CLOSED);
+        else post.setCommentSectionStatus(Post.CommentSectionStatus.OPEN);
+
         postRepository.save(post);
         log.debug("Comment section of Post with id of {} are now {}", post.getId(), post.getCommentSectionStatus().name());
         return post;
@@ -114,7 +111,7 @@ public class PostServiceImpl implements PostService {
     public List<Post> getAll(User currentUser) {
         return postRepository.findAll()
                 .stream()
-                .filter(post -> post.getStatus() == Status.ACTIVE)
+                .filter(Post::isActive)
                 .filter(post -> !blockService.isBlockedBy(currentUser, post.getAuthor()))
                 .filter(post -> !blockService.isYouBeenBlockedBy(currentUser, post.getAuthor()))
                 .sorted(Comparator.comparing(Post::getDateCreated).reversed())
@@ -122,13 +119,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Optional<Comment> getPinnedComment(Post post) throws ResourceNotFoundException {
-        Comment pinnedComment = post.getPinnedComment();
-        if (post.isDeleted())
+    public Comment getPinnedComment(Post post) throws ResourceNotFoundException {
+        if (post.isInactive())
             throw new ResourceNotFoundException("Post with id of " + post.getId() + " might already been deleted or does not exists anymore!");
 
-        if (pinnedComment == null) return Optional.empty();
-        return Optional.of( pinnedComment );
+        return post.getPinnedComment();
     }
 
     @Override
@@ -136,13 +131,14 @@ public class PostServiceImpl implements PostService {
     public int getTotalCommentsAndReplies(Post post) {
         int commentCount = (int) post.getComments()
                 .stream()
-                .filter(comment -> comment.getStatus() == Status.ACTIVE)
+                .filter(Comment::isActive)
                 .count();
 
         int commentRepliesCount = (int) post.getComments()
                 .stream()
                 .map(Comment::getReplies)
-                .flatMap(replies -> replies.stream().filter(reply -> reply.getStatus() == Status.ACTIVE))
+                .flatMap(replies -> replies.stream()
+                        .filter(Reply::isActive))
                 .count();
 
         return commentCount + commentRepliesCount;
@@ -152,7 +148,7 @@ public class PostServiceImpl implements PostService {
     public void pin(User currentUser, Post post, Comment comment) throws NotOwnedException, ResourceNotFoundException {
         if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " does not own post with id of " + post.getId() + " for him/her to pin a comment in this post!");
         if (post.doesNotHave(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " doesn't have comment with id of " + comment.getId());
-        if (comment.isDeleted()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " you specify is already deleted or doesn't exist anymore!");
+        if (comment.isInactive()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " you specify is already deleted or doesn't exist anymore!");
 
         post.setPinnedComment(comment);
         postRepository.save(post);
@@ -169,7 +165,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostMention mention(User mentioningUser, User mentionedUser, Post post) {
-        if (post.isDeleted()) throw new ResourceNotFoundException("Cannot mention! The post with id of " + post.getId() + " you are trying to mention might already been deleted or does not exists!");
+        if (post.isInactive()) throw new ResourceNotFoundException("Cannot mention! The post with id of " + post.getId() + " you are trying to mention might already been deleted or does not exists!");
         if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
         if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw  new BlockedException("Cannot mention! Mentioned user with id of " + mentionedUser.getId() + " already blocked you");
         if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");
@@ -201,7 +197,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post savedPost(User currentUser, Post postToSaved) {
-        if (postToSaved.isDeleted()) throw new ResourceNotFoundException("Post with id of " + postToSaved.getId() + " does not exists or already deleted!") ;
+        if (postToSaved.isInactive()) throw new ResourceNotFoundException("Post with id of " + postToSaved.getId() + " does not exists or already deleted!") ;
 
         currentUser.getSavedPosts().add(postToSaved);
         postToSaved.getSavingUsers().add(currentUser);
@@ -229,7 +225,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post sharePost(User currentUser, Post postToShare) {
-        if (postToShare.isDeleted()) throw new ResourceNotFoundException("Post with id of " + postToShare.getId() + " does not exists or already deleted!") ;
+        if (postToShare.isInactive()) throw new ResourceNotFoundException("Post with id of " + postToShare.getId() + " does not exists or already deleted!") ;
 
         currentUser.getSharedPosts().add(postToShare);
         postToShare.getSharers().add(currentUser);

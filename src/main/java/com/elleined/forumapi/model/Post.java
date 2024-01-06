@@ -80,7 +80,12 @@ public class Post {
 
 
     public enum CommentSectionStatus {OPEN, CLOSED}
-    public boolean isDeleted() {
+
+    public boolean isActive() {
+        return this.getStatus() == Status.ACTIVE;
+    }
+
+    public boolean isInactive() {
         return this.getStatus() == Status.INACTIVE;
     }
 
@@ -90,5 +95,13 @@ public class Post {
 
     public boolean doesNotHave(Comment comment) {
         return this.getComments().stream().noneMatch(comment::equals);
+    }
+
+    public boolean isCommentSectionOpen() {
+        return this.getCommentSectionStatus() == CommentSectionStatus.OPEN;
+    }
+
+    public boolean hasNoPinnedComment() {
+        return this.getPinnedComment() == null;
     }
 }

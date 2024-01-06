@@ -31,11 +31,10 @@ public class PostPinCommentController {
 
 
     @GetMapping("/getPinnedComment/{postId}")
-    public Optional<CommentDTO> getPinnedComment(@PathVariable("postId") int postId) {
+    public CommentDTO getPinnedComment(@PathVariable("postId") int postId) {
         Post post = postService.getById(postId);
-        Optional<Comment> pinnedComment = postService.getPinnedComment(post);
-
-        return Optional.of( commentMapper.toDTO(pinnedComment.orElseThrow()) );
+        Comment pinnedComment = postService.getPinnedComment(post);
+        return commentMapper.toDTO(pinnedComment);
     }
 
     @PatchMapping("/{postId}/pinComment/{commentId}")

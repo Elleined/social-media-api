@@ -65,7 +65,10 @@ public class Reply {
     @Setter(AccessLevel.NONE)
     private List<ReplyReact> reactions;
 
-    public boolean isDeleted() {
+    public boolean isInactive() {
         return this.getStatus() == Status.INACTIVE;
+    }
+    public boolean isActive() {
+        return this.getStatus() == Status.ACTIVE;
     }
 }

@@ -59,13 +59,11 @@ public class CommentService
 
         if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
         if (post.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot comment because author already closed the comment section for this post!");
-        if (post.isDeleted()) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
+        if (post.isInactive()) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
 
-        NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.COMMENT)
-                ? NotificationStatus.READ
-                : NotificationStatus.UNREAD;
+        NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.COMMENT) ? NotificationStatus.READ : NotificationStatus.UNREAD;
         Comment comment = commentMapper.toEntity(body, post, currentUser, attachedPicture.getOriginalFilename(), status);
         commentRepository.save(comment);
 
@@ -111,7 +109,7 @@ public class CommentService
             throws ResourceNotFoundException,
             UpvoteException {
 
-        if (comment.isDeleted()) throw new ResourceNotFoundException("The comment you trying to upvote might be deleted by the author or does not exists anymore!");
+        if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to upvote might be deleted by the author or does not exists anymore!");
         if (respondent.isAlreadyUpvoted(comment)) throw new UpvoteException("You can only up vote and down vote a comment once!");
 
         comment.getUpvotingUsers().add(respondent);
@@ -146,7 +144,7 @@ public class CommentService
 
     public Optional<Reply> getPinnedReply(Comment comment) throws ResourceNotFoundException {
         Reply pinnedReply = comment.getPinnedReply();
-        if (comment.isDeleted())
+        if (comment.isInactive())
             throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists!");
 
         if (pinnedReply == null) return Optional.empty();
@@ -157,7 +155,7 @@ public class CommentService
     public void pin(User currentUser, Comment comment, Reply reply) throws NotOwnedException, ResourceNotFoundException {
         if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " does not owned comment with id of " + comment.getId() + " for him/her to pin a reply in this comment!");
         if (comment.doesNotHave(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() + " doesnt have reply of " + reply.getId());
-        if (reply.isDeleted()) throw new ResourceNotFoundException("Reply with id of " + reply.getId() + " you specify is already deleted or does not exists anymore!");
+        if (reply.isInactive()) throw new ResourceNotFoundException("Reply with id of " + reply.getId() + " you specify is already deleted or does not exists anymore!");
 
         comment.setPinnedReply(reply);
         commentRepository.save(comment);
@@ -173,7 +171,7 @@ public class CommentService
 
     @Override
     public CommentMention mention(User mentioningUser, User mentionedUser, Comment comment) {
-        if (comment.isDeleted()) throw new ResourceNotFoundException("Cannot mention! The comment with id of " + comment.getId() + " you are trying to mention might already been deleted or does not exists!");
+        if (comment.isInactive()) throw new ResourceNotFoundException("Cannot mention! The comment with id of " + comment.getId() + " you are trying to mention might already been deleted or does not exists!");
         if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
         if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw  new BlockedException("Cannot mention! Mentioned user with id of " + mentionedUser.getId() + " already blocked you");
         if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");

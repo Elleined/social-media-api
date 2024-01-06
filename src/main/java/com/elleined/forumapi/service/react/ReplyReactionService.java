@@ -60,7 +60,7 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
 
     @Override
     public ReplyReact save(User currentUser, Reply reply, Emoji emoji) {
-        if (reply.isDeleted())
+        if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot react to this reply! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, reply.getReplier()))
             throw new BlockedException("Cannot react to this reply! because you blocked this user already!");
@@ -77,7 +77,7 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
     public void update(User currentUser, Reply reply, ReplyReact replyReact, Emoji emoji) {
         if (currentUser.notOwned(replyReact))
             throw new NotOwnedException("Cannot update react to this reply! because you don't own this reaction");
-        if (reply.isDeleted())
+        if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot update react to this reply! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, reply.getReplier()))
             throw new BlockedException("Cannot update react to this reply! because you blocked this user already!");

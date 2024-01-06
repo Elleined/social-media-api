@@ -52,7 +52,7 @@ public class ReplyService
 
         if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Reply body cannot be empty!");
         if (comment.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
-        if (comment.isDeleted()) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
+        if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
 
@@ -89,7 +89,7 @@ public class ReplyService
     }
 
     public List<Reply> getAllByComment(User currentUser, Comment comment) throws ResourceNotFoundException {
-        if (comment.isDeleted()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists anymore!");
+        if (comment.isInactive()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists anymore!");
 
         Reply pinnedReply = comment.getPinnedReply();
         List<Reply> replies = new ArrayList<>(comment.getReplies()
@@ -110,7 +110,7 @@ public class ReplyService
 
     @Override
     public ReplyMention mention(User mentioningUser, User mentionedUser, Reply reply) {
-        if (reply.isDeleted()) throw new ResourceNotFoundException("Cannot mention! The reply with id of " + reply.getId() + " you are trying to mention might already be deleted or does not exists!");
+        if (reply.isInactive()) throw new ResourceNotFoundException("Cannot mention! The reply with id of " + reply.getId() + " you are trying to mention might already be deleted or does not exists!");
         if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
         if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! Mentioned userwith id of " + mentionedUser.getId() + " already blocked you");
         if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");

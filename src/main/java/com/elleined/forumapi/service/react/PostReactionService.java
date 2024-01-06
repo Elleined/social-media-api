@@ -59,7 +59,7 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
 
     @Override
     public PostReact save(User currentUser, Post post, Emoji emoji) {
-        if (post.isDeleted())
+        if (post.isInactive())
             throw new ResourceNotFoundException("Cannot react to this post! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, post.getAuthor()))
             throw new BlockedException("Cannot react to this post! because you blocked this user already!");
@@ -76,7 +76,7 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
     public void update(User currentUser, Post post, PostReact postReact, Emoji emoji) {
         if (currentUser.notOwned(postReact))
             throw new NotOwnedException("Cannot update react to this post! because you don't own this reaction");
-        if (post.isDeleted())
+        if (post.isInactive())
             throw new ResourceNotFoundException("Cannot update react to this post! because this might be already deleted or doesn't exists!");
         if (blockService.isBlockedBy(currentUser, post.getAuthor()))
             throw new BlockedException("Cannot update react to this post! because you blocked this user already!");

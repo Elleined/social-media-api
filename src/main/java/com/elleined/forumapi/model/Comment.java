@@ -88,8 +88,11 @@ public class Comment {
     public boolean doesNotHave(Reply reply) {
         return this.getReplies().stream().noneMatch(reply::equals);
     }
-    public boolean isDeleted() {
+    public boolean isInactive() {
         return this.getStatus() == Status.INACTIVE;
+    }
+    public boolean isActive() {
+        return this.getStatus() == Status.ACTIVE;
     }
 
     public int getUpvoteCount() {
