@@ -26,7 +26,7 @@ import java.util.Set;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/{currentUserId}/posts/comments/{commentId}/replies")
+@RequestMapping("/users/{currentUserId}/posts/comments/{commentId}/replies")
 public class ReplyController {
 
     private final UserService userService;
@@ -95,7 +95,7 @@ public class ReplyController {
         return replyMapper.toDTO(reply);
     }
 
-    @PatchMapping("/body/{replyId}")
+    @PatchMapping("/{replyId}/body")
     public ReplyDTO updateBody(@PathVariable("currentUserId") int currentUserId,
                                @PathVariable("replyId") int replyId,
                                @RequestParam("newReplyBody") String newReplyBody) {
