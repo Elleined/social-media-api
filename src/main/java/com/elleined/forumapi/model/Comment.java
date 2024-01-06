@@ -91,4 +91,8 @@ public class Comment {
     public boolean isDeleted() {
         return this.getStatus() == Status.INACTIVE;
     }
+
+    public int getUpvoteCount() {
+        return this.getUpvotingUsers().size();
+    }
 }

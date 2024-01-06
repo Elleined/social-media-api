@@ -1,6 +1,7 @@
 package com.elleined.forumapi.service;
 
 import com.elleined.forumapi.exception.*;
+import com.elleined.forumapi.mapper.CommentMapper;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.repository.CommentRepository;
@@ -40,6 +41,8 @@ public class CommentService
     private final ModalTrackerService modalTrackerService;
 
     private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
+
     private final ReplyRepository replyRepository;
 
     private final ImageUploader imageUploader;
@@ -67,28 +70,11 @@ public class CommentService
         NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.COMMENT)
                 ? NotificationStatus.READ
                 : NotificationStatus.UNREAD;
-
-        Comment comment = Comment.builder()
-                .body(body)
-                .dateCreated(LocalDateTime.now())
-                .post(post)
-                .commenter(currentUser)
-                .attachedPicture(attachedPicture == null ? null : attachedPicture.getOriginalFilename())
-                .notificationStatus(status)
-                .status(Status.ACTIVE)
-                .replies(new ArrayList<>())
-                .mentions(new HashSet<>())
-                .build();
-
-        currentUser.getComments().add(comment);
-        post.getComments().add(comment);
+        Comment comment = commentMapper.toEntity(body, post, currentUser, attachedPicture.getOriginalFilename(), status);
         commentRepository.save(comment);
 
-        if (attachedPicture != null)
-            imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.COMMENT_PICTURE_FOLDER, attachedPicture);
-
+        imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.COMMENT_PICTURE_FOLDER, attachedPicture);
         if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, comment);
-
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
     }
@@ -116,7 +102,7 @@ public class CommentService
                 .filter(comment -> comment.getStatus() == Status.ACTIVE)
                 .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
-                .sorted(Comparator.comparingInt(Comment::getUpvote).reversed())
+                .sorted(Comparator.comparingInt(Comment::getUpvoteCount).reversed())
                 .toList());
         if (pinnedComment != null) comments.add(0, pinnedComment); // Prioritizing pinned comment
         return comments;
@@ -133,10 +119,10 @@ public class CommentService
         if (comment.isDeleted()) throw new ResourceNotFoundException("The comment you trying to upvote might be deleted by the author or does not exists anymore!");
         if (respondent.isAlreadyUpvoted(comment)) throw new UpvoteException("You can only up vote and down vote a comment once!");
 
-        comment.setUpvote(comment.getUpvote() + 1);
-        commentRepository.save(comment);
-
+        comment.getUpvotingUsers().add(respondent);
         respondent.getUpvotedComments().add(comment);
+
+        commentRepository.save(comment);
         userRepository.save(respondent);
         log.debug("User with id of {} upvoted the Comment with id of {} successfully", respondent.getId(), comment.getId());
         return comment;
