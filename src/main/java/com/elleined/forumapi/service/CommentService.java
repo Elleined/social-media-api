@@ -134,11 +134,4 @@ public class CommentService {
                 .filter(Reply::isActive)
                 .count();
     }
-
-    public Reply getPinnedReply(Comment comment) throws ResourceNotFoundException {
-        if (comment.isInactive())
-            throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists!");
-
-        return comment.getPinnedReply();
-    }
 }

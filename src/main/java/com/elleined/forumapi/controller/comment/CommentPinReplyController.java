@@ -32,7 +32,7 @@ public class CommentPinReplyController {
     @GetMapping("/getPinnedReply/{commentId}")
     public ReplyDTO getPinnedReply(@PathVariable("commentId") int commentId) {
         Comment comment = commentService.getById(commentId);
-        Reply pinnedReply = commentService.getPinnedReply(comment);
+        Reply pinnedReply = commentPinReplyService.getPinned(comment);
 
         return replyMapper.toDTO(pinnedReply);
     }

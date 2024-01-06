@@ -113,14 +113,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Comment getPinnedComment(Post post) throws ResourceNotFoundException {
-        if (post.isInactive())
-            throw new ResourceNotFoundException("Post with id of " + post.getId() + " might already been deleted or does not exists anymore!");
-
-        return post.getPinnedComment();
-    }
-
-    @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalCommentsAndReplies(Post post) {
         int commentCount = (int) post.getComments()

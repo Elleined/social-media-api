@@ -33,7 +33,7 @@ public class PostPinCommentController {
     @GetMapping("/getPinnedComment/{postId}")
     public CommentDTO getPinnedComment(@PathVariable("postId") int postId) {
         Post post = postService.getById(postId);
-        Comment pinnedComment = postService.getPinnedComment(post);
+        Comment pinnedComment = postPinCommentService.getPinned(post);
         return commentMapper.toDTO(pinnedComment);
     }
 

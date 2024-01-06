@@ -20,7 +20,6 @@ public class PostPinCommentService implements PinService<Post, Comment> {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-
     @Override
     public void pin(User currentUser, Post post, Comment comment) throws NotOwnedException, ResourceNotFoundException {
         if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " does not own post with id of " + post.getId() + " for him/her to pin a comment in this post!");
@@ -38,5 +37,13 @@ public class PostPinCommentService implements PinService<Post, Comment> {
         commentRepository.save(comment);
 
         log.debug("Post pinned comment unpinned successfully");
+    }
+
+    @Override
+    public Comment getPinned(Post post) throws ResourceNotFoundException {
+        if (post.isInactive())
+            throw new ResourceNotFoundException("Post with id of " + post.getId() + " might already been deleted or does not exists anymore!");
+
+        return post.getPinnedComment();
     }
 }

@@ -35,8 +35,6 @@ public interface PostService extends SavedPostService, SharePostService {
 
     List<Post> getAll(User currentUser);
 
-    Comment getPinnedComment(Post post) throws ResourceNotFoundException;
-
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     int getTotalCommentsAndReplies(Post post);
 
