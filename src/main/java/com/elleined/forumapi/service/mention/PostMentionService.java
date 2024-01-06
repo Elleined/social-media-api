@@ -3,6 +3,7 @@ package com.elleined.forumapi.service.mention;
 import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.exception.MentionException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
+import com.elleined.forumapi.mapper.mention.PostMentionMapper;
 import com.elleined.forumapi.model.ModalTracker;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Post;
@@ -16,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Slf4j
@@ -29,7 +29,9 @@ public class PostMentionService implements MentionService<Post> {
 
     private final ModalTrackerService modalTrackerService;
 
+    private final PostMentionMapper postMentionMapper;
     private final MentionRepository mentionRepository;
+
 
     @Override
     public PostMention mention(User mentioningUser, User mentionedUser, Post post) {
@@ -38,21 +40,9 @@ public class PostMentionService implements MentionService<Post> {
         if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw  new BlockedException("Cannot mention! Mentioned user with id of " + mentionedUser.getId() + " already blocked you");
         if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");
 
-        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), post.getId(), ModalTracker.Type.POST)
-                ? NotificationStatus.READ
-                : NotificationStatus.UNREAD;
+        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), post.getId(), ModalTracker.Type.POST) ? NotificationStatus.READ : NotificationStatus.UNREAD;
+        PostMention postMention = postMentionMapper.toEntity(mentioningUser, mentionedUser, post, notificationStatus);
 
-        PostMention postMention = PostMention.postMentionBuilder()
-                .mentioningUser(mentioningUser)
-                .mentionedUser(mentionedUser)
-                .createdAt(LocalDateTime.now())
-                .notificationStatus(notificationStatus)
-                .post(post)
-                .build();
-
-        mentioningUser.getSentPostMentions().add(postMention);
-        mentionedUser.getReceivePostMentions().add(postMention);
-        post.getMentions().add(postMention);
         mentionRepository.save(postMention);
         log.debug("User with id of {} mentioned user with id of {} in post with id of {}", mentioningUser.getId(), mentionedUser.getId(), post.getId());
         return postMention;

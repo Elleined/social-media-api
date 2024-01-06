@@ -3,6 +3,7 @@ package com.elleined.forumapi.service.mention;
 import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.exception.MentionException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
+import com.elleined.forumapi.mapper.mention.ReplyMentionMapper;
 import com.elleined.forumapi.model.ModalTracker;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Reply;
@@ -30,6 +31,7 @@ public class ReplyMentionService implements MentionService<Reply> {
     private final ModalTrackerService modalTrackerService;
 
     private final MentionRepository mentionRepository;
+    private final ReplyMentionMapper replyMentionMapper;
 
     @Override
     public ReplyMention mention(User mentioningUser, User mentionedUser, Reply reply) {
@@ -38,22 +40,9 @@ public class ReplyMentionService implements MentionService<Reply> {
         if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! Mentioned userwith id of " + mentionedUser.getId() + " already blocked you");
         if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");
 
+        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), reply.getComment().getId(), ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
+        ReplyMention replyMention = replyMentionMapper.toEntity(mentioningUser, mentionedUser, reply, notificationStatus);
 
-        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), reply.getComment().getId(), ModalTracker.Type.REPLY)
-                ? NotificationStatus.READ
-                : NotificationStatus.UNREAD;
-
-        ReplyMention replyMention = ReplyMention.replyMentionBuilder()
-                .mentioningUser(mentioningUser)
-                .mentionedUser(mentionedUser)
-                .createdAt(LocalDateTime.now())
-                .reply(reply)
-                .notificationStatus(notificationStatus)
-                .build();
-
-        mentioningUser.getSentReplyMentions().add(replyMention);
-        mentionedUser.getReceiveReplyMentions().add(replyMention);
-        reply.getMentions().add(replyMention);
         mentionRepository.save(replyMention);
         log.debug("User with id of {} mentioned user with id of {} in reply with id of {}", mentioningUser.getId(), mentionedUser.getId(), reply.getId());
         return replyMention;
