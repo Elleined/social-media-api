@@ -10,8 +10,6 @@ import com.elleined.forumapi.repository.PostRepository;
 import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.image.ImageUploader;
-import com.elleined.forumapi.utils.DirectoryFolders;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,8 +38,6 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
 
     private final CommentRepository commentRepository;
-
-    private final ImageUploader imageUploader;
 
     private final ModalTrackerService modalTrackerService;
 
@@ -58,10 +57,8 @@ public class PostServiceImpl implements PostService {
             throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
         Post post = postMapper.toEntity(body, currentUser, attachedPicture.getOriginalFilename());
-        currentUser.getPosts().add(post);
         postRepository.save(post);
 
-        imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.POST_PICTURES_FOLDER, attachedPicture);
         if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, post);
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;

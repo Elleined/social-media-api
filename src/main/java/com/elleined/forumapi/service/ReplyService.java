@@ -1,15 +1,14 @@
 package com.elleined.forumapi.service;
 
 import com.elleined.forumapi.exception.*;
+import com.elleined.forumapi.mapper.ReplyMapper;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.image.ImageUploader;
 import com.elleined.forumapi.service.mention.MentionService;
 import com.elleined.forumapi.service.pin.PinService;
-import com.elleined.forumapi.utils.DirectoryFolders;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,12 +32,11 @@ public class ReplyService
         implements MentionService<Reply> {
 
     private final ReplyRepository replyRepository;
+    private final ReplyMapper replyMapper;
 
     private final ModalTrackerService modalTrackerService;
 
     private final BlockService blockService;
-
-    private final ImageUploader imageUploader;
 
     private final PinService<Comment, Reply> replyPinService;
 
@@ -56,22 +57,8 @@ public class ReplyService
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
 
         NotificationStatus status = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getId(), ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
-        Reply reply = Reply.builder()
-                .body(body)
-                .dateCreated(LocalDateTime.now())
-                .replier(currentUser)
-                .comment(comment)
-                .attachedPicture(attachedPicture == null ? null : attachedPicture.getOriginalFilename())
-                .status(Status.ACTIVE)
-                .notificationStatus(status)
-                .mentions(new HashSet<>())
-                .build();
-
-        currentUser.getReplies().add(reply);
-        comment.getReplies().add(reply);
+        Reply reply = replyMapper.toEntity(body, currentUser, comment, attachedPicture.getOriginalFilename(), status);
         replyRepository.save(reply);
-
-        if (attachedPicture != null) imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.REPLY_PICTURE_FOLDER, attachedPicture);
 
         if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, reply);
         log.debug("Reply with id of {} saved successfully!", reply.getId());

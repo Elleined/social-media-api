@@ -2,14 +2,45 @@
 package com.elleined.forumapi.mapper;
 
 import com.elleined.forumapi.dto.ReplyDTO;
-import com.elleined.forumapi.model.Reply;
+import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.service.Formatter;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", imports = Formatter.class, uses = UserMapper.class)
+@Mapper(componentModel = "spring", imports = {
+        Formatter.class,
+        Status.class
+}, uses = UserMapper.class)
 public abstract class ReplyMapper {
+
+    @Mappings({
+            // Should not be touched!
+            @Mapping(target = "id", ignore = true),
+
+            // Required
+            @Mapping(target = "body", expression = "java(body)"),
+            @Mapping(target = "replier", expression = "java(currentUser)"),
+            @Mapping(target = "comment", expression = "java(comment)"),
+            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)"),
+
+            // Required auto fill
+            @Mapping(target = "dateCreated", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
+
+            // Required list
+            @Mapping(target = "mentions", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())"),
+
+            // Optional
+            @Mapping(target = "attachedPicture", expression = "java(picture)"),
+    })
+    public abstract Reply toEntity(String body,
+                                   @Context User currentUser,
+                                   @Context Comment comment,
+                                   @Context String picture,
+                                   @Context NotificationStatus notificationStatus);
 
     @Mappings({
             @Mapping(target = "replierName", source = "reply.replier.name"),

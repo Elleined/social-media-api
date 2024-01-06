@@ -22,14 +22,16 @@ public abstract class CommentMapper {
     @Mappings({
             // Should not be touched!
             @Mapping(target = "id", ignore = true),
+
+            // Required
             @Mapping(target = "body", expression = "java(body)"),
             @Mapping(target = "post", expression = "java(post)"),
             @Mapping(target = "commenter", expression = "java(currentUser)"),
+            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)"),
 
             // Required auto fill
             @Mapping(target = "dateCreated", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
-            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)"),
 
             // Required list
             @Mapping(target = "mentions", expression = "java(new java.util.HashSet<>())"),

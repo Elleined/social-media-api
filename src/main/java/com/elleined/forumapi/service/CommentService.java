@@ -9,10 +9,8 @@ import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.image.ImageUploader;
 import com.elleined.forumapi.service.mention.MentionService;
 import com.elleined.forumapi.service.pin.PinService;
-import com.elleined.forumapi.utils.DirectoryFolders;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +43,6 @@ public class CommentService
 
     private final ReplyRepository replyRepository;
 
-    private final ImageUploader imageUploader;
-
     private final PinService<Post, Comment> commentPinService;
 
     private final MentionRepository mentionRepository;
@@ -73,7 +69,6 @@ public class CommentService
         Comment comment = commentMapper.toEntity(body, post, currentUser, attachedPicture.getOriginalFilename(), status);
         commentRepository.save(comment);
 
-        imageUploader.upload(cropTradeImgDirectory + DirectoryFolders.COMMENT_PICTURE_FOLDER, attachedPicture);
         if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, comment);
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
