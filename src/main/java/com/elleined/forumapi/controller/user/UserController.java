@@ -29,7 +29,7 @@ public class UserController {
         return userMapper.toDTO(user);
     }
 
-    @GetMapping("/{currentUserId}/getSuggestedMentions")
+    @GetMapping("/{currentUserId}/suggested-mentions")
     public List<UserDTO> getSuggestedMentions(@PathVariable("currentUserId") int currentUserId,
                                               @RequestParam("name") String name) {
         User currentUser = userService.getById(currentUserId);

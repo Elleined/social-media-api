@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/{currentUserId}/notifications")
+@RequestMapping("/users/{currentUserId}/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
 
     private final UserService userService;
     private final NotificationService<Notification> notificationService;
 
-    @GetMapping("/getAllNotification")
+    @GetMapping
     public Collection<Notification> getAllUnreadNotification(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         return notificationService.getAllUnreadNotification(currentUser);
     }
 
-    @GetMapping("/getTotalNotificationCount")
+    @GetMapping("/count")
     public long getNotificationCount(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         return notificationService.getNotificationCount(currentUser);
