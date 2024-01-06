@@ -3,14 +3,12 @@ package com.elleined.forumapi.service;
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.mapper.CommentMapper;
 import com.elleined.forumapi.model.*;
-import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.repository.CommentRepository;
-import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.mention.MentionService;
-import com.elleined.forumapi.service.pin.PinService;
+import com.elleined.forumapi.service.mention.CommentMentionService;
+import com.elleined.forumapi.service.pin.PostPinCommentService;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -30,10 +27,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class CommentService implements MentionService<Comment> {
+public class CommentService {
 
     private final UserRepository userRepository;
-
     private final BlockService blockService;
 
     private final ModalTrackerService modalTrackerService;
@@ -43,9 +39,9 @@ public class CommentService implements MentionService<Comment> {
 
     private final ReplyRepository replyRepository;
 
-    private final PinService<Post, Comment> commentPinService;
+    private final PostPinCommentService commentPinService;
 
-    private final MentionRepository mentionRepository;
+    private final CommentMentionService commentMentionService;
 
     public Comment save(User currentUser, Post post, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
             throws ResourceNotFoundException,
@@ -64,7 +60,7 @@ public class CommentService implements MentionService<Comment> {
         Comment comment = commentMapper.toEntity(body, post, currentUser, attachedPicture.getOriginalFilename(), status);
         commentRepository.save(comment);
 
-        if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, comment);
+        if (mentionedUsers != null) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
     }
@@ -88,8 +84,8 @@ public class CommentService implements MentionService<Comment> {
         Comment pinnedComment = post.getPinnedComment();
         List<Comment> comments = new ArrayList<>(post.getComments()
                 .stream()
-                .filter(comment -> !comment.equals(pinnedComment))
                 .filter(Comment::isActive)
+                .filter(comment -> !comment.equals(pinnedComment))
                 .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
                 .sorted(Comparator.comparingInt(Comment::getUpvoteCount).reversed())
@@ -144,37 +140,5 @@ public class CommentService implements MentionService<Comment> {
             throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists!");
 
         return comment.getPinnedReply();
-    }
-
-    @Override
-    public CommentMention mention(User mentioningUser, User mentionedUser, Comment comment) {
-        if (comment.isInactive()) throw new ResourceNotFoundException("Cannot mention! The comment with id of " + comment.getId() + " you are trying to mention might already been deleted or does not exists!");
-        if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
-        if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw  new BlockedException("Cannot mention! Mentioned user with id of " + mentionedUser.getId() + " already blocked you");
-        if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");
-
-        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), comment.getPost().getId(), ModalTracker.Type.COMMENT)
-                ? NotificationStatus.READ
-                : NotificationStatus.UNREAD;
-
-        CommentMention commentMention = CommentMention.commentMentionBuilder()
-                .mentioningUser(mentioningUser)
-                .mentionedUser(mentionedUser)
-                .createdAt(LocalDateTime.now())
-                .comment(comment)
-                .notificationStatus(notificationStatus)
-                .build();
-
-        mentioningUser.getSentCommentMentions().add(commentMention);
-        mentionedUser.getReceiveCommentMentions().add(commentMention);
-        comment.getMentions().add(commentMention);
-        mentionRepository.save(commentMention);
-        log.debug("User with id of {} mentioned user with id of {} in comment with id of {}", mentioningUser.getId(), mentionedUser.getId(), comment.getId());
-        return commentMention;
-    }
-
-    @Override
-    public void mentionAll(User mentioningUser, Set<User> mentionedUsers, Comment comment) {
-        mentionedUsers.forEach(mentionedUser -> mention(mentioningUser, mentionedUser, comment));
     }
 }

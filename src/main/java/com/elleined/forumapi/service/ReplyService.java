@@ -3,11 +3,9 @@ package com.elleined.forumapi.service;
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.mapper.ReplyMapper;
 import com.elleined.forumapi.model.*;
-import com.elleined.forumapi.model.mention.ReplyMention;
-import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.mention.MentionService;
+import com.elleined.forumapi.service.mention.ReplyMentionService;
 import com.elleined.forumapi.service.pin.PinService;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,8 +24,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class ReplyService
-        implements MentionService<Reply> {
+public class ReplyService {
 
     private final ReplyRepository replyRepository;
     private final ReplyMapper replyMapper;
@@ -39,7 +35,7 @@ public class ReplyService
 
     private final PinService<Comment, Reply> replyPinService;
 
-    private final MentionRepository mentionRepository;
+    private final ReplyMentionService replyMentionService;
 
     public Reply save(User currentUser, Comment comment, String body, MultipartFile attachedPicture, Set<User> mentionedUsers) throws EmptyBodyException,
             ClosedCommentSectionException,
@@ -56,7 +52,7 @@ public class ReplyService
         Reply reply = replyMapper.toEntity(body, currentUser, comment, attachedPicture.getOriginalFilename(), status);
         replyRepository.save(reply);
 
-        if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, reply);
+        if (mentionedUsers != null) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);
         log.debug("Reply with id of {} saved successfully!", reply.getId());
         return reply;
     }
@@ -101,38 +97,5 @@ public class ReplyService
 
     public Reply getById(int replyId) throws ResourceNotFoundException {
         return replyRepository.findById(replyId).orElseThrow(() -> new ResourceNotFoundException("Reply with id of " + replyId + " does not exists!"));
-    }
-
-    @Override
-    public ReplyMention mention(User mentioningUser, User mentionedUser, Reply reply) {
-        if (reply.isInactive()) throw new ResourceNotFoundException("Cannot mention! The reply with id of " + reply.getId() + " you are trying to mention might already be deleted or does not exists!");
-        if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
-        if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! Mentioned userwith id of " + mentionedUser.getId() + " already blocked you");
-        if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");
-
-
-        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), reply.getComment().getId(), ModalTracker.Type.REPLY)
-                ? NotificationStatus.READ
-                : NotificationStatus.UNREAD;
-
-        ReplyMention replyMention = ReplyMention.replyMentionBuilder()
-                .mentioningUser(mentioningUser)
-                .mentionedUser(mentionedUser)
-                .createdAt(LocalDateTime.now())
-                .reply(reply)
-                .notificationStatus(notificationStatus)
-                .build();
-
-        mentioningUser.getSentReplyMentions().add(replyMention);
-        mentionedUser.getReceiveReplyMentions().add(replyMention);
-        reply.getMentions().add(replyMention);
-        mentionRepository.save(replyMention);
-        log.debug("User with id of {} mentioned user with id of {} in reply with id of {}", mentioningUser.getId(), mentionedUser.getId(), reply.getId());
-        return replyMention;
-    }
-
-    @Override
-    public void mentionAll(User mentioningUser, Set<User> mentionedUsers, Reply reply) {
-        mentionedUsers.forEach(mentionedUser -> mention(mentioningUser, mentionedUser, reply));
     }
 }

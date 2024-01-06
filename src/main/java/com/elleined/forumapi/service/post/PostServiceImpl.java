@@ -1,15 +1,16 @@
 package com.elleined.forumapi.service.post;
 
-import com.elleined.forumapi.exception.*;
+import com.elleined.forumapi.exception.BlockedException;
+import com.elleined.forumapi.exception.EmptyBodyException;
+import com.elleined.forumapi.exception.NotOwnedException;
+import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.mapper.PostMapper;
 import com.elleined.forumapi.model.*;
-import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.repository.CommentRepository;
-import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.repository.PostRepository;
 import com.elleined.forumapi.repository.UserRepository;
-import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.block.BlockService;
+import com.elleined.forumapi.service.mention.PostMentionService;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -32,14 +32,12 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
+    private final PostMentionService postMentionService;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
 
     private final CommentRepository commentRepository;
 
-    private final ModalTrackerService modalTrackerService;
-
-    private final MentionRepository mentionRepository;
 
     @Override
     public Post save(User currentUser, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
@@ -54,7 +52,7 @@ public class PostServiceImpl implements PostService {
         Post post = postMapper.toEntity(body, currentUser, attachedPicture.getOriginalFilename());
         postRepository.save(post);
 
-        if (mentionedUsers != null) mentionAll(currentUser, mentionedUsers, post);
+        if (mentionedUsers != null) postMentionService.mentionAll(currentUser, mentionedUsers, post);
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;
     }
@@ -138,38 +136,6 @@ public class PostServiceImpl implements PostService {
                 .count();
 
         return commentCount + commentRepliesCount;
-    }
-
-    @Override
-    public PostMention mention(User mentioningUser, User mentionedUser, Post post) {
-        if (post.isInactive()) throw new ResourceNotFoundException("Cannot mention! The post with id of " + post.getId() + " you are trying to mention might already been deleted or does not exists!");
-        if (blockService.isBlockedBy(mentioningUser, mentionedUser)) throw new BlockedException("Cannot mention! You blocked the mentioned user with id of !" + mentionedUser.getId());
-        if (blockService.isYouBeenBlockedBy(mentioningUser, mentionedUser)) throw  new BlockedException("Cannot mention! Mentioned user with id of " + mentionedUser.getId() + " already blocked you");
-        if (mentioningUser.equals(mentionedUser)) throw new MentionException("Cannot mention! You are trying to mention yourself which is not possible!");
-
-        NotificationStatus notificationStatus = modalTrackerService.isModalOpen(mentionedUser.getId(), post.getId(), ModalTracker.Type.POST)
-                ? NotificationStatus.READ
-                : NotificationStatus.UNREAD;
-
-        PostMention postMention = PostMention.postMentionBuilder()
-                .mentioningUser(mentioningUser)
-                .mentionedUser(mentionedUser)
-                .createdAt(LocalDateTime.now())
-                .notificationStatus(notificationStatus)
-                .post(post)
-                .build();
-
-        mentioningUser.getSentPostMentions().add(postMention);
-        mentionedUser.getReceivePostMentions().add(postMention);
-        post.getMentions().add(postMention);
-        mentionRepository.save(postMention);
-        log.debug("User with id of {} mentioned user with id of {} in post with id of {}", mentioningUser.getId(), mentionedUser.getId(), post.getId());
-        return postMention;
-    }
-
-    @Override
-    public void mentionAll(User mentioningUser, Set<User> mentionedUsers, Post post) {
-        mentionedUsers.forEach(mentionedUser -> mention(mentioningUser, mentionedUser, post));
     }
 
     @Override
