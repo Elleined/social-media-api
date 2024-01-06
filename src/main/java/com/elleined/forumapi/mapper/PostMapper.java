@@ -3,19 +3,54 @@ package com.elleined.forumapi.mapper;
 
 import com.elleined.forumapi.dto.PostDTO;
 import com.elleined.forumapi.model.Post;
+import com.elleined.forumapi.model.Status;
+import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.Formatter;
 import com.elleined.forumapi.service.post.PostService;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-@Mapper(componentModel = "spring", imports = Formatter.class, uses = UserMapper.class)
+@Mapper(componentModel = "spring", imports = {
+        Formatter.class,
+        Status.class,
+        Post.CommentSectionStatus.class
+}, uses = UserMapper.class)
 public abstract class PostMapper {
 
     @Autowired @Lazy
     protected PostService postService;
+
+    @Mappings({
+            // Should not be touched!
+            @Mapping(target = "id", ignore = true),
+
+            // Required
+            @Mapping(target = "author", expression = "java(currentUser)"),
+            @Mapping(target = "body", expression = "java(body)"),
+            @Mapping(target = "attachedPicture", expression = "java(picture)"),
+
+            // Required auto fill
+            @Mapping(target = "dateCreated", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
+            @Mapping(target = "commentSectionStatus", expression = "java(CommentSectionStatus.OPEN)"),
+
+            // Required list
+            @Mapping(target = "mentions", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "savingUsers", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "sharers", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "comments", expression = "java(new java.util.ArrayList<>())"),
+
+            // Optional
+            @Mapping(target = "pinnedComment", expression = "java(null)"),
+    })
+    public abstract Post toEntity(String body,
+                                  @Context User currentUser,
+                                  @Context String picture);
 
     @Mappings({
             @Mapping(target = "formattedDateCreated", expression = "java(Formatter.formatDateWithoutYear(post.getDateCreated()))"),
