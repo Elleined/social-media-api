@@ -61,7 +61,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public FriendRequest sendFriendRequest(User currentUser, User userToAdd) {
+    public void sendFriendRequest(User currentUser, User userToAdd) {
         if (currentUser.hasAlreadySentFriendRequestTo(userToAdd))
             throw new FriendRequestException("Cannot sent friend request! becuase you already sent friend request to this user!");
         if (currentUser.hasAlreadyReceiveFriendRequestTo(userToAdd))
@@ -81,7 +81,6 @@ public class FriendServiceImpl implements FriendService {
         userRepository.save(currentUser);
         userRepository.save(userToAdd);
         log.debug("User with id of {} sent a friend request to user with id of {}", currentUser.getId(), userToAdd.getId());
-        return friendRequest;
     }
 
     @Override

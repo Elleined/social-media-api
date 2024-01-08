@@ -6,6 +6,7 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.friend.FriendService;
+import com.elleined.forumapi.service.notification.friend.reader.FriendRequestNotificationReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +19,16 @@ public class FriendRequestController {
 
     private final FriendService friendService;
     private final UserService userService;
+
+    private final FriendRequestNotificationReader friendRequestNotificationReader;
     private final FriendRequestMapper friendRequestMapper;
 
     @GetMapping
     public List<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
+
+        friendRequestNotificationReader.readAll(currentUser);
+
         return friendService.getAllFriendRequests(currentUser).stream()
                 .map(friendRequestMapper::toDTO)
                 .toList();

@@ -6,7 +6,7 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.UserService;
-import com.elleined.forumapi.service.notification.post.PostMentionNotificationReader;
+import com.elleined.forumapi.service.notification.post.reader.PostMentionNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,6 +2,6 @@ package com.elleined.forumapi.service.notification.react.reader;
 
 import com.elleined.forumapi.model.User;
 
-public interface ReactNotificationReaderService {
+public interface ReactNotificationReader {
     void readAll(User currentUser);
 }
