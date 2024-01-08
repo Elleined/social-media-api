@@ -7,6 +7,7 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.post.reader.PostMentionNotificationReader;
+import com.elleined.forumapi.service.notification.post.reader.PostReactNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +28,17 @@ public class PostController {
 
     private final PostService postService;
     private final PostMapper postMapper;
+    private final PostReactNotificationReader postReactNotificationReader;
+    private final PostMentionNotificationReader postMentionNotificationReader;
 
     private final ModalTrackerService modalTrackerService;
 
-    private final PostMentionNotificationReader postMentionNotificationReader;
 
     @GetMapping
     public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
+
+        postReactNotificationReader.readAll(currentUser);
         postMentionNotificationReader.readAll(currentUser);
 
         modalTrackerService.saveTrackerOfUserById(currentUserId, 0, "POST");

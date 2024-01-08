@@ -8,7 +8,6 @@ import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.emoji.EmojiService;
-import com.elleined.forumapi.service.notification.react.reader.PostReactNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
 import com.elleined.forumapi.service.react.ReactionService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ public class PostReactionController {
     private final UserService userService;
 
     private final PostService postService;
-    private final PostReactNotificationReader postReactNotificationReader;
     private final ReactionService<Post, PostReact> postReactionService;
     private final PostReactionMapper postReactionMapper;
 

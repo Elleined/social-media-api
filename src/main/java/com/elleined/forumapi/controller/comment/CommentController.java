@@ -10,6 +10,7 @@ import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.comment.reader.CommentMentionNotificationReader;
 import com.elleined.forumapi.service.notification.comment.reader.CommentNotificationReader;
+import com.elleined.forumapi.service.notification.comment.reader.CommentReactNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
 import com.elleined.forumapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class CommentController {
 
     private final WSService wsService;
 
+    private final CommentReactNotificationReader commentReactNotificationReader;
     private final CommentMentionNotificationReader commentMentionNotificationReader;
     private final CommentNotificationReader commentNotificationReader;
 
@@ -45,6 +47,7 @@ public class CommentController {
         Post post = postService.getById(postId);
 
         commentNotificationReader.readAll(currentUser, post);
+        commentReactNotificationReader.readAll(currentUser, post);
         commentMentionNotificationReader.readAll(currentUser, post);
 
         modalTrackerService.saveTrackerOfUserById(currentUserId, postId, "COMMENT");

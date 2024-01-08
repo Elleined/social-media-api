@@ -18,7 +18,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 @Primary
-public class PostMentionNotificationReader implements PostNotificationReaderService {
+public class PostMentionNotificationReader implements PostNotificationReader {
     private final MentionNotificationService<PostMention> postMentionNotificationService;
     private final MentionRepository mentionRepository;
 
