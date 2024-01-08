@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service.notification.reader.comment;
+package com.elleined.forumapi.service.notification.comment.reader;
 
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Post;

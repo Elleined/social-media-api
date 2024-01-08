@@ -1,4 +1,4 @@
-package com.elleined.forumapi.service.notification.reader.react;
+package com.elleined.forumapi.service.notification.react.reader;
 
 import com.elleined.forumapi.model.User;
 import lombok.RequiredArgsConstructor;
