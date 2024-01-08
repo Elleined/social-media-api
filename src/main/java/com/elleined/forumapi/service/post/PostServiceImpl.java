@@ -38,7 +38,6 @@ public class PostServiceImpl implements PostService {
 
     private final CommentRepository commentRepository;
 
-
     @Override
     public Post save(User currentUser, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
             throws EmptyBodyException,
