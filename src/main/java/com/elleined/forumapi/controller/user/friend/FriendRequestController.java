@@ -6,7 +6,6 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.friend.FriendService;
-import com.elleined.forumapi.service.ws.notification.friend.WSFriendRequestNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,6 @@ public class FriendRequestController {
     private final FriendService friendService;
     private final UserService userService;
     private final FriendRequestMapper friendRequestMapper;
-    private final WSFriendRequestNotificationService wsFriendRequestNotificationService;
 
     @GetMapping
     public List<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId) {
@@ -35,8 +33,7 @@ public class FriendRequestController {
                                   @PathVariable("userToAddId") int userToAddId) {
         User currentUser = userService.getById(currentUserId);
         User userToAdd = userService.getById(userToAddId);
-        FriendRequest friendRequest = friendService.sendFriendRequest(currentUser, userToAdd);
-        wsFriendRequestNotificationService.broadcastSendFriendRequest(friendRequest);
+        friendService.sendFriendRequest(currentUser, userToAdd);
     }
 
     @PatchMapping("/{friendRequestId}/accept")
@@ -45,7 +42,6 @@ public class FriendRequestController {
         User currentUser = userService.getById(currentUserId);
         FriendRequest friendRequest = friendService.getById(friendRequestId);
         friendService.acceptFriendRequest(currentUser, friendRequest);
-        wsFriendRequestNotificationService.broadcastAcceptedFriendRequest(friendRequest);
     }
 
     @DeleteMapping("/{friendRequestId}/cancel")

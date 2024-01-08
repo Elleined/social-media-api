@@ -12,8 +12,6 @@ import com.elleined.forumapi.service.notification.reader.comment.CommentMentionN
 import com.elleined.forumapi.service.notification.reader.comment.CommentNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
 import com.elleined.forumapi.service.ws.WSService;
-import com.elleined.forumapi.service.ws.notification.comment.CommentWSNotificationService;
-import com.elleined.forumapi.service.ws.notification.mention.CommentWSMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,10 +32,6 @@ public class CommentController {
     private final CommentMapper commentMapper;
 
     private final WSService wsService;
-
-    private final CommentWSNotificationService commentWSNotificationService;
-
-    private final CommentWSMentionNotificationService commentMentionWSNotificationService;
 
     private final CommentMentionNotificationReader commentMentionNotificationReader;
     private final CommentNotificationReader commentNotificationReader;
@@ -71,10 +65,7 @@ public class CommentController {
         Post post = postService.getById(postId);
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers);
-        if (mentionedUsers != null) commentMentionWSNotificationService.broadcastMentions(comment.getMentions());
-
-        commentWSNotificationService.broadcast(comment);
-        wsService.broadcastComment(comment);
+        wsService.broadcast(comment);
         return commentMapper.toDTO(comment);
     }
 
@@ -88,7 +79,7 @@ public class CommentController {
         Comment comment = commentService.getById(commentId);
 
         commentService.delete(currentUser, post, comment);
-        wsService.broadcastComment(comment);
+        wsService.broadcast(comment);
         return commentMapper.toDTO(comment);
     }
 
@@ -103,7 +94,7 @@ public class CommentController {
         Comment comment = commentService.getById(commentId);
 
         Comment updatedComment = commentService.updateBody(currentUser, post, comment, newCommentBody);
-        wsService.broadcastComment(updatedComment);
+        wsService.broadcast(updatedComment);
 
         return commentMapper.toDTO(updatedComment);
     }

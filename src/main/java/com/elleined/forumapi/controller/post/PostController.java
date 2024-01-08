@@ -8,7 +8,6 @@ import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.reader.post.PostMentionNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
-import com.elleined.forumapi.service.ws.notification.mention.PostWSMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,6 @@ public class PostController {
 
     private final ModalTrackerService modalTrackerService;
 
-    private final PostWSMentionNotificationService postMentionWSNotificationService;
     private final PostMentionNotificationReader postMentionNotificationReader;
 
     @GetMapping
@@ -54,8 +52,6 @@ public class PostController {
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
         Post post = postService.save(currentUser, body, attachedPicture, mentionedUsers);
-
-        if (mentionedUsers != null) postMentionWSNotificationService.broadcastMentions(post.getMentions());
         return postMapper.toDTO(post);
     }
 

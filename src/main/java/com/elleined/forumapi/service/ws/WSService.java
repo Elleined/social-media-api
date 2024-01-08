@@ -21,7 +21,7 @@ public class WSService {
     private final CommentMapper commentMapper;
     private final ReplyMapper replyMapper;
 
-    public void broadcastComment(Comment comment) {
+    public void broadcast(Comment comment) {
         CommentDTO commentDTO = commentMapper.toDTO(comment);
         commentDTO.setBody(HtmlUtils.htmlEscape(commentDTO.getBody()));
 
@@ -30,7 +30,7 @@ public class WSService {
         log.debug("Comment with id of {} and body of {} broadcast successfully to {}", commentDTO.getId(), commentDTO.getBody(), destination);
     }
 
-    public void broadcastReply(Reply reply) {
+    public void broadcast(Reply reply) {
         ReplyDTO replyDTO = replyMapper.toDTO(reply);
         replyDTO.setBody(HtmlUtils.htmlEscape(replyDTO.getBody()));
 

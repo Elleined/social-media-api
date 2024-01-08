@@ -12,8 +12,6 @@ import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyMentionNotificationReader;
 import com.elleined.forumapi.service.notification.reader.reply.ReplyNotificationReader;
 import com.elleined.forumapi.service.ws.WSService;
-import com.elleined.forumapi.service.ws.notification.mention.ReplyWSMentionNotificationService;
-import com.elleined.forumapi.service.ws.notification.reply.ReplyWSNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -36,10 +34,6 @@ public class ReplyController {
     private final ReplyMapper replyMapper;
 
     private final ModalTrackerService modalTrackerService;
-
-    private final ReplyWSNotificationService replyWSNotificationService;
-
-    private final ReplyWSMentionNotificationService replyMentionWSNotificationService;
 
     private final WSService wsService;
 
@@ -73,11 +67,7 @@ public class ReplyController {
         Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.save(currentUser, comment, body, attachedPicture, mentionedUsers);
-
-        if (mentionedUsers != null) replyMentionWSNotificationService.broadcastMentions(reply.getMentions());
-
-        replyWSNotificationService.broadcast(reply);
-        wsService.broadcastReply(reply);
+        wsService.broadcast(reply);
         return replyMapper.toDTO(reply);
     }
 
@@ -91,7 +81,7 @@ public class ReplyController {
         Reply reply = replyService.getById(replyId);
 
         replyService.delete(currentUser, comment, reply);
-        wsService.broadcastReply(reply);
+        wsService.broadcast(reply);
         return replyMapper.toDTO(reply);
     }
 
@@ -104,7 +94,7 @@ public class ReplyController {
         Reply reply = replyService.getById(replyId);
 
         Reply updatedReply = replyService.updateBody(currentUser, reply, newReplyBody);
-        wsService.broadcastReply(updatedReply);
+        wsService.broadcast(updatedReply);
         return replyMapper.toDTO(updatedReply);
     }
 }
