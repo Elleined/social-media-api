@@ -2,6 +2,7 @@ package com.elleined.forumapi.service.notification.react.reader;
 
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.model.react.ReplyReact;
 import com.elleined.forumapi.repository.react.ReplyReactRepository;
 import com.elleined.forumapi.service.notification.react.ReactNotificationService;
@@ -25,6 +26,17 @@ public class ReplyReactNotificationReader implements ReactNotificationReader {
     @Override
     public void readAll(User currentUser) {
         List<ReplyReact> unreadReactions = replyReactNotificationService.getAllUnreadNotification(currentUser);
+        unreadReactions.forEach(replyReact -> replyReact.setNotificationStatus(NotificationStatus.READ));
+        replyReactRepository.saveAll(unreadReactions);
+        log.debug("Reading all reply reaction for current user with id of {} success", currentUser.getId());
+    }
+
+    @Override
+    public void readAll(User currentUser, Emoji.Type type) {
+        List<ReplyReact> unreadReactions = replyReactNotificationService.getAllUnreadNotification(currentUser).stream()
+                .filter(replyReact -> replyReact.getEmoji().getType() == type)
+                .toList();
+
         unreadReactions.forEach(replyReact -> replyReact.setNotificationStatus(NotificationStatus.READ));
         replyReactRepository.saveAll(unreadReactions);
         log.debug("Reading all reply reaction for current user with id of {} success", currentUser.getId());

@@ -3,6 +3,7 @@ package com.elleined.forumapi.service.notification.react.reader;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.react.CommentReact;
+import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
 import com.elleined.forumapi.service.notification.react.ReactNotificationService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,16 @@ public class CommentReactNotificationReader implements ReactNotificationReader {
     @Override
     public void readAll(User currentUser) {
         List<CommentReact> unreadReactions = commentReactNotificationService.getAllUnreadNotification(currentUser);
+        unreadReactions.forEach(commentReact -> commentReact.setNotificationStatus(NotificationStatus.READ));
+        commentReactRepository.saveAll(unreadReactions);
+        log.debug("Reading all comment reaction for current user with id of {} success", currentUser.getId());
+    }
+
+    @Override
+    public void readAll(User currentUser, Emoji.Type type) {
+        List<CommentReact> unreadReactions = commentReactNotificationService.getAllUnreadNotification(currentUser).stream()
+                .filter(commentReact -> commentReact.getEmoji().getType() == type)
+                .toList();
         unreadReactions.forEach(commentReact -> commentReact.setNotificationStatus(NotificationStatus.READ));
         commentReactRepository.saveAll(unreadReactions);
         log.debug("Reading all comment reaction for current user with id of {} success", currentUser.getId());
