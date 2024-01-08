@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class CommentWSNotificationService extends BaseWSNotificationService implements WSNotificationService<Comment> {
+public class CommentWSNotificationService extends BaseWSNotificationService
+        implements WSNotificationService<Comment> {
 
     private final CommentNotificationMapper commentNotificationMapper;
 
