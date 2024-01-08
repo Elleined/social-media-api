@@ -22,7 +22,7 @@ public interface ReactNotificationMapper {
             @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(postReact.getCreatedAt()))"),
             @Mapping(target = "notificationStatus", source = "notificationStatus"),
 
-            @Mapping(target = "emojiType", source = "")
+            @Mapping(target = "emojiType", source = "emoji.type")
     })
     ReactionNotification toNotification(PostReact postReact);
 
@@ -36,7 +36,7 @@ public interface ReactNotificationMapper {
             @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(commentReact.getCreatedAt()))"),
             @Mapping(target = "notificationStatus", source = "notificationStatus"),
 
-            @Mapping(target = "emojiType", source = "")
+            @Mapping(target = "emojiType", source = "emoji.type")
     })
     ReactionNotification toNotification(CommentReact commentReact);
 
@@ -50,7 +50,7 @@ public interface ReactNotificationMapper {
             @Mapping(target = "formattedTime", expression = "java(Formatter.formatTime(replyReact.getCreatedAt()))"),
             @Mapping(target = "notificationStatus", source = "notificationStatus"),
 
-            @Mapping(target = "emojiType", source = "")
+            @Mapping(target = "emojiType", source = "emoji.type")
     })
     ReactionNotification toNotification(ReplyReact replyReact);
 }
