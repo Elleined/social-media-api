@@ -47,7 +47,6 @@ An API that supports social media functionality.
 - Share and Unshare post
 - Send, Accept, and Cancel friend request
 - Follow and Unfollow users
-- Web Socket for real time communication in comments and replies
 
 # Technologies used
 - Spring boot
