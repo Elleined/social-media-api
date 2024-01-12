@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", imports = Collectors.class)
 public interface HashTagMapper {
 
+    @Mapping(target = "connectedPosts", expression = "java(hashTag.getPosts().stream().map(Post::getId).collect(Collectors.toSet()))")
     HashTagDTO toDTO(HashTag hashTag);
 
     @Mappings({
