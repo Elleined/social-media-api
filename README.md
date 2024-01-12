@@ -69,6 +69,7 @@ An API that supports social media functionality.
 - Create, Update, Delete Reaction in Comment
 - Create, Update, Delete Reaction in Reply
 - Author can close the comment section for his/her every post
+- Create HashTag in post, comment, and reply
 - Comment upvote
 - Pin comment and reply
 - Block another user
