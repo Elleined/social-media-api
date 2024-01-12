@@ -32,12 +32,6 @@ public class PostHashTagController {
                 .collect(Collectors.toSet());
     }
 
-    @GetMapping("/keyword")
-    public Set<HashTagDTO> searchHashTagByKeyword(@RequestParam("keyword") String keyword) {
-        return hashTagService.searchHashTagByKeyword(keyword).stream()
-                .map(hashTagMapper::toDTO)
-                .collect(Collectors.toSet());
-    }
 
     @GetMapping("/search-posts-by-keyword")
     public Set<PostDTO> searchPostByHashtagKeyword(@PathVariable("currentUserId") int currentUserId,

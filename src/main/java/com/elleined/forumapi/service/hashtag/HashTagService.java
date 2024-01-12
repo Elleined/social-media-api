@@ -5,12 +5,16 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.hashtag.HashTag;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface HashTagService {
     Set<HashTag> getAll();
-    Set<HashTag> searchHashTagByKeyword(String keyword);
     Set<Post> getAllPostByHashTagKeyword(User currentUser, String keyword);
+
+    boolean isAlreadyExists(String keyword);
+    HashTag getByKeyword(String keyword);
+
 
     HashTag save(Post post, String keyword);
     List<HashTag> saveAll(Post post, Set<String> keywords);

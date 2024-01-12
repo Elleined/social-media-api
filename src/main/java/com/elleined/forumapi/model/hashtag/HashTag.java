@@ -5,9 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
-@Table(name = "tbl_post_hashtag")
+@Table(name = "tbl_hashtag")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,12 +41,6 @@ public class HashTag {
     )
     private LocalDateTime createdAt;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(
-            name = "post_id",
-            referencedColumnName = "post_id",
-            updatable = false,
-            nullable = false
-    )
-    private Post post;
+    @ManyToMany(mappedBy = "hashTags")
+    private Set<Post> posts;
 }

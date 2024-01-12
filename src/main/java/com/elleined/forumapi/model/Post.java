@@ -41,6 +41,19 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private CommentSectionStatus commentSectionStatus;
 
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_post_hashtag",
+            joinColumns = @JoinColumn(name = "post_id",
+                    referencedColumnName = "post_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "id",
+                    referencedColumnName = "id"
+            )
+    )
+    private Set<HashTag> hashTags;
+
     @ManyToOne
     @JoinColumn(
             name = "author_id",
@@ -78,10 +91,6 @@ public class Post {
     @ManyToMany(mappedBy = "sharedPosts")
     @Setter(AccessLevel.NONE)
     private Set<User> sharers;
-
-    @OneToMany(mappedBy = "post")
-    @Setter(AccessLevel.NONE)
-    private Set<HashTag> hashTags;
 
     public enum CommentSectionStatus {OPEN, CLOSED}
 

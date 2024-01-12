@@ -20,7 +20,7 @@ public interface HashTagMapper {
 
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "keyword", expression = "java(keyword)"),
-            @Mapping(target = "post", expression = "java(post)"),
+            @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())")
     })
     HashTag toEntity(String keyword, @Context Post post);
 }
