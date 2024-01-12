@@ -1,7 +1,6 @@
 package com.elleined.forumapi.repository;
 
 import com.elleined.forumapi.model.Post;
-import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.hashtag.HashTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

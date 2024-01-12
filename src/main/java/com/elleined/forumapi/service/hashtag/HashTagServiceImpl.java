@@ -50,7 +50,7 @@ public class HashTagServiceImpl implements HashTagService {
     @Override
     public HashTag getByKeyword(String keyword) {
         return hashTagRepository.findAll().stream()
-                .filter(hashTag -> hashTag.getKeyword().equals(keyword))
+                .filter(hashTag -> hashTag.getKeyword().equalsIgnoreCase(keyword))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Hashtag with keyword of " + keyword + " does not exists!"));
     }
