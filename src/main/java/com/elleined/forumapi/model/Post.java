@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model;
 
+import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.react.PostReact;
 import jakarta.persistence.*;
@@ -78,6 +79,9 @@ public class Post {
     @Setter(AccessLevel.NONE)
     private Set<User> sharers;
 
+    @OneToMany(mappedBy = "post")
+    @Setter(AccessLevel.NONE)
+    private List<HashTag> hashTags;
 
     public enum CommentSectionStatus {OPEN, CLOSED}
 

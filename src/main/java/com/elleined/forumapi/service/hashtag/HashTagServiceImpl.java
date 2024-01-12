@@ -2,6 +2,7 @@ package com.elleined.forumapi.service.hashtag;
 
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.hashtag.HashTag;
+import com.elleined.forumapi.repository.HashTagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,7 @@ import java.util.Set;
 @Transactional
 @RequiredArgsConstructor
 public class HashTagServiceImpl implements HashTagService {
-    @Override
-    public List<HashTag> getAll(Post post) {
-        return null;
-    }
+    private final HashTagRepository hashTagRepository;
 
     @Override
     public List<HashTag> getAllByKeyword(String keyword) {
