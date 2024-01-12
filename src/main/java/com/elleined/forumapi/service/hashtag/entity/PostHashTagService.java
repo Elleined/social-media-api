@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostHashTagService implements EntityHashTagService<Post> {
     private final HashTagRepository hashTagRepository;
-    private final HashTagMapper hashTagMapper;
 
     private final HashTagService hashTagService;
+    private final HashTagMapper hashTagMapper;
 
     private final PostRepository postRepository;
 
@@ -45,7 +45,7 @@ public class PostHashTagService implements EntityHashTagService<Post> {
             hashTag.getPosts().add(post);
 
             postRepository.save(post);
-            hashTagRepository.save(hashTag);
+            hashTagService.save(hashTag);
             log.debug("HashTag with keyword of {} saved successfully", keyword);
             return hashTag;
         }
@@ -56,7 +56,7 @@ public class PostHashTagService implements EntityHashTagService<Post> {
         hashTag.getPosts().add(post);
 
         postRepository.save(post);
-        hashTagRepository.save(hashTag);
+        hashTagService.save(hashTag);
         log.debug("HashTag with keyword of {} saved successfully", keyword);
         return hashTag;
     }

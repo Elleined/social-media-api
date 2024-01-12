@@ -38,4 +38,9 @@ public class HashTagServiceImpl implements HashTagService {
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Hashtag with keyword of " + keyword + " does not exists!"));
     }
+
+    @Override
+    public HashTag save(HashTag hashTag) {
+        return hashTagRepository.save(hashTag);
+    }
 }

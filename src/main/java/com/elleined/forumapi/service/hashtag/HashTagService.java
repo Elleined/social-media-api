@@ -13,6 +13,8 @@ public interface HashTagService {
 
     HashTag getByKeyword(String keyword);
 
+    HashTag save(HashTag hashTag);
+
 //    Set<T> getAllByHashTagKeyword(User currentUser, String keyword);
 //    HashTag save(T t, String keyword);
 //    List<HashTag> saveAll(T t, Set<String> keywords);
