@@ -1,6 +1,8 @@
 package com.elleined.forumapi.repository;
 
+import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
+import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.hashtag.HashTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +18,18 @@ public interface HashTagRepository extends JpaRepository<HashTag, Integer> {
             WHERE h.keyword LIKE CONCAT('%', :keyword, '%')
             """)
     Set<Post> getAllPostByHashTagKeyword(@Param("keyword") String keyword);
+
+    @Query("""
+            SELECT h.comments
+            FROM HashTag h
+            WHERE h.keyword LIKE CONCAT('%', :keyword, '%')
+            """)
+    Set<Comment> getAllCommentByHashTagKeyword(@Param("keyword") String keyword);
+
+    @Query("""
+            SELECT h.replies
+            FROM HashTag h
+            WHERE h.keyword LIKE CONCAT('%', :keyword, '%')
+            """)
+    Set<Reply> getAllReplyByHashTagKeyword(@Param("keyword") String keyword);
 }
