@@ -6,10 +6,12 @@ import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.mapper.PostMapper;
 import com.elleined.forumapi.model.*;
+import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.PostRepository;
 import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
+import com.elleined.forumapi.service.hashtag.HashTagService;
 import com.elleined.forumapi.service.mention.PostMentionService;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
@@ -38,12 +40,14 @@ public class PostServiceImpl implements PostService {
 
     private final CommentRepository commentRepository;
 
+    private final HashTagService hashTagService;
+
     @Override
-    public Post save(User currentUser, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
-            throws EmptyBodyException,
-            BlockedException,
-            ResourceNotFoundException,
-            IOException {
+    public Post save(User currentUser,
+                     String body,
+                     MultipartFile attachedPicture,
+                     Set<User> mentionedUsers,
+                     Set<String> keywords) throws EmptyBodyException, BlockedException, ResourceNotFoundException, IOException {
 
         if (StringValidator.isNotValidBody(body))
             throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
@@ -52,6 +56,7 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
 
         if (mentionedUsers != null) postMentionService.mentionAll(currentUser, mentionedUsers, post);
+        if (keywords != null) hashTagService.saveAll(post, keywords);
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;
     }

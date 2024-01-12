@@ -9,5 +9,5 @@ import java.util.Set;
 
 public interface HashTagService {
     Set<Post> searchPostByHashtagKeyword(User currentUser, String keyword);
-    List<HashTag> save(Post post, List<String> keywords);
+    List<HashTag> saveAll(Post post, Set<String> keywords);
 }

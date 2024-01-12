@@ -6,6 +6,7 @@ import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
+import com.elleined.forumapi.model.hashtag.HashTag;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +17,11 @@ import java.util.Set;
 
 public interface PostService extends SavedPostService, SharePostService {
 
-    Post save(User currentUser, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
+    Post save(User currentUser,
+              String body,
+              MultipartFile attachedPicture,
+              Set<User> mentionedUsers,
+              Set<String> keywords)
             throws EmptyBodyException,
             BlockedException,
             ResourceNotFoundException,

@@ -51,11 +51,12 @@ public class PostController {
     public PostDTO save(@PathVariable("currentUserId") int currentUserId,
                         @RequestParam("body") String body,
                         @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
-                        @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
+                        @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
+                        @RequestParam(required = false, name = "keywords") Set<String> keywords) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
-        Post post = postService.save(currentUser, body, attachedPicture, mentionedUsers);
+        Post post = postService.save(currentUser, body, attachedPicture, mentionedUsers, keywords);
         return postMapper.toDTO(post);
     }
 

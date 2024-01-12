@@ -27,7 +27,7 @@ public class HashTagServiceImpl implements HashTagService {
     }
 
     @Override
-    public List<HashTag> save(Post post, List<String> keywords) {
+    public List<HashTag> saveAll(Post post, Set<String> keywords) {
         List<HashTag> hashTags = keywords.stream()
                 .map(keyword -> hashtagMapper.toEntity(keyword, post))
                 .toList();
