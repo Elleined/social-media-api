@@ -1,7 +1,6 @@
 package com.elleined.forumapi.service.notification.react;
 
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.model.react.React;
 import com.elleined.forumapi.service.notification.NotificationService;
 

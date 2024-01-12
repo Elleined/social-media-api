@@ -12,7 +12,6 @@ import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.pin.PostPinCommentService;
 import com.elleined.forumapi.service.post.PostService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor

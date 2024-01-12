@@ -2,6 +2,7 @@ package com.elleined.forumapi.service.hashtag;
 
 import com.elleined.forumapi.mapper.hashtag.HashtagMapper;
 import com.elleined.forumapi.model.Post;
+import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.repository.HashTagRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -22,8 +22,8 @@ public class HashTagServiceImpl implements HashTagService {
     private final HashtagMapper hashtagMapper;
 
     @Override
-    public Set<Post> searchPostByHashtagKeyword(String keyword) {
-        return hashTagRepository.searchPostByHashtagKeyword(keyword);
+    public Set<Post> searchPostByHashtagKeyword(User currentUser, String keyword) {
+        return hashTagRepository.searchPostByHashtagKeyword(currentUser, keyword);
     }
 
     @Override

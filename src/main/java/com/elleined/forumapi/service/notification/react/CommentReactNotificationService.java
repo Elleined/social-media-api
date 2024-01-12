@@ -1,7 +1,6 @@
 package com.elleined.forumapi.service.notification.react;
 
 import com.elleined.forumapi.model.Comment;
-import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.React;

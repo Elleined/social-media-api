@@ -4,7 +4,6 @@ import com.elleined.forumapi.exception.BlockedException;
 import com.elleined.forumapi.exception.EmptyBodyException;
 import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
-import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import org.springframework.transaction.annotation.Propagation;
