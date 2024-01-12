@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,10 +36,8 @@ public class HashTagServiceImpl implements HashTagService {
 
     @Override
     public Set<Post> getAllPostByHashTagKeyword(User currentUser, String keyword) {
-        return hashTagRepository.findAll().stream()
-                .filter(hashTag -> hashTag.getKeyword().equalsIgnoreCase(keyword))
-                .map(HashTag::getPosts)
-                .flatMap(Collection::stream)
+        return hashTagRepository.getAllPostByHashTagKeyword(keyword).stream()
+                .filter(post -> !post.getAuthor().equals(currentUser))
                 .collect(Collectors.toSet());
     }
 

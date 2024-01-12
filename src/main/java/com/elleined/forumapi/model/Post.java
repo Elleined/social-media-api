@@ -48,7 +48,7 @@ public class Post {
                     referencedColumnName = "post_id"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "id",
+                    name = "hashtag_id",
                     referencedColumnName = "id"
             )
     )
