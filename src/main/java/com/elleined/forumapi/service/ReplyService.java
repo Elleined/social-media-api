@@ -48,8 +48,10 @@ public class ReplyService {
         if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
 
+
+        String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         NotificationStatus status = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getId(), ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
-        Reply reply = replyMapper.toEntity(body, currentUser, comment, attachedPicture.getOriginalFilename(), status);
+        Reply reply = replyMapper.toEntity(body, currentUser, comment, picture, status);
         replyRepository.save(reply);
 
         if (mentionedUsers != null) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);

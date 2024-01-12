@@ -53,8 +53,10 @@ public class CommentService {
         if (blockService.isBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
 
+
+        String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.COMMENT) ? NotificationStatus.READ : NotificationStatus.UNREAD;
-        Comment comment = commentMapper.toEntity(body, post, currentUser, attachedPicture.getOriginalFilename(), status);
+        Comment comment = commentMapper.toEntity(body, post, currentUser, picture, status);
         commentRepository.save(comment);
 
         if (mentionedUsers != null) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);

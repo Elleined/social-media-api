@@ -52,7 +52,8 @@ public class PostServiceImpl implements PostService {
         if (StringValidator.isNotValidBody(body))
             throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
-        Post post = postMapper.toEntity(body, currentUser, attachedPicture.getOriginalFilename());
+        String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
+        Post post = postMapper.toEntity(body, currentUser, picture);
         postRepository.save(post);
 
         if (mentionedUsers != null) postMentionService.mentionAll(currentUser, mentionedUsers, post);

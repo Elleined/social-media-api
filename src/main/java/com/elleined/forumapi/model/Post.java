@@ -81,7 +81,7 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     @Setter(AccessLevel.NONE)
-    private List<HashTag> hashTags;
+    private Set<HashTag> hashTags;
 
     public enum CommentSectionStatus {OPEN, CLOSED}
 

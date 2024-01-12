@@ -43,6 +43,7 @@ public abstract class PostMapper {
             @Mapping(target = "savingUsers", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "sharers", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "comments", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "hashTags", expression = "java(new java.util.HashSet<>())"),
 
             // Optional
             @Mapping(target = "attachedPicture", expression = "java(picture)"),
