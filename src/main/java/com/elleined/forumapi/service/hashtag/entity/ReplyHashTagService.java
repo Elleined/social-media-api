@@ -44,8 +44,8 @@ public class ReplyHashTagService implements EntityHashTagService<Reply> {
             reply.getHashTags().add(hashTag);
             hashTag.getReplies().add(reply);
 
-            replyRepository.save(reply);
             hashTagService.save(hashTag);
+            replyRepository.save(reply);
             log.debug("HashTag with keyword of {} saved successfully", keyword);
             return hashTag;
         }
@@ -55,8 +55,8 @@ public class ReplyHashTagService implements EntityHashTagService<Reply> {
         reply.getHashTags().add(hashTag);
         hashTag.getReplies().add(reply);
 
-        replyRepository.save(reply);
         hashTagService.save(hashTag);
+        replyRepository.save(reply);
         log.debug("HashTag with keyword of {} saved successfully", keyword);
         return hashTag;
     }

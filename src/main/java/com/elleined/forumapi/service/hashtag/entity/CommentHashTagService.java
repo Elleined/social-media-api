@@ -44,8 +44,8 @@ public class CommentHashTagService implements EntityHashTagService<Comment> {
             comment.getHashTags().add(hashTag);
             hashTag.getComments().add(comment);
 
-            commentRepository.save(comment);
             hashTagService.save(hashTag);
+            commentRepository.save(comment);
             log.debug("HashTag with keyword of {} saved successfully", keyword);
             return hashTag;
         }
@@ -55,8 +55,8 @@ public class CommentHashTagService implements EntityHashTagService<Comment> {
         comment.getHashTags().add(hashTag);
         hashTag.getComments().add(comment);
 
-        commentRepository.save(comment);
         hashTagService.save(hashTag);
+        commentRepository.save(comment);
         log.debug("HashTag with keyword of {} saved successfully", keyword);
         return hashTag;
     }

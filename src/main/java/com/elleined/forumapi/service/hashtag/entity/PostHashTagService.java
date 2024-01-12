@@ -44,8 +44,8 @@ public class PostHashTagService implements EntityHashTagService<Post> {
             post.getHashTags().add(hashTag);
             hashTag.getPosts().add(post);
 
-            postRepository.save(post);
             hashTagService.save(hashTag);
+            postRepository.save(post);
             log.debug("HashTag with keyword of {} saved successfully", keyword);
             return hashTag;
         }
@@ -55,8 +55,8 @@ public class PostHashTagService implements EntityHashTagService<Post> {
         post.getHashTags().add(hashTag);
         hashTag.getPosts().add(post);
 
-        postRepository.save(post);
         hashTagService.save(hashTag);
+        postRepository.save(post);
         log.debug("HashTag with keyword of {} saved successfully", keyword);
         return hashTag;
     }
