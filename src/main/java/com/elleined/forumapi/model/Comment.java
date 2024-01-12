@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model;
 
+import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.react.CommentReact;
 import jakarta.persistence.*;
@@ -63,6 +64,18 @@ public class Comment {
     )
     private Reply pinnedReply;
 
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_comment_hashtag",
+            joinColumns = @JoinColumn(name = "comment_id",
+                    referencedColumnName = "comment_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "hashtag_id",
+                    referencedColumnName = "id"
+            )
+    )
+    private Set<HashTag> hashTags;
 
     // comment id reference is in reply table
     @OneToMany(mappedBy = "comment")

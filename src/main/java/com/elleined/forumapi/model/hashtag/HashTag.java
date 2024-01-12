@@ -1,6 +1,8 @@
 package com.elleined.forumapi.model.hashtag;
 
+import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
+import com.elleined.forumapi.model.Reply;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,4 +38,10 @@ public class HashTag {
 
     @ManyToMany(mappedBy = "hashTags")
     private Set<Post> posts;
+
+    @ManyToMany(mappedBy = "hashTags")
+    private Set<Comment> comments;
+
+    @ManyToMany(mappedBy = "hashTags")
+    private Set<Reply> replies;
 }

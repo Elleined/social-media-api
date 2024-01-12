@@ -1,5 +1,6 @@
 package com.elleined.forumapi.model;
 
+import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.model.react.ReplyReact;
 import jakarta.persistence.*;
@@ -64,6 +65,20 @@ public class Reply {
     @OneToMany(mappedBy = "reply")
     @Setter(AccessLevel.NONE)
     private List<ReplyReact> reactions;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_reply_hashtag",
+            joinColumns = @JoinColumn(name = "reply_id",
+                    referencedColumnName = "reply_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "hashtag_id",
+                    referencedColumnName = "id"
+            )
+    )
+    private Set<HashTag> hashTags;
 
     public boolean isInactive() {
         return this.getStatus() == Status.INACTIVE;
