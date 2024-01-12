@@ -18,9 +18,9 @@ public interface HashTagMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            
+
             @Mapping(target = "keyword", expression = "java(keyword)"),
             @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())")
     })
-    HashTag toEntity(String keyword, @Context Post post);
+    HashTag toEntity(String keyword);
 }

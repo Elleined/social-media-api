@@ -25,6 +25,7 @@ public class HashTagServiceImpl implements HashTagService {
     private final HashTagRepository hashTagRepository;
     private final HashTagMapper hashtagMapper;
 
+    private final PostRepository postRepository;
     @Override
     public Set<HashTag> getAll() {
         return new HashSet<>(hashTagRepository.findAll());
@@ -57,13 +58,23 @@ public class HashTagServiceImpl implements HashTagService {
     @Override
     public HashTag save(Post post, String keyword) {
         if (this.notExist(keyword)) {
-            HashTag hashTag = hashtagMapper.toEntity(keyword, post);
+            HashTag hashTag = hashtagMapper.toEntity(keyword);
+
+            post.getHashTags().add(hashTag);
+            hashTag.getPosts().add(post);
+
+            postRepository.save(post);
             hashTagRepository.save(hashTag);
             log.debug("HashTag with keyword of {} saved successfully", keyword);
             return hashTag;
         }
 
         HashTag hashTag = this.getByKeyword(keyword);
+
+        post.getHashTags().add(hashTag);
+        hashTag.getPosts().add(post);
+
+        postRepository.save(post);
         hashTagRepository.save(hashTag);
         log.debug("HashTag with keyword of {} saved successfully", keyword);
         return hashTag;

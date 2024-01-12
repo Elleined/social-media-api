@@ -30,6 +30,7 @@ public class HashTag {
             name = "keyword",
             nullable = false,
             updatable = false,
+            unique = true,
             length = 25
     )
     private String keyword;
