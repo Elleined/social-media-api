@@ -1,5 +1,6 @@
 package com.elleined.forumapi.service.hashtag;
 
+import com.elleined.forumapi.mapper.hashtag.HashtagMapper;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.repository.HashTagRepository;
@@ -18,6 +19,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class HashTagServiceImpl implements HashTagService {
     private final HashTagRepository hashTagRepository;
+    private final HashtagMapper hashtagMapper;
 
     @Override
     public Set<Post> searchPostByHashtagKeyword(String keyword) {
@@ -27,11 +29,7 @@ public class HashTagServiceImpl implements HashTagService {
     @Override
     public List<HashTag> save(Post post, List<String> keywords) {
         List<HashTag> hashTags = keywords.stream()
-                .map(keyword -> HashTag.builder()
-                        .createdAt(LocalDateTime.now())
-                        .post(post)
-                        .keyword(keyword)
-                        .build())
+                .map(keyword -> hashtagMapper.toEntity(keyword, post))
                 .toList();
         hashTagRepository.saveAll(hashTags);
         log.debug("Hashtags with keywords of {} saved successfully!", keywords);
