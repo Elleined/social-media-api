@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -19,22 +20,21 @@ public class HashTagServiceImpl implements HashTagService {
     private final HashTagRepository hashTagRepository;
 
     @Override
-    public List<HashTag> getAllByKeyword(String keyword) {
-        return null;
+    public Set<Post> searchPostByHashtagKeyword(String keyword) {
+        return hashTagRepository.searchPostByHashtagKeyword(keyword);
     }
 
     @Override
-    public Set<Post> searchByKeyword(String keyword) {
-        return null;
-    }
-
-    @Override
-    public HashTag save(Post post, String keyword) {
-        return null;
-    }
-
-    @Override
-    public List<HashTag> save(Post post, List<String> word) {
-        return null;
+    public List<HashTag> save(Post post, List<String> keywords) {
+        List<HashTag> hashTags = keywords.stream()
+                .map(keyword -> HashTag.builder()
+                        .createdAt(LocalDateTime.now())
+                        .post(post)
+                        .keyword(keyword)
+                        .build())
+                .toList();
+        hashTagRepository.saveAll(hashTags);
+        log.debug("Hashtags with keywords of {} saved successfully!", keywords);
+        return hashTags;
     }
 }
