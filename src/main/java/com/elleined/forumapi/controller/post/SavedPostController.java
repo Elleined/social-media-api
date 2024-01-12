@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{currentUserId}/posts/saved-posts")
+@RequestMapping("/users/{currentUserId}/posts/{postId}/saved-posts")
 public class SavedPostController {
     private final UserService userService;
 
@@ -29,7 +29,7 @@ public class SavedPostController {
                 .collect(Collectors.toSet());
     }
 
-    @PostMapping("/{postId}")
+    @PostMapping
     public PostDTO savedPost(@PathVariable("currentUserId") int currentUserId,
                              @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);
@@ -38,7 +38,7 @@ public class SavedPostController {
         return postMapper.toDTO(post);
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping
     public void unSavedPost(@PathVariable("currentUserId") int currentUserId,
                             @PathVariable("postId") int postId) {
 

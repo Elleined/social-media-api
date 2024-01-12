@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{currentUserId}/posts/shared-posts")
+@RequestMapping("/users/{currentUserId}/posts/{postId}/shared-posts")
 public class SharedPostController {
     private final UserService userService;
     private final PostService postService;
@@ -29,7 +29,7 @@ public class SharedPostController {
                 .collect(Collectors.toSet());
     }
 
-    @PostMapping("/{postId}")
+    @PostMapping
     public PostDTO sharePost(@PathVariable("currentUserId") int currentUserId,
                              @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);
@@ -39,7 +39,7 @@ public class SharedPostController {
         return postMapper.toDTO(sharedPost);
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping
     public ResponseEntity<PostDTO> unSharePost(@PathVariable("currentUserId") int currentUserId,
                                                @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);

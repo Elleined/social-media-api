@@ -15,10 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts")
+@RequestMapping("/users/{currentUserId}/posts/{postId}")
 public class PostPinCommentController {
     private final UserService userService;
 
@@ -30,14 +29,14 @@ public class PostPinCommentController {
     private final CommentMapper commentMapper;
 
 
-    @GetMapping("/{postId}/pinned-comment")
+    @GetMapping("/pinned-comment")
     public CommentDTO getPinnedComment(@PathVariable("postId") int postId) {
         Post post = postService.getById(postId);
         Comment pinnedComment = postPinCommentService.getPinned(post);
         return commentMapper.toDTO(pinnedComment);
     }
 
-    @PatchMapping("/{postId}/pin-comment/{commentId}")
+    @PatchMapping("/pin-comment/{commentId}")
     public PostDTO pinComment(@PathVariable("currentUserId") int currentUserId,
                               @PathVariable("postId") int postId,
                               @PathVariable("commentId") int commentId) {
