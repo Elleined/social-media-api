@@ -7,7 +7,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_hashtag")
+@Table(name = "tbl_post_hashtag")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +28,8 @@ public class HashTag {
     @Column(
             name = "keyword",
             nullable = false,
-            updatable = false
+            updatable = false,
+            length = 25
     )
     private String keyword;
 

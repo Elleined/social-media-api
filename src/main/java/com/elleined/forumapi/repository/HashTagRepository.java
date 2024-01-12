@@ -12,12 +12,18 @@ import java.util.Set;
 public interface HashTagRepository extends JpaRepository<HashTag, Integer> {
 
     @Query("""
+            SELECT h
+            FROM HashTag h
+            WHERE h.keyword LIKE CONCAT('%', :keyword, '%')
+            """)
+    Set<HashTag> searchHashTagByKeyword(@Param("keyword") String keyword);
+
+    @Query("""
             SELECT h.post
             FROM HashTag h
-            WHERE h.keyword
-            LIKE CONCAT('%', :keyword, '%')
+            WHERE h.keyword LIKE CONCAT('%', :keyword, '%')
             AND h.post.author <> :currentUser
             """)
-    Set<Post> searchPostByHashtagKeyword(@Param("currentUser") User currentUser,
+    Set<Post> getAllPostByHashTagKeyword(@Param("currentUser") User currentUser,
                                          @Param("keyword") String keyword);
 }

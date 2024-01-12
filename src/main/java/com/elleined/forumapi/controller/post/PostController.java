@@ -4,7 +4,6 @@ import com.elleined.forumapi.dto.PostDTO;
 import com.elleined.forumapi.mapper.PostMapper;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.hashtag.HashTagService;

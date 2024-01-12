@@ -6,7 +6,6 @@ import com.elleined.forumapi.exception.NotOwnedException;
 import com.elleined.forumapi.exception.ResourceNotFoundException;
 import com.elleined.forumapi.mapper.PostMapper;
 import com.elleined.forumapi.model.*;
-import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.PostRepository;
 import com.elleined.forumapi.repository.UserRepository;
