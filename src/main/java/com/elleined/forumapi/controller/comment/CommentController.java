@@ -58,16 +58,17 @@ public class CommentController {
 
     @PostMapping
     public CommentDTO save(@PathVariable("currentUserId") int currentUserId,
-                                  @PathVariable("postId") int postId,
-                                  @RequestParam("body") String body,
-                                  @RequestPart(required = false, value = "attachedPicture") MultipartFile attachedPicture,
-                                  @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
+                           @PathVariable("postId") int postId,
+                           @RequestParam("body") String body,
+                           @RequestPart(required = false, value = "attachedPicture") MultipartFile attachedPicture,
+                           @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
+                           @RequestParam(required = false, name = "keywords") Set<String> keywords) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
         Post post = postService.getById(postId);
 
-        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers);
+        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers, keywords);
         wsService.broadcast(comment);
         return commentMapper.toDTO(comment);
     }

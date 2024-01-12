@@ -61,15 +61,16 @@ public class ReplyController {
 
     @PostMapping
     public ReplyDTO save(@PathVariable("currentUserId") int currentUserId,
-                              @PathVariable("commentId") int commentId,
-                              @RequestParam("body") String body,
-                              @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
-                              @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
+                         @PathVariable("commentId") int commentId,
+                         @RequestParam("body") String body,
+                         @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
+                         @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
+                         @RequestParam(required = false, name = "keywords") Set<String> keywords) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
         Comment comment = commentService.getById(commentId);
-        Reply reply = replyService.save(currentUser, comment, body, attachedPicture, mentionedUsers);
+        Reply reply = replyService.save(currentUser, comment, body, attachedPicture, mentionedUsers, keywords);
         wsService.broadcast(reply);
         return replyMapper.toDTO(reply);
     }

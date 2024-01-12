@@ -6,6 +6,7 @@ import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.service.block.BlockService;
+import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.CommentMentionService;
 import com.elleined.forumapi.service.pin.PostPinCommentService;
 import com.elleined.forumapi.validator.StringValidator;
@@ -40,7 +41,14 @@ public class CommentService {
 
     private final CommentMentionService commentMentionService;
 
-    public Comment save(User currentUser, Post post, String body, MultipartFile attachedPicture, Set<User> mentionedUsers)
+    private final EntityHashTagService<Comment> commentHashTagService;
+
+    public Comment save(User currentUser,
+                        Post post,
+                        String body,
+                        MultipartFile attachedPicture,
+                        Set<User> mentionedUsers,
+                        Set<String> keywords)
             throws ResourceNotFoundException,
             ClosedCommentSectionException,
             BlockedException,
@@ -60,6 +68,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         if (mentionedUsers != null) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
+        if (keywords != null) commentHashTagService.saveAll(comment, keywords);
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
     }

@@ -5,6 +5,7 @@ import com.elleined.forumapi.mapper.ReplyMapper;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.service.block.BlockService;
+import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.ReplyMentionService;
 import com.elleined.forumapi.service.pin.CommentPinReplyService;
 import com.elleined.forumapi.validator.StringValidator;
@@ -37,7 +38,14 @@ public class ReplyService {
 
     private final ReplyMentionService replyMentionService;
 
-    public Reply save(User currentUser, Comment comment, String body, MultipartFile attachedPicture, Set<User> mentionedUsers) throws EmptyBodyException,
+    private final EntityHashTagService<Reply> replyHashTagService;
+
+    public Reply save(User currentUser,
+                      Comment comment,
+                      String body,
+                      MultipartFile attachedPicture,
+                      Set<User> mentionedUsers,
+                      Set<String> keywords) throws EmptyBodyException,
             ClosedCommentSectionException,
             ResourceNotFoundException,
             BlockedException, IOException {
@@ -55,6 +63,7 @@ public class ReplyService {
         replyRepository.save(reply);
 
         if (mentionedUsers != null) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);
+        if (keywords != null) replyHashTagService.saveAll(reply, keywords);
         log.debug("Reply with id of {} saved successfully!", reply.getId());
         return reply;
     }

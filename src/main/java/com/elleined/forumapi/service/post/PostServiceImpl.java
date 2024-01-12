@@ -10,7 +10,6 @@ import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.PostRepository;
 import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.hashtag.HashTagService;
 import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.PostMentionService;
 import com.elleined.forumapi.validator.StringValidator;

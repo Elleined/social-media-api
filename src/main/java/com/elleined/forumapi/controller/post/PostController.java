@@ -6,7 +6,6 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.UserService;
-import com.elleined.forumapi.service.hashtag.HashTagService;
 import com.elleined.forumapi.service.notification.post.reader.PostMentionNotificationReader;
 import com.elleined.forumapi.service.notification.post.reader.PostReactNotificationReader;
 import com.elleined.forumapi.service.post.PostService;
@@ -33,9 +32,6 @@ public class PostController {
     private final PostMentionNotificationReader postMentionNotificationReader;
 
     private final ModalTrackerService modalTrackerService;
-
-    private final HashTagService hashTagService;
-
 
     @GetMapping
     public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
