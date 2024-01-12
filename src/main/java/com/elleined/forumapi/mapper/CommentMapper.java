@@ -38,10 +38,11 @@ public abstract class CommentMapper {
             @Mapping(target = "upvotingUsers", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "replies", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "hashTags", expression = "java(new java.util.HashSet<>())"),
 
             // Optional
             @Mapping(target = "attachedPicture", expression = "java(picture)"),
-            @Mapping(target = "pinnedReply", expression = "java(null)")
+            @Mapping(target = "pinnedReply", expression = "java(null)"),
     })
     public abstract Comment toEntity(String body,
                                      @Context Post post,
@@ -63,7 +64,7 @@ public abstract class CommentMapper {
             @Mapping(target = "postBody", source = "comment.post.body"),
             @Mapping(target = "mentionedUsers", source = "comment.mentions"),
             @Mapping(target = "authorId", source = "comment.post.author.id"),
-            @Mapping(target = "pinnedReplyId", source = "comment.pinnedReply.id")
+            @Mapping(target = "pinnedReplyId", source = "comment.pinnedReply.id"),
     })
     public abstract CommentDTO toDTO(Comment comment);
 }

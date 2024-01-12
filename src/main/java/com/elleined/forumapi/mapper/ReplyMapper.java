@@ -32,6 +32,7 @@ public abstract class ReplyMapper {
             // Required list
             @Mapping(target = "mentions", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "hashTags", expression = "java(new java.util.HashSet<>())"),
 
             // Optional
             @Mapping(target = "attachedPicture", expression = "java(picture)"),
