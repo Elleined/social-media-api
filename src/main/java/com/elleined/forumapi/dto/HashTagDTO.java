@@ -11,7 +11,6 @@ import java.util.Set;
 public class HashTagDTO {
     private int id;
     private String keyword;
-    private LocalDateTime createdAt;
     private Set<Integer> connectedPosts;
 //    private Set<Integer> connectedComments;
 //    private Set<Integer> connectedReplies;

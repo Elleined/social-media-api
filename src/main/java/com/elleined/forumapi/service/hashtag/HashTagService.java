@@ -12,7 +12,8 @@ public interface HashTagService {
     Set<HashTag> getAll();
     Set<Post> getAllPostByHashTagKeyword(User currentUser, String keyword);
 
-    boolean isAlreadyExists(String keyword);
+    boolean notExist(String name);
+
     HashTag getByKeyword(String keyword);
 
 

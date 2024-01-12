@@ -25,9 +25,6 @@ public class HashTagServiceImpl implements HashTagService {
     private final HashTagRepository hashTagRepository;
     private final HashTagMapper hashtagMapper;
 
-    private final PostRepository postRepository;
-
-
     @Override
     public Set<HashTag> getAll() {
         return new HashSet<>(hashTagRepository.findAll());
@@ -42,11 +39,12 @@ public class HashTagServiceImpl implements HashTagService {
     }
 
     @Override
-    public boolean isAlreadyExists(String keyword) {
+    public boolean notExist(String keyword) {
         return hashTagRepository.findAll().stream()
                 .map(HashTag::getKeyword)
-                .anyMatch(keyword::equalsIgnoreCase);
+                .noneMatch(keyword::equalsIgnoreCase);
     }
+
 
     @Override
     public HashTag getByKeyword(String keyword) {
@@ -58,34 +56,23 @@ public class HashTagServiceImpl implements HashTagService {
 
     @Override
     public HashTag save(Post post, String keyword) {
-        if (this.isAlreadyExists(keyword)) {
-            HashTag hashTag = this.getByKeyword(keyword);
-
-            post.getHashTags().add(hashTag);
-            hashTag.getPosts().add(post);
-
-            postRepository.save(post);
+        if (this.notExist(keyword)) {
+            HashTag hashTag = hashtagMapper.toEntity(keyword, post);
             hashTagRepository.save(hashTag);
+            log.debug("HashTag with keyword of {} saved successfully", keyword);
             return hashTag;
         }
 
-        HashTag hashTag = hashtagMapper.toEntity(keyword, post);
-
-        post.getHashTags().add(hashTag);
-        hashTag.getPosts().add(post);
-
-        postRepository.save(post);
+        HashTag hashTag = this.getByKeyword(keyword);
         hashTagRepository.save(hashTag);
+        log.debug("HashTag with keyword of {} saved successfully", keyword);
         return hashTag;
     }
 
     @Override
     public List<HashTag> saveAll(Post post, Set<String> keywords) {
-        List<HashTag> hashTags = keywords.stream()
-                .map(keyword -> hashtagMapper.toEntity(keyword, post))
+        return keywords.stream()
+                .map(keyword -> this.save(post, keyword))
                 .toList();
-        hashTagRepository.saveAll(hashTags);
-        log.debug("Hashtags with keywords of {} saved successfully!", keywords);
-        return hashTags;
     }
 }

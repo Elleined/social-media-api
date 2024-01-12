@@ -18,8 +18,7 @@ public interface HashTagMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-
-            @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
+            
             @Mapping(target = "keyword", expression = "java(keyword)"),
             @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())")
     })

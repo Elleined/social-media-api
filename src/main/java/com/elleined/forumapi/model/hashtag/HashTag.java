@@ -34,13 +34,6 @@ public class HashTag {
     )
     private String keyword;
 
-    @Column(
-            name = "created_at",
-            nullable = false,
-            updatable = false
-    )
-    private LocalDateTime createdAt;
-
     @ManyToMany(mappedBy = "hashTags")
     private Set<Post> posts;
 }
