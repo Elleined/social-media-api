@@ -28,36 +28,6 @@ An API that supports social media functionality.
       // Execute code here
   });
   ```
-## For real time notification subscribe to this topics 
-   - for comment notification
-     ```
-       const commentNotificationTopic = "/notification/comments/${yourId}";
-     ```
-   - for reply notification
-     ```
-        const replyNotificationTopic = "/notification/replies/${yourId}";
-     ```
-   - for like notification
-     ```
-        const likeNotificationTopic = "/notification/likes/${yourId}";
-     ```
-   - for mention notification
-     ```
-        const mentionNotificationTopic = "/notification/mentions/${yourId}";
-     ```
-   - for friend request notification
-     ```
-        const friendRequestNotificationTopic = "/notification/friend-request/${yourId}";
-     ```
-   - sample code
-     ```
-     stompClient.subscribe(commentNotificationTopic, function (payloadToBeAutomaticallyReceive) {
-        const json = JSON.parse(payloadToBeAutomaticallyReceive.body); 
-        // Execute code here
-        // dto/notification folder contains the notification payloads
-        // Feel free to replication block of code to subscribe in all the notifications topic
-     });
-     ```
      
 # Features
 - Create, Edit, and Delete a Post with or wthout picture
@@ -78,10 +48,6 @@ An API that supports social media functionality.
 - Send, Accept, and Cancel friend request
 - Follow and Unfollow users
 - Web Socket for real time communication in comments and replies
-- Receive real-time notification for comment and reply
-- Receive real-time notification for mention in post, comment, and reply
-- Receive real-time notification for like in post, comment, and reply
-- Receive real-time notification for send and accept friend request
 
 # Technologies used
 - Spring boot
