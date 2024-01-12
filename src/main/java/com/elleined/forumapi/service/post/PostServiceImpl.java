@@ -11,6 +11,7 @@ import com.elleined.forumapi.repository.PostRepository;
 import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.hashtag.HashTagService;
+import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.PostMentionService;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class PostServiceImpl implements PostService {
 
     private final CommentRepository commentRepository;
 
-    private final HashTagService hashTagService;
+    private final EntityHashTagService<Post> postHashTagService;
 
     @Override
     public Post save(User currentUser,
@@ -56,7 +57,7 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
 
         if (mentionedUsers != null) postMentionService.mentionAll(currentUser, mentionedUsers, post);
-        if (keywords != null) hashTagService.saveAll(post, keywords);
+        if (keywords != null) postHashTagService.saveAll(post, keywords);
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;
     }
