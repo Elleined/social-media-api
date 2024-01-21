@@ -61,6 +61,6 @@ public class NoteServiceImpl implements NoteService {
                 .toList();
 
         noteRepository.deleteAll(notes);
-        log.debug("Expired note with ids of {} deleted successfully", notes.stream().map(Note::getId).toList());
+        log.trace("Expired note with ids of {} deleted successfully", notes.stream().map(Note::getId).toList());
     }
 }
