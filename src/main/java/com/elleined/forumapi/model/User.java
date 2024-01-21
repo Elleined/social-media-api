@@ -4,7 +4,7 @@ import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
-import com.elleined.forumapi.model.notes.Note;
+import com.elleined.forumapi.model.note.Note;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.react.ReplyReact;

@@ -1,4 +1,4 @@
-package com.elleined.forumapi.model.notes;
+package com.elleined.forumapi.model.note;
 
 import com.elleined.forumapi.model.User;
 import jakarta.persistence.*;
@@ -42,7 +42,8 @@ public class Note {
     @JoinColumn(
             name = "user_id",
             referencedColumnName = "user_id",
-            nullable = false
+            nullable = false,
+            unique = true
     )
     private User user;
 }
