@@ -59,5 +59,8 @@ public class NoteServiceImpl implements NoteService {
                             LocalDateTime.now().equals(noteExpiration);
                 })
                 .toList();
+
+        noteRepository.deleteAll(notes);
+        log.debug("Expired note with ids of {} deleted successfully", notes.stream().map(Note::getId).toList());
     }
 }
