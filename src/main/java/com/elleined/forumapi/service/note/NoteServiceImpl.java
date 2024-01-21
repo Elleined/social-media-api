@@ -1,6 +1,6 @@
 package com.elleined.forumapi.service.note;
 
-import com.elleined.forumapi.mapper.NoteMapper;
+import com.elleined.forumapi.mapper.note.NoteMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.note.Note;
 import com.elleined.forumapi.repository.NoteRepository;

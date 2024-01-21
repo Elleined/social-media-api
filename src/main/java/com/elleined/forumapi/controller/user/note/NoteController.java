@@ -1,7 +1,7 @@
 package com.elleined.forumapi.controller.user.note;
 
 import com.elleined.forumapi.dto.NoteDTO;
-import com.elleined.forumapi.mapper.NoteMapper;
+import com.elleined.forumapi.mapper.note.NoteMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.note.Note;
 import com.elleined.forumapi.service.UserService;
@@ -25,7 +25,8 @@ public class NoteController {
                         @RequestParam("thought") String thought) {
 
         User currentUser = userService.getById(currentUserId);
-        return noteService.save(currentUser, thought);
+        Note note = noteService.save(currentUser, thought);
+        return noteMapper.toDTO(note);
     }
 
     public void update(@PathVariable("currentUserId") int currentUserId,
@@ -42,6 +43,7 @@ public class NoteController {
 
     public NoteDTO getNote(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return noteService.getNote(currentUser);
+        Note note = noteService.getNote(currentUser);
+        return noteMapper.toDTO(note);
     }
 }
