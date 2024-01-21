@@ -1,5 +1,6 @@
 package com.elleined.forumapi.controller.user.note;
 
+import com.elleined.forumapi.dto.NoteDTO;
 import com.elleined.forumapi.mapper.NoteMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.note.Note;
@@ -20,8 +21,8 @@ public class NoteController {
     private final NoteService noteService;
     private final NoteMapper noteMapper;
 
-    public Note save(@PathVariable("currentUserId") int currentUserId,
-                     @RequestParam("thought") String thought) {
+    public NoteDTO save(@PathVariable("currentUserId") int currentUserId,
+                        @RequestParam("thought") String thought) {
 
         User currentUser = userService.getById(currentUserId);
         return noteService.save(currentUser, thought);
@@ -39,7 +40,7 @@ public class NoteController {
         noteService.delete(currentUser);
     }
 
-    public Note getNote(@PathVariable("currentUserId") int currentUserId) {
+    public NoteDTO getNote(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         return noteService.getNote(currentUser);
     }
