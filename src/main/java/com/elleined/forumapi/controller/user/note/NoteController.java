@@ -7,13 +7,10 @@ import com.elleined.forumapi.model.note.Note;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.note.NoteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users/{currentUserId}/notes")
+@RequestMapping("/users/{currentUserId}/note")
 @RequiredArgsConstructor
 public class NoteController {
     private final UserService userService;
@@ -21,6 +18,7 @@ public class NoteController {
     private final NoteService noteService;
     private final NoteMapper noteMapper;
 
+    @PostMapping
     public NoteDTO save(@PathVariable("currentUserId") int currentUserId,
                         @RequestParam("thought") String thought) {
 
@@ -29,6 +27,7 @@ public class NoteController {
         return noteMapper.toDTO(note);
     }
 
+    @PatchMapping
     public void update(@PathVariable("currentUserId") int currentUserId,
                        @RequestParam("newThought") String newThought) {
 
@@ -36,11 +35,13 @@ public class NoteController {
         noteService.update(currentUser, newThought);
     }
 
+    @DeleteMapping
     public void delete(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         noteService.delete(currentUser);
     }
 
+    @GetMapping
     public NoteDTO getNote(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         Note note = noteService.getNote(currentUser);
