@@ -8,4 +8,6 @@ public interface NoteService {
     void update(User currentUser, String newThought);
     void delete(User currentUser);
     Note getNote(User currentUser);
+
+    void deleteExpiredNotes();
 }

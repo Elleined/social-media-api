@@ -1,5 +1,6 @@
 package com.elleined.forumapi.service.note;
 
+import com.elleined.forumapi.mapper.NoteMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.note.Note;
 import com.elleined.forumapi.repository.NoteRepository;
@@ -14,10 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService {
     private final NoteRepository noteRepository;
+    private final NoteMapper noteMapper;
 
     @Override
     public Note save(User currentUser, String thought) {
-        return null;
+
     }
 
     @Override
@@ -33,5 +35,10 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public Note getNote(User currentUser) {
         return null;
+    }
+
+    @Override
+    public void deleteExpiredNotes() {
+
     }
 }
