@@ -45,6 +45,7 @@ An API that supports social media functionality.
 - Block another user
 - Save and Unsave post
 - Share and Unshare post
+- Create, update, and delete note
 - Send, Accept, and Cancel friend request
 - Follow and Unfollow users
 
