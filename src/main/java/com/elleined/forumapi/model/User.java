@@ -4,6 +4,7 @@ import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.model.mention.ReplyMention;
+import com.elleined.forumapi.model.notes.Note;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.react.ReplyReact;
@@ -200,6 +201,11 @@ public class User {
     @OneToMany(mappedBy = "respondent")
     @Setter(AccessLevel.NONE)
     private Set<ReplyReact> createdReplyReactions;
+
+    // user id reference is in tbl user note
+    @OneToOne(mappedBy = "user")
+    @Setter(AccessLevel.NONE)
+    private Note note;
 
     public boolean notOwned(Post post) {
         return this.getPosts().stream().noneMatch(post::equals);
