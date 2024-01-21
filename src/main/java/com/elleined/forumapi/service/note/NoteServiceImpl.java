@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +25,7 @@ public class NoteServiceImpl implements NoteService {
         Note note = noteMapper.toEntity(currentUser, thought);
         noteRepository.save(note);
         log.debug("Note with id of {} saved successfully!", note.getId());
+        return note;
     }
 
     @Override
