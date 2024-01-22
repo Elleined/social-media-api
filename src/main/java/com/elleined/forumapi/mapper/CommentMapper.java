@@ -2,7 +2,7 @@ package com.elleined.forumapi.mapper;
 
 import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.model.*;
-import com.elleined.forumapi.service.CommentService;
+import com.elleined.forumapi.service.comment.CommentService;
 import com.elleined.forumapi.service.Formatter;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

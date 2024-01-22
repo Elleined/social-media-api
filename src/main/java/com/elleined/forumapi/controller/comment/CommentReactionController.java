@@ -6,7 +6,7 @@ import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.model.react.Emoji;
-import com.elleined.forumapi.service.CommentService;
+import com.elleined.forumapi.service.comment.CommentService;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.emoji.EmojiService;
 import com.elleined.forumapi.service.react.ReactionService;

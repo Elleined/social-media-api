@@ -1,9 +1,10 @@
-package com.elleined.forumapi.service;
+package com.elleined.forumapi.service.reply;
 
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.mapper.ReplyMapper;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.repository.ReplyRepository;
+import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.ReplyMentionService;
@@ -25,7 +26,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class ReplyService {
+public class ReplyServiceImpl implements ReplyService {
 
     private final ReplyRepository replyRepository;
     private final ReplyMapper replyMapper;
@@ -40,6 +41,7 @@ public class ReplyService {
 
     private final EntityHashTagService<Reply> replyHashTagService;
 
+    @Override
     public Reply save(User currentUser,
                       Comment comment,
                       String body,
@@ -68,6 +70,7 @@ public class ReplyService {
         return reply;
     }
 
+    @Override
     public void delete(User currentUser, Comment comment, Reply reply) throws NotOwnedException {
         if (comment.doesNotHave(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() +  " does not have reply with id of " + reply.getId());
         if (currentUser.notOwned(reply)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
@@ -78,6 +81,7 @@ public class ReplyService {
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 
+    @Override
     public Reply updateBody(User currentUser, Reply reply, String newReplyBody)
             throws ResourceNotFoundException,
             NotOwnedException {
@@ -91,6 +95,7 @@ public class ReplyService {
         return reply;
     }
 
+    @Override
     public List<Reply> getAllByComment(User currentUser, Comment comment) throws ResourceNotFoundException {
         if (comment.isInactive()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists anymore!");
 
@@ -106,6 +111,7 @@ public class ReplyService {
         return replies;
     }
 
+    @Override
     public Reply getById(int replyId) throws ResourceNotFoundException {
         return replyRepository.findById(replyId).orElseThrow(() -> new ResourceNotFoundException("Reply with id of " + replyId + " does not exists!"));
     }

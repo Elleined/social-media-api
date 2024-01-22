@@ -1,10 +1,11 @@
-package com.elleined.forumapi.service;
+package com.elleined.forumapi.service.comment;
 
 import com.elleined.forumapi.exception.*;
 import com.elleined.forumapi.mapper.CommentMapper;
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
+import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.CommentMentionService;
@@ -27,7 +28,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class CommentService {
+public class CommentServiceImpl implements CommentService {
     private final BlockService blockService;
 
     private final ModalTrackerService modalTrackerService;
@@ -43,6 +44,7 @@ public class CommentService {
 
     private final EntityHashTagService<Comment> commentHashTagService;
 
+    @Override
     public Comment save(User currentUser,
                         Post post,
                         String body,
@@ -73,6 +75,7 @@ public class CommentService {
         return comment;
     }
 
+    @Override
     public void delete(User currentUser, Post post, Comment comment) {
         if (post.doesNotHave(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " does not have comment with id of " + comment.getId());
         if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
@@ -88,6 +91,7 @@ public class CommentService {
         log.debug("Comment with id of {} are now inactive!", comment.getId());
     }
 
+    @Override
     public List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException {
         Comment pinnedComment = post.getPinnedComment();
         List<Comment> comments = new ArrayList<>(post.getComments()
@@ -102,10 +106,12 @@ public class CommentService {
         return comments;
     }
 
+    @Override
     public Comment getById(int commentId) throws ResourceNotFoundException {
         return commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment with id of " + commentId + " does not exists!"));
     }
 
+    @Override
     public Comment updateBody(User currentUser, Post post, Comment comment, String newBody)
             throws ResourceNotFoundException,
             NotOwnedException {
@@ -120,6 +126,7 @@ public class CommentService {
         return comment;
     }
 
+    @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalReplies(Comment comment) {
         return (int) comment.getReplies().stream()

@@ -4,7 +4,7 @@ import com.elleined.forumapi.dto.CommentDTO;
 import com.elleined.forumapi.mapper.CommentMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.service.CommentService;
+import com.elleined.forumapi.service.comment.CommentService;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.upvote.CommentUpvoteService;
 import lombok.RequiredArgsConstructor;
