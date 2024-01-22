@@ -33,16 +33,31 @@ public class User {
     )
     private int id;
 
-    @Column(name = "name")
+    @Column(
+            name = "name",
+            nullable = false
+    )
     private String name;
 
-    @Column(name = "email_address", unique = true)
+    @Column(
+            name = "email_address",
+            nullable = false,
+            unique = true
+    )
     private String email;
 
-    @Column(name = "picture", columnDefinition = "MEDIUMTEXT")
+    @Column(
+            name = "picture",
+            columnDefinition = "MEDIUMTEXT"
+    )
     private String picture;
 
-    @Column(name = "uuid")
+    @Column(
+            name = "uuid",
+            nullable = false,
+            updatable = false,
+            unique = true
+    )
     private String UUID;
 
     @ManyToMany

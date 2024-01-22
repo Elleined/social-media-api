@@ -43,6 +43,7 @@ public class Note {
             name = "user_id",
             referencedColumnName = "user_id",
             nullable = false,
+            updatable = false,
             unique = true
     )
     private User user;

@@ -32,33 +32,50 @@ public class Comment {
     @Column(name = "body", nullable = false)
     private String body;
 
-    @Column(name = "date_created")
+    @Column(
+            name = "date_created",
+            updatable = false,
+            nullable = false
+    )
     private LocalDateTime dateCreated;
 
-    @Column(name = "status")
+    @Column(
+            name = "status",
+            nullable = false
+    )
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "attached_picture", columnDefinition = "MEDIUMTEXT")
+    @Column(
+            name = "attached_picture",
+            columnDefinition = "MEDIUMTEXT"
+    )
     private String attachedPicture;
 
-    @Column(name = "notification_status")
+    @Column(
+            name = "notification_status",
+            nullable = false
+    )
     @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "post_id",
             referencedColumnName = "post_id",
-            foreignKey = @ForeignKey(name = "FK_post_id")
+            foreignKey = @ForeignKey(name = "FK_post_id"),
+            nullable = false,
+            updatable = false
     )
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "commenter_id",
             referencedColumnName = "user_id",
-            foreignKey = @ForeignKey(name = "FK_commenter_id")
+            foreignKey = @ForeignKey(name = "FK_commenter_id"),
+            nullable = false,
+            updatable = false
     )
     private User commenter;
 

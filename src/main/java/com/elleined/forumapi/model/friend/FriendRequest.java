@@ -37,7 +37,8 @@ public class FriendRequest {
     @JoinColumn(
             name = "requested_user_id",
             referencedColumnName = "user_id",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private User requestedUser;
 
@@ -45,7 +46,8 @@ public class FriendRequest {
     @JoinColumn(
             name = "requesting_user_id",
             referencedColumnName = "user_id",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private User requestingUser;
 

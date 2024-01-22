@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "tbl_comment_emoji")
 @NoArgsConstructor
@@ -25,7 +26,6 @@ public class CommentReact extends React {
             nullable = false,
             updatable = false
     )
-    @Getter
     private Comment comment;
 
     @Builder(builderMethodName = "commentReactBuilder")

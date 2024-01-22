@@ -40,7 +40,8 @@ public abstract class React {
 
     @Column(
             name = "created_at",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private LocalDateTime createdAt;
 

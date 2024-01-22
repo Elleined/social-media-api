@@ -23,7 +23,8 @@ public final class CommentMention extends Mention {
     @JoinColumn(
             name = "comment_id",
             referencedColumnName = "comment_id",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private Comment comment;
 

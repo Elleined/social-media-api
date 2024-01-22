@@ -29,36 +29,56 @@ public class Reply {
     )
     private int id;
 
-    @Column(name = "body", nullable = false)
+    @Column(
+            name = "body",
+            nullable = false
+    )
     private String body;
 
-    @Column(name = "date_created")
+    @Column(
+            name = "date_created",
+            nullable = false,
+            updatable = false
+    )
     private LocalDateTime dateCreated;
 
-    @Column(name = "status")
+    @Column(
+            name = "status",
+            nullable = false
+    )
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "notification_status")
+    @Column(
+            name = "notification_status",
+            nullable = false
+    )
     @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
 
-    @Column(name = "attached_picture", columnDefinition = "MEDIUMTEXT")
+    @Column(
+            name = "attached_picture",
+            columnDefinition = "MEDIUMTEXT"
+    )
     private String attachedPicture;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "comment_id",
             referencedColumnName = "comment_id",
-            foreignKey = @ForeignKey(name = "FK_comment_id")
+            foreignKey = @ForeignKey(name = "FK_comment_id"),
+            nullable = false,
+            updatable = false
     )
     private Comment comment;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "replier_id",
             referencedColumnName = "user_id",
-            foreignKey = @ForeignKey(name = "FK_replier_id")
+            foreignKey = @ForeignKey(name = "FK_replier_id"),
+            nullable = false,
+            updatable = false
     )
     private User replier;
 
@@ -70,7 +90,6 @@ public class Reply {
     @OneToMany(mappedBy = "reply")
     @Setter(AccessLevel.NONE)
     private List<ReplyReact> reactions;
-
 
     @ManyToMany
     @JoinTable(

@@ -21,11 +21,18 @@ public class ModalTracker {
     )
     private int receiverId;
 
-    @Column(name = "modal_type")
+    @Column(
+            name = "modal_type",
+            nullable = false
+    )
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @Column(name = "associated_id_opened")
+    @Column(
+            name = "associated_id_opened",
+            nullable = false,
+            updatable = false
+    )
     private int associatedTypeIdOpened;
 
     public enum Type {

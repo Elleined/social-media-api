@@ -23,7 +23,8 @@ public final class ReplyMention extends Mention {
     @JoinColumn(
             name = "reply_id",
             referencedColumnName = "reply_id",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private Reply reply;
 

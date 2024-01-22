@@ -23,7 +23,8 @@ public final class PostMention extends Mention {
     @JoinColumn(
             name = "post_id",
             referencedColumnName = "post_id",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private Post post;
 

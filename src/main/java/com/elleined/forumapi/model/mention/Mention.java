@@ -48,7 +48,8 @@ public abstract class Mention {
     @JoinColumn(
             name = "mentioned_user",
             referencedColumnName = "user_id",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private User mentionedUser;
 
@@ -63,7 +64,8 @@ public abstract class Mention {
     @JoinColumn(
             name = "mentioning_user",
             referencedColumnName = "user_id",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private User mentioningUser;
 

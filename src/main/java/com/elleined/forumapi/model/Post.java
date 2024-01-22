@@ -29,20 +29,36 @@ public class Post {
     )
     private int id;
 
-    @Column(name = "body", nullable = false)
+    @Column(
+            name = "body",
+            nullable = false
+    )
     private String body;
 
-    @Column(name = "date_created")
+    @Column(
+            name = "date_created",
+            nullable = false,
+            updatable = false
+    )
     private LocalDateTime dateCreated;
 
-    @Column(name = "status")
+    @Column(
+            name = "status",
+            nullable = false
+    )
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "attached_picture", columnDefinition = "MEDIUMTEXT")
+    @Column(
+            name = "attached_picture",
+            columnDefinition = "MEDIUMTEXT"
+    )
     private String attachedPicture;
 
-    @Column(name = "comment_section_status")
+    @Column(
+            name = "comment_section_status",
+            nullable = false
+    )
     @Enumerated(EnumType.STRING)
     private CommentSectionStatus commentSectionStatus;
 
@@ -59,11 +75,13 @@ public class Post {
     )
     private Set<HashTag> hashTags;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "author_id",
             referencedColumnName = "user_id",
-            foreignKey = @ForeignKey(name = "FK_author_id")
+            foreignKey = @ForeignKey(name = "FK_author_id"),
+            nullable = false,
+            updatable = false
     )
     private User author;
 
