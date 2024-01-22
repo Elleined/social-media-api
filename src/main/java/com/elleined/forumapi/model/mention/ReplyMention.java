@@ -13,17 +13,18 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "tbl_reply_mention")
 @NoArgsConstructor
 public final class ReplyMention extends Mention {
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "reply_id",
-            referencedColumnName = "reply_id"
+            referencedColumnName = "reply_id",
+            nullable = false
     )
-    @Getter
     private Reply reply;
 
     @Builder(builderMethodName = "replyMentionBuilder")

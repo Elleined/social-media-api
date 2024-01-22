@@ -13,21 +13,21 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "tbl_post_mention")
 @NoArgsConstructor
 public final class PostMention extends Mention {
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "post_id",
-            referencedColumnName = "post_id"
+            referencedColumnName = "post_id",
+            nullable = false
     )
-    @Getter
     private Post post;
 
     @Builder(builderMethodName = "postMentionBuilder")
-
     public PostMention(int id, LocalDateTime createdAt, User mentionedUser, NotificationStatus notificationStatus, User mentioningUser, Post post) {
         super(id, createdAt, mentionedUser, notificationStatus, mentioningUser);
         this.post = post;

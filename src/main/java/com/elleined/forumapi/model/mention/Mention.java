@@ -37,24 +37,33 @@ public abstract class Mention {
     )
     private int id;
 
-    @Column(name = "created_at")
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false
+    )
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "mentioned_user",
-            referencedColumnName = "user_id"
+            referencedColumnName = "user_id",
+            nullable = false
     )
     private User mentionedUser;
 
-    @Column(name = "notification_status")
+    @Column(
+            name = "notification_status",
+            nullable = false
+    )
     @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "mentioning_user",
-            referencedColumnName = "user_id"
+            referencedColumnName = "user_id",
+            nullable = false
     )
     private User mentioningUser;
 

@@ -19,15 +19,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public final class CommentMention extends Mention {
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "comment_id",
-            referencedColumnName = "comment_id"
+            referencedColumnName = "comment_id",
+            nullable = false
     )
     private Comment comment;
 
     @Builder(builderMethodName = "commentMentionBuilder")
-
     public CommentMention(int id, LocalDateTime createdAt, User mentionedUser, NotificationStatus notificationStatus, User mentioningUser, Comment comment) {
         super(id, createdAt, mentionedUser, notificationStatus, mentioningUser);
         this.comment = comment;
