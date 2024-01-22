@@ -266,4 +266,8 @@ public class User {
                 .map(FriendRequest::getRequestedUser)
                 .anyMatch(this::equals);
     }
+
+    public boolean hasNote() {
+        return this.getNote() != null;
+    }
 }

@@ -7,6 +7,7 @@ import com.elleined.forumapi.model.note.Note;
 import com.elleined.forumapi.service.UserService;
 import com.elleined.forumapi.service.note.NoteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,17 +29,19 @@ public class NoteController {
     }
 
     @PatchMapping
-    public void update(@PathVariable("currentUserId") int currentUserId,
+    public NoteDTO update(@PathVariable("currentUserId") int currentUserId,
                        @RequestParam("newThought") String newThought) {
 
         User currentUser = userService.getById(currentUserId);
-        noteService.update(currentUser, newThought);
+        Note note = noteService.update(currentUser, newThought);
+        return noteMapper.toDTO(note);
     }
 
     @DeleteMapping
-    public void delete(@PathVariable("currentUserId") int currentUserId) {
+    public ResponseEntity<Note> delete(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         noteService.delete(currentUser);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

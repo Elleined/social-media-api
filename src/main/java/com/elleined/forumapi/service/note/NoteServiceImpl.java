@@ -1,5 +1,6 @@
 package com.elleined.forumapi.service.note;
 
+import com.elleined.forumapi.exception.NoteException;
 import com.elleined.forumapi.mapper.note.NoteMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.note.Note;
@@ -21,7 +22,8 @@ public class NoteServiceImpl implements NoteService {
     private final NoteMapper noteMapper;
 
     @Override
-    public Note save(User currentUser, String thought) {
+    public Note save(User currentUser, String thought) throws NoteException {
+        if (currentUser.hasNote()) throw new NoteException("Creating note failed! because you already have note existing!");
         Note note = noteMapper.toEntity(currentUser, thought);
         noteRepository.save(note);
         log.debug("Note with id of {} saved successfully!", note.getId());
@@ -29,16 +31,19 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void update(User currentUser, String newThought) {
+    public Note update(User currentUser, String newThought) {
         Note note = currentUser.getNote();
+        if (!currentUser.hasNote()) throw new NoteException("Updating note failed! because current user has no note");
         note.setThought(newThought);
         noteRepository.save(note);
         log.debug("Note with id of {} updated with new thought of {}", note.getId(), newThought);
+        return note;
     }
 
     @Override
     public void delete(User currentUser) {
         Note note = currentUser.getNote();
+        if (!currentUser.hasNote()) throw new NoteException("Deleting note failed! because current user has no note");
         noteRepository.delete(note);
         log.debug("Note with id of {} deleted successfully", note.getId());
     }
