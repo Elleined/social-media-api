@@ -13,7 +13,12 @@ import lombok.*;
 public class ModalTracker {
 
     @Id
-    @Column(name = "receiver_user_id")
+    @Column(
+            name = "receiver_user_id",
+            unique = true,
+            nullable = false,
+            updatable = false
+    )
     private int receiverId;
 
     @Column(name = "modal_type")

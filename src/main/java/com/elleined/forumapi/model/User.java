@@ -25,7 +25,12 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(
+            name = "user_id",
+            unique = true,
+            nullable = false,
+            updatable = false
+    )
     private int id;
 
     @Column(name = "name")

@@ -21,9 +21,9 @@ public class HashTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name = "id",
+            unique = true,
             nullable = false,
-            updatable = false,
-            unique = true
+            updatable = false
     )
     private int id;
 

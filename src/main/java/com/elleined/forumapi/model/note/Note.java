@@ -19,8 +19,8 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name = "note_id",
-            nullable = false,
             unique = true,
+            nullable = false,
             updatable = false
     )
     private  int id;

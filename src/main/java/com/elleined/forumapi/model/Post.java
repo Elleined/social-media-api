@@ -21,7 +21,12 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column(
+            name = "post_id",
+            unique = true,
+            nullable = false,
+            updatable = false
+    )
     private int id;
 
     @Column(name = "body", nullable = false)

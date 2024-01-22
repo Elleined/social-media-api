@@ -21,7 +21,12 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @Column(
+            name = "comment_id",
+            unique = true,
+            nullable = false,
+            updatable = false
+    )
     private int id;
 
     @Column(name = "body", nullable = false)

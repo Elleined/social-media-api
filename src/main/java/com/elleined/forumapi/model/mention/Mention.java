@@ -29,7 +29,12 @@ public abstract class Mention {
             name = "autoIncrement",
             sequenceName = "autoIncrement"
     )
-    @Column(name = "mention_id")
+    @Column(
+            name = "mention_id",
+            unique = true,
+            nullable = false,
+            updatable = false
+    )
     private int id;
 
     @Column(name = "created_at")

@@ -21,7 +21,12 @@ public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reply_id")
+    @Column(
+            name = "reply_id",
+            unique = true,
+            nullable = false,
+            updatable = false
+    )
     private int id;
 
     @Column(name = "body", nullable = false)

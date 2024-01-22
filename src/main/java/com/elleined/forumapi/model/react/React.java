@@ -32,8 +32,8 @@ public abstract class React {
     )
     @Column(
             name = "id",
-            nullable = false,
             unique = true,
+            nullable = false,
             updatable = false
     )
     private int id;
