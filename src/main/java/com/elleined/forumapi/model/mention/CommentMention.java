@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "tbl_comment_mention")
 @NoArgsConstructor
-public final class CommentMention extends Mention {
+public class CommentMention extends Mention {
 
     @ManyToOne(optional = false)
     @JoinColumn(
