@@ -10,9 +10,12 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "tbl_reply_emoji")
 @NoArgsConstructor
@@ -25,7 +28,6 @@ public class ReplyReact extends React {
             nullable = false,
             updatable = false
     )
-    @Getter
     private Reply reply;
 
     @Builder(builderMethodName = "replyReactBuilder")
