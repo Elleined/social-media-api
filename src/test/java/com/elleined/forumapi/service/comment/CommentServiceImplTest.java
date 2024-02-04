@@ -18,12 +18,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -109,14 +106,46 @@ class CommentServiceImplTest {
         // Expected and Actual Value
 
         // Mock Data
+        User currentUser = spy(User.class);
+
+        Comment comment = new Comment();
+        List<Reply> replies = Arrays.asList(
+                Reply.builder()
+                        .status(Status.ACTIVE)
+                        .build(),
+                Reply.builder()
+                        .status(Status.ACTIVE)
+                        .build()
+        );
+        comment.setStatus(Status.ACTIVE);
+        comment.setReplies(replies);
+
+        Post post = spy(Post.class);
+        post.setPinnedComment(comment);
 
         // Stubbing methods
+        doReturn(false).when(post).doesNotHave(any(Comment.class));
+        doReturn(false).when(currentUser).notOwned(any(Comment.class));
+        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
+        doAnswer(answer -> {
+            post.setPinnedComment(null);
+            return post;
+        }).when(postPinCommentService).unpin(any(Comment.class));
+        when(replyRepository.saveAll(anyList())).thenReturn(replies);
 
         // Calling the method
+        assertDoesNotThrow(() -> commentService.delete(currentUser, post, comment));
 
         // Assertions
+        assertEquals(Status.INACTIVE, comment.getStatus());
+        assertNull(post.getPinnedComment());
+        assertTrue(comment.isInactive());
+        assertTrue(comment.getReplies().stream().allMatch(Reply::isInactive));
 
         // Behavior Verifications
+        verify(commentRepository).save(any(Comment.class));
+        verify(postPinCommentService).unpin(any(Comment.class));
+        verify(replyRepository).saveAll(anyList());
     }
 
     @Test

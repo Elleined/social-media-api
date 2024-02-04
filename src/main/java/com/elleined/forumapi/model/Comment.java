@@ -101,17 +101,14 @@ public class Comment {
 
     // comment id reference is in reply table
     @OneToMany(mappedBy = "comment")
-    @Setter(AccessLevel.NONE)
     private List<Reply> replies;
 
     // comment id refernce is in tbl mention comment
     @OneToMany(mappedBy = "comment")
-    @Setter(AccessLevel.NONE)
     private Set<CommentMention> mentions;
 
     // comment id refernce is in tbl comment emoji
     @OneToMany(mappedBy = "comment")
-    @Setter(AccessLevel.NONE)
     private List<CommentReact> reactions;
 
     @ManyToMany(mappedBy = "upvotedComments")
