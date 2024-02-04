@@ -1,7 +1,6 @@
 package com.elleined.forumapi.validator;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,12 +16,13 @@ class StringValidatorTest {
         // Expected and Actual Value
 
         // Mock Data
+        StringValidator stringValidator = new Validator();
 
         // Stubbing methods
 
         // Calling the method
         // Assertions
-        assertTrue(StringValidator.isNotValidBody("   "));
+        assertTrue(stringValidator.isNotValid("   "));
 
         // Behavior Verifications
     }
@@ -33,12 +33,13 @@ class StringValidatorTest {
         // Expected and Actual Value
 
         // Mock Data
+        StringValidator stringValidator = new Validator();
 
         // Stubbing methods
 
         // Calling the method
         // Assertions
-        assertTrue(StringValidator.isNotValidBody(""));
+        assertTrue(stringValidator.isNotValid(""));
 
         // Behavior Verifications
     }
@@ -49,12 +50,13 @@ class StringValidatorTest {
         // Expected and Actual Value
 
         // Mock Data
+        StringValidator stringValidator = new Validator();
 
         // Stubbing methods
 
         // Calling the method
         // Assertions
-        assertTrue(StringValidator.isNotValidBody(null));
+        assertTrue(stringValidator.isNotValid(null));
 
         // Behavior Verifications
     }

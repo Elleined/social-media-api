@@ -12,6 +12,8 @@ import com.elleined.forumapi.service.mention.CommentMentionService;
 import com.elleined.forumapi.service.pin.PostPinCommentService;
 import com.elleined.forumapi.validator.CollectionValidator;
 import com.elleined.forumapi.validator.StringValidator;
+import com.elleined.forumapi.validator.Validator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,8 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentHashTagService commentHashTagService;
 
+    private final Validator validator;
+
     @Override
     public Comment save(User currentUser,
                         Post post,
@@ -58,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
             EmptyBodyException,
             IOException {
 
-        if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
+        if (validator.isNotValid(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
         if (post.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot comment because author already closed the comment section for this post!");
         if (post.isInactive()) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
@@ -69,8 +73,8 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentMapper.toEntity(body, post, currentUser, picture, status);
         commentRepository.save(comment);
 
-        if (CollectionValidator.isValid(mentionedUsers)) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
-        if (CollectionValidator.isValid(keywords)) commentHashTagService.saveAll(comment, keywords);
+        if (validator.isValid(mentionedUsers)) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
+        if (validator.isValid(keywords)) commentHashTagService.saveAll(comment, keywords);
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
     }

@@ -14,6 +14,7 @@ import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.PostMentionService;
 import com.elleined.forumapi.validator.CollectionValidator;
 import com.elleined.forumapi.validator.StringValidator;
+import com.elleined.forumapi.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,8 @@ public class PostServiceImpl implements PostService {
 
     private final EntityHashTagService<Post> postHashTagService;
 
+    private final Validator validator;
+
     @Override
     public Post save(User currentUser,
                      String body,
@@ -49,15 +52,15 @@ public class PostServiceImpl implements PostService {
                      Set<User> mentionedUsers,
                      Set<String> keywords) throws EmptyBodyException, BlockedException, ResourceNotFoundException, IOException {
 
-        if (StringValidator.isNotValidBody(body))
+        if (validator.isNotValid(body))
             throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         Post post = postMapper.toEntity(body, currentUser, picture);
         postRepository.save(post);
 
-        if (CollectionValidator.isValid(mentionedUsers)) postMentionService.mentionAll(currentUser, mentionedUsers, post);
-        if (CollectionValidator.isValid(keywords)) postHashTagService.saveAll(post, keywords);
+        if (validator.isValid(mentionedUsers)) postMentionService.mentionAll(currentUser, mentionedUsers, post);
+        if (validator.isValid(keywords)) postHashTagService.saveAll(post, keywords);
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;
     }

@@ -17,6 +17,7 @@ class CollectionValidatorTest {
     @Test
     void isValid() {
         // Expected and Actual Value
+        CollectionValidator collectionValidator = new Validator();
 
         // Mock Data
         Set<String> setString = new HashSet<>();
@@ -28,8 +29,8 @@ class CollectionValidatorTest {
 
         // Calling the method
         // Assertions
-        assertTrue(CollectionValidator.isValid(setString));
-        assertTrue(CollectionValidator.isValid(listString));
+        assertTrue(collectionValidator.isValid(setString));
+        assertTrue(collectionValidator.isValid(listString));
 
         // Behavior Verifications
     }
@@ -37,6 +38,7 @@ class CollectionValidatorTest {
     @Test
     void isNotValid() {
         // Expected and Actual Value
+        CollectionValidator collectionValidator = new Validator();
 
         // Mock Data
 
@@ -44,8 +46,8 @@ class CollectionValidatorTest {
 
         // Calling the method
         // Assertions
-        assertTrue(CollectionValidator.isNotValid(new HashSet<>()));
-        assertTrue(CollectionValidator.isNotValid(new HashSet<>()));
+        assertTrue(collectionValidator.isNotValid(new HashSet<>()));
+        assertTrue(collectionValidator.isNotValid(new HashSet<>()));
 
         // Behavior Verifications
     }

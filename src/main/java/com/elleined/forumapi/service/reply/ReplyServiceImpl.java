@@ -11,6 +11,7 @@ import com.elleined.forumapi.service.mention.ReplyMentionService;
 import com.elleined.forumapi.service.pin.CommentPinReplyService;
 import com.elleined.forumapi.validator.CollectionValidator;
 import com.elleined.forumapi.validator.StringValidator;
+import com.elleined.forumapi.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,8 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final EntityHashTagService<Reply> replyHashTagService;
 
+    private final Validator validator;
+
     @Override
     public Reply save(User currentUser,
                       Comment comment,
@@ -53,7 +56,7 @@ public class ReplyServiceImpl implements ReplyService {
             ResourceNotFoundException,
             BlockedException, IOException {
 
-        if (StringValidator.isNotValidBody(body)) throw new EmptyBodyException("Reply body cannot be empty!");
+        if (validator.isNotValid(body)) throw new EmptyBodyException("Reply body cannot be empty!");
         if (comment.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
         if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
@@ -65,8 +68,8 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = replyMapper.toEntity(body, currentUser, comment, picture, status);
         replyRepository.save(reply);
 
-        if (CollectionValidator.isValid(mentionedUsers)) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);
-        if (CollectionValidator.isValid(keywords)) replyHashTagService.saveAll(reply, keywords);
+        if (validator.isValid(mentionedUsers)) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);
+        if (validator.isValid(keywords)) replyHashTagService.saveAll(reply, keywords);
         log.debug("Reply with id of {} saved successfully!", reply.getId());
         return reply;
     }

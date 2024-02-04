@@ -10,6 +10,7 @@ import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.hashtag.entity.CommentHashTagService;
 import com.elleined.forumapi.service.mention.CommentMentionService;
 import com.elleined.forumapi.service.pin.PostPinCommentService;
+import com.elleined.forumapi.validator.Validator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,6 +46,9 @@ class CommentServiceImplTest {
     @Mock
     private CommentHashTagService commentHashTagService;
 
+    @Mock
+    private Validator validator;
+
     @InjectMocks
     private CommentServiceImpl commentService;
 
@@ -69,6 +73,7 @@ class CommentServiceImplTest {
         keywords.add("Keyword1");
 
         // Stubbing methods
+        doReturn(false).when(validator).isNotValid(anyString());
         doReturn(false).when(post).isCommentSectionClosed();
         doReturn(false).when(post).isInactive();
         when(blockService.isBlockedBy(any(User.class), any(User.class))).thenReturn(false);
@@ -76,6 +81,7 @@ class CommentServiceImplTest {
         when(modalTrackerService.isModalOpen(anyInt(), anyInt(), any(ModalTracker.Type.class))).thenReturn(true);
         when(commentMapper.toEntity(anyString(), any(Post.class), any(User.class), anyString(), any(NotificationStatus.class))).thenReturn(new Comment());
         when(commentRepository.save(any(Comment.class))).thenReturn(new Comment());
+        doReturn(true).when(validator).isValid(anySet());
         doNothing().when(commentMentionService).mentionAll(any(User.class), anySet(), any(Comment.class));
         when(commentHashTagService.saveAll(any(Comment.class), anySet())).thenReturn(new ArrayList<>());
 
@@ -87,11 +93,13 @@ class CommentServiceImplTest {
 
         // Behavior Verifications
 
+        verify(validator).isNotValid(anyString());
         verify(blockService).isBlockedBy(any(User.class), any(User.class));
         verify(blockService).isYouBeenBlockedBy(any(User.class), any(User.class));
         verify(modalTrackerService).isModalOpen(anyInt(), anyInt(), any(ModalTracker.Type.class));
         verify(commentMapper).toEntity(anyString(), any(Post.class), any(User.class), anyString(), any(NotificationStatus.class));
         verify(commentRepository).save(any(Comment.class));
+        verify(validator, atMost(2)).isValid(anySet());
         verify(commentMentionService).mentionAll(any(User.class), anySet(), any(Comment.class));
         verify(commentHashTagService).saveAll(any(Comment.class), anySet());
     }
