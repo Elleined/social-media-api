@@ -10,14 +10,10 @@ import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.hashtag.entity.CommentHashTagService;
 import com.elleined.forumapi.service.mention.CommentMentionService;
 import com.elleined.forumapi.service.pin.PostPinCommentService;
-import com.elleined.forumapi.validator.CollectionValidator;
-import com.elleined.forumapi.validator.StringValidator;
 import com.elleined.forumapi.validator.Validator;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -132,7 +128,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public int getTotalReplies(Comment comment) {
         return (int) comment.getReplies().stream()
                 .filter(Reply::isActive)

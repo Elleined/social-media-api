@@ -94,25 +94,20 @@ public class Post {
 
     // post id reference is in comment table
     @OneToMany(mappedBy = "post")
-    @Setter(AccessLevel.NONE)
     private List<Comment> comments;
 
     // post id refernce is on tbl mention post
     @OneToMany(mappedBy = "post")
-    @Setter(AccessLevel.NONE)
     private Set<PostMention> mentions;
 
     // post id reference is in tbl post emoji
     @OneToMany(mappedBy = "post")
-    @Setter(AccessLevel.NONE)
     private List<PostReact> reactions;
 
     @ManyToMany(mappedBy = "savedPosts")
-    @Setter(AccessLevel.NONE)
     private Set<User> savingUsers;
 
     @ManyToMany(mappedBy = "sharedPosts")
-    @Setter(AccessLevel.NONE)
     private Set<User> sharers;
 
     public enum CommentSectionStatus {OPEN, CLOSED}

@@ -153,12 +153,46 @@ class CommentServiceImplTest {
         // Expected and Actual Value
 
         // Mock Data
+        User currentUser = spy(User.class);
+
+        Comment pinnedComment = Comment.builder()
+                .status(Status.ACTIVE)
+                .commenter(new User())
+                .build();
+
+        Comment activeComment1 = Comment.builder()
+                .status(Status.ACTIVE)
+                .commenter(new User())
+                .upvotingUsers(Set.of(new User(), new User()))
+                .build();
+
+        Comment activeComment2 = Comment.builder()
+                .status(Status.ACTIVE)
+                .commenter(new User())
+                .upvotingUsers(Set.of(new User(), new User(), new User()))
+                .build();
+
+        Comment inactiveComment = Comment.builder()
+                .status(Status.INACTIVE)
+                .commenter(new User())
+                .upvotingUsers(Set.of(new User(), new User(), new User(), new User()))
+                .build();
+
+        List<Comment> rawComments = Arrays.asList(inactiveComment, activeComment1, activeComment2, pinnedComment);
+
+        Post post = spy(Post.class);
+        post.setComments(rawComments);
+        post.setPinnedComment(pinnedComment);
+
+        List<Comment> expectedComments = Arrays.asList(pinnedComment, activeComment2, activeComment1);
 
         // Stubbing methods
+        when(blockService.isBlockedBy(any(User.class), any(User.class))).thenReturn(false);
+        when(blockService.isYouBeenBlockedBy(any(User.class), any(User.class))).thenReturn(false);
 
         // Calling the method
-
         // Assertions
+        assertIterableEquals(expectedComments, commentService.getAllByPost(currentUser, post));
 
         // Behavior Verifications
     }
