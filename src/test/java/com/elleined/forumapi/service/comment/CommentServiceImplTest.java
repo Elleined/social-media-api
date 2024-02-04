@@ -195,6 +195,8 @@ class CommentServiceImplTest {
         assertIterableEquals(expectedComments, commentService.getAllByPost(currentUser, post));
 
         // Behavior Verifications
+        verify(blockService, atLeastOnce()).isBlockedBy(any(User.class), any(User.class));
+        verify(blockService, atLeastOnce()).isYouBeenBlockedBy(any(User.class), any(User.class));
     }
 
     @Test
