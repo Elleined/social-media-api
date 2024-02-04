@@ -63,14 +63,13 @@ public class CommentServiceImpl implements CommentService {
         if (blockService.isBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getAuthor())) throw new BlockedException("Cannot comment because this user block you already!");
 
-
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         NotificationStatus status = modalTrackerService.isModalOpen(post.getAuthor().getId(), post.getId(), ModalTracker.Type.COMMENT) ? NotificationStatus.READ : NotificationStatus.UNREAD;
         Comment comment = commentMapper.toEntity(body, post, currentUser, picture, status);
         commentRepository.save(comment);
 
-        if (mentionedUsers != null) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
-        if (keywords != null) commentHashTagService.saveAll(comment, keywords);
+        if (mentionedUsers != null && !mentionedUsers.isEmpty()) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
+        if (keywords != null && !keywords.isEmpty()) commentHashTagService.saveAll(comment, keywords);
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
     }
