@@ -10,6 +10,7 @@ import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.hashtag.entity.CommentHashTagService;
 import com.elleined.forumapi.service.mention.CommentMentionService;
 import com.elleined.forumapi.service.pin.PostPinCommentService;
+import com.elleined.forumapi.validator.CollectionValidator;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,8 +69,8 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentMapper.toEntity(body, post, currentUser, picture, status);
         commentRepository.save(comment);
 
-        if (mentionedUsers != null && !mentionedUsers.isEmpty()) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
-        if (keywords != null && !keywords.isEmpty()) commentHashTagService.saveAll(comment, keywords);
+        if (CollectionValidator.isValid(mentionedUsers)) commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
+        if (CollectionValidator.isValid(keywords)) commentHashTagService.saveAll(comment, keywords);
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
     }

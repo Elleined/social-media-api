@@ -9,6 +9,7 @@ import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.ReplyMentionService;
 import com.elleined.forumapi.service.pin.CommentPinReplyService;
+import com.elleined.forumapi.validator.CollectionValidator;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,8 +65,8 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = replyMapper.toEntity(body, currentUser, comment, picture, status);
         replyRepository.save(reply);
 
-        if (mentionedUsers != null) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);
-        if (keywords != null) replyHashTagService.saveAll(reply, keywords);
+        if (CollectionValidator.isValid(mentionedUsers)) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);
+        if (CollectionValidator.isValid(keywords)) replyHashTagService.saveAll(reply, keywords);
         log.debug("Reply with id of {} saved successfully!", reply.getId());
         return reply;
     }

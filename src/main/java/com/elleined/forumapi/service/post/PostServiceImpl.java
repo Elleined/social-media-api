@@ -12,6 +12,7 @@ import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
 import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.forumapi.service.mention.PostMentionService;
+import com.elleined.forumapi.validator.CollectionValidator;
 import com.elleined.forumapi.validator.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +56,8 @@ public class PostServiceImpl implements PostService {
         Post post = postMapper.toEntity(body, currentUser, picture);
         postRepository.save(post);
 
-        if (mentionedUsers != null) postMentionService.mentionAll(currentUser, mentionedUsers, post);
-        if (keywords != null) postHashTagService.saveAll(post, keywords);
+        if (CollectionValidator.isValid(mentionedUsers)) postMentionService.mentionAll(currentUser, mentionedUsers, post);
+        if (CollectionValidator.isValid(keywords)) postHashTagService.saveAll(post, keywords);
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;
     }
