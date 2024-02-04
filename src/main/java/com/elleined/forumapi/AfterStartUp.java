@@ -18,11 +18,9 @@ public class AfterStartUp {
     @PostConstruct
     void init() {
         modalTrackerService.deleteAll();
-
-        if (!emojiRepository.existsById(1)) {
-            System.out.println("Please wait populating emoji table...");
-            emojiPopulator.populate();
-            System.out.println("Populating emoji table success...");
-        }
+        if (emojiRepository.existsById(1)) return;
+        System.out.println("Please wait populating emoji table...");
+        emojiPopulator.populate();
+        System.out.println("Populating emoji table success...");
     }
 }
