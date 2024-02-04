@@ -1,14 +1,14 @@
 package com.elleined.forumapi.model.mention;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.Status;
 import com.elleined.forumapi.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.spy;
 
 @ExtendWith(MockitoExtension.class)
 class ReplyMentionTest {

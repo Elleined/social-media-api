@@ -1,8 +1,5 @@
 package com.elleined.forumapi.model;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.friend.FriendRequest;
 import com.elleined.forumapi.model.note.Note;
 import com.elleined.forumapi.model.react.CommentReact;
@@ -10,12 +7,12 @@ import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.react.ReplyReact;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mapstruct.control.MappingControl;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class UserTest {
