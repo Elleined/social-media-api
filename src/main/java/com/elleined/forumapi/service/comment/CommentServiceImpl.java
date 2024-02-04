@@ -7,7 +7,7 @@ import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.ReplyRepository;
 import com.elleined.forumapi.service.ModalTrackerService;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
+import com.elleined.forumapi.service.hashtag.entity.CommentHashTagService;
 import com.elleined.forumapi.service.mention.CommentMentionService;
 import com.elleined.forumapi.service.pin.PostPinCommentService;
 import com.elleined.forumapi.validator.StringValidator;
@@ -42,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentMentionService commentMentionService;
 
-    private final EntityHashTagService<Comment> commentHashTagService;
+    private final CommentHashTagService commentHashTagService;
 
     @Override
     public Comment save(User currentUser,
