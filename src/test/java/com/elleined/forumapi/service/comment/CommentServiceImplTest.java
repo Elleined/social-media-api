@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.comment;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.MultiPartFileDataFactory;
 import com.elleined.forumapi.mapper.CommentMapper;
 import com.elleined.forumapi.model.*;
@@ -18,11 +15,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {
@@ -53,13 +54,19 @@ class CommentServiceImplTest {
         // Expected and Actual Value
         // Mock Data
         User currentUser = spy(User.class);
+
         Post post = spy(Post.class);
         post.setAuthor(new User());
 
         String commentBody = "Valid comment body";
+
         MultipartFile attachedPicture = MultiPartFileDataFactory.notEmpty();
+
         Set<User> mentionedUsers = new HashSet<>();
+        mentionedUsers.add(new User());
+
         Set<String> keywords = new HashSet<>();
+        keywords.add("Keyword1");
 
         // Stubbing methods
         doReturn(false).when(post).isCommentSectionClosed();
@@ -69,7 +76,8 @@ class CommentServiceImplTest {
         when(modalTrackerService.isModalOpen(anyInt(), anyInt(), any(ModalTracker.Type.class))).thenReturn(true);
         when(commentMapper.toEntity(anyString(), any(Post.class), any(User.class), anyString(), any(NotificationStatus.class))).thenReturn(new Comment());
         when(commentRepository.save(any(Comment.class))).thenReturn(new Comment());
-
+        doNothing().when(commentMentionService).mentionAll(any(User.class), anySet(), any(Comment.class));
+        when(commentHashTagService.saveAll(any(Comment.class), anySet())).thenReturn(new ArrayList<>());
 
         // Calling the method
         // Assertions
@@ -78,7 +86,14 @@ class CommentServiceImplTest {
         assertDoesNotThrow(() -> commentService.save(currentUser, post, commentBody, attachedPicture, mentionedUsers, keywords));
 
         // Behavior Verifications
-        verifyNoInteractions(commentMentionService, commentHashTagService);
+
+        verify(blockService).isBlockedBy(any(User.class), any(User.class));
+        verify(blockService).isYouBeenBlockedBy(any(User.class), any(User.class));
+        verify(modalTrackerService).isModalOpen(anyInt(), anyInt(), any(ModalTracker.Type.class));
+        verify(commentMapper).toEntity(anyString(), any(Post.class), any(User.class), anyString(), any(NotificationStatus.class));
+        verify(commentRepository).save(any(Comment.class));
+        verify(commentMentionService).mentionAll(any(User.class), anySet(), any(Comment.class));
+        verify(commentHashTagService).saveAll(any(Comment.class), anySet());
     }
 
     @Test
