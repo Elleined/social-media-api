@@ -322,4 +322,27 @@ class UserTest {
 
         // Behavior Verifications
     }
+
+    @Test
+    void hasFriendRequest() {
+        // Expected Value
+
+        // Mock data
+        FriendRequest friendRequest = new FriendRequest();
+        User currentUser = User.builder()
+                .receiveFriendRequest(new HashSet<>())
+                .build();
+
+        currentUser.getReceiveFriendRequest().add(friendRequest);
+
+        // Set up method
+
+        // Stubbing methods
+
+        // Calling the method
+        // Assertions
+        assertTrue(currentUser.getReceiveFriendRequest().contains(friendRequest));
+
+        // Behavior Verifications
+    }
 }

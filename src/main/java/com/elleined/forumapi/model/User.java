@@ -154,77 +154,62 @@ public class User {
 
     // user id reference is in tbl  user friend
     @OneToMany(mappedBy = "requestingUser")
-    @Setter(AccessLevel.NONE)
     private Set<FriendRequest> sentFriendRequest;
 
     // user id reference is in tbl  user friend
     @OneToMany(mappedBy = "requestedUser")
-    @Setter(AccessLevel.NONE)
     private Set<FriendRequest> receiveFriendRequest;
 
     // user id reference is in post table
     @OneToMany(mappedBy = "author")
-    @Setter(AccessLevel.NONE)
     private List<Post> posts;
 
     // user id reference is in comment table
     @OneToMany(mappedBy = "commenter")
-    @Setter(AccessLevel.NONE)
     private List<Comment> comments;
 
     // user id reference is in reply table
     @OneToMany(mappedBy = "replier")
-    @Setter(AccessLevel.NONE)
     private List<Reply> replies;
 
     // user id reference is in tbl mention post
     @OneToMany(mappedBy = "mentioningUser")
-    @Setter(AccessLevel.NONE)
     private Set<PostMention> sentPostMentions;
 
     // user id reference is in tbl mention post
     @OneToMany(mappedBy = "mentionedUser")
-    @Setter(AccessLevel.NONE)
     private Set<PostMention> receivePostMentions;
 
     // user id reference is in tbl mention comment
     @OneToMany(mappedBy = "mentioningUser")
-    @Setter(AccessLevel.NONE)
     private Set<CommentMention> sentCommentMentions;
 
     // user id reference is in tbl mention comment
     @OneToMany(mappedBy = "mentionedUser")
-    @Setter(AccessLevel.NONE)
     private Set<CommentMention> receiveCommentMentions;
 
     // user id reference is in tbl mention reply
     @OneToMany(mappedBy = "mentioningUser")
-    @Setter(AccessLevel.NONE)
     private Set<ReplyMention> sentReplyMentions;
 
     // user id reference is in tbl mention reply
     @OneToMany(mappedBy = "mentionedUser")
-    @Setter(AccessLevel.NONE)
     private Set<ReplyMention> receiveReplyMentions;
 
     // user id reference is in tbl post emoji
     @OneToMany(mappedBy = "respondent")
-    @Setter(AccessLevel.NONE)
     private Set<PostReact> createdPostReactions;
 
     // user id reference is in tbl comment emoji
     @OneToMany(mappedBy = "respondent")
-    @Setter(AccessLevel.NONE)
     private Set<CommentReact> createdCommentReactions;
 
     // user id reference is in tbl reply emoji
     @OneToMany(mappedBy = "respondent")
-    @Setter(AccessLevel.NONE)
     private Set<ReplyReact> createdReplyReactions;
 
     // user id reference is in tbl user note
     @OneToOne(mappedBy = "user")
-    @Setter(AccessLevel.NONE)
     private Note note;
 
     public boolean notOwned(Post post) {
@@ -289,5 +274,9 @@ public class User {
 
     public boolean hasNote() {
         return this.getNote() != null;
+    }
+
+    public boolean hasFriendRequest(FriendRequest friendRequest) {
+        return this.getReceiveFriendRequest().contains(friendRequest);
     }
 }
