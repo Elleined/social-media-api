@@ -206,40 +206,69 @@ class CommentServiceImplTest {
         // Mock Data
 
         // Stubbing methods
+        when(commentRepository.findById(anyInt())).thenReturn(Optional.of(new Comment()));
 
         // Calling the method
-
         // Assertions
+        assertDoesNotThrow(() -> commentService.getById(anyInt()));
 
         // Behavior Verifications
+        verify(commentRepository).findById(anyInt());
     }
 
     @Test
     void updateBody() {
         // Expected and Actual Value
+        String expectedBody = "New Body";
 
         // Mock Data
+        User currentUser = spy(User.class);
+        Post post = spy(Post.class);
+
+        Comment comment = spy(Comment.class);
+        comment.setBody("Old Body");
 
         // Stubbing methods
+        doReturn(false).when(post).doesNotHave(any(Comment.class));
+        doReturn(false).when(currentUser).notOwned(any(Comment.class));
+        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
         // Calling the method
-
         // Assertions
+        assertDoesNotThrow(() -> commentService.updateBody(currentUser, post, comment, expectedBody));
+        assertEquals(expectedBody, comment.getBody());
 
         // Behavior Verifications
+        verify(commentRepository).save(any(Comment.class));
     }
 
     @Test
     void getTotalReplies() {
         // Expected and Actual Value
+        int expectedSize = 2;
 
         // Mock Data
+        Reply inactiveReply = Reply.builder()
+                .status(Status.INACTIVE)
+                .build();
+
+        Reply activeReply1 = Reply.builder()
+                .status(Status.ACTIVE)
+                .build();
+
+        Reply activeReply2 = Reply.builder()
+                .status(Status.ACTIVE)
+                .build();
+
+        Comment comment = Comment.builder()
+                .replies(List.of(activeReply1, activeReply2, inactiveReply))
+                .build();
 
         // Stubbing methods
 
         // Calling the method
-
         // Assertions
+        assertEquals(expectedSize, commentService.getTotalReplies(comment));
 
         // Behavior Verifications
     }
