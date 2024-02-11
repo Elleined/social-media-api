@@ -6,6 +6,7 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.service.notification.mention.MentionNotificationService;
+import com.elleined.forumapi.service.notification.mention.ReplyMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Qualifier("replyMentionNotificationReader")
 public class ReplyMentionNotificationReader implements ReplyNotificationReaderService {
-    private final MentionNotificationService<ReplyMention> replyMentionNotificationService;
+    private final ReplyMentionNotificationService replyMentionNotificationService;
     private final MentionRepository mentionRepository;
 
     @Override

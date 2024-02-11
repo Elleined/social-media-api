@@ -4,7 +4,7 @@ import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.PostMention;
 import com.elleined.forumapi.repository.MentionRepository;
-import com.elleined.forumapi.service.notification.mention.MentionNotificationService;
+import com.elleined.forumapi.service.notification.mention.PostMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Primary
 public class PostMentionNotificationReader implements PostNotificationReader {
-    private final MentionNotificationService<PostMention> postMentionNotificationService;
+    private final PostMentionNotificationService postMentionNotificationService;
     private final MentionRepository mentionRepository;
 
     @Override

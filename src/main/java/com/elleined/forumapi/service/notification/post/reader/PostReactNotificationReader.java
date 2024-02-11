@@ -4,6 +4,7 @@ import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.repository.react.PostReactRepository;
+import com.elleined.forumapi.service.notification.react.PostReactNotificationService;
 import com.elleined.forumapi.service.notification.react.ReactNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Primary
 public class PostReactNotificationReader implements PostNotificationReader {
-    private final ReactNotificationService<PostReact> postReactNotificationService;
+    private final PostReactNotificationService postReactNotificationService;
     private final PostReactRepository postReactRepository;
 
     @Override
