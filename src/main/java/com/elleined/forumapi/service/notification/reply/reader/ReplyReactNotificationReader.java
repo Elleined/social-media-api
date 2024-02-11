@@ -27,7 +27,9 @@ public class ReplyReactNotificationReader implements ReplyNotificationReaderServ
     @Override
     public void readAll(User currentUser, Comment comment) {
         List<ReplyReact> unreadReactions = replyReactNotificationService.getAllUnreadNotification(currentUser);
-        unreadReactions.forEach(replyReact -> replyReact.setNotificationStatus(NotificationStatus.READ));
+        unreadReactions.stream()
+                .filter(replyReact -> replyReact.getReply().getComment().equals(comment))
+                .forEach(replyReact -> replyReact.setNotificationStatus(NotificationStatus.READ));
         replyReactRepository.saveAll(unreadReactions);
         log.debug("Reading all reply reaction for current user with id of {} success", currentUser.getId());
     }

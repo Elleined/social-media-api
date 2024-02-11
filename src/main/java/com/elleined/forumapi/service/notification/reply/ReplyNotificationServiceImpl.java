@@ -31,11 +31,6 @@ public class ReplyNotificationServiceImpl implements ReplyNotificationService {
     }
 
     @Override
-    public int getNotificationCount(User currentUser) {
-        return getAllUnreadNotification(currentUser).size();
-    }
-
-    @Override
     public int notificationCountForReplier(User commenter, Comment comment, User replier) {
         return (int) comment.getReplies()
                 .stream()

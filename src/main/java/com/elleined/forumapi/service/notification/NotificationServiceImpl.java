@@ -15,8 +15,14 @@ import com.elleined.forumapi.model.react.PostReact;
 import com.elleined.forumapi.model.react.ReplyReact;
 import com.elleined.forumapi.service.notification.comment.CommentNotificationService;
 import com.elleined.forumapi.service.notification.friend.FriendRequestNotificationService;
+import com.elleined.forumapi.service.notification.mention.CommentMentionNotificationService;
 import com.elleined.forumapi.service.notification.mention.MentionNotificationService;
+import com.elleined.forumapi.service.notification.mention.PostMentionNotificationService;
+import com.elleined.forumapi.service.notification.mention.ReplyMentionNotificationService;
+import com.elleined.forumapi.service.notification.react.CommentReactNotificationService;
+import com.elleined.forumapi.service.notification.react.PostReactNotificationService;
 import com.elleined.forumapi.service.notification.react.ReactNotificationService;
+import com.elleined.forumapi.service.notification.react.ReplyReactNotificationService;
 import com.elleined.forumapi.service.notification.reply.ReplyNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,14 +42,14 @@ public class NotificationServiceImpl implements NotificationService<Notification
     // Notification Services
 
     // Mentions
-    private final MentionNotificationService<PostMention> postMentionNotificationService;
-    private final MentionNotificationService<CommentMention> commentMentionNotificationService;
-    private final MentionNotificationService<ReplyMention> replyMentionNotificationService;
+    private final PostMentionNotificationService postMentionNotificationService;
+    private final CommentMentionNotificationService commentMentionNotificationService;
+    private final ReplyMentionNotificationService replyMentionNotificationService;
 
     // Reactions
-    private final ReactNotificationService<PostReact> postReactNotificationService;
-    private final ReactNotificationService<CommentReact> commentReactNotificationService;
-    private final ReactNotificationService<ReplyReact> replyReactNotificationService;
+    private final PostReactNotificationService postReactNotificationService;
+    private final CommentReactNotificationService commentReactNotificationService;
+    private final ReplyReactNotificationService replyReactNotificationService;
 
     // Entities
     private final CommentNotificationService commentNotificationService;

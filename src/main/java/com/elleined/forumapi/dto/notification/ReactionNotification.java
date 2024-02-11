@@ -3,11 +3,13 @@ package com.elleined.forumapi.dto.notification;
 import com.elleined.forumapi.model.react.Emoji;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class ReactionNotification extends Notification {
 
-    private final Emoji.Type emojiType;
+    private Emoji.Type emojiType;
 
     @Builder
     public ReactionNotification(int id, String message, int receiverId, String respondentPicture, int respondentId, String formattedDate, String formattedTime, String notificationStatus, Emoji.Type emojiType) {
