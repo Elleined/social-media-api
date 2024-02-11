@@ -32,7 +32,6 @@ public class PostMentionService implements MentionService<Post> {
     private final PostMentionMapper postMentionMapper;
     private final MentionRepository mentionRepository;
 
-
     @Override
     public PostMention mention(User mentioningUser, User mentionedUser, Post post) {
         if (post.isInactive()) throw new ResourceNotFoundException("Cannot mention! The post with id of " + post.getId() + " you are trying to mention might already been deleted or does not exists!");
