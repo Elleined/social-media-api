@@ -47,4 +47,12 @@ public class Note {
             unique = true
     )
     private User user;
+
+    public boolean isExpired() {
+        LocalDateTime noteCreation = this.getCreatedAt();
+        LocalDateTime noteExpiration = noteCreation.plusDays(1);
+
+        return LocalDateTime.now().isAfter(noteExpiration) ||
+                LocalDateTime.now().equals(noteExpiration);
+    }
 }

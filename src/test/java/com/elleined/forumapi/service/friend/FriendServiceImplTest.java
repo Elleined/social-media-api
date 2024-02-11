@@ -204,12 +204,12 @@ class FriendServiceImplTest {
                 .createdAt(LocalDateTime.now().plusDays(1))
                 .build();
 
-        Set<FriendRequest> rawFriendRequests = Set.of(friendRequest1, friendRequest2);
-
-        Set<FriendRequest> expectedFriendRequests = Set.of(friendRequest2, friendRequest1);
 
         // Set up method
+        Set<FriendRequest> rawFriendRequests = Set.of(friendRequest1, friendRequest2);
         currentUser.setReceiveFriendRequest(rawFriendRequests);
+
+        Set<FriendRequest> expectedFriendRequests = Set.of(friendRequest2, friendRequest1);
 
         // Stubbing methods
 

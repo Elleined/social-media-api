@@ -32,8 +32,8 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Note update(User currentUser, String newThought) {
-        Note note = currentUser.getNote();
         if (!currentUser.hasNote()) throw new NoteException("Updating note failed! because current user has no note");
+        Note note = currentUser.getNote();
         note.setThought(newThought);
         noteRepository.save(note);
         log.debug("Note with id of {} updated with new thought of {}", note.getId(), newThought);
@@ -42,8 +42,8 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public void delete(User currentUser) {
-        Note note = currentUser.getNote();
         if (!currentUser.hasNote()) throw new NoteException("Deleting note failed! because current user has no note");
+        Note note = currentUser.getNote();
         noteRepository.delete(note);
         log.debug("Note with id of {} deleted successfully", note.getId());
     }
@@ -56,13 +56,7 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public void deleteExpiredNotes() {
         List<Note> notes = noteRepository.findAll().stream()
-                .filter(note -> {
-                    LocalDateTime noteCreation = note.getCreatedAt();
-                    LocalDateTime noteExpiration = noteCreation.plusDays(1);
-
-                    return LocalDateTime.now().isAfter(noteExpiration) ||
-                            LocalDateTime.now().equals(noteExpiration);
-                })
+                .filter(Note::isExpired)
                 .toList();
 
         noteRepository.deleteAll(notes);
