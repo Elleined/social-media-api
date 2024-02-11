@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.notification.comment;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.service.block.BlockService;
 import org.junit.jupiter.api.Test;
@@ -11,8 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentNotificationServiceImplTest {

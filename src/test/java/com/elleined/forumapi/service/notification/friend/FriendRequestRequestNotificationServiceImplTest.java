@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.notification.friend;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
@@ -12,6 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 @ExtendWith(MockitoExtension.class)
 class FriendRequestRequestNotificationServiceImplTest {

@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.emoji;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.react.Emoji;
 import com.elleined.forumapi.model.react.Emoji.Type;
 import com.elleined.forumapi.repository.EmojiRepository;
@@ -17,6 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EmojiServiceImplTest {

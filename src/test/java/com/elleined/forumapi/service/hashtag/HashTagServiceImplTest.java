@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.hashtag;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.hashtag.HashTag;
 import com.elleined.forumapi.repository.HashTagRepository;
 import org.junit.jupiter.api.Test;
@@ -13,8 +10,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class HashTagServiceImplTest {

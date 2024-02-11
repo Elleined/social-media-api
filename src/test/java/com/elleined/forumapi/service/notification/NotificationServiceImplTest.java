@@ -1,21 +1,12 @@
 package com.elleined.forumapi.service.notification;
 
-import com.elleined.forumapi.dto.notification.*;
+import com.elleined.forumapi.dto.notification.Notification;
 import com.elleined.forumapi.mapper.notification.comment.CommentNotificationMapper;
 import com.elleined.forumapi.mapper.notification.friend.FriendRequestNotificationMapper;
 import com.elleined.forumapi.mapper.notification.mention.MentionNotificationMapper;
 import com.elleined.forumapi.mapper.notification.react.ReactNotificationMapper;
 import com.elleined.forumapi.mapper.notification.reply.ReplyNotificationMapper;
-import com.elleined.forumapi.model.Comment;
-import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
-import com.elleined.forumapi.model.friend.FriendRequest;
-import com.elleined.forumapi.model.mention.CommentMention;
-import com.elleined.forumapi.model.mention.PostMention;
-import com.elleined.forumapi.model.mention.ReplyMention;
-import com.elleined.forumapi.model.react.CommentReact;
-import com.elleined.forumapi.model.react.PostReact;
-import com.elleined.forumapi.model.react.ReplyReact;
 import com.elleined.forumapi.service.notification.comment.CommentNotificationService;
 import com.elleined.forumapi.service.notification.friend.FriendRequestNotificationService;
 import com.elleined.forumapi.service.notification.mention.CommentMentionNotificationService;

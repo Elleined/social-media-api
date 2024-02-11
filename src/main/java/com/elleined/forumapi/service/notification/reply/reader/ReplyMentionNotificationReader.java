@@ -5,7 +5,6 @@ import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.repository.MentionRepository;
-import com.elleined.forumapi.service.notification.mention.MentionNotificationService;
 import com.elleined.forumapi.service.notification.mention.ReplyMentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

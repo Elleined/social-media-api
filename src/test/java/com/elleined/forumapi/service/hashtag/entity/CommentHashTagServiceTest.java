@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.hashtag.entity;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.mapper.hashtag.HashTagMapper;
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.User;
@@ -18,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentHashTagServiceTest {

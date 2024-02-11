@@ -6,7 +6,6 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
 import com.elleined.forumapi.service.notification.react.CommentReactNotificationService;
-import com.elleined.forumapi.service.notification.react.ReactNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;

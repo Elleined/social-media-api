@@ -5,7 +5,6 @@ import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.react.ReplyReact;
 import com.elleined.forumapi.repository.react.ReplyReactRepository;
-import com.elleined.forumapi.service.notification.react.ReactNotificationService;
 import com.elleined.forumapi.service.notification.react.ReplyReactNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

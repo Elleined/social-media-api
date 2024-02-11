@@ -1,10 +1,7 @@
 package com.elleined.forumapi.service.notification.mention;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Comment;
+import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Status;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.CommentMention;
@@ -18,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentMentionNotificationServiceTest {

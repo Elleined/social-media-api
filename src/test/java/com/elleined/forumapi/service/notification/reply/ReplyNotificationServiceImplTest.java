@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.notification.reply;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.*;
 import com.elleined.forumapi.service.block.BlockService;
 import org.junit.jupiter.api.Test;
@@ -12,6 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReplyNotificationServiceImplTest {

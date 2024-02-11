@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.note;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.mapper.note.NoteMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.note.Note;
@@ -13,9 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class NoteServiceImplTest {

@@ -6,7 +6,6 @@ import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.repository.MentionRepository;
 import com.elleined.forumapi.service.notification.mention.CommentMentionNotificationService;
-import com.elleined.forumapi.service.notification.mention.MentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;

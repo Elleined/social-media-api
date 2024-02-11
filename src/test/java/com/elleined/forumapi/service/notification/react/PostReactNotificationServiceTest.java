@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.notification.react;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.Status;
@@ -17,7 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostReactNotificationServiceTest {

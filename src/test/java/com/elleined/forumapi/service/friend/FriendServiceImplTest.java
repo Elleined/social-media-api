@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.friend;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.mapper.FriendRequestMapper;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.friend.FriendRequest;
@@ -17,9 +14,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FriendServiceImplTest {

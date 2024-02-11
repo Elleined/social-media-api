@@ -1,13 +1,9 @@
 package com.elleined.forumapi.service.notification.comment.reader;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.NotificationStatus;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
-
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
 import com.elleined.forumapi.service.notification.react.CommentReactNotificationService;
@@ -19,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentReactNotificationReaderTest {

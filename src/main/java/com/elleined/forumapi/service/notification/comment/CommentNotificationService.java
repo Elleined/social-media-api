@@ -4,9 +4,7 @@ import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.notification.NotificationService;
-import org.w3c.dom.stylesheets.LinkStyle;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface CommentNotificationService extends NotificationService<Comment> {
