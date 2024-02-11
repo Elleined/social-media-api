@@ -29,16 +29,4 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
                         .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())))
                 .toList();
     }
-
-    @Override
-    public int notificationCountForCommenter(User author, Post post, User commenter) {
-        return (int) post.getComments()
-                .stream()
-                .filter(Comment::isActive)
-                .filter(Comment::isUnread)
-                .filter(comment -> comment.getCommenter().equals(commenter))
-                .filter(comment -> !blockService.isBlockedBy(author, comment.getCommenter()))
-                .filter(comment -> !blockService.isYouBeenBlockedBy(author, comment.getCommenter()))
-                .count();
-    }
 }

@@ -5,6 +5,7 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.mention.CommentMention;
 import com.elleined.forumapi.repository.MentionRepository;
+import com.elleined.forumapi.service.notification.mention.CommentMentionNotificationService;
 import com.elleined.forumapi.service.notification.mention.MentionNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Qualifier("commentMentionNotificationReader")
 public class CommentMentionNotificationReader implements CommentNotificationReaderService {
-    private final MentionNotificationService<CommentMention> commentMentionNotificationService;
+    private final CommentMentionNotificationService commentMentionNotificationService;
     private final MentionRepository mentionRepository;
 
     @Override

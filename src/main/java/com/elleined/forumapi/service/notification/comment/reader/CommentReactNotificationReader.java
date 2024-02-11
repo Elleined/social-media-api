@@ -5,6 +5,7 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.model.react.CommentReact;
 import com.elleined.forumapi.repository.react.CommentReactRepository;
+import com.elleined.forumapi.service.notification.react.CommentReactNotificationService;
 import com.elleined.forumapi.service.notification.react.ReactNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +21,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Qualifier("commentReactNotificationReader")
 public class CommentReactNotificationReader implements CommentNotificationReaderService {
-    private final ReactNotificationService<CommentReact> commentReactNotificationService;
+    private final CommentReactNotificationService commentReactNotificationService;
     private final CommentReactRepository commentReactRepository;
     @Override
     public void readAll(User currentUser, Post post) {
         List<CommentReact> unreadReactions = commentReactNotificationService.getAllUnreadNotification(currentUser);
-        unreadReactions.forEach(commentReact -> commentReact.setNotificationStatus(NotificationStatus.READ));
+        unreadReactions.stream()
+                .filter(commentReact -> commentReact.getComment().getPost().equals(post))
+                .forEach(commentReact -> commentReact.setNotificationStatus(NotificationStatus.READ));
         commentReactRepository.saveAll(unreadReactions);
         log.debug("Reading all comment reaction for current user with id of {} success", currentUser.getId());
     }
