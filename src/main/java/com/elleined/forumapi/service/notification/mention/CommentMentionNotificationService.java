@@ -25,9 +25,4 @@ public class CommentMentionNotificationService implements MentionNotificationSer
                 .filter(mention -> !blockService.isYouBeenBlockedBy(currentUser, mention.getMentionedUser()))
                 .toList();
     }
-
-    @Override
-    public int getNotificationCount(User currentUser) {
-        return getAllUnreadNotification(currentUser).size();
-    }
 }

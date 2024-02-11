@@ -31,11 +31,6 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
     }
 
     @Override
-    public int getNotificationCount(User currentUser) {
-        return getAllUnreadNotification(currentUser).size();
-    }
-
-    @Override
     public int notificationCountForCommenter(User author, Post post, User commenter) {
         return (int) post.getComments()
                 .stream()

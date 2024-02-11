@@ -18,10 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReplyReactNotificationService implements ReactNotificationService<ReplyReact> {
     private final BlockService blockService;
-    @Override
-    public int getNotificationCount(User currentUser) {
-        return getAllUnreadNotification(currentUser).size();
-    }
 
     @Override
     public List<ReplyReact> getAllUnreadNotification(User currentUser) {

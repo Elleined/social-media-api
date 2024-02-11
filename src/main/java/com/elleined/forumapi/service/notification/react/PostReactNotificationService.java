@@ -21,11 +21,6 @@ public class PostReactNotificationService implements ReactNotificationService<Po
     private final BlockService blockService;
 
     @Override
-    public int getNotificationCount(User currentUser) {
-        return getAllUnreadNotification(currentUser).size();
-    }
-
-    @Override
     public List<PostReact> getAllUnreadNotification(User currentUser) {
         return currentUser.getPosts().stream()
                 .filter(Post::isActive)

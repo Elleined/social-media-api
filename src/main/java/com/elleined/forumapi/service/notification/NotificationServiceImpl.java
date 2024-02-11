@@ -111,9 +111,4 @@ public class NotificationServiceImpl implements NotificationService<Notification
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
     }
-
-    @Override
-    public int getNotificationCount(User currentUser) {
-        return getAllUnreadNotification(currentUser).size();
-    }
 }

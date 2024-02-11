@@ -20,11 +20,6 @@ public class CommentReactNotificationService implements ReactNotificationService
     private final BlockService blockService;
 
     @Override
-    public int getNotificationCount(User currentUser) {
-        return getAllUnreadNotification(currentUser).size();
-    }
-
-    @Override
     public List<CommentReact> getAllUnreadNotification(User currentUser) {
         return currentUser.getComments().stream()
                 .filter(Comment::isActive)

@@ -14,5 +14,8 @@ public interface NotificationService<R> {
      * Does not include read status
      * **/
     Collection<R> getAllUnreadNotification(User currentUser);
-    int getNotificationCount(User currentUser);
+
+    default int getNotificationCount(User currentUser) {
+        return getAllUnreadNotification(currentUser).size();
+    }
 }

@@ -14,10 +14,6 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class FriendRequestRequestNotificationServiceImpl implements FriendRequestNotificationService {
-    @Override
-    public int getNotificationCount(User currentUser) {
-        return getAllUnreadNotification(currentUser).size();
-    }
 
     @Override
     public List<FriendRequest> getAllUnreadNotification(User currentUser) {
