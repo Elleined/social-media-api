@@ -197,7 +197,7 @@ class FriendServiceImplTest {
         User currentUser = new User();
 
         FriendRequest friendRequest1 = FriendRequest.builder()
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now().plusMinutes(1))
                 .build();
 
         FriendRequest friendRequest2 = FriendRequest.builder()
