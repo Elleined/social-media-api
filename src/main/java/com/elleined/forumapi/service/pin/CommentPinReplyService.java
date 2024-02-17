@@ -6,7 +6,6 @@ import com.elleined.forumapi.model.Comment;
 import com.elleined.forumapi.model.Reply;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.repository.CommentRepository;
-import com.elleined.forumapi.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentPinReplyService implements PinService<Comment, Reply> {
     private final CommentRepository commentRepository;
-    private final ReplyRepository replyRepository;
 
     @Override
     public void pin(User currentUser, Comment comment, Reply reply) throws NotOwnedException, ResourceNotFoundException {
@@ -32,9 +30,9 @@ public class CommentPinReplyService implements PinService<Comment, Reply> {
     }
 
     @Override
-    public void unpin(Reply reply) {
-        reply.getComment().setPinnedReply(null);
-        replyRepository.save(reply);
+    public void unpin(Comment comment) {
+        comment.setPinnedReply(null);
+        commentRepository.save(comment);
         log.debug("Comment pinned reply unpinned successfully");
     }
 

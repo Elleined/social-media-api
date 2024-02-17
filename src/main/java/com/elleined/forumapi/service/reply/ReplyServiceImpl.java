@@ -79,7 +79,7 @@ public class ReplyServiceImpl implements ReplyService {
 
         reply.setStatus(Status.INACTIVE);
         replyRepository.save(reply);
-        if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) commentPinReplyService.unpin(reply);
+        if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) commentPinReplyService.unpin(comment);
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 

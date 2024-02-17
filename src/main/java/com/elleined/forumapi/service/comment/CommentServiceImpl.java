@@ -84,7 +84,7 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(comment);
 
         if (post.getPinnedComment() != null && post.getPinnedComment().equals(comment))
-            postPinCommentService.unpin(comment);
+            postPinCommentService.unpin(post);
 
         List<Reply> replies = comment.getReplies();
         replies.forEach(reply -> reply.setStatus(Status.INACTIVE));
