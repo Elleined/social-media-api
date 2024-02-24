@@ -175,6 +175,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Set<Post> getAllSharedPosts(User currentUser) {
-        return currentUser.getSharedPosts();
+        return currentUser.getSharedPosts().stream()
+                .filter(Post::isActive)
+                .collect(Collectors.toSet());
     }
 }

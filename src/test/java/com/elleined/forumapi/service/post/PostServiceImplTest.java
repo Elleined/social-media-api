@@ -1,8 +1,5 @@
 package com.elleined.forumapi.service.post;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.forumapi.MultiPartFileDataFactory;
 import com.elleined.forumapi.mapper.PostMapper;
 import com.elleined.forumapi.model.Comment;
@@ -26,7 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
@@ -330,7 +333,6 @@ class PostServiceImplTest {
                 .build();
 
         // Set up method
-        Set<Post> expectedSavedPosts = Set.of(post1, post2);
 
         // Stubbing methods
 
@@ -340,25 +342,40 @@ class PostServiceImplTest {
         // Behavior Verifications
 
         // Assertions
-        assertIterableEquals(expectedSavedPosts, actualSavedPosts);
-
+        assertTrue(actualSavedPosts.contains(post1));
+        assertTrue(actualSavedPosts.contains(post2));
     }
+
 
     @Test
     void sharePost() {
         // Expected Value
 
         // Mock data
+        User currentUser = User.builder()
+                .sharedPosts(new HashSet<>())
+                .build();
+
+        Post post = spy(Post.class);
+        post.setSharers(new HashSet<>());
 
         // Set up method
 
         // Stubbing methods
+        doReturn(false).when(post).isInactive();
+        when(postRepository.save(any(Post.class))).thenReturn(post);
+        when(userRepository.save(any(User.class))).thenReturn(currentUser);
 
         // Calling the method
+        postService.sharePost(currentUser, post);
 
         // Behavior Verifications
+        verify(postRepository).save(any(Post.class));
+        verify(userRepository).save(any(User.class));
 
         // Assertions
+        assertTrue(currentUser.getSharedPosts().contains(post));
+        assertTrue(post.getSharers().contains(currentUser));
     }
 
     @Test
@@ -366,16 +383,32 @@ class PostServiceImplTest {
         // Expected Value
 
         // Mock data
+        User currentUser = User.builder()
+                .sharedPosts(new HashSet<>())
+                .build();
+
+        Post post = Post.builder()
+                .sharers(new HashSet<>())
+                .build();
 
         // Set up method
+        currentUser.getSharedPosts().add(post);
+        post.getSharers().add(currentUser);
 
         // Stubbing methods
+        when(postRepository.save(any(Post.class))).thenReturn(post);
+        when(userRepository.save(any(User.class))).thenReturn(currentUser);
 
         // Calling the method
+        postService.unSharePost(currentUser, post);
 
         // Behavior Verifications
+        verify(postRepository).save(any(Post.class));
+        verify(userRepository).save(any(User.class));
 
         // Assertions
+        assertFalse(currentUser.getSharedPosts().contains(post));
+        assertFalse(post.getSharers().contains(currentUser));
     }
 
     @Test
@@ -383,15 +416,33 @@ class PostServiceImplTest {
         // Expected Value
 
         // Mock data
+        Post inactivePost = Post.builder()
+                .status(Status.INACTIVE)
+                .build();
+
+        Post post1 = Post.builder()
+                .status(Status.ACTIVE)
+                .build();
+
+        Post post2 = Post.builder()
+                .status(Status.ACTIVE)
+                .build();
+
+        User currentUser = User.builder()
+                .sharedPosts(Set.of(inactivePost, post1, post2))
+                .build();
 
         // Set up method
 
         // Stubbing methods
 
         // Calling the method
+        Set<Post> actualSharePosts = postService.getAllSharedPosts(currentUser);
 
         // Behavior Verifications
 
         // Assertions
+        assertTrue(actualSharePosts.contains(post1));
+        assertTrue(actualSharePosts.contains(post2));
     }
 }
