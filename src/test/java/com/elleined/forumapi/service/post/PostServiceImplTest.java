@@ -341,6 +341,7 @@ class PostServiceImplTest {
 
         // Assertions
         assertIterableEquals(expectedSavedPosts, actualSavedPosts);
+
     }
 
     @Test
