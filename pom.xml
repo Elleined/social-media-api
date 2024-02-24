@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.elleined</groupId>
-	<artifactId>forum-api</artifactId>
+	<artifactId>social-media-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>forum-api</name>
 	<description>Creating REST API that supports social media functionalities</description>
