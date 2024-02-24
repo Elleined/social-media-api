@@ -89,10 +89,10 @@ public class PostReactionService implements ReactionService<Post, PostReact> {
     }
 
     @Override
-    public void delete(User currentUser, Post post, PostReact postReact) {
+    public void delete(User currentUser, PostReact postReact) {
         if (currentUser.notOwned(postReact))
             throw new NotOwnedException("Cannot delete this post reaction! because you dont owned this reaction!");
         postReactRepository.delete(postReact);
-        log.debug("Reaction with id of {} removed successfully with post with id of {}", postReact.getId(), post.getId());
+        log.debug("Reaction with id of {} removed successfully", postReact.getId());
     }
 }

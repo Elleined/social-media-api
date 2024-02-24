@@ -6,13 +6,10 @@ import com.elleined.forumapi.model.Post;
 import com.elleined.forumapi.model.Status;
 import com.elleined.forumapi.model.User;
 import com.elleined.forumapi.service.Formatter;
-import com.elleined.forumapi.service.post.PostService;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 
 @Mapper(componentModel = "spring", imports = {
         Formatter.class,

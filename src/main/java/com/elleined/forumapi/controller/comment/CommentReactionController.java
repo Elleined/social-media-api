@@ -70,6 +70,6 @@ public class CommentReactionController {
         User currentUser = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
         CommentReact commentReact = commentReactionService.getById(reactionId);
-        commentReactionService.delete(currentUser, comment, commentReact);
+        commentReactionService.delete(currentUser, commentReact);
     }
 }

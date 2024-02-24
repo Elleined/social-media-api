@@ -89,10 +89,10 @@ public class ReplyReactionService implements ReactionService<Reply, ReplyReact> 
     }
 
     @Override
-    public void delete(User currentUser, Reply reply, ReplyReact replyReact) {
+    public void delete(User currentUser, ReplyReact replyReact) {
         if (currentUser.notOwned(replyReact))
             throw new NotOwnedException("Cannot delete this reply reaction! because you don't owned this reaction!");
         replyReactRepository.delete(replyReact);
-        log.debug("Reaction with id of {} removed successfully with post with id of {}", replyReact.getId(), reply.getId());
+        log.debug("Reaction with id of {} removed successfully", replyReact.getId());
     }
 }

@@ -70,6 +70,6 @@ public class ReplyReactionController {
         User currentUser = userService.getById(currentUserId);
         Reply reply = replyService.getById(replyId);
         ReplyReact replyReact = replyReactionService.getById(reactionId);
-        replyReactionService.delete(currentUser, reply, replyReact);
+        replyReactionService.delete(currentUser, replyReact);
     }
 }

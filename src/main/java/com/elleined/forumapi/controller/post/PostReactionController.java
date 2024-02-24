@@ -69,6 +69,6 @@ public class PostReactionController {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         PostReact postReact = postReactionService.getById(reactionId);
-        postReactionService.delete(currentUser, post, postReact);
+        postReactionService.delete(currentUser, postReact);
     }
 }
