@@ -63,15 +63,22 @@ class CommentPinReplyServiceTest {
         // Mock data
         Reply reply = new Reply();
 
+        Comment comment = new Comment();
+        comment.setPinnedReply(reply);
+
         // Set up method
 
         // Stubbing methods
+        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
         // Calling the method
+        commentPinReplyService.unpin(comment);
 
         // Behavior Verifications
+        verify(commentRepository).save(any(Comment.class));
 
         // Assertions
+        assertNull(comment.getPinnedReply());
     }
 
     @Test
@@ -79,15 +86,23 @@ class CommentPinReplyServiceTest {
         // Expected Value
 
         // Mock data
+        Reply expectedReply = new Reply();
+
+        Comment comment = spy(Comment.class);
+        comment.setPinnedReply(expectedReply);
 
         // Set up method
 
         // Stubbing methods
+        doReturn(false).when(comment).isInactive();
 
         // Calling the method
+        commentPinReplyService.getPinned(comment);
 
         // Behavior Verifications
 
         // Assertions
+        assertNotNull(comment.getPinnedReply());
+        assertEquals(expectedReply, comment.getPinnedReply());
     }
 }

@@ -130,7 +130,7 @@ class CommentServiceImplTest {
         doAnswer(answer -> {
             post.setPinnedComment(null);
             return post;
-        }).when(postPinCommentService).unpin(any(Comment.class));
+        }).when(postPinCommentService).unpin(any(Post.class));
         when(replyRepository.saveAll(anyList())).thenReturn(replies);
 
         // Calling the method
@@ -144,7 +144,7 @@ class CommentServiceImplTest {
 
         // Behavior Verifications
         verify(commentRepository).save(any(Comment.class));
-        verify(postPinCommentService).unpin(any(Comment.class));
+        verify(postPinCommentService).unpin(any(Post.class));
         verify(replyRepository).saveAll(anyList());
     }
 
