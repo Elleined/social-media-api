@@ -10,7 +10,8 @@ import com.elleined.forumapi.repository.CommentRepository;
 import com.elleined.forumapi.repository.PostRepository;
 import com.elleined.forumapi.repository.UserRepository;
 import com.elleined.forumapi.service.block.BlockService;
-import com.elleined.forumapi.service.hashtag.entity.EntityHashTagService;
+import com.elleined.forumapi.service.comment.CommentService;
+import com.elleined.forumapi.service.hashtag.entity.PostHashTagService;
 import com.elleined.forumapi.service.mention.PostMentionService;
 import com.elleined.forumapi.validator.Validator;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,9 +41,10 @@ public class PostServiceImpl implements PostService {
 
     private final CommentRepository commentRepository;
 
-    private final EntityHashTagService<Post> postHashTagService;
+    private final PostHashTagService postHashTagService;
 
     private final Validator validator;
+
 
     @Override
     public Post save(User currentUser,
@@ -109,31 +112,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getAll(User currentUser) {
-        return postRepository.findAll()
-                .stream()
+        return postRepository.findAll().stream()
                 .filter(Post::isActive)
                 .filter(post -> !blockService.isBlockedBy(currentUser, post.getAuthor()))
                 .filter(post -> !blockService.isYouBeenBlockedBy(currentUser, post.getAuthor()))
                 .sorted(Comparator.comparing(Post::getDateCreated).reversed())
                 .toList();
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public int getTotalCommentsAndReplies(Post post) {
-        int commentCount = (int) post.getComments()
-                .stream()
-                .filter(Comment::isActive)
-                .count();
-
-        int commentRepliesCount = (int) post.getComments()
-                .stream()
-                .map(Comment::getReplies)
-                .flatMap(replies -> replies.stream()
-                        .filter(Reply::isActive))
-                .count();
-
-        return commentCount + commentRepliesCount;
     }
 
     @Override
@@ -161,7 +145,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Set<Post> getAllSavedPosts(User currentUser) {
-        return currentUser.getSavedPosts();
+        return currentUser.getSavedPosts().stream()
+                .filter(Post::isActive)
+                .collect(Collectors.toSet());
     }
 
     @Override

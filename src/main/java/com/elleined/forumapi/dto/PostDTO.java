@@ -17,7 +17,6 @@ public class PostDTO {
     private int authorId;
     private String authorName;
     private String authorPicture;
-    private int totalCommentAndReplies;
     private String status;
     private String commentSectionStatus;
     private String attachedPicture;

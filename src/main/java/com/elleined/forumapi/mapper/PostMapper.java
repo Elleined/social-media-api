@@ -19,10 +19,7 @@ import org.springframework.context.annotation.Lazy;
         Status.class,
         Post.CommentSectionStatus.class
 }, uses = UserMapper.class)
-public abstract class PostMapper {
-
-    @Autowired @Lazy
-    protected PostService postService;
+public interface PostMapper {
 
     @Mappings({
             // Should not be touched!
@@ -49,7 +46,7 @@ public abstract class PostMapper {
             @Mapping(target = "attachedPicture", expression = "java(picture)"),
             @Mapping(target = "pinnedComment", expression = "java(null)"),
     })
-    public abstract Post toEntity(String body,
+    Post toEntity(String body,
                                   @Context User currentUser,
                                   @Context String picture);
 
@@ -59,12 +56,11 @@ public abstract class PostMapper {
             @Mapping(target = "authorId", source = "post.author.id"),
             @Mapping(target = "authorName", source = "post.author.name"),
             @Mapping(target = "authorPicture", source = "post.author.picture"),
-            @Mapping(target = "totalCommentAndReplies", expression = "java(postService.getTotalCommentsAndReplies(post))"),
             @Mapping(target = "status", source = "post.status"),
             @Mapping(target = "commentSectionStatus", source = "post.commentSectionStatus"),
             @Mapping(target = "mentionedUsers", source = "post.mentions"),
             @Mapping(target = "attachedPicture", source = "post.attachedPicture"),
             @Mapping(target = "pinnedCommentId", source = "post.pinnedComment.id"),
     })
-    public abstract PostDTO toDTO(Post post);
+    PostDTO toDTO(Post post);
 }

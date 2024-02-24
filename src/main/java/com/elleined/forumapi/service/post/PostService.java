@@ -38,9 +38,6 @@ public interface PostService extends SavedPostService, SharePostService {
 
     List<Post> getAll(User currentUser);
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    int getTotalCommentsAndReplies(Post post);
-
     @Override
     Post savedPost(User currentUser, Post postToSaved);
 
