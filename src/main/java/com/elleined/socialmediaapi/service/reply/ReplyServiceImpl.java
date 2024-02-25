@@ -7,6 +7,7 @@ import com.elleined.socialmediaapi.repository.ReplyRepository;
 import com.elleined.socialmediaapi.service.ModalTrackerService;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.hashtag.entity.EntityHashTagService;
+import com.elleined.socialmediaapi.service.hashtag.entity.ReplyHashTagService;
 import com.elleined.socialmediaapi.service.mention.ReplyMentionService;
 import com.elleined.socialmediaapi.service.pin.CommentPinReplyService;
 import com.elleined.socialmediaapi.validator.Validator;
@@ -39,7 +40,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final ReplyMentionService replyMentionService;
 
-    private final EntityHashTagService<Reply> replyHashTagService;
+    private final ReplyHashTagService replyHashTagService;
 
     private final Validator validator;
 
@@ -59,7 +60,6 @@ public class ReplyServiceImpl implements ReplyService {
         if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
-
 
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         NotificationStatus status = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getId(), ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
@@ -107,7 +107,7 @@ public class ReplyServiceImpl implements ReplyService {
                 .filter(reply -> !reply.equals(pinnedReply))
                 .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
-                .sorted(Comparator.comparing(Reply::getDateCreated))
+                .sorted(Comparator.comparing(Reply::getDateCreated).reversed())
                 .toList());
         if (pinnedReply != null) replies.add(0, pinnedReply); // Prioritizing pinned reply
         return replies;
