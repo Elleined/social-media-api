@@ -3,7 +3,6 @@ package com.elleined.socialmediaapi.controller.comment;
 import com.elleined.socialmediaapi.dto.CommentDTO;
 import com.elleined.socialmediaapi.mapper.CommentMapper;
 import com.elleined.socialmediaapi.model.Comment;
-import com.elleined.socialmediaapi.model.ModalTracker;
 import com.elleined.socialmediaapi.model.ModalTracker.Type;
 import com.elleined.socialmediaapi.model.Post;
 import com.elleined.socialmediaapi.model.User;

@@ -1,8 +1,5 @@
 package com.elleined.socialmediaapi.service.upvote;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.socialmediaapi.model.Comment;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.repository.CommentRepository;
@@ -14,6 +11,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentUpvoteServiceTest {

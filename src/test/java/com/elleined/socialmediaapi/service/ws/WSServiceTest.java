@@ -1,8 +1,5 @@
 package com.elleined.socialmediaapi.service.ws;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.socialmediaapi.dto.CommentDTO;
 import com.elleined.socialmediaapi.dto.ReplyDTO;
 import com.elleined.socialmediaapi.mapper.CommentMapper;
@@ -15,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class WSServiceTest {

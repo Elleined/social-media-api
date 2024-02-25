@@ -1,8 +1,5 @@
 package com.elleined.socialmediaapi.service.reply;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.socialmediaapi.MultiPartFileDataFactory;
 import com.elleined.socialmediaapi.mapper.ReplyMapper;
 import com.elleined.socialmediaapi.model.*;
@@ -26,6 +23,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReplyServiceImplTest {

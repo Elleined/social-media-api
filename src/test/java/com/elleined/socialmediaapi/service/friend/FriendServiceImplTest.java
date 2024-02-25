@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -208,7 +209,7 @@ class FriendServiceImplTest {
         Set<FriendRequest> rawFriendRequests = Set.of(friendRequest1, friendRequest2);
         currentUser.setReceiveFriendRequest(rawFriendRequests);
 
-        Set<FriendRequest> expectedFriendRequests = Set.of(friendRequest2, friendRequest1);
+        List<FriendRequest> expectedFriendRequests = List.of(friendRequest2, friendRequest1);
 
         // Stubbing methods
 

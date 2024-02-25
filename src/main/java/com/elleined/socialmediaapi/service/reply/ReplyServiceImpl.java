@@ -6,7 +6,6 @@ import com.elleined.socialmediaapi.model.*;
 import com.elleined.socialmediaapi.repository.ReplyRepository;
 import com.elleined.socialmediaapi.service.ModalTrackerService;
 import com.elleined.socialmediaapi.service.block.BlockService;
-import com.elleined.socialmediaapi.service.hashtag.entity.EntityHashTagService;
 import com.elleined.socialmediaapi.service.hashtag.entity.ReplyHashTagService;
 import com.elleined.socialmediaapi.service.mention.ReplyMentionService;
 import com.elleined.socialmediaapi.service.pin.CommentPinReplyService;

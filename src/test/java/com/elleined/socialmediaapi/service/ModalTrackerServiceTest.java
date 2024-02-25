@@ -1,8 +1,5 @@
 package com.elleined.socialmediaapi.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.elleined.socialmediaapi.model.ModalTracker;
 import com.elleined.socialmediaapi.repository.ModalTrackerRepository;
 import org.junit.jupiter.api.Test;
@@ -12,6 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ModalTrackerServiceTest {
