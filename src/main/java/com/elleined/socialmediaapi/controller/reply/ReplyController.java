@@ -3,6 +3,8 @@ package com.elleined.socialmediaapi.controller.reply;
 import com.elleined.socialmediaapi.dto.ReplyDTO;
 import com.elleined.socialmediaapi.mapper.ReplyMapper;
 import com.elleined.socialmediaapi.model.Comment;
+import com.elleined.socialmediaapi.model.ModalTracker;
+import com.elleined.socialmediaapi.model.ModalTracker.Type;
 import com.elleined.socialmediaapi.model.Reply;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.service.ModalTrackerService;
@@ -53,7 +55,7 @@ public class ReplyController {
         replyReactNotificationReader.readAll(currentUser, comment);
         replyMentionNotificationReader.readAll(currentUser, comment);
 
-        modalTrackerService.saveTrackerOfUserById(currentUserId, commentId, "REPLY");
+        modalTrackerService.saveTrackerByUserId(currentUserId, commentId, Type.REPLY);
         return replyService.getAllByComment(currentUser, comment).stream()
                 .map(replyMapper::toDTO)
                 .toList();

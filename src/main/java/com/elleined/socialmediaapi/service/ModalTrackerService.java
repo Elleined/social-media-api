@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.service;
 
 import com.elleined.socialmediaapi.model.ModalTracker;
+import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.repository.ModalTrackerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +19,15 @@ public class ModalTrackerService {
     private final ModalTrackerRepository modalTrackerRepository;
 
     @Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_COMMITTED)
-    public ModalTracker saveTrackerOfUserById(int receiverId, int associateTypeIdOpened, String type) {
+    public void saveTrackerByUserId(int receiverId, int associateTypeIdOpened, ModalTracker.Type type) {
         ModalTracker modalTracker = ModalTracker.builder()
                 .receiverId(receiverId)
                 .associatedTypeIdOpened(associateTypeIdOpened)
-                .type(ModalTracker.Type.valueOf(type))
+                .type(type)
                 .build();
 
-        var saveModalTracker = modalTrackerRepository.save(modalTracker);
+        modalTrackerRepository.save(modalTracker);
         log.debug("Saving modal tracker for the receiver with id of {} and Type of {} with associated id of {} success!", receiverId, type, associateTypeIdOpened);
-        return saveModalTracker;
     }
 
     public ModalTracker getTrackerOfUserById(int userId) {
@@ -35,7 +35,7 @@ public class ModalTrackerService {
     }
     
     public void deleteTrackerOfUserById(int userId, ModalTracker.Type type) {
-        ModalTracker modalTracker = getTrackerOfUserById(userId);
+        ModalTracker modalTracker = this.getTrackerOfUserById(userId);
         if (modalTracker == null) return;
         if (modalTracker.getType() == type) {
             modalTrackerRepository.deleteById(userId);

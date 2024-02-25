@@ -2,6 +2,8 @@ package com.elleined.socialmediaapi.controller.post;
 
 import com.elleined.socialmediaapi.dto.PostDTO;
 import com.elleined.socialmediaapi.mapper.PostMapper;
+import com.elleined.socialmediaapi.model.ModalTracker;
+import com.elleined.socialmediaapi.model.ModalTracker.Type;
 import com.elleined.socialmediaapi.model.Post;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.service.ModalTrackerService;
@@ -40,7 +42,7 @@ public class PostController {
         postReactNotificationReader.readAll(currentUser);
         postMentionNotificationReader.readAll(currentUser);
 
-        modalTrackerService.saveTrackerOfUserById(currentUserId, 0, "POST");
+        modalTrackerService.saveTrackerByUserId(currentUserId, 0, Type.POST);
         return postService.getAll(currentUser).stream()
                 .map(postMapper::toDTO)
                 .toList();
