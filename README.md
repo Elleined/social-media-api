@@ -65,12 +65,12 @@ An API that supports social media functionality.
 docker network sma-network
 ```
 
-## 2. Docker Run MYSQL
+## 2. Docker Run MySQL Server
 ```
 docker run -itd --rm -p 3307:3306 --network sma-network --name sma_mysql_server -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=social_media_api_db mysql:8.0.32
 ```
 
-## 3. Docker Run Your API
+## 3. Docker Run Social Media API
 ```
 docker run -itd --rm -p 8081:8081 --network sma-network --name sma_app sma
 ```
