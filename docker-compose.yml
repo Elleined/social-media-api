@@ -25,7 +25,7 @@ services:
     ports:
       - "3307:3306"
     networks:
-      - marketplace_network
+      - sma_network
 networks:
   sma_network:
     name: sma_network
