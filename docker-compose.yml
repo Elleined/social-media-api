@@ -2,6 +2,7 @@ version: "3"
 services:
   sma_api:
     build: .
+    image: elleined/sma
     container_name: sma_app
     restart: always
     ports:
