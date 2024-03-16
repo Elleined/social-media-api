@@ -16,13 +16,16 @@ services:
     networks:
       - sma_network
     depends_on:
-      - sma_mysql_server
+      sma_mysql_server:
+        condition: service_healthy
   sma_mysql_server:
     image: mysql:8.0.32
     container_name: sma_mysql_server
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=sma_db
+    healthcheck:
+      test: mysqladmin ping -h localhost -u root --password=$$MYSQL_ROOT_PASSWORD
     ports:
       - "3307:3306"
     networks:
