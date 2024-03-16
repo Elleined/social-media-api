@@ -1,6 +1,6 @@
 version: "3"
 services:
-  sma_api:
+  sma_app:
     build: .
     image: elleined/sma
     container_name: sma_app
