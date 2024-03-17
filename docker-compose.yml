@@ -1,0 +1,38 @@
+version: "3"
+services:
+  forum_app:
+    build: .
+    image: elleined/sma:thesis
+    container_name: forum_app
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - MYSQL_HOST=forum_mysql_server
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=forum_db
+    networks:
+      - forum_network
+    depends_on:
+      forum_mysql_server:
+        condition: service_healthy
+  forum_mysql_server:
+    image: mysql:8.0.32
+    container_name: forum_mysql_server
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=forum_db
+    healthcheck:
+      test: mysqladmin ping -h localhost -u root --password=$$MYSQL_ROOT_PASSWORD
+    ports:
+      - "3307:3306"
+    networks:
+      - forum_network
+networks:
+  forum_network:
+    name: forum_network
+    ipam:
+      driver: default
+    external: false

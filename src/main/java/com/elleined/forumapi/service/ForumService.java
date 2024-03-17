@@ -22,7 +22,6 @@ import com.elleined.forumapi.model.mention.ReplyMention;
 import com.elleined.forumapi.service.image.ImageUploader;
 import com.elleined.forumapi.utils.DirectoryFolders;
 import com.elleined.forumapi.validator.StringValidator;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

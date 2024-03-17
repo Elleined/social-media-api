@@ -1,6 +1,5 @@
 package com.elleined.forumapi.config;
 
-import com.elleined.forumapi.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
