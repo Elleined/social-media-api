@@ -2,10 +2,10 @@ package com.elleined.socialmediaapi.service.hashtag.entity;
 
 import com.elleined.socialmediaapi.mapper.hashtag.HashTagMapper;
 import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
-import com.elleined.socialmediaapi.repository.CommentRepository;
-import com.elleined.socialmediaapi.repository.HashTagRepository;
+import com.elleined.socialmediaapi.repository.main.CommentRepository;
+import com.elleined.socialmediaapi.repository.hashtag.HashTagRepository;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,9 +2,9 @@ package com.elleined.socialmediaapi.service.pin;
 
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.main.Reply;
-import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.repository.CommentRepository;
-import com.elleined.socialmediaapi.repository.ReplyRepository;
+import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.repository.main.CommentRepository;
+import com.elleined.socialmediaapi.repository.main.ReplyRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

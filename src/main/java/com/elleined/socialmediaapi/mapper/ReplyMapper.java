@@ -5,6 +5,7 @@ import com.elleined.socialmediaapi.dto.ReplyDTO;
 import com.elleined.socialmediaapi.model.*;
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.main.Reply;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.Formatter;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

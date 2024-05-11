@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.notification.friend;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

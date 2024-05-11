@@ -1,9 +1,9 @@
 package com.elleined.socialmediaapi.service.upvote;
 
 import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.repository.CommentRepository;
-import com.elleined.socialmediaapi.repository.UserRepository;
+import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.repository.main.CommentRepository;
+import com.elleined.socialmediaapi.repository.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

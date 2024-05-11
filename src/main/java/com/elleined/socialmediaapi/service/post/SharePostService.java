@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.post;
 
 import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 
 import java.util.Collection;
 

@@ -3,7 +3,7 @@ package com.elleined.socialmediaapi.service.reply;
 import com.elleined.socialmediaapi.exception.*;
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.main.Reply;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

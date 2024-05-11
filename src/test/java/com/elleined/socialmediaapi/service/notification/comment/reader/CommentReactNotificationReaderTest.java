@@ -3,7 +3,7 @@ package com.elleined.socialmediaapi.service.notification.comment.reader;
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.react.CommentReactRepository;
 import com.elleined.socialmediaapi.service.notification.react.CommentReactNotificationService;
 import org.junit.jupiter.api.Test;

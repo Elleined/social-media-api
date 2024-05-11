@@ -3,7 +3,7 @@ package com.elleined.socialmediaapi.service.comment;
 import com.elleined.socialmediaapi.exception.*;
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;

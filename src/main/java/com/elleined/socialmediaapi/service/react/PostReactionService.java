@@ -5,7 +5,7 @@ import com.elleined.socialmediaapi.exception.NotOwnedException;
 import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.react.PostReactionMapper;
 import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.react.React;
 import com.elleined.socialmediaapi.repository.react.PostReactRepository;

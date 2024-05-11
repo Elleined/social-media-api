@@ -6,7 +6,7 @@ import com.elleined.socialmediaapi.mapper.notification.friend.FriendRequestNotif
 import com.elleined.socialmediaapi.mapper.notification.mention.MentionNotificationMapper;
 import com.elleined.socialmediaapi.mapper.notification.react.ReactNotificationMapper;
 import com.elleined.socialmediaapi.mapper.notification.reply.ReplyNotificationMapper;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.notification.comment.CommentNotificationService;
 import com.elleined.socialmediaapi.service.notification.friend.FriendRequestNotificationService;
 import com.elleined.socialmediaapi.service.notification.mention.CommentMentionNotificationService;

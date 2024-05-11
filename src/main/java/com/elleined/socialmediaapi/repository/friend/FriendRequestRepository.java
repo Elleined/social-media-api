@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.repository;
+package com.elleined.socialmediaapi.repository.friend;
 
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import org.springframework.data.jpa.repository.JpaRepository;

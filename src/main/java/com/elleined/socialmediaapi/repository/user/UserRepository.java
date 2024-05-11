@@ -1,6 +1,6 @@
-package com.elleined.socialmediaapi.repository;
+package com.elleined.socialmediaapi.repository.user;
 
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

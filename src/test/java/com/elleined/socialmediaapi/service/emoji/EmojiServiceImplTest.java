@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.service.emoji;
 
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.react.Emoji.Type;
-import com.elleined.socialmediaapi.repository.EmojiRepository;
+import com.elleined.socialmediaapi.repository.react.EmojiRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

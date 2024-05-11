@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.mapper.note;
 
 import com.elleined.socialmediaapi.dto.NoteDTO;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.note.Note;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

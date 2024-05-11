@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.populator;
 
 import com.elleined.socialmediaapi.model.react.Emoji;
-import com.elleined.socialmediaapi.repository.EmojiRepository;
+import com.elleined.socialmediaapi.repository.react.EmojiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

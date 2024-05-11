@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.populator;
 
-import com.elleined.socialmediaapi.repository.EmojiRepository;
+import com.elleined.socialmediaapi.repository.react.EmojiRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

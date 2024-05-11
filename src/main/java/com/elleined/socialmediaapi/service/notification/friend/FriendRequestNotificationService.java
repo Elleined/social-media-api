@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.service.notification.friend;
 
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.service.notification.NotificationService;
 

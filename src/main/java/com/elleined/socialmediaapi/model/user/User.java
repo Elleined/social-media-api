@@ -1,5 +1,6 @@
-package com.elleined.socialmediaapi.model;
+package com.elleined.socialmediaapi.model.user;
 
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.main.Post;
@@ -150,11 +151,11 @@ public class User extends PrimaryKeyIdentity {
 
     // user id reference is in tbl  user friend
     @OneToMany(mappedBy = "creator")
-    private Set<FriendRequest> sentFriendRequest;
+    private Set<FriendRequest> sentFriendRequests;
 
     // user id reference is in tbl  user friend
     @OneToMany(mappedBy = "requestedUser")
-    private Set<FriendRequest> receiveFriendRequest;
+    private Set<FriendRequest> receiveFriendRequests;
 
     @OneToMany(mappedBy = "creator")
     private List<Post> posts;
@@ -189,16 +190,16 @@ public class User extends PrimaryKeyIdentity {
         return this.getFriends().contains(anotherUser);
     }
     public boolean hasFriendRequest(FriendRequest friendRequest) {
-        return this.getReceiveFriendRequest().contains(friendRequest);
+        return this.getReceiveFriendRequests().contains(friendRequest);
     }
     public boolean hasAlreadySentFriendRequestTo(User userToAdd) {
-        return this.getSentFriendRequest().stream()
+        return this.getSentFriendRequests().stream()
                 .map(FriendRequest::getRequestedUser)
                 .anyMatch(userToAdd::equals);
     }
 
     public boolean hasAlreadyReceiveFriendRequestTo(User userToAdd) {
-        return userToAdd.getSentFriendRequest().stream()
+        return userToAdd.getSentFriendRequests().stream()
                 .map(FriendRequest::getRequestedUser)
                 .anyMatch(this::equals);
     }

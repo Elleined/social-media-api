@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.model.story;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

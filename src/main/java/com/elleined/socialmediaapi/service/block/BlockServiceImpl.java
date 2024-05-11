@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.service.block;
 
 import com.elleined.socialmediaapi.exception.BlockedException;
-import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.repository.UserRepository;
+import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

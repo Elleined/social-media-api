@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.follow;
 
-import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.repository.UserRepository;
+import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

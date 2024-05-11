@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.repository;
+package com.elleined.socialmediaapi.repository.hashtag;
 
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Comment;

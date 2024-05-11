@@ -6,7 +6,7 @@ import com.elleined.socialmediaapi.mapper.CommentMapper;
 import com.elleined.socialmediaapi.mapper.ReplyMapper;
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.main.Reply;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.UserService;
 import com.elleined.socialmediaapi.service.comment.CommentService;
 import com.elleined.socialmediaapi.service.pin.CommentPinReplyService;

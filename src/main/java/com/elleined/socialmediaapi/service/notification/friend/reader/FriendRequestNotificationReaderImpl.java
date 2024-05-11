@@ -1,9 +1,9 @@
 package com.elleined.socialmediaapi.service.notification.friend.reader;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.repository.FriendRequestRepository;
+import com.elleined.socialmediaapi.repository.friend.FriendRequestRepository;
 import com.elleined.socialmediaapi.service.notification.friend.FriendRequestNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

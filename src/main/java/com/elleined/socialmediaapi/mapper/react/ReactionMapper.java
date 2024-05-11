@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.mapper.react;
 
 import com.elleined.socialmediaapi.dto.ReactionDTO;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.react.React;
 

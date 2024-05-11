@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.service.react;
 
 import com.elleined.socialmediaapi.mapper.react.CommentReactionMapper;
 import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.repository.react.CommentReactRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;

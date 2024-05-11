@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.model.mention;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.main.Reply;

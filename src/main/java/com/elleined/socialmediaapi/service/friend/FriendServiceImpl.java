@@ -2,10 +2,10 @@ package com.elleined.socialmediaapi.service.friend;
 
 import com.elleined.socialmediaapi.exception.*;
 import com.elleined.socialmediaapi.mapper.FriendRequestMapper;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.repository.FriendRequestRepository;
-import com.elleined.socialmediaapi.repository.UserRepository;
+import com.elleined.socialmediaapi.repository.friend.FriendRequestRepository;
+import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

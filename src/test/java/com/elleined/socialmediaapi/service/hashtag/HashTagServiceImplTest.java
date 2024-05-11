@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.hashtag;
 
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
-import com.elleined.socialmediaapi.repository.HashTagRepository;
+import com.elleined.socialmediaapi.repository.hashtag.HashTagRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

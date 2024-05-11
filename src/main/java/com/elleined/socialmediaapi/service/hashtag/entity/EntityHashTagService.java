@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.service.hashtag.entity;
 
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 
 import java.util.List;

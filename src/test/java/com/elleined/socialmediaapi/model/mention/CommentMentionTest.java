@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.model.mention;
 
 import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.Status;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

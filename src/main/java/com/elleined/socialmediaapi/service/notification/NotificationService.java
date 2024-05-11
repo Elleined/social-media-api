@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.service.notification;
 
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 
 import java.util.Collection;
 

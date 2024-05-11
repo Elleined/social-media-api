@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.mapper;
 
 import com.elleined.socialmediaapi.dto.FriendRequestDTO;
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
