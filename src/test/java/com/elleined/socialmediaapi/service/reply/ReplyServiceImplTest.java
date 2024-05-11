@@ -3,6 +3,8 @@ package com.elleined.socialmediaapi.service.reply;
 import com.elleined.socialmediaapi.MultiPartFileDataFactory;
 import com.elleined.socialmediaapi.mapper.ReplyMapper;
 import com.elleined.socialmediaapi.model.*;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.repository.ReplyRepository;
 import com.elleined.socialmediaapi.service.ModalTrackerService;
 import com.elleined.socialmediaapi.service.block.BlockService;

@@ -1,9 +1,8 @@
 package com.elleined.socialmediaapi.service.notification.comment.reader;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.Post;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.model.mention.CommentMention;
 import com.elleined.socialmediaapi.repository.MentionRepository;
 import com.elleined.socialmediaapi.service.notification.mention.CommentMentionNotificationService;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,8 @@
 package com.elleined.socialmediaapi.mapper.mention;
 
-import com.elleined.socialmediaapi.model.Comment;
+import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.model.mention.CommentMention;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

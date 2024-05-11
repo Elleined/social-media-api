@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.service.reply;
 
 import com.elleined.socialmediaapi.exception.*;
-import com.elleined.socialmediaapi.model.Comment;
-import com.elleined.socialmediaapi.model.Reply;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.User;
 import org.springframework.web.multipart.MultipartFile;
 

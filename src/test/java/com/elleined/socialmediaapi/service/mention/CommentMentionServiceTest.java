@@ -2,7 +2,8 @@ package com.elleined.socialmediaapi.service.mention;
 
 import com.elleined.socialmediaapi.mapper.mention.CommentMentionMapper;
 import com.elleined.socialmediaapi.model.*;
-import com.elleined.socialmediaapi.model.mention.CommentMention;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.repository.MentionRepository;
 import com.elleined.socialmediaapi.service.ModalTrackerService;
 import com.elleined.socialmediaapi.service.block.BlockService;

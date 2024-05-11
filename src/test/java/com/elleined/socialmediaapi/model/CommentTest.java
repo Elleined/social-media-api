@@ -1,5 +1,8 @@
 package com.elleined.socialmediaapi.model;
 
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
+import com.elleined.socialmediaapi.model.main.Reply;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

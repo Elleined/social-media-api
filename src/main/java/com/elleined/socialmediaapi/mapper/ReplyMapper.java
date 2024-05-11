@@ -3,6 +3,8 @@ package com.elleined.socialmediaapi.mapper;
 
 import com.elleined.socialmediaapi.dto.ReplyDTO;
 import com.elleined.socialmediaapi.model.*;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.service.Formatter;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

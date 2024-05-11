@@ -1,10 +1,10 @@
 package com.elleined.socialmediaapi.model;
 
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
-import com.elleined.socialmediaapi.model.react.CommentReact;
-import com.elleined.socialmediaapi.model.react.PostReact;
-import com.elleined.socialmediaapi.model.react.ReplyReact;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

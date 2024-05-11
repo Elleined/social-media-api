@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.hashtag.entity;
 
 import com.elleined.socialmediaapi.mapper.hashtag.HashTagMapper;
-import com.elleined.socialmediaapi.model.Comment;
+import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.repository.CommentRepository;

@@ -1,8 +1,8 @@
 
 package com.elleined.socialmediaapi.service.pin;
 
-import com.elleined.socialmediaapi.model.Comment;
-import com.elleined.socialmediaapi.model.Post;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.repository.PostRepository;
 import org.junit.jupiter.api.Test;

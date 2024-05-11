@@ -4,7 +4,7 @@ import com.elleined.socialmediaapi.exception.BlockedException;
 import com.elleined.socialmediaapi.exception.EmptyBodyException;
 import com.elleined.socialmediaapi.exception.NotOwnedException;
 import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
-import com.elleined.socialmediaapi.model.Post;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.User;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -2,8 +2,8 @@ package com.elleined.socialmediaapi.service.post;
 
 import com.elleined.socialmediaapi.MultiPartFileDataFactory;
 import com.elleined.socialmediaapi.mapper.PostMapper;
-import com.elleined.socialmediaapi.model.Comment;
-import com.elleined.socialmediaapi.model.Post;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.Status;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.repository.CommentRepository;

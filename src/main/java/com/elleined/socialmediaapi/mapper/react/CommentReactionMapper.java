@@ -1,10 +1,9 @@
 package com.elleined.socialmediaapi.mapper.react;
 
 import com.elleined.socialmediaapi.dto.ReactionDTO;
-import com.elleined.socialmediaapi.model.Comment;
+import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.model.react.CommentReact;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

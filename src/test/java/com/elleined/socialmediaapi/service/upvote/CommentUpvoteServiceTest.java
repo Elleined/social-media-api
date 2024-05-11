@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.service.upvote;
 
-import com.elleined.socialmediaapi.model.Comment;
+import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.repository.CommentRepository;
 import com.elleined.socialmediaapi.repository.UserRepository;

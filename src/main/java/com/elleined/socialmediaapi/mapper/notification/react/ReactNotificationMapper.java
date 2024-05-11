@@ -1,9 +1,6 @@
 package com.elleined.socialmediaapi.mapper.notification.react;
 
 import com.elleined.socialmediaapi.dto.notification.ReactionNotification;
-import com.elleined.socialmediaapi.model.react.CommentReact;
-import com.elleined.socialmediaapi.model.react.PostReact;
-import com.elleined.socialmediaapi.model.react.ReplyReact;
 import com.elleined.socialmediaapi.service.Formatter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

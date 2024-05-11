@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.repository;
 
-import com.elleined.socialmediaapi.model.Comment;
-import com.elleined.socialmediaapi.model.Post;
-import com.elleined.socialmediaapi.model.Reply;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

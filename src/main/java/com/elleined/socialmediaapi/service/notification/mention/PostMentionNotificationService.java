@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.service.notification.mention;
 
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.mention.PostMention;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

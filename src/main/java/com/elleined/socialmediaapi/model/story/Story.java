@@ -1,16 +1,49 @@
 package com.elleined.socialmediaapi.model.story;
 
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.User;
-import org.springframework.web.multipart.MultipartFile;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-public class Story {
+@Entity
+@Table(name = "tbl_story")
+@NoArgsConstructor
+@Getter
+@Setter
+public class Story extends PrimaryKeyIdentity {
+    @Column(
+            name = "content",
+            nullable = false
+    )
+    private String content;
 
-    private int id;
-    private String text;
-    private MultipartFile attachment;
-    private User author;
-    private User taggedUsers;
-    private LocalDateTime createdAt;
+    @Column(name = "attach_picture")
+    private String attachPicture;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "creator_id",
+            referencedColumnName = "id",
+            nullable = false,
+            unique = true
+    )
+    private User creator;
+
+    @Builder
+    public Story(int id,
+                 LocalDateTime createdAt,
+                 LocalDateTime updatedAt,
+                 String content,
+                 String attachPicture,
+                 User creator) {
+        super(id, createdAt, updatedAt);
+        this.content = content;
+        this.attachPicture = attachPicture;
+        this.creator = creator;
+    }
 }

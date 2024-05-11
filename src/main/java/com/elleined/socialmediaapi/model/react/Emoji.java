@@ -1,26 +1,18 @@
 package com.elleined.socialmediaapi.model.react;
 
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
+
 @Entity
 @Table(name = "tbl_emoji")
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class Emoji {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name = "id",
-            unique = true,
-            nullable = false,
-            updatable = false
-    )
-    private int id;
+public class Emoji extends PrimaryKeyIdentity {
 
     @Enumerated(EnumType.STRING)
     @Column(
@@ -29,7 +21,12 @@ public class Emoji {
     )
     private Type type;
 
-    public Emoji(Type type) {
+    @Builder
+    public Emoji(int id,
+                 LocalDateTime createdAt,
+                 LocalDateTime updatedAt,
+                 Type type) {
+        super(id, createdAt, updatedAt);
         this.type = type;
     }
 

@@ -1,29 +1,19 @@
 package com.elleined.socialmediaapi.model.note;
 
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
+
 @Entity
-@Table(name = "tbl_user_note")
-@Builder
+@Table(name = "tbl_note")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class Note {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name = "note_id",
-            unique = true,
-            nullable = false,
-            updatable = false
-    )
-    private  int id;
+public class Note extends PrimaryKeyIdentity {
 
     @Column(
             name = "thought",
@@ -31,22 +21,25 @@ public class Note {
     )
     private String thought;
 
-    @Column(
-            name = "created_at",
+    @OneToOne(optional = false)
+    @JoinColumn(
+            name = "creator_id",
+            referencedColumnName = "id",
             nullable = false,
             updatable = false
     )
-    private LocalDateTime createdAt;
+    private User creator;
 
-    @OneToOne(optional = false)
-    @JoinColumn(
-            name = "user_id",
-            referencedColumnName = "user_id",
-            nullable = false,
-            updatable = false,
-            unique = true
-    )
-    private User user;
+    @Builder
+    public Note(int id,
+                LocalDateTime createdAt,
+                LocalDateTime updatedAt,
+                String thought,
+                User creator) {
+        super(id, createdAt, updatedAt);
+        this.thought = thought;
+        this.creator = creator;
+    }
 
     public boolean isExpired() {
         LocalDateTime noteCreation = this.getCreatedAt();

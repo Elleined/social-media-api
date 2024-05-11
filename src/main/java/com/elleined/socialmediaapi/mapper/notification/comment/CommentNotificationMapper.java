@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.mapper.notification.comment;
 
 import com.elleined.socialmediaapi.dto.notification.CommentNotification;
 import com.elleined.socialmediaapi.mapper.notification.NotificationMapper;
-import com.elleined.socialmediaapi.model.Comment;
+import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.service.Formatter;
 import com.elleined.socialmediaapi.service.notification.comment.CommentNotificationService;
 import org.mapstruct.Mapper;

@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.pin;
 
-import com.elleined.socialmediaapi.model.Comment;
-import com.elleined.socialmediaapi.model.Reply;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.repository.CommentRepository;
 import com.elleined.socialmediaapi.repository.ReplyRepository;

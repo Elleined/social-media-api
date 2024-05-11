@@ -1,57 +1,44 @@
 package com.elleined.socialmediaapi.model.mention;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.User;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
+import com.elleined.socialmediaapi.model.main.Reply;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "tbl_mention")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@NoArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public abstract class Mention {
-
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.TABLE,
-            generator = "autoIncrement"
-    )
-    @SequenceGenerator(
-            allocationSize = 1,
-            name = "autoIncrement",
-            sequenceName = "autoIncrement"
-    )
-    @Column(
-            name = "mention_id",
-            unique = true,
-            nullable = false,
-            updatable = false
-    )
-    private int id;
-
-    @Column(
-            name = "created_at",
-            nullable = false,
-            updatable = false
-    )
-    private LocalDateTime createdAt;
+public class Mention extends PrimaryKeyIdentity {
 
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "mentioned_user",
-            referencedColumnName = "user_id",
+            referencedColumnName = "id",
             nullable = false,
             updatable = false
     )
     private User mentionedUser;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "creator_id",
+            referencedColumnName = "id",
+            nullable = false,
+            updatable = false
+    )
+    private User creator;
 
     @Column(
             name = "notification_status",
@@ -60,26 +47,31 @@ public abstract class Mention {
     @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(
-            name = "mentioning_user",
-            referencedColumnName = "user_id",
-            nullable = false,
-            updatable = false
-    )
-    private User mentioningUser;
+    @ManyToMany(mappedBy = "mentions")
+    private Set<Post> posts;
 
-    public abstract String getMessage();
+    @ManyToMany(mappedBy = "mentions")
+    private Set<Comment> comments;
 
-    public abstract int getReceiverId();
+    @ManyToMany(mappedBy = "mentions")
+    private Set<Reply> replies;
 
-    public abstract boolean isEntityActive();
-
-    public boolean isRead() {
-        return this.getNotificationStatus() == NotificationStatus.READ;
-    }
-
-    public boolean isUnread() {
-        return this.getNotificationStatus() == NotificationStatus.UNREAD;
+    @Builder
+    public Mention(int id,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt,
+                   User mentionedUser,
+                   User creator,
+                   NotificationStatus notificationStatus,
+                   Set<Post> posts,
+                   Set<Comment> comments,
+                   Set<Reply> replies) {
+        super(id, createdAt, updatedAt);
+        this.mentionedUser = mentionedUser;
+        this.creator = creator;
+        this.notificationStatus = notificationStatus;
+        this.posts = posts;
+        this.comments = comments;
+        this.replies = replies;
     }
 }

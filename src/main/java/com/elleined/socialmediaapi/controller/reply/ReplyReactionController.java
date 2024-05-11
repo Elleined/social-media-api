@@ -2,10 +2,9 @@ package com.elleined.socialmediaapi.controller.reply;
 
 import com.elleined.socialmediaapi.dto.ReactionDTO;
 import com.elleined.socialmediaapi.mapper.react.ReplyReactionMapper;
-import com.elleined.socialmediaapi.model.Reply;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.model.react.Emoji;
-import com.elleined.socialmediaapi.model.react.ReplyReact;
 import com.elleined.socialmediaapi.service.UserService;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import com.elleined.socialmediaapi.service.react.ReactionService;

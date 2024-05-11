@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.service.notification.post.reader;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.model.react.PostReact;
 import com.elleined.socialmediaapi.repository.react.PostReactRepository;
 import com.elleined.socialmediaapi.service.notification.react.PostReactNotificationService;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.mapper.notification.reply;
 
 import com.elleined.socialmediaapi.dto.notification.ReplyNotification;
 import com.elleined.socialmediaapi.mapper.notification.NotificationMapper;
-import com.elleined.socialmediaapi.model.Reply;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.service.Formatter;
 import com.elleined.socialmediaapi.service.notification.reply.ReplyNotificationService;
 import org.mapstruct.Mapper;

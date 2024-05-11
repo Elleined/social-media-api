@@ -2,6 +2,8 @@ package com.elleined.socialmediaapi.mapper;
 
 import com.elleined.socialmediaapi.dto.CommentDTO;
 import com.elleined.socialmediaapi.model.*;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.service.Formatter;
 import com.elleined.socialmediaapi.service.comment.CommentService;
 import org.mapstruct.Context;

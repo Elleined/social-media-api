@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.notification.comment;
 
-import com.elleined.socialmediaapi.model.Comment;
-import com.elleined.socialmediaapi.model.Post;
+import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;

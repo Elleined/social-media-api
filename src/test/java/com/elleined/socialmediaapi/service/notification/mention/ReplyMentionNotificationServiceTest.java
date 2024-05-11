@@ -1,10 +1,9 @@
 package com.elleined.socialmediaapi.service.notification.mention;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.Reply;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.Status;
 import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.model.mention.ReplyMention;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

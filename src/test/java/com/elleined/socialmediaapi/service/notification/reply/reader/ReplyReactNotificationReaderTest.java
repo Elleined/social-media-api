@@ -1,10 +1,9 @@
 package com.elleined.socialmediaapi.service.notification.reply.reader;
 
-import com.elleined.socialmediaapi.model.Comment;
+import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.Reply;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.model.react.ReplyReact;
 import com.elleined.socialmediaapi.repository.react.ReplyReactRepository;
 import com.elleined.socialmediaapi.service.notification.react.ReplyReactNotificationService;
 import org.junit.jupiter.api.Test;

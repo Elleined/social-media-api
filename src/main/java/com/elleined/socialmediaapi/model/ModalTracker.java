@@ -3,23 +3,14 @@ package com.elleined.socialmediaapi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "tbl_modal_tracker")
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class ModalTracker {
-
-    @Id
-    @Column(
-            name = "receiver_user_id",
-            unique = true,
-            nullable = false,
-            updatable = false
-    )
-    private int receiverId;
+public class ModalTracker extends PrimaryKeyIdentity {
 
     @Column(
             name = "modal_type",
@@ -34,6 +25,17 @@ public class ModalTracker {
             updatable = false
     )
     private int associatedTypeIdOpened;
+
+    @Builder
+    public ModalTracker(int id,
+                        LocalDateTime createdAt,
+                        LocalDateTime updatedAt,
+                        Type type,
+                        int associatedTypeIdOpened) {
+        super(id, createdAt, updatedAt);
+        this.type = type;
+        this.associatedTypeIdOpened = associatedTypeIdOpened;
+    }
 
     public enum Type {
         POST,

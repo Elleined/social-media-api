@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.service.post;
 
-import com.elleined.socialmediaapi.model.Post;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.User;
 
 import java.util.Set;

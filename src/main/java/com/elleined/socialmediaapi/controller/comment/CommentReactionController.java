@@ -2,9 +2,8 @@ package com.elleined.socialmediaapi.controller.comment;
 
 import com.elleined.socialmediaapi.dto.ReactionDTO;
 import com.elleined.socialmediaapi.mapper.react.CommentReactionMapper;
-import com.elleined.socialmediaapi.model.Comment;
+import com.elleined.socialmediaapi.model.main.Comment;
 import com.elleined.socialmediaapi.model.User;
-import com.elleined.socialmediaapi.model.react.CommentReact;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.service.UserService;
 import com.elleined.socialmediaapi.service.comment.CommentService;

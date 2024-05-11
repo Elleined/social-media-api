@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.mapper;
 
 
 import com.elleined.socialmediaapi.dto.PostDTO;
-import com.elleined.socialmediaapi.model.Post;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.Status;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.service.Formatter;

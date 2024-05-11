@@ -3,7 +3,7 @@ package com.elleined.socialmediaapi.controller.post;
 import com.elleined.socialmediaapi.dto.PostDTO;
 import com.elleined.socialmediaapi.mapper.PostMapper;
 import com.elleined.socialmediaapi.model.ModalTracker.Type;
-import com.elleined.socialmediaapi.model.Post;
+import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.service.ModalTrackerService;
 import com.elleined.socialmediaapi.service.UserService;

@@ -1,9 +1,8 @@
 package com.elleined.socialmediaapi.service.notification.react;
 
-import com.elleined.socialmediaapi.model.Reply;
+import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.User;
 import com.elleined.socialmediaapi.model.react.React;
-import com.elleined.socialmediaapi.model.react.ReplyReact;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
