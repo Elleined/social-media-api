@@ -24,21 +24,21 @@ public class Mention extends PrimaryKeyIdentity {
 
     @ManyToOne(optional = false)
     @JoinColumn(
-            name = "mentioned_user",
-            referencedColumnName = "id",
-            nullable = false,
-            updatable = false
-    )
-    private User mentionedUser;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(
             name = "creator_id",
             referencedColumnName = "id",
             nullable = false,
             updatable = false
     )
     private User creator;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "mentioned_user",
+            referencedColumnName = "id",
+            nullable = false,
+            updatable = false
+    )
+    private User mentionedUser;
 
     @Column(
             name = "notification_status",

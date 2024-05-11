@@ -1,6 +1,7 @@
-package com.elleined.socialmediaapi.newdto;
+package com.elleined.socialmediaapi.newdto.user;
 
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
+import com.elleined.socialmediaapi.newdto.DTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
