@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.dto.notification;
+package com.elleined.socialmediaapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class Notification {
     private int id;
-    private String message;
+    private int creatorId;
     private int receiverId;
-    private String respondentPicture;
-    private int respondentId;
-    private String formattedDate;
-    private String formattedTime;
+    private String message;
     private String notificationStatus;
 }

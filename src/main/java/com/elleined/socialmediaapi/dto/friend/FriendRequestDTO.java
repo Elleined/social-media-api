@@ -1,7 +1,7 @@
-package com.elleined.socialmediaapi.newdto.friend;
+package com.elleined.socialmediaapi.dto.friend;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.newdto.DTO;
+import com.elleined.socialmediaapi.dto.DTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

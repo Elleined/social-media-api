@@ -1,6 +1,6 @@
-package com.elleined.socialmediaapi.newdto.note;
+package com.elleined.socialmediaapi.dto.note;
 
-import com.elleined.socialmediaapi.newdto.DTO;
+import com.elleined.socialmediaapi.dto.DTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

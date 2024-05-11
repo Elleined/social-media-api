@@ -1,9 +1,6 @@
-package com.elleined.socialmediaapi.newdto.hashtag;
+package com.elleined.socialmediaapi.dto.hashtag;
 
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.main.Reply;
-import com.elleined.socialmediaapi.newdto.DTO;
+import com.elleined.socialmediaapi.dto.DTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
