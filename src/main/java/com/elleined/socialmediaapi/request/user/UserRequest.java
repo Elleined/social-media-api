@@ -15,7 +15,9 @@ public class UserRequest extends Request {
     private String email;
 
     @Builder
-    public UserRequest(String name, String picture, String email) {
+    public UserRequest(String name,
+                       String picture,
+                       String email) {
         this.name = name;
         this.picture = picture;
         this.email = email;

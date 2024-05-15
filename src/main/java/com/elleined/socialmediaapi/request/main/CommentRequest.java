@@ -18,9 +18,9 @@ public class CommentRequest extends ForumRequest {
                           int creatorId,
                           String attachedPicture,
                           Set<Integer> hashTagIds,
-                          Set<Integer> mentionIds,
+                          Set<Integer> mentionedUserIds,
                           int postId) {
-        super(body, creatorId, attachedPicture, hashTagIds, mentionIds);
+        super(body, creatorId, attachedPicture, hashTagIds, mentionedUserIds);
         this.postId = postId;
     }
 }

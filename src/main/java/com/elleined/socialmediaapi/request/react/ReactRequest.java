@@ -13,15 +13,15 @@ import lombok.Setter;
 @Setter
 public class ReactRequest extends Request {
     private int creatorId;
-    private Emoji.Type type;
+    private int emojiId;
     private int forumId;
 
     @Builder
     public ReactRequest(int creatorId,
-                        Emoji.Type type,
+                        int emojiId,
                         int forumId) {
         this.creatorId = creatorId;
-        this.type = type;
+        this.emojiId = emojiId;
         this.forumId = forumId;
     }
 }

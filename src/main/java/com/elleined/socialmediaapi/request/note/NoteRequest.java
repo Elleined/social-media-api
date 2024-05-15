@@ -11,11 +11,12 @@ import lombok.Setter;
 @Setter
 public class NoteRequest extends Request {
     private String thought;
-    private int creator;
+    private int creatorId;
 
     @Builder
-    public NoteRequest(String thought, int creator) {
+    public NoteRequest(String thought,
+                       int creatorId) {
         this.thought = thought;
-        this.creator = creator;
+        this.creatorId = creatorId;
     }
 }

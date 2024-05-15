@@ -17,7 +17,7 @@ public class PostRequest extends ForumRequest {
                        int creatorId,
                        String attachedPicture,
                        Set<Integer> hashTagIds,
-                       Set<Integer> mentionIds) {
-        super(body, creatorId, attachedPicture, hashTagIds, mentionIds);
+                       Set<Integer> mentionedUserIds) {
+        super(body, creatorId, attachedPicture, hashTagIds, mentionedUserIds);
     }
 }

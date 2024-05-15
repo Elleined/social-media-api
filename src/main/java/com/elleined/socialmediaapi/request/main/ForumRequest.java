@@ -15,13 +15,17 @@ public abstract class ForumRequest extends Request {
     private int creatorId;
     private String attachedPicture;
     private Set<Integer> hashTagIds;
-    private Set<Integer> mentionIds;
+    private Set<Integer> mentionedUserIds;
 
-    public ForumRequest(String body, int creatorId, String attachedPicture, Set<Integer> hashTagIds, Set<Integer> mentionIds) {
+    public ForumRequest(String body,
+                        int creatorId,
+                        String attachedPicture,
+                        Set<Integer> hashTagIds,
+                        Set<Integer> mentionedUserIds) {
         this.body = body;
         this.creatorId = creatorId;
         this.attachedPicture = attachedPicture;
         this.hashTagIds = hashTagIds;
-        this.mentionIds = mentionIds;
+        this.mentionedUserIds = mentionedUserIds;
     }
 }
