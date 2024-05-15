@@ -49,7 +49,6 @@ public abstract class Forum extends PrimaryKeyIdentity {
     @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
 
-    @Builder
     public Forum(int id,
                  LocalDateTime createdAt,
                  LocalDateTime updatedAt,
