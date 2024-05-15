@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.model.main;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.mention.Mention;
@@ -14,6 +15,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_comment")
@@ -133,5 +135,31 @@ public class Comment extends Forum {
 
     public boolean has(Reply reply) {
         return this.getReplies().stream().anyMatch(reply::equals);
+    }
+
+    public List<Integer> getAllReplyIds() {
+        return this.getReplies().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .toList();
+    }
+    public Set<Integer> getAllHashTagIds() {
+        return this.getHashTags().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+    public Set<Integer> getAllMentionIds() {
+        return this.getMentions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+    public Set<Integer> getAllReactionIds() {
+        return this.getReactions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+    public Set<Integer> getAllUserVoteIds() {
+        return this.getUserVotes().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
 }
