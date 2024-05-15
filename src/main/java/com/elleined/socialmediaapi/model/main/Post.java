@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.model.main;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.mention.Mention;
@@ -14,6 +15,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_post")
@@ -35,6 +37,9 @@ public class Post extends Forum {
             referencedColumnName = "id"
     )
     private Comment pinnedComment;
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments;
 
     @ManyToMany
     @JoinTable(
@@ -83,10 +88,6 @@ public class Post extends Forum {
             )
     )
     private Set<React> reactions;
-
-    // post id reference is in comment table
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comments;
 
     @ManyToMany
     @JoinTable(
@@ -158,5 +159,41 @@ public class Post extends Forum {
     }
     public boolean has(Comment comment) {
         return this.getComments().stream().anyMatch(comment::equals);
+    }
+
+    public Set<Integer> getAllHashTagIds() {
+        return this.getHashTags().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllMentionIds() {
+        return this.getMentions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllReactionIds() {
+        return this.getReactions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public List<Integer> getAllCommentIds() {
+        return this.getComments().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .toList();
+    }
+
+    public Set<Integer> getAllSavingUserIds() {
+        return this.getSavingUsers().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllSharerIds() {
+        return this.getSharers().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
 }
