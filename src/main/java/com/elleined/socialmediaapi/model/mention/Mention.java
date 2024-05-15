@@ -31,21 +31,21 @@ public class Mention extends PrimaryKeyIdentity {
     )
     private User creator;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(
-            name = "mentioned_user",
-            referencedColumnName = "id",
-            nullable = false,
-            updatable = false
-    )
-    private User mentionedUser;
-
     @Column(
             name = "notification_status",
             nullable = false
     )
     @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "mentioned_user_id",
+            referencedColumnName = "id",
+            nullable = false,
+            updatable = false
+    )
+    private User mentionedUser;
 
     @ManyToMany(mappedBy = "mentions")
     private Set<Post> posts;
@@ -60,16 +60,16 @@ public class Mention extends PrimaryKeyIdentity {
     public Mention(int id,
                    LocalDateTime createdAt,
                    LocalDateTime updatedAt,
-                   User mentionedUser,
                    User creator,
                    NotificationStatus notificationStatus,
+                   User mentionedUser,
                    Set<Post> posts,
                    Set<Comment> comments,
                    Set<Reply> replies) {
         super(id, createdAt, updatedAt);
-        this.mentionedUser = mentionedUser;
         this.creator = creator;
         this.notificationStatus = notificationStatus;
+        this.mentionedUser = mentionedUser;
         this.posts = posts;
         this.comments = comments;
         this.replies = replies;

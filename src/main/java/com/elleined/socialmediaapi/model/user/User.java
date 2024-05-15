@@ -3,14 +3,17 @@ package com.elleined.socialmediaapi.model.user;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.main.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
+import com.elleined.socialmediaapi.model.story.Story;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -44,14 +47,35 @@ public class User extends PrimaryKeyIdentity {
     )
     private String UUID;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(
-            name = "comment_id",
-            referencedColumnName = "id",
-            nullable = false,
-            updatable = false
-    )
+    @OneToOne(mappedBy = "creator")
+    private Note note;
+
+    @OneToOne(mappedBy = "creator")
+    private Story story;
+
+    @OneToMany(mappedBy = "creator")
+    private Set<FriendRequest> sentFriendRequests;
+
+    @OneToMany(mappedBy = "requestedUser")
+    private Set<FriendRequest> receiveFriendRequests;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Reply> replies;
+
+    @ManyToMany(mappedBy = "savingUsers")
+    private Set<Post> savedPosts;
+
+    @ManyToMany(mappedBy = "userVotes")
     private Set<Comment> votedComments;
+
+    @ManyToMany(mappedBy = "sharers")
+    private Set<Post> sharedPosts;
 
     @ManyToMany
     @JoinTable(
@@ -71,35 +95,19 @@ public class User extends PrimaryKeyIdentity {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_user_shared_post",
+            name = "tbl_friend",
             joinColumns = @JoinColumn(
                     name = "user_id",
                     referencedColumnName = "id",
                     nullable = false
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "post_id",
+                    name = "friend_id",
                     referencedColumnName = "id",
                     nullable = false
             )
     )
-    private Set<Post> sharedPosts;
-
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_user_saved_post",
-            joinColumns = @JoinColumn(
-                    name = "user_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "post_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            )
-    )
-    private Set<Post> savedPosts;
+    private Set<User> friends;
 
     @ManyToMany
     @JoinTable(
@@ -133,42 +141,6 @@ public class User extends PrimaryKeyIdentity {
     )
     private Set<User> followings;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_friend_",
-            joinColumns = @JoinColumn(
-                    name = "user_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "friend_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            )
-    )
-    private Set<User> friends;
-
-    // user id reference is in tbl  user friend
-    @OneToMany(mappedBy = "creator")
-    private Set<FriendRequest> sentFriendRequests;
-
-    // user id reference is in tbl  user friend
-    @OneToMany(mappedBy = "requestedUser")
-    private Set<FriendRequest> receiveFriendRequests;
-
-    @OneToMany(mappedBy = "creator")
-    private List<Post> posts;
-
-    @OneToMany(mappedBy = "creator")
-    private List<Comment> comments;
-
-    @OneToMany(mappedBy = "creator")
-    private List<Reply> replies;
-
-    @OneToOne(mappedBy = "creator")
-    private Note note;
-
     public boolean notOwned(Post post) {
         return this.getPosts().stream().noneMatch(post::equals);
     }
@@ -179,28 +151,70 @@ public class User extends PrimaryKeyIdentity {
         return this.getReplies().stream().noneMatch(reply::equals);
     }
 
-    public boolean isAlreadyUpvoted(Comment comment) {
-        return this.getVotedComments().stream().anyMatch(comment::equals);
-    }
-    public boolean hasNote() {
-        return this.getNote() != null;
+
+    public Set<Integer> getAllBlockedUserIds() {
+        return this.getBlockedUsers().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
 
-    public boolean isFriendsWith(User anotherUser) {
-        return this.getFriends().contains(anotherUser);
+    public Set<Integer> getAllSharedPostIds() {
+        return this.getSharedPosts().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
-    public boolean hasFriendRequest(FriendRequest friendRequest) {
-        return this.getReceiveFriendRequests().contains(friendRequest);
+
+    public Set<Integer> getAllSavedPostIds() {
+        return this.getSavedPosts().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
-    public boolean hasAlreadySentFriendRequestTo(User userToAdd) {
+
+    public Set<Integer> getAllFollowerIds() {
+        return this.getFollowers().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllFollowingIds() {
+        return this.getFollowings().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllFriendIds() {
+        return this.getFriends().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllSentFriendRequestIds() {
         return this.getSentFriendRequests().stream()
-                .map(FriendRequest::getRequestedUser)
-                .anyMatch(userToAdd::equals);
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
 
-    public boolean hasAlreadyReceiveFriendRequestTo(User userToAdd) {
-        return userToAdd.getSentFriendRequests().stream()
-                .map(FriendRequest::getRequestedUser)
-                .anyMatch(this::equals);
+    public Set<Integer> getAllReceiveFriendRequestIds() {
+        return this.getReceiveFriendRequests().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public List<Integer> getAllPostIds() {
+        return this.getPosts().stream()
+                .map(Forum::getId)
+                .toList();
+    }
+
+    public List<Integer> getAllCommentIds() {
+        return this.getComments().stream()
+                .map(Forum::getId)
+                .toList();
+    }
+
+    public List<Integer> getAllReplyIds() {
+        return this.getReplies().stream()
+                .map(Forum::getId)
+                .toList();
     }
 }

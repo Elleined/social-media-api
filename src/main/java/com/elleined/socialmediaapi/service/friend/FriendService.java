@@ -21,4 +21,23 @@ public interface FriendService {
     List<FriendRequest> getAllFriendRequests(User currentUser);
 
     FriendRequest getById(int id) throws ResourceNotFoundException;
+
+
+    public boolean isFriendsWith(User anotherUser) {
+        return this.getFriends().contains(anotherUser);
+    }
+    public boolean hasFriendRequest(FriendRequest friendRequest) {
+        return this.getReceiveFriendRequests().contains(friendRequest);
+    }
+    public boolean hasAlreadySentFriendRequestTo(User userToAdd) {
+        return this.getSentFriendRequests().stream()
+                .map(FriendRequest::getRequestedUser)
+                .anyMatch(userToAdd::equals);
+    }
+
+    public boolean hasAlreadyReceiveFriendRequestTo(User userToAdd) {
+        return userToAdd.getSentFriendRequests().stream()
+                .map(FriendRequest::getRequestedUser)
+                .anyMatch(this::equals);
+    }
 }

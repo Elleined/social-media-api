@@ -32,6 +32,7 @@ public class UserDTO extends DTO {
     private List<Integer> commentIds;
     private List<Integer> replyIds;
     private int noteId;
+    private int storyId;
 
     @Builder
     public UserDTO(int id,
@@ -53,7 +54,8 @@ public class UserDTO extends DTO {
                    List<Integer> postIds,
                    List<Integer> commentIds,
                    List<Integer> replyIds,
-                   int noteId) {
+                   int noteId,
+                   int storyId) {
         super(id, createdAt, updatedAt);
         this.name = name;
         this.email = email;
@@ -72,5 +74,6 @@ public class UserDTO extends DTO {
         this.commentIds = commentIds;
         this.replyIds = replyIds;
         this.noteId = noteId;
+        this.storyId = storyId;
     }
 }

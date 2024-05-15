@@ -38,7 +38,7 @@ public class Post extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_hashtag_post",
+            name = "tbl_post_hashtag",
             joinColumns = @JoinColumn(
                     name = "post_id",
                     referencedColumnName = "id",
@@ -54,7 +54,7 @@ public class Post extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_mention_post",
+            name = "tbl_post_mention",
             joinColumns = @JoinColumn(
                     name = "post_id",
                     referencedColumnName = "id",
@@ -70,7 +70,7 @@ public class Post extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_react_post",
+            name = "tbl_post_react",
             joinColumns = @JoinColumn(
                     name = "post_id",
                     referencedColumnName = "id",
@@ -88,10 +88,36 @@ public class Post extends Forum {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
-    @ManyToMany(mappedBy = "savedPosts")
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_post_saved",
+            joinColumns = @JoinColumn(
+                    name = "post_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "user_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
     private Set<User> savingUsers;
 
-    @ManyToMany(mappedBy = "sharedPosts")
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_post_share",
+            joinColumns = @JoinColumn(
+                    name = "post_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "user_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
     private Set<User> sharers;
 
     @Builder
@@ -130,7 +156,7 @@ public class Post extends Forum {
     public boolean isCommentSectionOpen() {
         return this.getCommentSectionStatus() == CommentSectionStatus.OPEN;
     }
-    public boolean doesNotHave(Comment comment) {
-        return this.getComments().stream().noneMatch(comment::equals);
+    public boolean has(Comment comment) {
+        return this.getComments().stream().anyMatch(comment::equals);
     }
 }

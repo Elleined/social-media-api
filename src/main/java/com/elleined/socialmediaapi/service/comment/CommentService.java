@@ -37,4 +37,8 @@ public interface CommentService {
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     int getTotalReplies(Comment comment);
+
+    public boolean isAlreadyUpvoted(Comment comment) {
+        return this.getVotedComments().stream().anyMatch(comment::equals);
+    }
 }

@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.model.hashtag;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.Post;
 import com.elleined.socialmediaapi.model.main.Reply;
 import jakarta.persistence.Column;
@@ -14,7 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_hashtag")
@@ -54,5 +57,23 @@ public class HashTag extends PrimaryKeyIdentity {
         this.posts = posts;
         this.comments = comments;
         this.replies = replies;
+    }
+
+    public Set<Integer> getAllPostIds() {
+        return this.getPosts().stream()
+                .map(Forum::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllCommentIds() {
+        return this.getComments().stream()
+                .map(Forum::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllReplyIds() {
+        return this.getReplies().stream()
+                .map(Forum::getId)
+                .collect(Collectors.toSet());
     }
 }

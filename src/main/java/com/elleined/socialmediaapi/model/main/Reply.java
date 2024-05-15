@@ -33,7 +33,7 @@ public class Reply extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_hashtag_reply",
+            name = "tbl_reply_hashtag",
             joinColumns = @JoinColumn(
                     name = "reply_id",
                     referencedColumnName = "id",
@@ -50,7 +50,7 @@ public class Reply extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_mention_reply",
+            name = "tbl_reply_mention",
             joinColumns = @JoinColumn(
                     name = "reply_id",
                     referencedColumnName = "id",
@@ -66,7 +66,7 @@ public class Reply extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_react_reply",
+            name = "tbl_reply_react",
             joinColumns = @JoinColumn(
                     name = "reply_id",
                     referencedColumnName = "id",

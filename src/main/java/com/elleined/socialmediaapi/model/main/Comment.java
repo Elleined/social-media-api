@@ -22,6 +22,13 @@ import java.util.Set;
 @Setter
 public class Comment extends Forum {
 
+    @OneToOne
+    @JoinColumn(
+            name = "pinned_reply_id",
+            referencedColumnName = "id"
+    )
+    private Reply pinnedReply;
+
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "post_id",
@@ -31,16 +38,12 @@ public class Comment extends Forum {
     )
     private Post post;
 
-    @OneToOne
-    @JoinColumn(
-            name = "pinned_reply_id",
-            referencedColumnName = "id"
-    )
-    private Reply pinnedReply;
+    @OneToMany(mappedBy = "comment")
+    private List<Reply> replies;
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_hashtag_comment",
+            name = "tbl_comment_hashtag",
             joinColumns = @JoinColumn(
                     name = "comment_id",
                     referencedColumnName = "id",
@@ -54,10 +57,9 @@ public class Comment extends Forum {
     )
     private Set<HashTag> hashTags;
 
-
     @ManyToMany
     @JoinTable(
-            name = "tbl_mention_comment",
+            name = "tbl_comment_mention",
             joinColumns = @JoinColumn(
                     name = "comment_id",
                     referencedColumnName = "id",
@@ -73,7 +75,7 @@ public class Comment extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_react_comment",
+            name = "tbl_comment_react",
             joinColumns = @JoinColumn(
                     name = "comment_id",
                     referencedColumnName = "id",
@@ -87,13 +89,23 @@ public class Comment extends Forum {
     )
     private Set<React> reactions;
 
-    @OneToMany(mappedBy = "comment")
-    private List<Reply> replies;
-
-    @ManyToMany(mappedBy = "votedComments")
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_comment_vote",
+            joinColumns = @JoinColumn(
+                    name = "comment_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "user_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
     private Set<User> userVotes;
 
-    @Builder
+
     public Comment(int id,
                    LocalDateTime createdAt,
                    LocalDateTime updatedAt,
@@ -102,24 +114,24 @@ public class Comment extends Forum {
                    String attachedPicture,
                    User creator,
                    NotificationStatus notificationStatus,
-                   Post post,
                    Reply pinnedReply,
+                   Post post,
+                   List<Reply> replies,
                    Set<HashTag> hashTags,
                    Set<Mention> mentions,
                    Set<React> reactions,
-                   List<Reply> replies,
                    Set<User> userVotes) {
         super(id, createdAt, updatedAt, body, status, attachedPicture, creator, notificationStatus);
-        this.post = post;
         this.pinnedReply = pinnedReply;
+        this.post = post;
+        this.replies = replies;
         this.hashTags = hashTags;
         this.mentions = mentions;
         this.reactions = reactions;
-        this.replies = replies;
         this.userVotes = userVotes;
     }
 
-    public boolean doesNotHave(Reply reply) {
-        return this.getReplies().stream().noneMatch(reply::equals);
+    public boolean has(Reply reply) {
+        return this.getReplies().stream().anyMatch(reply::equals);
     }
 }

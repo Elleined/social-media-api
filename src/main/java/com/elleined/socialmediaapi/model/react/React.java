@@ -21,7 +21,6 @@ import java.util.Set;
 @Setter
 public class React extends PrimaryKeyIdentity {
 
-
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "creator_id",

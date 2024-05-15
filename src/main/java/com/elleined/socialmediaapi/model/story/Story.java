@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Story extends PrimaryKeyIdentity {
+
     @Column(
             name = "content",
             nullable = false

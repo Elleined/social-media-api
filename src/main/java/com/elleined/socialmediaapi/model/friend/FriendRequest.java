@@ -19,6 +19,13 @@ import java.time.LocalDateTime;
 @Setter
 public class FriendRequest extends PrimaryKeyIdentity {
 
+    @Enumerated(EnumType.STRING)
+    @Column(
+            name = "notification_status",
+            nullable = false
+    )
+    private NotificationStatus notificationStatus;
+
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "creator_id",
@@ -37,24 +44,17 @@ public class FriendRequest extends PrimaryKeyIdentity {
     )
     private User requestedUser;
 
-    @Enumerated(EnumType.STRING)
-    @Column(
-            name = "notification_status",
-            nullable = false
-    )
-    private NotificationStatus notificationStatus;
-
     @Builder
     public FriendRequest(int id,
                          LocalDateTime createdAt,
                          LocalDateTime updatedAt,
-                         User requestedUser,
+                         NotificationStatus notificationStatus,
                          User creator,
-                         NotificationStatus notificationStatus) {
+                         User requestedUser) {
         super(id, createdAt, updatedAt);
-        this.requestedUser = requestedUser;
-        this.creator = creator;
         this.notificationStatus = notificationStatus;
+        this.creator = creator;
+        this.requestedUser = requestedUser;
     }
 
     public boolean isRead() {

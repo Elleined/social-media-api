@@ -10,5 +10,8 @@ public interface NoteService {
     void delete(User currentUser);
     Note getNote(User currentUser);
 
+    public boolean hasNote() {
+        return this.getNote() != null;
+    }
     void deleteExpiredNotes();
 }
