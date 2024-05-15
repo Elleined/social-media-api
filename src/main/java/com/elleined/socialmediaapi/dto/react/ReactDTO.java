@@ -17,7 +17,7 @@ import java.util.Set;
 public class ReactDTO extends DTO {
     private int creatorId;
     private NotificationStatus notificationStatus;
-    private Emoji.Type emojiType;
+    private int emojiId;
     private Set<Integer> postIds;
     private Set<Integer> commentIds;
     private Set<Integer> replyIds;
@@ -28,14 +28,14 @@ public class ReactDTO extends DTO {
                     LocalDateTime updatedAt,
                     int creatorId,
                     NotificationStatus notificationStatus,
-                    Emoji.Type emojiType,
+                    int emojiId,
                     Set<Integer> postIds,
                     Set<Integer> commentIds,
                     Set<Integer> replyIds) {
         super(id, createdAt, updatedAt);
         this.creatorId = creatorId;
         this.notificationStatus = notificationStatus;
-        this.emojiType = emojiType;
+        this.emojiId = emojiId;
         this.postIds = postIds;
         this.commentIds = commentIds;
         this.replyIds = replyIds;
