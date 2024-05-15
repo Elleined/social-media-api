@@ -1,21 +1,31 @@
 package com.elleined.socialmediaapi.mapper.hashtag;
 
-import com.elleined.socialmediaapi.dto.HashTagDTO;
+import com.elleined.socialmediaapi.dto.hashtag.HashTagDTO;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
+import com.elleined.socialmediaapi.mapper.CustomMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import java.util.stream.Collectors;
+@Mapper(componentModel = "spring")
+public interface HashTagMapper extends CustomMapper<HashTag, HashTagDTO> {
 
-@Mapper(componentModel = "spring", imports = Collectors.class)
-public interface HashTagMapper {
-
+    @Override
+    @Mappings({
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "createdAt", source = "createdAt"),
+            @Mapping(target = "updatedAt", source = "updatedAt"),
+            @Mapping(target = "keyword", source = "keyword"),
+            @Mapping(target = "postIds", expression = "java(hashTag.getAllPostIds())"),
+            @Mapping(target = "commentIds", expression = "java(hashTag.getAllCommentIds())"),
+            @Mapping(target = "replyIds", expression = "java(hashTag.getAllReplyIds())")
+    })
     HashTagDTO toDTO(HashTag hashTag);
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-
+            @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "keyword", expression = "java(keyword)"),
             @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "comments", expression = "java(new java.util.HashSet<>())"),

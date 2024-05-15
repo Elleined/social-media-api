@@ -151,7 +151,6 @@ public class User extends PrimaryKeyIdentity {
         return this.getReplies().stream().noneMatch(reply::equals);
     }
 
-
     public Set<Integer> getAllBlockedUserIds() {
         return this.getBlockedUsers().stream()
                 .map(PrimaryKeyIdentity::getId)
@@ -166,6 +165,12 @@ public class User extends PrimaryKeyIdentity {
 
     public Set<Integer> getAllSavedPostIds() {
         return this.getSavedPosts().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllVotedCommentIds() {
+        return this.getVotedComments().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }

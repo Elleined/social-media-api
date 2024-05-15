@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.newmapper;
+package com.elleined.socialmediaapi.mapper;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 
