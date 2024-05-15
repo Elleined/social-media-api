@@ -13,15 +13,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ForumDTO extends DTO {
+public abstract class ForumDTO extends DTO {
     private String body;
     private Status status;
     private String attachedPicture;
     private int creatorId;
     private NotificationStatus notificationStatus;
 
-    @Builder
-    public ForumDTO(int id, LocalDateTime createdAt, LocalDateTime updatedAt, String body, Status status, String attachedPicture, int creatorId, NotificationStatus notificationStatus) {
+    public ForumDTO(int id,
+                    LocalDateTime createdAt,
+                    LocalDateTime updatedAt,
+                    String body,
+                    Status status,
+                    String attachedPicture,
+                    int creatorId,
+                    NotificationStatus notificationStatus) {
         super(id, createdAt, updatedAt);
         this.body = body;
         this.status = status;

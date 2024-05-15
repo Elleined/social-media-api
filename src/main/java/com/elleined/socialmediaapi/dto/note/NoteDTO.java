@@ -16,7 +16,11 @@ public class NoteDTO extends DTO {
     private int creatorId;
 
     @Builder
-    public NoteDTO(int id, LocalDateTime createdAt, LocalDateTime updatedAt, String thought, int creatorId) {
+    public NoteDTO(int id,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt,
+                   String thought,
+                   int creatorId) {
         super(id, createdAt, updatedAt);
         this.thought = thought;
         this.creatorId = creatorId;

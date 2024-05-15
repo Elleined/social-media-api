@@ -17,7 +17,12 @@ public class StoryDTO extends DTO {
     private int creatorId;
 
     @Builder
-    public StoryDTO(int id, LocalDateTime createdAt, LocalDateTime updatedAt, String content, String attachPicture, int creatorId) {
+    public StoryDTO(int id,
+                    LocalDateTime createdAt,
+                    LocalDateTime updatedAt,
+                    String content,
+                    String attachPicture,
+                    int creatorId) {
         super(id, createdAt, updatedAt);
         this.content = content;
         this.attachPicture = attachPicture;
