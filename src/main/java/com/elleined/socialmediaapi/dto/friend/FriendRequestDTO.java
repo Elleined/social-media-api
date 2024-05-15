@@ -18,7 +18,12 @@ public class FriendRequestDTO extends DTO {
     private NotificationStatus notificationStatus;
 
     @Builder
-    public FriendRequestDTO(int id, LocalDateTime createdAt, LocalDateTime updatedAt, Integer creatorId, Integer requestedUserId, NotificationStatus notificationStatus) {
+    public FriendRequestDTO(int id,
+                            LocalDateTime createdAt,
+                            LocalDateTime updatedAt,
+                            Integer creatorId,
+                            Integer requestedUserId,
+                            NotificationStatus notificationStatus) {
         super(id, createdAt, updatedAt);
         this.creatorId = creatorId;
         this.requestedUserId = requestedUserId;
