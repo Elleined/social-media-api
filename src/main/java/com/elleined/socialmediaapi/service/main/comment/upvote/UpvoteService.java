@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.upvote;
+package com.elleined.socialmediaapi.service.main.comment.upvote;
 
 import com.elleined.socialmediaapi.model.user.User;
 

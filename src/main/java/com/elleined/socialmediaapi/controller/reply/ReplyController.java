@@ -11,7 +11,7 @@ import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.notification.reply.reader.ReplyMentionNotificationReader;
 import com.elleined.socialmediaapi.service.notification.reply.reader.ReplyNotificationReader;
 import com.elleined.socialmediaapi.service.notification.reply.reader.ReplyReactNotificationReader;
-import com.elleined.socialmediaapi.service.main.reply.ReplyService;
+import com.elleined.socialmediaapi.service.reply.ReplyService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

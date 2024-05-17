@@ -2,16 +2,19 @@ package com.elleined.socialmediaapi.mapper.main;
 
 import com.elleined.socialmediaapi.dto.main.PostDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
-import org.mapstruct.*;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 import java.util.Set;
 
-@Mapper(componentModel = "spring", imports = {Post.CommentSectionStatus.class, Status.class})
+@Mapper(componentModel = "spring", imports = {Post.CommentSectionStatus.class, Forum.Status.class})
 public interface PostMapper extends CustomMapper<Post, PostDTO> {
 
     @Override
@@ -23,7 +26,7 @@ public interface PostMapper extends CustomMapper<Post, PostDTO> {
             @Mapping(target = "status", source = "status"),
             @Mapping(target = "attachedPicture", source = "attachedPicture"),
             @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "notificationStatus", source = "notificationStatus"),
+            @Mapping(target = "notificationIds", expression = "java(post.getAllNotificationIds())"),
             @Mapping(target = "commentSectionStatus", source = "commentSectionStatus"),
             @Mapping(target = "pinnedCommentId", source = "pinnedComment.id"),
             @Mapping(target = "hashTagIds", expression = "java(post.getAllHashTagIds())"),
@@ -43,7 +46,7 @@ public interface PostMapper extends CustomMapper<Post, PostDTO> {
             @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
             @Mapping(target = "attachedPicture", expression = "java(attachedPicture)"),
             @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)"),
+            @Mapping(target = "notifications", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "commentSectionStatus", expression = "java(CommentSectionStatus.OPEN)"),
             @Mapping(target = "pinnedComment", expression = "java(null)"),
             @Mapping(target = "hashTags", expression = "java(hashTags)"),
@@ -54,9 +57,8 @@ public interface PostMapper extends CustomMapper<Post, PostDTO> {
             @Mapping(target = "sharers", expression = "java(new java.util.HashSet<>())")
     })
     Post toEntity(User creator,
-                  String body,
+                  @Context String body,
                   String attachedPicture,
                   Set<HashTag> hashTags,
-                  Set<Mention> mentions,
-                  @Context NotificationStatus notificationStatus);
+                  Set<Mention> mentions);
 }

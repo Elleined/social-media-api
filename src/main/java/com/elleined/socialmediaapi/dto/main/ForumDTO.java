@@ -1,37 +1,47 @@
 package com.elleined.socialmediaapi.dto.main;
 
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.dto.DTO;
-import lombok.Builder;
+import com.elleined.socialmediaapi.model.main.Forum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public abstract class ForumDTO extends DTO {
     private String body;
-    private Status status;
+    private Forum.Status status;
     private String attachedPicture;
     private int creatorId;
-    private NotificationStatus notificationStatus;
+    private Set<Integer> hashTagIds;
+    private Set<Integer> mentionIds;
+    private Set<Integer> reactionIds;
+    private Set<Integer> notificationIds;
+
 
     public ForumDTO(int id,
                     LocalDateTime createdAt,
                     LocalDateTime updatedAt,
                     String body,
-                    Status status,
+                    Forum.Status status,
                     String attachedPicture,
                     int creatorId,
-                    NotificationStatus notificationStatus) {
+                    Set<Integer> hashTagIds,
+                    Set<Integer> mentionIds,
+                    Set<Integer> reactionIds,
+                    Set<Integer> notificationIds) {
         super(id, createdAt, updatedAt);
         this.body = body;
         this.status = status;
         this.attachedPicture = attachedPicture;
         this.creatorId = creatorId;
-        this.notificationStatus = notificationStatus;
+        this.hashTagIds = hashTagIds;
+        this.mentionIds = mentionIds;
+        this.reactionIds = reactionIds;
+        this.notificationIds = notificationIds;
     }
 }

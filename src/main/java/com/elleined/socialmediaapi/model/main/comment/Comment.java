@@ -183,4 +183,10 @@ public class Comment extends Forum {
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
+
+    public Set<Integer> getAllNotificationIds() {
+        return this.getNotifications().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
 }

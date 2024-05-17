@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -52,5 +54,11 @@ public class FriendRequest extends PrimaryKeyIdentity {
         this.creator = creator;
         this.requestedUser = requestedUser;
         this.notifications = notifications;
+    }
+
+    public Set<Integer> getAllNotificationIds() {
+        return this.getNotifications().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
 }

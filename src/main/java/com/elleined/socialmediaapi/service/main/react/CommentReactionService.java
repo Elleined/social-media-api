@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.react;
+package com.elleined.socialmediaapi.service.main.react;
 
 import com.elleined.socialmediaapi.exception.BlockedException;
 import com.elleined.socialmediaapi.exception.NotOwnedException;

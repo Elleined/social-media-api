@@ -91,4 +91,10 @@ public class Mention extends PrimaryKeyIdentity {
                 .map(Forum::getId)
                 .collect(Collectors.toSet());
     }
+
+    public Set<Integer> getAllNotificationIds() {
+        return this.getNotifications().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
 }

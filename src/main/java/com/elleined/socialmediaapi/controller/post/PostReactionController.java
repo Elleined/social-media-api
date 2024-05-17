@@ -8,7 +8,7 @@ import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.service.UserService;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
-import com.elleined.socialmediaapi.service.react.ReactionService;
+import com.elleined.socialmediaapi.service.main.react.ReactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

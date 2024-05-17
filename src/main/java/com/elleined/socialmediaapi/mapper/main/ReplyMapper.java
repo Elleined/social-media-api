@@ -2,8 +2,8 @@ package com.elleined.socialmediaapi.mapper.main;
 
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
@@ -15,7 +15,7 @@ import org.mapstruct.Mappings;
 
 import java.util.Set;
 
-@Mapper(componentModel = "spring", imports = {Status.class})
+@Mapper(componentModel = "spring", imports = {Forum.Status.class})
 public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
 
     @Override
@@ -27,7 +27,7 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
             @Mapping(target = "status", source = "status"),
             @Mapping(target = "attachedPicture", source = "attachedPicture"),
             @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "notificationStatus", source = "notificationStatus"),
+            @Mapping(target = "notificationIds", expression = "java(friendRequest.getAllNotificationIds())"),
             @Mapping(target = "commentId", source = "comment.id"),
             @Mapping(target = "hashTagIds", expression = "java(reply.getAllHashTagIds())"),
             @Mapping(target = "mentionIds", expression = "java(reply.getAllMentionIds())"),
@@ -43,7 +43,7 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
             @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
             @Mapping(target = "attachedPicture", expression = "java(attachedPicture)"),
             @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)"),
+            @Mapping(target = "notifications", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "comment", expression = "java(comment)"),
             @Mapping(target = "hashTags", expression = "java(hashTags)"),
             @Mapping(target = "mentions", expression = "java(mentions)"),
@@ -51,9 +51,8 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
     })
     Reply toEntity(User creator,
                    Comment comment,
-                   String body,
+                   @Context String body,
                    String attachedPicture,
                    Set<HashTag> hashTags,
-                   Set<Mention> mentions,
-                   @Context NotificationStatus notificationStatus);
+                   Set<Mention> mentions);
 }

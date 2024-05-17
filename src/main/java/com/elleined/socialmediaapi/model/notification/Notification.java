@@ -33,13 +33,13 @@ public class Notification extends PrimaryKeyIdentity {
     )
     private Status status;
 
-    @ManyToMany(mappedBy = "posts")
+    @ManyToMany(mappedBy = "notifications")
     private Set<Post> posts;
 
-    @ManyToMany(mappedBy = "comments")
+    @ManyToMany(mappedBy = "notifications")
     private Set<Comment> comments;
 
-    @ManyToMany(mappedBy = "comments")
+    @ManyToMany(mappedBy = "notifications")
     private Set<Reply> replies;
 
     @ManyToMany
@@ -56,7 +56,7 @@ public class Notification extends PrimaryKeyIdentity {
                     nullable = false
             )
     )
-    private Set<React> reacts;
+    private Set<React> reactions;
 
     @ManyToMany
     @JoinTable(
@@ -99,7 +99,7 @@ public class Notification extends PrimaryKeyIdentity {
                         Set<Post> posts,
                         Set<Comment> comments,
                         Set<Reply> replies,
-                        Set<React> reacts,
+                        Set<React> reactions,
                         Set<Mention> mentions,
                         Set<FriendRequest> friendRequests) {
         super(id, createdAt, updatedAt);
@@ -108,7 +108,7 @@ public class Notification extends PrimaryKeyIdentity {
         this.posts = posts;
         this.comments = comments;
         this.replies = replies;
-        this.reacts = reacts;
+        this.reactions = reactions;
         this.mentions = mentions;
         this.friendRequests = friendRequests;
     }

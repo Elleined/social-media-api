@@ -6,6 +6,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.repository.react.PostReactRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
+import com.elleined.socialmediaapi.service.main.react.PostReactionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;

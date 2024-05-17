@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.dto.main;
 
-import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.main.Status;
+import com.elleined.socialmediaapi.model.main.Forum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +16,6 @@ import java.util.Set;
 public class CommentDTO extends ForumDTO {
     private int postId;
     private int pinnedReplyId;
-    private Set<Integer> hashTagIds;
-    private Set<Integer> mentionIds;
-    private Set<Integer> reactionIds;
     private List<Integer> replyIds;
     private Set<Integer> userVoteIds;
 
@@ -28,23 +24,20 @@ public class CommentDTO extends ForumDTO {
                       LocalDateTime createdAt,
                       LocalDateTime updatedAt,
                       String body,
-                      Status status,
+                      Forum.Status status,
                       String attachedPicture,
                       int creatorId,
-                      NotificationStatus notificationStatus,
-                      int postId,
-                      int pinnedReplyId,
                       Set<Integer> hashTagIds,
                       Set<Integer> mentionIds,
                       Set<Integer> reactionIds,
+                      Set<Integer> notificationIds,
+                      int postId,
+                      int pinnedReplyId,
                       List<Integer> replyIds,
                       Set<Integer> userVoteIds) {
-        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, notificationStatus);
+        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, hashTagIds, mentionIds, reactionIds, notificationIds);
         this.postId = postId;
         this.pinnedReplyId = pinnedReplyId;
-        this.hashTagIds = hashTagIds;
-        this.mentionIds = mentionIds;
-        this.reactionIds = reactionIds;
         this.replyIds = replyIds;
         this.userVoteIds = userVoteIds;
     }

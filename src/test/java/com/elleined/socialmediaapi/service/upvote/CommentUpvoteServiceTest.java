@@ -4,6 +4,7 @@ import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
+import com.elleined.socialmediaapi.service.main.comment.upvote.CommentUpvoteService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.mapper.friend;
 
 import com.elleined.socialmediaapi.dto.friend.FriendRequestDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.user.User;
 import org.mapstruct.Context;
@@ -10,7 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", imports = {NotificationStatus.class})
+@Mapper(componentModel = "spring")
 public interface FriendRequestMapper extends CustomMapper<FriendRequest, FriendRequestDTO> {
 
     @Override
@@ -20,7 +19,7 @@ public interface FriendRequestMapper extends CustomMapper<FriendRequest, FriendR
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "creatorId", source = "creator.id"),
             @Mapping(target = "requestedUserId", source = "requestedUser.id"),
-            @Mapping(target = "notificationStatus", source = "notificationStatus")
+            @Mapping(target = "notificationIds", expression = "java(friendRequest.getAllNotificationIds())")
     })
     FriendRequestDTO toDTO(FriendRequest friendRequest);
 
@@ -30,7 +29,7 @@ public interface FriendRequestMapper extends CustomMapper<FriendRequest, FriendR
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "creator", expression = "java(creator)"),
             @Mapping(target = "requestedUser", expression = "java(requestedUser)"),
-            @Mapping(target = "notificationStatus", expression = "java(NotificationStatus.UNREAD)")
+            @Mapping(target = "notifications", expression = "java(new java.util.HashSet<>())")
     })
     FriendRequest toEntity(User creator,
                            @Context User requestedUser);

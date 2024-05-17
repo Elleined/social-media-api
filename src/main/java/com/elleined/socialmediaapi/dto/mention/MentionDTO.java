@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.dto.mention;
 
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.dto.DTO;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +15,7 @@ import java.util.Set;
 public class MentionDTO extends DTO {
     private int creatorId;
     private int mentionedUserId;
-    private NotificationStatus notificationStatus;
+    private Set<Integer> notificationIds;
     private Set<Integer> postIds;
     private Set<Integer> commentIds;
     private Set<Integer> replyIds;
@@ -27,14 +26,14 @@ public class MentionDTO extends DTO {
                       LocalDateTime updatedAt,
                       int creatorId,
                       int mentionedUserId,
-                      NotificationStatus notificationStatus,
+                      Set<Integer> notificationIds,
                       Set<Integer> postIds,
                       Set<Integer> commentIds,
                       Set<Integer> replyIds) {
         super(id, createdAt, updatedAt);
         this.creatorId = creatorId;
         this.mentionedUserId = mentionedUserId;
-        this.notificationStatus = notificationStatus;
+        this.notificationIds = notificationIds;
         this.postIds = postIds;
         this.commentIds = commentIds;
         this.replyIds = replyIds;

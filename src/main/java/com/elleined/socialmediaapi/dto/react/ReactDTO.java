@@ -1,7 +1,5 @@
 package com.elleined.socialmediaapi.dto.react;
 
-import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.dto.DTO;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +14,7 @@ import java.util.Set;
 @Setter
 public class ReactDTO extends DTO {
     private int creatorId;
-    private NotificationStatus notificationStatus;
+    private Set<Integer> notificationIds;
     private int emojiId;
     private Set<Integer> postIds;
     private Set<Integer> commentIds;
@@ -27,14 +25,14 @@ public class ReactDTO extends DTO {
                     LocalDateTime createdAt,
                     LocalDateTime updatedAt,
                     int creatorId,
-                    NotificationStatus notificationStatus,
+                    Set<Integer> notificationIds,
                     int emojiId,
                     Set<Integer> postIds,
                     Set<Integer> commentIds,
                     Set<Integer> replyIds) {
         super(id, createdAt, updatedAt);
         this.creatorId = creatorId;
-        this.notificationStatus = notificationStatus;
+        this.notificationIds = notificationIds;
         this.emojiId = emojiId;
         this.postIds = postIds;
         this.commentIds = commentIds;

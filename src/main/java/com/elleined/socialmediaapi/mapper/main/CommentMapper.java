@@ -2,8 +2,8 @@ package com.elleined.socialmediaapi.mapper.main;
 
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.mention.Mention;
@@ -15,7 +15,7 @@ import org.mapstruct.Mappings;
 
 import java.util.Set;
 
-@Mapper(componentModel = "spring", imports = {Status.class})
+@Mapper(componentModel = "spring", imports = {Forum.Status.class})
 public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
 
     @Override
@@ -27,7 +27,7 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "status", source = "status"),
             @Mapping(target = "attachedPicture", source = "attachedPicture"),
             @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "notificationStatus", source = "notificationStatus"),
+            @Mapping(target = "notificationIds", expression = "java(comment.getAllNotificationIds())"),
             @Mapping(target = "postId", source = "post.id"),
             @Mapping(target = "pinnedReplyId", source = "pinnedReply.id"),
             @Mapping(target = "hashTagIds", expression = "java(comment.getAllHashTagIds())"),
@@ -46,7 +46,7 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
             @Mapping(target = "attachedPicture", expression = "java(attachedPicture)"),
             @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)"),
+            @Mapping(target = "notifications", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "post", expression = "java(post)"),
             @Mapping(target = "pinnedReply", expression = "java(null)"),
             @Mapping(target = "hashTags", expression = "java(hashTags)"),
@@ -57,9 +57,8 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
     })
     Comment toEntity(User creator,
                      Post post,
-                     String body,
+                     @Context String body,
                      String attachedPicture,
                      Set<HashTag> hashTags,
-                     Set<Mention> mentions,
-                     @Context NotificationStatus notificationStatus);
+                     Set<Mention> mentions);
 }

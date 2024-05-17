@@ -10,7 +10,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.UserService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.pin.CommentPinReplyService;
-import com.elleined.socialmediaapi.service.main.reply.ReplyService;
+import com.elleined.socialmediaapi.service.reply.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
