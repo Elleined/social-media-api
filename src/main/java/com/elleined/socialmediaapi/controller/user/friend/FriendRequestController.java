@@ -2,9 +2,9 @@ package com.elleined.socialmediaapi.controller.user.friend;
 
 import com.elleined.socialmediaapi.dto.FriendRequestDTO;
 import com.elleined.socialmediaapi.mapper.FriendRequestMapper;
-import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.service.UserService;
+import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.friend.FriendService;
 import com.elleined.socialmediaapi.service.notification.friend.reader.FriendRequestNotificationReader;
 import lombok.RequiredArgsConstructor;

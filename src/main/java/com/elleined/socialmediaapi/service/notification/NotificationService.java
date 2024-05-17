@@ -8,13 +8,13 @@ import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.react.React;
 import com.elleined.socialmediaapi.model.user.User;
-import org.w3c.dom.Notation;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 
 public interface NotificationService {
+    List<Notification> getAllById(Set<Integer> ids);
     List<Notification> getAllNotification(User currentUser);
     List<Notification> getAllNotification(User currentUser, Notification.Status status);
 

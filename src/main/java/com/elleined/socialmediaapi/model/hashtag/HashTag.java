@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.model.hashtag;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.Forum;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import jakarta.persistence.Column;

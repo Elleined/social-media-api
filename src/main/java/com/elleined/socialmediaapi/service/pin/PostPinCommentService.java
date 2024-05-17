@@ -21,12 +21,12 @@ public class PostPinCommentService implements PinService<Post, Comment> {
     @Override
     public void pin(User currentUser, Post post, Comment comment) throws NotOwnedException, ResourceNotFoundException {
         if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " does not own post with id of " + post.getId() + " for him/her to pin a comment in this post!");
-        if (post.doesNotHave(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " doesn't have comment with id of " + comment.getId());
+        if (!post.has(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " doesn't have comment with id of " + comment.getId());
         if (comment.isInactive()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " you specify is already deleted or doesn't exist anymore!");
 
         post.setPinnedComment(comment);
         postRepository.save(post);
-        log.debug("Author with id of {} pinned comment with id {} in his/her post with id of {}", post.getAuthor().getId(), comment.getId(), post.getId());
+        log.debug("Author with id of {} pinned comment with id {} in his/her post with id of {}", post.getCreator().getId(), comment.getId(), post.getId());
     }
 
     @Override

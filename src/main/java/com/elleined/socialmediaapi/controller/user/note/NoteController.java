@@ -2,9 +2,9 @@ package com.elleined.socialmediaapi.controller.user.note;
 
 import com.elleined.socialmediaapi.dto.NoteDTO;
 import com.elleined.socialmediaapi.mapper.note.NoteMapper;
-import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.note.Note;
-import com.elleined.socialmediaapi.service.UserService;
+import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.note.NoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

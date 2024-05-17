@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.mapper.hashtag;
 
 import com.elleined.socialmediaapi.dto.hashtag.HashTagDTO;
-import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.exception.exception.field;
 
-import exception.SystemException;
+import com.elleined.socialmediaapi.exception.exception.SystemException;
 
 public class FieldException extends SystemException {
     public FieldException(String message) {

@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.mapper.user;
 
 import com.elleined.socialmediaapi.dto.user.UserDTO;
-import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
+import com.elleined.socialmediaapi.model.user.User;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

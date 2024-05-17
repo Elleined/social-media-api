@@ -2,7 +2,10 @@ package com.elleined.socialmediaapi.dto.notification;
 
 import com.elleined.socialmediaapi.dto.DTO;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;

@@ -4,7 +4,7 @@ import com.elleined.socialmediaapi.dto.ResponseMessage;
 import com.elleined.socialmediaapi.dto.UserDTO;
 import com.elleined.socialmediaapi.mapper.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.service.UserService;
+import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

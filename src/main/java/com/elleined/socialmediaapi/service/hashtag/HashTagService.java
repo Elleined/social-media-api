@@ -11,6 +11,7 @@ public interface HashTagService {
     Set<HashTag> getAll();
     HashTag save(String keyword);
     boolean isExists(String keyword);
+    List<HashTag> getAllById(Set<Integer> ids);
 
     default List<HashTag> saveAll(List<String> keywords) {
         if (keywords.stream().anyMatch(this::isExists)) throw new ResourceAlreadyExistsException("Cannot save all! Bacause one of hashtag keyword already exists!");

@@ -15,6 +15,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_notification")
@@ -116,5 +117,36 @@ public class Notification extends PrimaryKeyIdentity {
     public enum Status {
         READ,
         UNREAD
+    }
+
+    public Set<Integer> getAllPostIds() {
+        return this.getPosts().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+    public Set<Integer> getAllCommentIds() {
+        return this.getComments().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+    public Set<Integer> getAllReplyIds() {
+        return this.getReplies().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+    public Set<Integer> getAllReactionIds() {
+        return this.getReactions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+    public Set<Integer> getAllMentionIds() {
+        return this.getMentions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+    public Set<Integer> getAllFriendRequestIds() {
+        return this.getFriendRequests().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
 }

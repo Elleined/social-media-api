@@ -4,6 +4,7 @@ import com.elleined.socialmediaapi.dto.UserDTO;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
+import com.elleined.socialmediaapi.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

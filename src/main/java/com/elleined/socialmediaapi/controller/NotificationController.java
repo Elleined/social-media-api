@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.controller;
 
 import com.elleined.socialmediaapi.dto.notification.Notification;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.service.UserService;
+import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

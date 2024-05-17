@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.reply;
+package com.elleined.socialmediaapi.service.main.reply;
 
 import com.elleined.socialmediaapi.exception.*;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
@@ -30,4 +30,5 @@ public interface ReplyService {
     List<Reply> getAllByComment(User currentUser, Comment comment) throws ResourceNotFoundException;
 
     Reply getById(int replyId) throws ResourceNotFoundException;
+    List<Comment> getAllById(Set<Integer> ids);
 }

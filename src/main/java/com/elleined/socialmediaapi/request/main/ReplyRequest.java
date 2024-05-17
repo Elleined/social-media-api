@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.request.main;
 
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,10 @@ import java.util.Set;
 @Getter
 @Setter
 public class ReplyRequest extends ForumRequest {
+
     private int postId;
+
+    @Positive(message = "Please provide comment id")
     private int commentId;
 
     @Builder

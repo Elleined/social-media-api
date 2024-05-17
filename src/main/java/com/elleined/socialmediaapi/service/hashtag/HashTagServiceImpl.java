@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -31,6 +32,11 @@ public class HashTagServiceImpl implements HashTagService {
         return hashTagRepository.findAll().stream()
                 .map(HashTag::getKeyword)
                 .noneMatch(keyword::equalsIgnoreCase);
+    }
+
+    @Override
+    public List<HashTag> getAllById(Set<Integer> ids) {
+        return hashTagRepository.findAllById(ids);
     }
 
     @Override

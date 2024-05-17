@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.request.react;
 
-import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.request.Request;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReactRequest extends Request {
+    @Positive(message = "Please provide your id")
     private int creatorId;
+
+    @Positive(message = "Please provide emoji id")
     private int emojiId;
+
+    @Positive(message = "Please provide forum id")
     private int forumId;
 
     @Builder

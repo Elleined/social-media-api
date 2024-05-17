@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.reply;
+package com.elleined.socialmediaapi.service.main.reply;
 
 import com.elleined.socialmediaapi.exception.*;
 import com.elleined.socialmediaapi.mapper.ReplyMapper;

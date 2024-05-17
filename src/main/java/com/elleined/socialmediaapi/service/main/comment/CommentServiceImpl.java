@@ -117,6 +117,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<Comment> getAllById(Set<Integer> ids) {
+        return commentRepository.findAllById(ids);
+    }
+
+    @Override
     public Comment updateBody(User currentUser, Post post, Comment comment, CommentRequest commentRequest)
             throws ResourceNotFoundException,
             NotOwnedException {

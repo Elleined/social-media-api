@@ -21,12 +21,12 @@ public class CommentPinReplyService implements PinService<Comment, Reply> {
     @Override
     public void pin(User currentUser, Comment comment, Reply reply) throws NotOwnedException, ResourceNotFoundException {
         if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " does not owned comment with id of " + comment.getId() + " for him/her to pin a reply in this comment!");
-        if (comment.doesNotHave(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() + " doesnt have reply of " + reply.getId());
+        if (!comment.has(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() + " doesnt have reply of " + reply.getId());
         if (reply.isInactive()) throw new ResourceNotFoundException("Reply with id of " + reply.getId() + " you specify is already deleted or does not exists anymore!");
 
         comment.setPinnedReply(reply);
         commentRepository.save(comment);
-        log.debug("Comment author with id of {} pinned reply with id of {} in his/her comment with id of {}", comment.getCommenter().getId(), reply.getId(), comment.getId());
+        log.debug("Comment author with id of {} pinned reply with id of {} in his/her comment with id of {}", comment.getCreator().getId(), reply.getId(), comment.getId());
     }
 
     @Override

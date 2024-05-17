@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.service.main.comment;
 
 import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
@@ -25,6 +26,7 @@ public interface CommentService {
             IOException;
 
     Comment getById(int commentId) throws ResourceNotFoundException;
+    List<Comment> getAllById(Set<Integer> ids);
     List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException;
 
     void delete(User currentUser, Post post, Comment comment);
@@ -32,8 +34,4 @@ public interface CommentService {
     Comment update(User currentUser, Post post, Comment comment, CommentRequest commentRequest)
             throws ResourceNotFoundException,
             NotOwnedException;
-
-    default boolean isAlreadyUpvoted(User currentUser, Comment comment) {
-        return currentUser.getVotedComments().stream().anyMatch(comment::equals);
-    }
 }

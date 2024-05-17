@@ -2,14 +2,16 @@ package com.elleined.socialmediaapi.model.user;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.Forum;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.story.Story;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Set;
@@ -151,6 +153,11 @@ public class User extends PrimaryKeyIdentity {
         return this.getReplies().stream().noneMatch(reply::equals);
     }
 
+    // Comment
+    public boolean isAlreadyUpvoted(Comment comment) {
+        return this.getVotedComments().stream().anyMatch(comment::equals);
+    }
+
     // Note
     public boolean hasNote() {
         return this.getNote() != null;
@@ -246,4 +253,5 @@ public class User extends PrimaryKeyIdentity {
                 .map(Forum::getId)
                 .toList();
     }
+
 }

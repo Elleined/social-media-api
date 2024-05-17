@@ -2,7 +2,10 @@ package com.elleined.socialmediaapi.model.react;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
