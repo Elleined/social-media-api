@@ -33,6 +33,10 @@ public class Emoji extends PrimaryKeyIdentity {
         this.type = type;
     }
 
+    public Emoji(Type type) {
+        this.type = type;
+    }
+
     public enum Type {
         LIKE,
         HEART,

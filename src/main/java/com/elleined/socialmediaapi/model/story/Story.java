@@ -47,4 +47,12 @@ public class Story extends PrimaryKeyIdentity {
         this.attachPicture = attachPicture;
         this.creator = creator;
     }
+
+    public boolean isExpired() {
+        LocalDateTime storyCreation = this.getCreatedAt();
+        LocalDateTime storyExpiration = storyCreation.plusDays(1);
+
+        return LocalDateTime.now().isAfter(storyExpiration) ||
+                LocalDateTime.now().equals(storyExpiration);
+    }
 }

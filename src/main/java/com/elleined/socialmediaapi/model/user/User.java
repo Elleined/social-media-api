@@ -153,9 +153,18 @@ public class User extends PrimaryKeyIdentity {
         return this.getReplies().stream().noneMatch(reply::equals);
     }
 
+
     // Comment
     public boolean isAlreadyUpvoted(Comment comment) {
         return this.getVotedComments().stream().anyMatch(comment::equals);
+    }
+
+    // Story
+    public boolean hasStory() {
+        return this.getStory() != null;
+    }
+    public boolean doesNotHaveStory() {
+        return this.getStory() == null;
     }
 
     // Note
@@ -253,5 +262,4 @@ public class User extends PrimaryKeyIdentity {
                 .map(Forum::getId)
                 .toList();
     }
-
 }
