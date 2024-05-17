@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.controller.block;
 
-import com.elleined.socialmediaapi.dto.ResponseMessage;
-import com.elleined.socialmediaapi.dto.UserDTO;
-import com.elleined.socialmediaapi.mapper.UserMapper;
+import com.elleined.socialmediaapi.dto.APIResponse;
+import com.elleined.socialmediaapi.dto.user.UserDTO;
+import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.user.UserService;
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}")
+@RequestMapping("/users/{currentUserId}/blocked-users")
 public class BlockController {
     private final BlockService blockService;
 
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @GetMapping("/block")
+    @GetMapping
     public Set<UserDTO> getAllBlockedUserOf(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         return blockService.getAllBlockedUsers(currentUser).stream()
@@ -30,29 +30,7 @@ public class BlockController {
                 .collect(Collectors.toSet());
     }
 
-    @PatchMapping("/block/{userToBeBlockedId}")
-    public ResponseMessage blockUser(@PathVariable("currentUserId") int currentUserId,
-                                     @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
-
-        User currentUser = userService.getById(currentUserId);
-        User userToBeBlocked = userService.getById(userToBeBlockedId);
-
-        blockService.blockUser(currentUser, userToBeBlocked);
-        return new ResponseMessage(HttpStatus.OK, "User with id of " + userToBeBlockedId + " blocked successfully");
-    }
-
-    @PatchMapping("/unblock/{userToBeUnblockedId}")
-    public ResponseMessage unblockUser(@PathVariable("currentUserId") int currentUserId,
-                                       @PathVariable("userToBeUnblockedId") int userToBeUnblockedId) {
-
-        User currentUser = userService.getById(currentUserId);
-        User userToBeUnblocked = userService.getById(userToBeUnblockedId);
-
-        blockService.unBlockUser(currentUser, userToBeUnblocked);
-        return new ResponseMessage(HttpStatus.OK, "User with id of " + userToBeUnblockedId + " unblocked successfully");
-    }
-
-    @GetMapping("/is-blocked-by/{userToCheckId}")
+    @GetMapping("/check/{userToCheckId}/blocked-by-you")
     public boolean isBlockedBy(@PathVariable("currentUserId") int currentUserId,
                                @PathVariable("userToCheckId") int userToCheckId) {
 
@@ -62,12 +40,32 @@ public class BlockController {
         return blockService.isBlockedBy(currentUser, userToCheck);
     }
 
-    @GetMapping("/is-you-been-blocked-by/{suspectedBlockerId}")
+    @GetMapping("/check/{suspectedBlockerId}/you-been-blocked")
     public boolean isYouBeenBlockedBy(@PathVariable("currentUserId") int currentUserId,
                                       @PathVariable("suspectedBlockerId") int suspectedBlockerId) {
 
         User currentUser = userService.getById(currentUserId);
         User suspectedBlocker = userService.getById(suspectedBlockerId);
         return blockService.isYouBeenBlockedBy(currentUser, suspectedBlocker);
+    }
+
+    @PatchMapping("{userToBeBlockedId}/block")
+    public void blockUser(@PathVariable("currentUserId") int currentUserId,
+                                 @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
+
+        User currentUser = userService.getById(currentUserId);
+        User userToBeBlocked = userService.getById(userToBeBlockedId);
+
+        blockService.blockUser(currentUser, userToBeBlocked);
+    }
+
+    @PatchMapping("/{userToBeUnblockedId}/unblock")
+    public void unblockUser(@PathVariable("currentUserId") int currentUserId,
+                                   @PathVariable("userToBeUnblockedId") int userToBeUnblockedId) {
+
+        User currentUser = userService.getById(currentUserId);
+        User userToBeUnblocked = userService.getById(userToBeUnblockedId);
+
+        blockService.unBlockUser(currentUser, userToBeUnblocked);
     }
 }
