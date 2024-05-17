@@ -176,8 +176,11 @@ public class Post extends Forum {
     public boolean isCommentSectionOpen() {
         return this.getCommentSectionStatus() == CommentSectionStatus.OPEN;
     }
-    public boolean has(Comment comment) {
+    public boolean owned(Comment comment) {
         return this.getComments().stream().anyMatch(comment::equals);
+    }
+    public boolean notOwned(Comment comment) {
+        return this.getComments().stream().noneMatch(comment::equals);
     }
 
     public Set<Integer> getAllHashTagIds() {

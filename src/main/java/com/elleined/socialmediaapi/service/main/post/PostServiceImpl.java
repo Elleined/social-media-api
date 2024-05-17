@@ -4,18 +4,20 @@ import com.elleined.socialmediaapi.exception.BlockedException;
 import com.elleined.socialmediaapi.exception.EmptyBodyException;
 import com.elleined.socialmediaapi.exception.NotOwnedException;
 import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
-import com.elleined.socialmediaapi.mapper.PostMapper;
-import com.elleined.socialmediaapi.model.Status;
+import com.elleined.socialmediaapi.mapper.main.PostMapper;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.PostRepository;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
-import com.elleined.socialmediaapi.service.hashtag.entity.PostHashTagService;
-import com.elleined.socialmediaapi.service.mention.PostMentionService;
-import com.elleined.socialmediaapi.validator.Validator;
+import com.elleined.socialmediaapi.service.hashtag.HashTagService;
+import com.elleined.socialmediaapi.service.mention.MentionService;
+import com.elleined.socialmediaapi.utility.FieldUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,15 +38,13 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
-    private final PostMentionService postMentionService;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
 
+    private final MentionService mentionService;
+    private final HashTagService hashTagService;
+
     private final CommentRepository commentRepository;
-
-    private final PostHashTagService postHashTagService;
-
-    private final Validator validator;
 
 
     @Override
@@ -54,15 +54,17 @@ public class PostServiceImpl implements PostService {
                      Set<User> mentionedUsers,
                      Set<String> keywords) throws EmptyBodyException, BlockedException, ResourceNotFoundException, IOException {
 
-        if (validator.isNotValid(body))
+        if (FieldUtil.isNotValid(body))
             throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
 
+        Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
+        Set<HashTag> hashTags = hashTagService.saveAll(keywords);
+
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        Post post = postMapper.toEntity(body, currentUser, picture);
+        Post post = postMapper.toEntity(currentUser, body, picture, hashTags, mentions);
         postRepository.save(post);
 
-        if (validator.isValid(mentionedUsers)) postMentionService.mentionAll(currentUser, mentionedUsers, post);
-        if (validator.isValid(keywords)) postHashTagService.saveAll(post, keywords);
+
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;
     }
@@ -70,18 +72,18 @@ public class PostServiceImpl implements PostService {
     @Override
     public void delete(User currentUser, Post post) throws NotOwnedException {
         if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
-        post.setStatus(Status.INACTIVE);
+        post.setStatus(Forum.Status.INACTIVE);
         postRepository.save(post);
 
         List<Comment> comments = post.getComments();
-        comments.forEach(comment -> comment.setStatus(Status.INACTIVE));
+        comments.forEach(comment -> comment.setStatus(Forum.Status.INACTIVE));
         commentRepository.saveAll(comments);
 
         log.debug("Post with id of {} are now inactive", post.getId());
     }
 
     @Override
-    public Post updateBody(User currentUser, Post post, String newBody)
+    public Post update(User currentUser, Post post, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
             NotOwnedException {
 
@@ -89,6 +91,7 @@ public class PostServiceImpl implements PostService {
         if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
         post.setBody(newBody);
+        post.setAttachedPicture(newAttachedPicture);
         postRepository.save(post);
         log.debug("Post with id of {} updated with the new body of {}", post.getId(), newBody);
         return post;
@@ -112,12 +115,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getAllById(Set<Integer> ids) {
+        return postRepository.findAllById(ids);
+    }
+
+    @Override
     public List<Post> getAll(User currentUser) {
         return postRepository.findAll().stream()
                 .filter(Post::isActive)
-                .filter(post -> !blockService.isBlockedBy(currentUser, post.getAuthor()))
-                .filter(post -> !blockService.isYouBeenBlockedBy(currentUser, post.getAuthor()))
-                .sorted(Comparator.comparing(Post::getDateCreated).reversed())
+                .filter(post -> !blockService.isBlockedBy(currentUser, post.getCreator()))
+                .filter(post -> !blockService.isYouBeenBlockedBy(currentUser, post.getCreator()))
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .toList();
     }
 

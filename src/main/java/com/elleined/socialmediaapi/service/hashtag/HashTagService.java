@@ -5,6 +5,7 @@ import com.elleined.socialmediaapi.model.hashtag.HashTag;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public interface HashTagService {
     HashTag getByKeyword(String keyword);
@@ -13,10 +14,10 @@ public interface HashTagService {
     boolean isExists(String keyword);
     List<HashTag> getAllById(Set<Integer> ids);
 
-    default List<HashTag> saveAll(List<String> keywords) {
+    default Set<HashTag> saveAll(Set<String> keywords) {
         if (keywords.stream().anyMatch(this::isExists)) throw new ResourceAlreadyExistsException("Cannot save all! Bacause one of hashtag keyword already exists!");
         return keywords.stream()
                 .map(this::save)
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

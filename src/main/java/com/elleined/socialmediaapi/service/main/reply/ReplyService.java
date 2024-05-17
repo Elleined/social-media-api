@@ -23,12 +23,12 @@ public interface ReplyService {
 
     void delete(User currentUser, Comment comment, Reply reply) throws NotOwnedException;
 
-    Reply updateBody(User currentUser, Reply reply, String newReplyBody)
+    Reply update(User currentUser, Reply reply, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
             NotOwnedException;
 
     List<Reply> getAllByComment(User currentUser, Comment comment) throws ResourceNotFoundException;
 
     Reply getById(int replyId) throws ResourceNotFoundException;
-    List<Comment> getAllById(Set<Integer> ids);
+    List<Reply> getAllById(Set<Integer> ids);
 }

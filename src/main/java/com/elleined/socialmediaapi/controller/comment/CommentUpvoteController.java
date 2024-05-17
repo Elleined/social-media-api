@@ -4,9 +4,9 @@ import com.elleined.socialmediaapi.dto.CommentDTO;
 import com.elleined.socialmediaapi.mapper.CommentMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
-import com.elleined.socialmediaapi.service.main.comment.upvote.CommentUpvoteService;
+import com.elleined.socialmediaapi.service.main.comment.vote.CommentVoteService;
+import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +20,7 @@ public class CommentUpvoteController {
     private final UserService userService;
 
     private final CommentService commentService;
-    private final CommentUpvoteService commentUpvoteService;
+    private final CommentVoteService commentUpvoteService;
     private final CommentMapper commentMapper;
 
     @PatchMapping("/{commentId}/upvote")
@@ -29,7 +29,7 @@ public class CommentUpvoteController {
         User respondent = userService.getById(currentUserId);
         Comment comment = commentService.getById(commentId);
 
-        Comment updatedComment = commentUpvoteService.upvote(respondent, comment);
+        Comment updatedComment = commentUpvoteService.upVote(respondent, comment);
         return commentMapper.toDTO(updatedComment);
     }
 }

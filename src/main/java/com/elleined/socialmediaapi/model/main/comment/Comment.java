@@ -157,6 +157,9 @@ public class Comment extends Forum {
     public boolean has(Reply reply) {
         return this.getReplies().stream().anyMatch(reply::equals);
     }
+    public boolean hasNot(Reply reply) {
+        return !has(reply);
+    }
 
     public List<Integer> getAllReplyIds() {
         return this.getReplies().stream()
@@ -189,4 +192,9 @@ public class Comment extends Forum {
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
+
+    public boolean isCommentSectionClosed() {
+        return this.getPost().isCommentSectionClosed();
+    }
+
 }

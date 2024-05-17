@@ -1,18 +1,19 @@
 package com.elleined.socialmediaapi.service.main.reply;
 
 import com.elleined.socialmediaapi.exception.*;
-import com.elleined.socialmediaapi.mapper.ReplyMapper;
-import com.elleined.socialmediaapi.model.NotificationStatus;
+import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.ReplyRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
-import com.elleined.socialmediaapi.service.hashtag.entity.ReplyHashTagService;
-import com.elleined.socialmediaapi.service.mention.ReplyMentionService;
-import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
+import com.elleined.socialmediaapi.service.hashtag.HashTagService;
+import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.pin.CommentPinReplyService;
-import com.elleined.socialmediaapi.validator.Validator;
+import com.elleined.socialmediaapi.utility.FieldUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,17 +35,12 @@ public class ReplyServiceImpl implements ReplyService {
     private final ReplyRepository replyRepository;
     private final ReplyMapper replyMapper;
 
-    private final ModalTrackerService modalTrackerService;
-
     private final BlockService blockService;
 
     private final CommentPinReplyService commentPinReplyService;
 
-    private final ReplyMentionService replyMentionService;
-
-    private final ReplyHashTagService replyHashTagService;
-
-    private final Validator validator;
+    private final MentionService mentionService;
+    private final HashTagService hashTagService;
 
     @Override
     public Reply save(User currentUser,
@@ -57,45 +53,46 @@ public class ReplyServiceImpl implements ReplyService {
             ResourceNotFoundException,
             BlockedException, IOException {
 
-        if (validator.isNotValid(body)) throw new EmptyBodyException("Reply body cannot be empty!");
+        if (FieldUtil.isNotValid(body)) throw new EmptyBodyException("Reply body cannot be empty!");
         if (comment.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
         if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
-        if (blockService.isBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because you blocked this user already!");
-        if (blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter())) throw new BlockedException("Cannot reply because this user block you already!");
+        if (blockService.isBlockedBy(currentUser, comment.getCreator())) throw new BlockedException("Cannot reply because you blocked this user already!");
+        if (blockService.isYouBeenBlockedBy(currentUser, comment.getCreator())) throw new BlockedException("Cannot reply because this user block you already!");
+
+        Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
+        Set<HashTag> hashTags = hashTagService.saveAll(keywords);
 
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        NotificationStatus status = modalTrackerService.isModalOpen(comment.getCommenter().getId(), comment.getId(), ModalTracker.Type.REPLY) ? NotificationStatus.READ : NotificationStatus.UNREAD;
-        Reply reply = replyMapper.toEntity(body, currentUser, comment, picture, status);
+        Reply reply = replyMapper.toEntity(currentUser, comment, body, picture, hashTags, mentions);
         replyRepository.save(reply);
 
-        if (validator.isValid(mentionedUsers)) replyMentionService.mentionAll(currentUser, mentionedUsers, reply);
-        if (validator.isValid(keywords)) replyHashTagService.saveAll(reply, keywords);
         log.debug("Reply with id of {} saved successfully!", reply.getId());
         return reply;
     }
 
     @Override
     public void delete(User currentUser, Comment comment, Reply reply) throws NotOwnedException {
-        if (comment.doesNotHave(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() +  " does not have reply with id of " + reply.getId());
+        if (comment.hasNot(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() +  " does not have reply with id of " + reply.getId());
         if (currentUser.notOwned(reply)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
 
-        reply.setStatus(Status.INACTIVE);
+        reply.setStatus(Forum.Status.INACTIVE);
         replyRepository.save(reply);
         if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) commentPinReplyService.unpin(comment);
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 
     @Override
-    public Reply updateBody(User currentUser, Reply reply, String newReplyBody)
+    public Reply update(User currentUser, Reply reply, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
             NotOwnedException {
 
-        if (reply.getBody().equals(newReplyBody)) return reply;
+        if (reply.getBody().equals(newBody)) return reply;
         if (currentUser.notOwned(reply)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
 
-        reply.setBody(newReplyBody);
+        reply.setBody(newBody);
+        reply.setAttachedPicture(newAttachedPicture);
         replyRepository.save(reply);
-        log.debug("Reply with id of {} updated with the new body of {}", reply.getId(), newReplyBody);
+        log.debug("Updating reply success");
         return reply;
     }
 
@@ -107,9 +104,9 @@ public class ReplyServiceImpl implements ReplyService {
         List<Reply> replies = new ArrayList<>(comment.getReplies().stream()
                 .filter(Reply::isActive)
                 .filter(reply -> !reply.equals(pinnedReply))
-                .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getReplier()))
-                .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getReplier()))
-                .sorted(Comparator.comparing(Reply::getDateCreated).reversed())
+                .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getCreator()))
+                .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getCreator()))
+                .sorted(Comparator.comparing(Reply::getCreatedAt).reversed())
                 .toList());
         if (pinnedReply != null) replies.add(0, pinnedReply); // Prioritizing pinned reply
         return replies;
@@ -118,5 +115,10 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Reply getById(int replyId) throws ResourceNotFoundException {
         return replyRepository.findById(replyId).orElseThrow(() -> new ResourceNotFoundException("Reply with id of " + replyId + " does not exists!"));
+    }
+
+    @Override
+    public List<Reply> getAllById(Set<Integer> ids) {
+        return replyRepository.findAllById(ids);
     }
 }

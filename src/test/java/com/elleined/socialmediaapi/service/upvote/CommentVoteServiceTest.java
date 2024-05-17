@@ -4,7 +4,7 @@ import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
-import com.elleined.socialmediaapi.service.main.comment.upvote.CommentUpvoteService;
+import com.elleined.socialmediaapi.service.main.comment.vote.CommentVoteService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CommentUpvoteServiceTest {
+class CommentVoteServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -25,7 +25,7 @@ class CommentUpvoteServiceTest {
     private CommentRepository commentRepository;
 
     @InjectMocks
-    private CommentUpvoteService commentUpvoteService;
+    private CommentVoteService commentUpvoteService;
 
     @Test
     void upvote() {
@@ -45,7 +45,7 @@ class CommentUpvoteServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(respondent);
 
         // Calling the method
-        commentUpvoteService.upvote(respondent, comment);
+        commentUpvoteService.upVote(respondent, comment);
 
         // Behavior Verifications
         verify(commentRepository).save(any(Comment.class));

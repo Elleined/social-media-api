@@ -2,7 +2,8 @@ package com.elleined.socialmediaapi.service.main.comment;
 
 import com.elleined.socialmediaapi.exception.*;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
-import com.elleined.socialmediaapi.model.NotificationStatus;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
@@ -10,11 +11,9 @@ import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.ReplyRepository;
-import com.elleined.socialmediaapi.request.main.CommentRequest;
 import com.elleined.socialmediaapi.service.block.BlockService;
-import com.elleined.socialmediaapi.service.hashtag.entity.CommentHashTagService;
-import com.elleined.socialmediaapi.service.mention.CommentMentionService;
-import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
+import com.elleined.socialmediaapi.service.hashtag.HashTagService;
+import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
 import com.elleined.socialmediaapi.utility.FieldUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -36,8 +34,6 @@ import java.util.Set;
 public class CommentServiceImpl implements CommentService {
     private final BlockService blockService;
 
-    private final ModalTrackerService modalTrackerService;
-
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
 
@@ -45,9 +41,8 @@ public class CommentServiceImpl implements CommentService {
 
     private final PostPinCommentService postPinCommentService;
 
-    private final CommentMentionService commentMentionService;
-
-    private final CommentHashTagService commentHashTagService;
+    private final MentionService mentionService;
+    private final HashTagService hashTagService;
 
     @Override
     public Comment save(User currentUser,
@@ -68,30 +63,30 @@ public class CommentServiceImpl implements CommentService {
         if (blockService.isBlockedBy(currentUser, post.getCreator())) throw new BlockedException("Cannot comment because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getCreator())) throw new BlockedException("Cannot comment because this user block you already!");
 
+        Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
+        Set<HashTag> hashTags = hashTagService.saveAll(keywords);
+
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        NotificationStatus status = modalTrackerService.isModalOpen(post.getCreator().getId(), post.getId(), ModalTracker.Type.COMMENT) ? NotificationStatus.READ : NotificationStatus.UNREAD;
-        Comment comment = commentMapper.toEntity(currentUser, post, body, picture, );
+        Comment comment = commentMapper.toEntity(currentUser, post, body, picture, hashTags, mentions);
         commentRepository.save(comment);
 
-        List<Mention> mentions = commentMentionService.mentionAll(currentUser, mentionedUsers, comment);
-         commentHashTagService.saveAll(comment, keywords);
         log.debug("Comment with id of {} saved successfully", comment.getId());
         return comment;
     }
 
     @Override
     public void delete(User currentUser, Post post, Comment comment) {
-        if (post.doesNotHave(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " does not have comment with id of " + comment.getId());
+        if (post.notOwned(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " does not have comment with id of " + comment.getId());
         if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
 
-        comment.setStatus(Status.INACTIVE);
+        comment.setStatus(Forum.Status.INACTIVE);
         commentRepository.save(comment);
 
         if (post.getPinnedComment() != null && post.getPinnedComment().equals(comment))
             postPinCommentService.unpin(post);
 
         List<Reply> replies = comment.getReplies();
-        replies.forEach(reply -> reply.setStatus(Status.INACTIVE));
+        replies.forEach(reply -> reply.setStatus(Forum.Status.INACTIVE));
         replyRepository.saveAll(replies);
         log.debug("Comment with id of {} are now inactive!", comment.getId());
     }
@@ -103,9 +98,8 @@ public class CommentServiceImpl implements CommentService {
                 .stream()
                 .filter(Comment::isActive)
                 .filter(comment -> !comment.equals(pinnedComment))
-                .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCommenter()))
-                .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCommenter()))
-                .sorted(Comparator.comparingInt(Comment::getUpvoteCount).reversed())
+                .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCreator()))
+                .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
                 .toList());
         if (pinnedComment != null) comments.add(0, pinnedComment); // Prioritizing pinned comment
         return comments;
@@ -122,24 +116,18 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment updateBody(User currentUser, Post post, Comment comment, CommentRequest commentRequest)
+    public Comment update(User currentUser, Post post, Comment comment, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
             NotOwnedException {
 
         if (comment.getBody().equals(newBody)) return comment;
-        if (post.doesNotHave(comment)) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
+        if (post.notOwned(comment)) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
         if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
 
         comment.setBody(newBody);
+        comment.setAttachedPicture(newAttachedPicture);
         commentRepository.save(comment);
-        log.debug("Comment with id of {} updated with the new body of {}", comment.getId(), newBody);
+        log.debug("Updating comment success");
         return comment;
-    }
-
-    @Override
-    public int getTotalReplies(Comment comment) {
-        return (int) comment.getReplies().stream()
-                .filter(Reply::isActive)
-                .count();
     }
 }

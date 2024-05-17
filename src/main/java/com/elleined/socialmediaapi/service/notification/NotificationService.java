@@ -24,4 +24,8 @@ public interface NotificationService {
     void read(User currentUser, Mention mention);
     void read(User currentUser, React react);
     void read(User currentUser, FriendRequest friendRequest);
+
+    default List<Notification> getAllUnreadNotification(User currentUser) {
+        return this.getAllNotification(currentUser, Notification.Status.UNREAD);
+    }
 }

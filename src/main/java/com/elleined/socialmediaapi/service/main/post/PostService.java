@@ -4,7 +4,6 @@ import com.elleined.socialmediaapi.exception.BlockedException;
 import com.elleined.socialmediaapi.exception.EmptyBodyException;
 import com.elleined.socialmediaapi.exception.NotOwnedException;
 import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,14 +26,14 @@ public interface PostService extends SavedPostService, SharePostService {
 
     void delete(User currentUser, Post post) throws NotOwnedException;
 
-    Post updateBody(User currentUser, Post post, String newBody)
+    Post update(User currentUser, Post post, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
             NotOwnedException;
 
     Post updateCommentSectionStatus(User currentUser, Post post);
 
     Post getById(int postId) throws ResourceNotFoundException;
-    List<Comment> getAllById(Set<Integer> ids);
+    List<Post> getAllById(Set<Integer> ids);
     List<Post> getAll(User currentUser);
 
     @Override
