@@ -26,12 +26,4 @@ public class EmojiServiceImpl implements EmojiService {
     public Emoji getById(int id) throws ResourceNotFoundException {
         return emojiRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Emoji with id of " + id + " doesn't exists"));
     }
-
-    @Override
-    public Emoji getByType(Emoji.Type type) {
-        return emojiRepository.findAll().stream()
-                .filter(emoji -> emoji.getType().equals(type))
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Emoji with type of " + type + " doesn't exists"));
-    }
 }

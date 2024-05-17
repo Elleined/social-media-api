@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {NotificationStatus.class})
 public interface MentionMapper extends CustomMapper<Mention, MentionDTO> {
 
     @Override
@@ -33,12 +33,11 @@ public interface MentionMapper extends CustomMapper<Mention, MentionDTO> {
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "creator", expression = "java(creator)"),
             @Mapping(target = "mentionedUser", expression = "java(mentionedUser)"),
-            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)"),
+            @Mapping(target = "notificationStatus", expression = "java(NotificationStatus.UNREAD)"),
             @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "comments", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "replies", expression = "java(new java.util.HashSet<>())")
     })
     Mention toEntity(User creator,
-                     @Context User mentionedUser,
-                     @Context NotificationStatus notificationStatus);
+                     @Context User mentionedUser);
 }

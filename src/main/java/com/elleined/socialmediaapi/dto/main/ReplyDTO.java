@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.dto.main;
 
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.main.Status;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

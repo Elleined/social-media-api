@@ -1,9 +1,9 @@
 package com.elleined.socialmediaapi.service.friend;
 
 import com.elleined.socialmediaapi.exception.*;
-import com.elleined.socialmediaapi.mapper.FriendRequestMapper;
-import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.mapper.friend.FriendRequestMapper;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.friend.FriendRequestRepository;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
@@ -31,11 +31,11 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void acceptFriendRequest(User currentUser, FriendRequest friendRequest) {
-        User requestingUser = friendRequest.getRequestingUser();
+        User requestingUser = friendRequest.getCreator();
 
         if (currentUser.isFriendsWith(requestingUser))
             throw new FriendException("Cannot accept friend request! because you're already friends.");
-        if (!currentUser.hasFriendRequest(friendRequest))
+        if (!currentUser.hasSendFriendRequestTo(requestingUser))
             throw new NotOwnedException("Cannot accept friend request! because you don't receive this friend request.");
 
         currentUser.getFriends().add(requestingUser);
@@ -49,11 +49,13 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void deleteFriendRequest(User currentUser, FriendRequest friendRequest) {
-        if (!currentUser.hasFriendRequest(friendRequest))
+        User requestingUser = friendRequest.getCreator();
+
+        if (!currentUser.hasSendFriendRequestTo(requestingUser))
             throw new NotOwnedException("Cannot delete friend request! because you don't have sent this friend request.");
 
         int friendRequestId = friendRequest.getId();
-        currentUser.getReceiveFriendRequest().remove(friendRequest);
+        currentUser.getReceiveFriendRequests().remove(friendRequest);
 
         userRepository.save(currentUser);
         friendRequestRepository.delete(friendRequest);
@@ -62,9 +64,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void sendFriendRequest(User currentUser, User userToAdd) {
-        if (currentUser.hasAlreadySentFriendRequestTo(userToAdd))
+        if (currentUser.hasSendFriendRequestTo(userToAdd))
             throw new FriendRequestException("Cannot sent friend request! becuase you already sent friend request to this user!");
-        if (currentUser.hasAlreadyReceiveFriendRequestTo(userToAdd))
+        if (currentUser.hasReceiveFriendRequestTo(userToAdd))
             throw new FriendRequestException("Cannot sent friend request! because this user already sent you a friend request!");
         if (currentUser.isFriendsWith(userToAdd))
             throw new FriendException("Cannot sent friend request! because you're already friends.");
@@ -74,8 +76,8 @@ public class FriendServiceImpl implements FriendService {
             throw  new BlockedException("Cannot sent friend request! because this user with id of " + userToAdd.getId() + " already blocked you");
 
         FriendRequest friendRequest = friendRequestMapper.toEntity(currentUser, userToAdd);
-        currentUser.getSentFriendRequest().add(friendRequest);
-        userToAdd.getReceiveFriendRequest().add(friendRequest);
+        currentUser.getSentFriendRequests().add(friendRequest);
+        userToAdd.getReceiveFriendRequests().add(friendRequest);
 
         friendRequestRepository.save(friendRequest);
         userRepository.save(currentUser);
@@ -86,7 +88,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void unFriend(User currentUser, User userToUnFriend) {
         if (!currentUser.isFriendsWith(userToUnFriend))
-            throw new FriendException("Cannot accept friend request! because you're not friends.");
+            throw new FriendException("Cannot unfriend! because you're not friends.");
         currentUser.getFriends().remove(userToUnFriend);
         userToUnFriend.getFriends().remove(currentUser);
 
@@ -102,7 +104,7 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<FriendRequest> getAllFriendRequests(User currentUser) {
-        return currentUser.getReceiveFriendRequest().stream()
+        return currentUser.getReceiveFriendRequests().stream()
                 .sorted(Comparator.comparing(FriendRequest::getCreatedAt).reversed())
                 .toList();
     }

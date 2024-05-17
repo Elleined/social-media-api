@@ -2,10 +2,10 @@ package com.elleined.socialmediaapi.model.user;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.Forum;
-import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.main.Reply;
+import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.story.Story;
 import jakarta.persistence.*;
@@ -151,6 +151,30 @@ public class User extends PrimaryKeyIdentity {
         return this.getReplies().stream().noneMatch(reply::equals);
     }
 
+    // Note
+    public boolean hasNote() {
+        return this.getNote() != null;
+    }
+    public boolean doesNotHaveNote() {
+        return this.getNote() == null;
+    }
+
+    // Friend
+    public boolean isFriendsWith(User anotherUser) {
+        return this.getFriends().contains(anotherUser);
+    }
+    public boolean hasSendFriendRequestTo(User userToAdd) {
+        return this.getSentFriendRequests().stream()
+                .map(FriendRequest::getRequestedUser)
+                .anyMatch(userToAdd::equals);
+    }
+    public boolean hasReceiveFriendRequestTo(User userToAdd) {
+        return userToAdd.getSentFriendRequests().stream()
+                .map(FriendRequest::getRequestedUser)
+                .anyMatch(this::equals);
+    }
+
+    // Get all id
     public Set<Integer> getAllBlockedUserIds() {
         return this.getBlockedUsers().stream()
                 .map(PrimaryKeyIdentity::getId)

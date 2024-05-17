@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.model.friend;
 
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @Entity
@@ -18,13 +19,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class FriendRequest extends PrimaryKeyIdentity {
-
-    @Enumerated(EnumType.STRING)
-    @Column(
-            name = "notification_status",
-            nullable = false
-    )
-    private NotificationStatus notificationStatus;
 
     @ManyToOne(optional = false)
     @JoinColumn(
@@ -44,24 +38,19 @@ public class FriendRequest extends PrimaryKeyIdentity {
     )
     private User requestedUser;
 
+    @ManyToMany(mappedBy = "friendRequests")
+    private Set<Notification> notifications;
+
     @Builder
     public FriendRequest(int id,
                          LocalDateTime createdAt,
                          LocalDateTime updatedAt,
-                         NotificationStatus notificationStatus,
                          User creator,
-                         User requestedUser) {
+                         User requestedUser,
+                         Set<Notification> notifications) {
         super(id, createdAt, updatedAt);
-        this.notificationStatus = notificationStatus;
         this.creator = creator;
         this.requestedUser = requestedUser;
-    }
-
-    public boolean isRead() {
-        return this.notificationStatus == NotificationStatus.READ;
-    }
-
-    public boolean isUnRead() {
-        return this.notificationStatus == NotificationStatus.UNREAD;
+        this.notifications = notifications;
     }
 }

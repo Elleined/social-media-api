@@ -1,15 +1,18 @@
 package com.elleined.socialmediaapi.model.react;
 
 
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.Forum;
+import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.main.Reply;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -32,13 +35,6 @@ public class React extends PrimaryKeyIdentity {
     )
     private User creator;
 
-    @Column(
-            name = "notification_status",
-            nullable = false
-    )
-    @Enumerated(EnumType.STRING)
-    private NotificationStatus notificationStatus; // of the post author
-
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "emoji_id",
@@ -56,32 +52,27 @@ public class React extends PrimaryKeyIdentity {
     @ManyToMany(mappedBy = "reactions")
     private Set<Reply> replies;
 
+    @ManyToMany(mappedBy = "reactions")
+    private Set<Notification> notifications;
+
     @Builder
     public React(int id,
                  LocalDateTime createdAt,
                  LocalDateTime updatedAt,
                  User creator,
-                 NotificationStatus notificationStatus,
                  Emoji emoji,
                  Set<Post> posts,
                  Set<Comment> comments,
-                 Set<Reply> replies) {
+                 Set<Reply> replies,
+                 Set<Notification> notifications) {
         super(id, createdAt, updatedAt);
         this.creator = creator;
-        this.notificationStatus = notificationStatus;
         this.emoji = emoji;
         this.posts = posts;
         this.comments = comments;
         this.replies = replies;
+        this.notifications = notifications;
     }
-
-    public boolean isRead() {
-        return this.getNotificationStatus() == NotificationStatus.READ;
-    }
-    public boolean isUnread() {
-        return this.getNotificationStatus() == NotificationStatus.UNREAD;
-    }
-
 
     public Set<Integer> getAllPostIds() {
         return this.getPosts().stream()

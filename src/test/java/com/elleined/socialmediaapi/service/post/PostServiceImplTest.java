@@ -2,8 +2,8 @@ package com.elleined.socialmediaapi.service.post;
 
 import com.elleined.socialmediaapi.MultiPartFileDataFactory;
 import com.elleined.socialmediaapi.mapper.PostMapper;
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.main.Post;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.Status;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
@@ -11,6 +11,7 @@ import com.elleined.socialmediaapi.repository.main.PostRepository;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.hashtag.entity.PostHashTagService;
+import com.elleined.socialmediaapi.service.main.post.PostServiceImpl;
 import com.elleined.socialmediaapi.service.mention.PostMentionService;
 import com.elleined.socialmediaapi.validator.Validator;
 import org.junit.jupiter.api.DisplayName;

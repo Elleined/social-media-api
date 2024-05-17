@@ -1,6 +1,8 @@
 package com.elleined.socialmediaapi.service.hashtag;
 
 import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
+import com.elleined.socialmediaapi.exception.exception.resource.ResourceAlreadyExistsException;
+import com.elleined.socialmediaapi.mapper.hashtag.HashTagMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.repository.hashtag.HashTagRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class HashTagServiceImpl implements HashTagService {
     private final HashTagRepository hashTagRepository;
+    private final HashTagMapper hashTagMapper;
 
     @Override
     public Set<HashTag> getAll() {
@@ -24,12 +27,11 @@ public class HashTagServiceImpl implements HashTagService {
     }
 
     @Override
-    public boolean notExist(String keyword) {
+    public boolean isExists(String keyword) {
         return hashTagRepository.findAll().stream()
                 .map(HashTag::getKeyword)
                 .noneMatch(keyword::equalsIgnoreCase);
     }
-
 
     @Override
     public HashTag getByKeyword(String keyword) {
@@ -40,7 +42,11 @@ public class HashTagServiceImpl implements HashTagService {
     }
 
     @Override
-    public HashTag save(HashTag hashTag) {
-        return hashTagRepository.save(hashTag);
+    public HashTag save(String keyword) {
+        if (isExists(keyword)) throw new ResourceAlreadyExistsException("Hashtag with keyword of " + keyword + " already exists!");
+        HashTag hashTag = hashTagMapper.toEntity(keyword);
+        hashTagRepository.save(hashTag);
+        log.debug("Saving hashtag success!");
+        return hashTag;
     }
 }

@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.service.notification.react;
 
-import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.Status;
 import com.elleined.socialmediaapi.model.user.User;

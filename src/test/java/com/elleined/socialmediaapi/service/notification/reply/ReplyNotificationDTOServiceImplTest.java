@@ -1,8 +1,7 @@
 package com.elleined.socialmediaapi.service.notification.reply;
 
-import com.elleined.socialmediaapi.model.*;
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.main.Reply;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import org.junit.jupiter.api.Test;

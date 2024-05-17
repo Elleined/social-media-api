@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.service;
 
-import com.elleined.socialmediaapi.model.ModalTracker;
-import com.elleined.socialmediaapi.repository.ModalTrackerRepository;
+import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

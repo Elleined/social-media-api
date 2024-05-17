@@ -2,17 +2,16 @@ package com.elleined.socialmediaapi.controller.comment;
 
 import com.elleined.socialmediaapi.dto.CommentDTO;
 import com.elleined.socialmediaapi.mapper.CommentMapper;
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.ModalTracker.Type;
-import com.elleined.socialmediaapi.model.main.Post;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.service.ModalTrackerService;
+import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
 import com.elleined.socialmediaapi.service.UserService;
-import com.elleined.socialmediaapi.service.comment.CommentService;
+import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.notification.comment.reader.CommentMentionNotificationReader;
 import com.elleined.socialmediaapi.service.notification.comment.reader.CommentNotificationReader;
 import com.elleined.socialmediaapi.service.notification.comment.reader.CommentReactNotificationReader;
-import com.elleined.socialmediaapi.service.post.PostService;
+import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -98,7 +97,7 @@ public class CommentController {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        Comment updatedComment = commentService.updateBody(currentUser, post, comment, newCommentBody);
+        Comment updatedComment = commentService.updateBody(currentUser, post, comment, , newCommentBody);
         wsService.broadcast(updatedComment);
 
         return commentMapper.toDTO(updatedComment);

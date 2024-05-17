@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.controller;
 
-import com.elleined.socialmediaapi.model.ModalTracker;
-import com.elleined.socialmediaapi.service.ModalTrackerService;
+import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

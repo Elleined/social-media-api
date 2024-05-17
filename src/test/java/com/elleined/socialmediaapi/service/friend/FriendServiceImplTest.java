@@ -116,8 +116,8 @@ class FriendServiceImplTest {
         // Set up method
 
         // Stubbing methods
-        doReturn(false).when(currentUser).hasAlreadySentFriendRequestTo(any(User.class));
-        doReturn(false).when(currentUser).hasAlreadyReceiveFriendRequestTo(any(User.class));
+        doReturn(false).when(currentUser).hasSendFriendRequestTo(any(User.class));
+        doReturn(false).when(currentUser).hasReceiveFriendRequestTo(any(User.class));
         doReturn(false).when(currentUser).isFriendsWith(any(User.class));
         when(blockService.isBlockedBy(any(User.class), any(User.class))).thenReturn(false);
         when(blockService.isYouBeenBlockedBy(any(User.class), any(User.class))).thenReturn(false);

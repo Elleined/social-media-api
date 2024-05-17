@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.service.notification.comment.reader;
 
-import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.NotificationStatus;
-import com.elleined.socialmediaapi.model.main.Post;
+import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.service.notification.comment.CommentNotificationService;

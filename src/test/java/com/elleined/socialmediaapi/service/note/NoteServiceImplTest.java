@@ -111,7 +111,7 @@ class NoteServiceImplTest {
     }
 
     @Test
-    void deleteExpiredNotes() {
+    void deleteAllExpiresNotes() {
         // Expected Value
 
         // Mock data
@@ -123,7 +123,7 @@ class NoteServiceImplTest {
         doNothing().when(noteRepository).deleteAll(anyList());
 
         // Calling the method
-        noteService.deleteExpiredNotes();
+        noteService.deleteAllExpiresNotes();
 
         // Assertions
 

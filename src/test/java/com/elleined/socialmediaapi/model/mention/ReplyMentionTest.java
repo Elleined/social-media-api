@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.model.mention;
 
-import com.elleined.socialmediaapi.model.main.Reply;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.Status;
 import com.elleined.socialmediaapi.model.user.User;
 import org.junit.jupiter.api.Test;

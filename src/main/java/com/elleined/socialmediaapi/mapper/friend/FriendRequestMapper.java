@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {NotificationStatus.class})
 public interface FriendRequestMapper extends CustomMapper<FriendRequest, FriendRequestDTO> {
 
     @Override
@@ -30,10 +30,9 @@ public interface FriendRequestMapper extends CustomMapper<FriendRequest, FriendR
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "creator", expression = "java(creator)"),
             @Mapping(target = "requestedUser", expression = "java(requestedUser)"),
-            @Mapping(target = "notificationStatus", expression = "java(notificationStatus)")
+            @Mapping(target = "notificationStatus", expression = "java(NotificationStatus.UNREAD)")
     })
     FriendRequest toEntity(User creator,
-                           @Context User requestedUser,
-                           @Context NotificationStatus notificationStatus);
+                           @Context User requestedUser);
 }
 

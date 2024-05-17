@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi;
 
 import com.elleined.socialmediaapi.populator.EmojiPopulator;
 import com.elleined.socialmediaapi.repository.react.EmojiRepository;
-import com.elleined.socialmediaapi.service.ModalTrackerService;
+import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

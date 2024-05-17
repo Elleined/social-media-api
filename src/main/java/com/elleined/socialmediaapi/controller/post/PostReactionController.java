@@ -2,12 +2,12 @@ package com.elleined.socialmediaapi.controller.post;
 
 import com.elleined.socialmediaapi.dto.ReactionDTO;
 import com.elleined.socialmediaapi.mapper.react.PostReactionMapper;
-import com.elleined.socialmediaapi.model.main.Post;
+import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.service.UserService;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
-import com.elleined.socialmediaapi.service.post.PostService;
+import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.react.ReactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

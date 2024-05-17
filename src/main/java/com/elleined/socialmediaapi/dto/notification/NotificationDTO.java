@@ -1,31 +1,45 @@
 package com.elleined.socialmediaapi.dto.notification;
 
 import com.elleined.socialmediaapi.dto.DTO;
+import com.elleined.socialmediaapi.model.notification.Notification;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class NotificationDTO extends DTO {
-    private int creatorId;
-    private int receiverId;
     private String message;
-    private String notificationStatus;
+    private Notification.Status status;
+    private Set<Integer> postIds;
+    private Set<Integer> commentIds;
+    private Set<Integer> replyIds;
+    private Set<Integer> reactIds;
+    private Set<Integer> mentionIds;
+    private Set<Integer> friendRequestIds;
 
     @Builder
     public NotificationDTO(int id,
                            LocalDateTime createdAt,
                            LocalDateTime updatedAt,
-                           int creatorId,
-                           int receiverId,
                            String message,
-                           String notificationStatus) {
+                           Notification.Status status,
+                           Set<Integer> postIds,
+                           Set<Integer> commentIds,
+                           Set<Integer> replyIds,
+                           Set<Integer> reactIds,
+                           Set<Integer> mentionIds,
+                           Set<Integer> friendRequestIds) {
         super(id, createdAt, updatedAt);
-        this.creatorId = creatorId;
-        this.receiverId = receiverId;
         this.message = message;
-        this.notificationStatus = notificationStatus;
+        this.status = status;
+        this.postIds = postIds;
+        this.commentIds = commentIds;
+        this.replyIds = replyIds;
+        this.reactIds = reactIds;
+        this.mentionIds = mentionIds;
+        this.friendRequestIds = friendRequestIds;
     }
 }

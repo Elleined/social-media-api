@@ -1,12 +1,12 @@
 package com.elleined.socialmediaapi.model.mention;
 
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.Forum;
+import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.main.Reply;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,13 +33,6 @@ public class Mention extends PrimaryKeyIdentity {
     )
     private User creator;
 
-    @Column(
-            name = "notification_status",
-            nullable = false
-    )
-    @Enumerated(EnumType.STRING)
-    private NotificationStatus notificationStatus;
-
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "mentioned_user_id",
@@ -58,24 +51,28 @@ public class Mention extends PrimaryKeyIdentity {
     @ManyToMany(mappedBy = "mentions")
     private Set<Reply> replies;
 
+    @ManyToMany(mappedBy = "mentions")
+    private Set<Notification> notifications;
+
     @Builder
     public Mention(int id,
                    LocalDateTime createdAt,
                    LocalDateTime updatedAt,
                    User creator,
-                   NotificationStatus notificationStatus,
                    User mentionedUser,
                    Set<Post> posts,
                    Set<Comment> comments,
-                   Set<Reply> replies) {
+                   Set<Reply> replies,
+                   Set<Notification> notifications) {
         super(id, createdAt, updatedAt);
         this.creator = creator;
-        this.notificationStatus = notificationStatus;
         this.mentionedUser = mentionedUser;
         this.posts = posts;
         this.comments = comments;
         this.replies = replies;
+        this.notifications = notifications;
     }
+
 
     public Set<Integer> getAllPostIds() {
         return this.getPosts().stream()

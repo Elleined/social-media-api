@@ -64,7 +64,7 @@ class HashTagServiceImplTest {
 
         // Calling the method
         // Assertions
-        assertTrue(hashTagService.notExist("KeywordToBeSearch"));
+        assertTrue(hashTagService.isExists("KeywordToBeSearch"));
 
         // Behavior Verifications
         verify(hashTagRepository).findAll();

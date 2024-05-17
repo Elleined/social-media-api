@@ -1,13 +1,6 @@
 package com.elleined.socialmediaapi.dto.user;
 
-import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.dto.DTO;
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.main.Reply;
-import com.elleined.socialmediaapi.model.note.Note;
-import com.elleined.socialmediaapi.model.story.Story;
-import com.elleined.socialmediaapi.model.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

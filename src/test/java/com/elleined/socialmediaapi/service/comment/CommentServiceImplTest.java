@@ -2,16 +2,16 @@ package com.elleined.socialmediaapi.service.comment;
 
 import com.elleined.socialmediaapi.MultiPartFileDataFactory;
 import com.elleined.socialmediaapi.mapper.CommentMapper;
-import com.elleined.socialmediaapi.model.*;
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.main.Reply;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.ReplyRepository;
-import com.elleined.socialmediaapi.service.ModalTrackerService;
+import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.hashtag.entity.CommentHashTagService;
+import com.elleined.socialmediaapi.service.main.comment.CommentServiceImpl;
 import com.elleined.socialmediaapi.service.mention.CommentMentionService;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
 import com.elleined.socialmediaapi.validator.Validator;
@@ -239,7 +239,7 @@ class CommentServiceImplTest {
 
         // Calling the method
         // Assertions
-        assertDoesNotThrow(() -> commentService.updateBody(currentUser, post, comment, expectedBody));
+        assertDoesNotThrow(() -> commentService.updateBody(currentUser, post, comment, , expectedBody));
         assertEquals(expectedBody, comment.getBody());
 
         // Behavior Verifications

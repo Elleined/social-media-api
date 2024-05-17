@@ -14,6 +14,6 @@ public class NoteScheduler {
 
     @Scheduled(fixedRate = 2000L)
     public void deleteExpiredNotes() {
-        noteService.deleteExpiredNotes();
+        noteService.deleteAllExpiresNotes();
     }
 }

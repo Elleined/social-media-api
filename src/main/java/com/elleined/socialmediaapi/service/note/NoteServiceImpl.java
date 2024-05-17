@@ -2,8 +2,8 @@ package com.elleined.socialmediaapi.service.note;
 
 import com.elleined.socialmediaapi.exception.NoteException;
 import com.elleined.socialmediaapi.mapper.note.NoteMapper;
-import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.note.Note;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.note.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Note update(User currentUser, String newThought) {
-        if (!currentUser.hasNote()) throw new NoteException("Updating note failed! because current user has no note");
+        if (currentUser.doesNotHaveNote()) throw new NoteException("Updating note failed! because current user has no note");
         Note note = currentUser.getNote();
         note.setThought(newThought);
         noteRepository.save(note);
@@ -40,9 +40,8 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void delete(User currentUser) {
-        if (!currentUser.hasNote()) throw new NoteException("Deleting note failed! because current user has no note");
-        Note note = currentUser.getNote();
+    public void delete(User currentUser, Note note) {
+        if (currentUser.doesNotHaveNote()) throw new NoteException("Deleting note failed! because current user has no note");
         noteRepository.delete(note);
         log.debug("Note with id of {} deleted successfully", note.getId());
     }
@@ -53,7 +52,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void deleteExpiredNotes() {
+    public void deleteAllExpiresNotes() {
         List<Note> notes = noteRepository.findAll().stream()
                 .filter(Note::isExpired)
                 .toList();

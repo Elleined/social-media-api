@@ -27,13 +27,13 @@ class NoteSchedulerTest {
         // Mock Data
 
         // Stubbing methods
-        doNothing().when(noteService).deleteExpiredNotes();
+        doNothing().when(noteService).deleteAllExpiresNotes();
 
         // Calling the method
         // Assertions
         assertDoesNotThrow(() -> noteScheduler.deleteExpiredNotes());
 
         // Behavior Verifications
-        verify(noteService).deleteExpiredNotes();
+        verify(noteService).deleteAllExpiresNotes();
     }
 }

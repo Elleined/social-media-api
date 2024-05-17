@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.react;
 
 import com.elleined.socialmediaapi.mapper.react.ReplyReactionMapper;
-import com.elleined.socialmediaapi.model.main.Reply;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.repository.react.ReplyReactRepository;

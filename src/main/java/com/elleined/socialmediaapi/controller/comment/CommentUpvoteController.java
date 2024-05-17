@@ -2,10 +2,10 @@ package com.elleined.socialmediaapi.controller.comment;
 
 import com.elleined.socialmediaapi.dto.CommentDTO;
 import com.elleined.socialmediaapi.mapper.CommentMapper;
-import com.elleined.socialmediaapi.model.main.Comment;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.UserService;
-import com.elleined.socialmediaapi.service.comment.CommentService;
+import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.upvote.CommentUpvoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PatchMapping;

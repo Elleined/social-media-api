@@ -1,9 +1,9 @@
 package com.elleined.socialmediaapi.model;
 
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.model.main.Comment;
-import com.elleined.socialmediaapi.model.main.Post;
-import com.elleined.socialmediaapi.model.main.Reply;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.user.User;
 import org.junit.jupiter.api.Test;
@@ -275,7 +275,7 @@ class UserTest {
 
         // Calling the method
         // Assertions
-        assertTrue(user.hasAlreadySentFriendRequestTo(userToAdd));
+        assertTrue(user.hasSendFriendRequestTo(userToAdd));
 
         // Behavior Verifications
     }
@@ -301,7 +301,7 @@ class UserTest {
 
         // Calling the method
         // Assertions
-        assertTrue(user.hasAlreadyReceiveFriendRequestTo(userToAdd));
+        assertTrue(user.hasReceiveFriendRequestTo(userToAdd));
 
         // Behavior Verifications
     }

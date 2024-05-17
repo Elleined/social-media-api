@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.model.main;
 
-import com.elleined.socialmediaapi.model.NotificationStatus;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
@@ -42,27 +41,19 @@ public abstract class Forum extends PrimaryKeyIdentity {
     )
     private User creator;
 
-    @Column(
-            name = "notification_status",
-            nullable = false
-    )
-    @Enumerated(EnumType.STRING)
-    private NotificationStatus notificationStatus;
-
+    @Builder
     public Forum(int id,
                  LocalDateTime createdAt,
                  LocalDateTime updatedAt,
                  String body,
                  Status status,
                  String attachedPicture,
-                 User creator,
-                 NotificationStatus notificationStatus) {
+                 User creator) {
         super(id, createdAt, updatedAt);
         this.body = body;
         this.status = status;
         this.attachedPicture = attachedPicture;
         this.creator = creator;
-        this.notificationStatus = notificationStatus;
     }
 
     public boolean isActive() {
@@ -73,11 +64,8 @@ public abstract class Forum extends PrimaryKeyIdentity {
         return this.getStatus() == Status.INACTIVE;
     }
 
-    public boolean isRead() {
-        return this.getNotificationStatus() == NotificationStatus.READ;
-    }
-
-    public boolean isUnread() {
-        return this.getNotificationStatus() == NotificationStatus.UNREAD;
+    public enum Status {
+        ACTIVE,
+        INACTIVE
     }
 }
