@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.service.main.comment.vote;
 
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
-import com.elleined.socialmediaapi.exception.UpvoteException;
+import com.elleined.socialmediaapi.exception.vote.VoteException;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
@@ -23,7 +22,7 @@ public class CommentVoteService implements VoteService<Comment> {
     public Comment upVote(User respondent, Comment comment) {
 
         if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to upvote might be deleted by the author or does not exists anymore!");
-        if (respondent.isAlreadyUpvoted(comment)) throw new UpvoteException("You can only up vote and down vote a comment once!");
+        if (respondent.isAlreadyUpvoted(comment)) throw new VoteException("You can only up vote and down vote a comment once!");
 
         comment.getUserVotes().add(respondent);
         respondent.getVotedComments().add(comment);

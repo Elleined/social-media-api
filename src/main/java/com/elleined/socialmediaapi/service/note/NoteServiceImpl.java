@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.service.note;
 
-import com.elleined.socialmediaapi.exception.NoteException;
+import com.elleined.socialmediaapi.exception.note.NoteException;
 import com.elleined.socialmediaapi.mapper.note.NoteMapper;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.user.User;

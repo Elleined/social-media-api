@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.validator;
 
 
-import exception.field.MobileNumberException;
-import utility.StringUtil;
+import com.elleined.socialmediaapi.exception.field.MobileNumberException;
+import com.elleined.socialmediaapi.utility.StringUtil;
 
 import java.util.List;
 

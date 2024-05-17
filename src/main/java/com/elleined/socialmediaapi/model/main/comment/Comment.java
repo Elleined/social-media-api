@@ -110,7 +110,6 @@ public class Comment extends Forum {
     )
     private Set<User> userVotes;
 
-
     @ManyToMany
     @JoinTable(
             name = "tbl_comment_notification",

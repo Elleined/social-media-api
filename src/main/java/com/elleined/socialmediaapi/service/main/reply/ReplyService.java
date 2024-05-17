@@ -1,6 +1,8 @@
 package com.elleined.socialmediaapi.service.main.reply;
 
 import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
@@ -17,15 +19,15 @@ public interface ReplyService {
                MultipartFile attachedPicture,
                Set<User> mentionedUsers,
                Set<String> keywords) throws EmptyBodyException,
-            ClosedCommentSectionException,
+            CommentSectionException,
             ResourceNotFoundException,
             BlockedException, IOException;
 
-    void delete(User currentUser, Comment comment, Reply reply) throws NotOwnedException;
+    void delete(User currentUser, Comment comment, Reply reply) throws ResourceNotOwnedException;
 
     Reply update(User currentUser, Reply reply, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
-            NotOwnedException;
+            ResourceNotOwnedException;
 
     List<Reply> getAllByComment(User currentUser, Comment comment) throws ResourceNotFoundException;
 

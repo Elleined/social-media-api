@@ -1,6 +1,8 @@
 package com.elleined.socialmediaapi.service.main.comment;
 
 import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
@@ -18,7 +20,7 @@ public interface CommentService {
                  Set<User> mentionedUsers,
                  Set<String> keywords)
             throws ResourceNotFoundException,
-            ClosedCommentSectionException,
+            CommentSectionException,
             BlockedException,
             EmptyBodyException,
             IOException;
@@ -31,5 +33,5 @@ public interface CommentService {
 
     Comment update(User currentUser, Post post, Comment comment, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
-            NotOwnedException;
+            ResourceNotOwnedException;
 }

@@ -1,9 +1,7 @@
 package com.elleined.socialmediaapi.service.main.post;
 
-import com.elleined.socialmediaapi.exception.BlockedException;
-import com.elleined.socialmediaapi.exception.EmptyBodyException;
-import com.elleined.socialmediaapi.exception.NotOwnedException;
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,11 +22,11 @@ public interface PostService extends SavedPostService, SharePostService {
             ResourceNotFoundException,
             IOException;
 
-    void delete(User currentUser, Post post) throws NotOwnedException;
+    void delete(User currentUser, Post post) throws ResourceNotOwnedException;
 
     Post update(User currentUser, Post post, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
-            NotOwnedException;
+            ResourceNotOwnedException;
 
     Post updateCommentSectionStatus(User currentUser, Post post);
 

@@ -28,46 +28,16 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<Notification> getAllById(Set<Integer> ids) {
-        return List.of();
+        return notificationRepository.findAllById(ids);
     }
 
     @Override
     public List<Notification> getAllNotification(User currentUser) {
-        return List.of();
+      return null;
     }
 
     @Override
     public List<Notification> getAllNotification(User currentUser, Notification.Status status) {
         return List.of();
-    }
-
-    @Override
-    public void read(User currentUser, Post post) {
-
-    }
-
-    @Override
-    public void read(User currentUser, Comment comment) {
-
-    }
-
-    @Override
-    public void read(User currentUser, Reply reply) {
-
-    }
-
-    @Override
-    public void read(User currentUser, Mention mention) {
-
-    }
-
-    @Override
-    public void read(User currentUser, React react) {
-
-    }
-
-    @Override
-    public void read(User currentUser, FriendRequest friendRequest) {
-
     }
 }

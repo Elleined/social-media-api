@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.service.react;
 
-import com.elleined.socialmediaapi.exception.NotOwnedException;
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.react.ReactMapper;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.react.React;
@@ -45,7 +44,7 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public void update(User currentUser, React react, Emoji emoji) {
         if (react.notOwnedBy(currentUser))
-            throw new NotOwnedException("Cannot update react to this post! because you don't own this reaction");
+            throw new ResourceNotOwnedException("Cannot update react to this post! because you don't own this reaction");
         react.setEmoji(emoji);
         reactRepository.save(react);
         log.debug("Updating react success!");
@@ -54,7 +53,7 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public void delete(User currentUser, React react) {
         if (react.notOwnedBy(currentUser))
-            throw new NotOwnedException("Cannot delete this post reaction! because you dont owned this reaction!");
+            throw new ResourceNotOwnedException("Cannot delete this post reaction! because you dont owned this reaction!");
         reactRepository.delete(react);
         log.debug("React deleted successfully.");
     }

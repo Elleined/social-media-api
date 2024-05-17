@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.service.friend;
 
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.user.User;
 

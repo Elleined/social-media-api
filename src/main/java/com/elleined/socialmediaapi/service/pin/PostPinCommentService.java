@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.service.pin;
 
-import com.elleined.socialmediaapi.exception.NotOwnedException;
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
@@ -19,9 +18,9 @@ public class PostPinCommentService implements PinService<Post, Comment> {
     private final PostRepository postRepository;
 
     @Override
-    public void pin(User currentUser, Post post, Comment comment) throws NotOwnedException, ResourceNotFoundException {
-        if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " does not own post with id of " + post.getId() + " for him/her to pin a comment in this post!");
-        if (!post.owned(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " doesn't have comment with id of " + comment.getId());
+    public void pin(User currentUser, Post post, Comment comment) throws ResourceNotOwnedException, ResourceNotFoundException {
+        if (currentUser.notOwned(post)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " does not own post with id of " + post.getId() + " for him/her to pin a comment in this post!");
+        if (!post.owned(comment)) throw new ResourceNotOwnedException("Post with id of " + post.getId() + " doesn't have comment with id of " + comment.getId());
         if (comment.isInactive()) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " you specify is already deleted or doesn't exist anymore!");
 
         post.setPinnedComment(comment);

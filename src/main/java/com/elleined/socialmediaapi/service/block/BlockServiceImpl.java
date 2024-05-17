@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.service.block;
 
-import com.elleined.socialmediaapi.exception.BlockedException;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,8 @@
 package com.elleined.socialmediaapi.service.main.comment;
 
 import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
@@ -52,13 +54,13 @@ public class CommentServiceImpl implements CommentService {
                         Set<User> mentionedUsers,
                         Set<String> keywords)
             throws ResourceNotFoundException,
-            ClosedCommentSectionException,
+            CommentSectionException,
             BlockedException,
             EmptyBodyException,
             IOException {
 
         if (FieldUtil.isNotValid(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
-        if (post.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot comment because author already closed the comment section for this post!");
+        if (post.isCommentSectionClosed()) throw new CommentSectionException("Cannot comment because author already closed the comment section for this post!");
         if (post.isInactive()) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, post.getCreator())) throw new BlockedException("Cannot comment because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getCreator())) throw new BlockedException("Cannot comment because this user block you already!");
@@ -76,8 +78,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void delete(User currentUser, Post post, Comment comment) {
-        if (post.notOwned(comment)) throw new NotOwnedException("Post with id of " + post.getId() + " does not have comment with id of " + comment.getId());
-        if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
+        if (post.notOwned(comment)) throw new ResourceNotOwnedException("Post with id of " + post.getId() + " does not have comment with id of " + comment.getId());
+        if (currentUser.notOwned(comment)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
 
         comment.setStatus(Forum.Status.INACTIVE);
         commentRepository.save(comment);
@@ -118,11 +120,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment update(User currentUser, Post post, Comment comment, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
-            NotOwnedException {
+            ResourceNotOwnedException {
 
         if (comment.getBody().equals(newBody)) return comment;
         if (post.notOwned(comment)) throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
-        if (currentUser.notOwned(comment)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
+        if (currentUser.notOwned(comment)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
 
         comment.setBody(newBody);
         comment.setAttachedPicture(newAttachedPicture);

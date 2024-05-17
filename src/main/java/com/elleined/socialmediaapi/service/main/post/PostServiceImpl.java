@@ -1,9 +1,7 @@
 package com.elleined.socialmediaapi.service.main.post;
 
-import com.elleined.socialmediaapi.exception.BlockedException;
-import com.elleined.socialmediaapi.exception.EmptyBodyException;
-import com.elleined.socialmediaapi.exception.NotOwnedException;
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.main.PostMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
@@ -70,8 +68,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void delete(User currentUser, Post post) throws NotOwnedException {
-        if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+    public void delete(User currentUser, Post post) throws ResourceNotOwnedException {
+        if (currentUser.notOwned(post)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
         post.setStatus(Forum.Status.INACTIVE);
         postRepository.save(post);
 
@@ -85,10 +83,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post update(User currentUser, Post post, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
-            NotOwnedException {
+            ResourceNotOwnedException {
 
         if (post.getBody().equals(newBody)) return post;
-        if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+        if (currentUser.notOwned(post)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
         post.setBody(newBody);
         post.setAttachedPicture(newAttachedPicture);
@@ -99,7 +97,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post updateCommentSectionStatus(User currentUser, Post post) {
-        if (currentUser.notOwned(post)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+        if (currentUser.notOwned(post)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
         if (post.isCommentSectionOpen()) post.setCommentSectionStatus(Post.CommentSectionStatus.CLOSED);
         else post.setCommentSectionStatus(Post.CommentSectionStatus.OPEN);

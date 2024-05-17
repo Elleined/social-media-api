@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.service.user;
 
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
-import com.elleined.socialmediaapi.exception.exception.field.EmailException;
+import com.elleined.socialmediaapi.exception.field.EmailException;
 import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;

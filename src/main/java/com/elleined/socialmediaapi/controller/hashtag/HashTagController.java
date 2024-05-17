@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.controller.hashtag;
 
-import com.elleined.socialmediaapi.dto.HashTagDTO;
+import com.elleined.socialmediaapi.dto.hashtag.HashTagDTO;
 import com.elleined.socialmediaapi.mapper.hashtag.HashTagMapper;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import lombok.RequiredArgsConstructor;

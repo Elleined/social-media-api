@@ -1,16 +1,21 @@
 package com.elleined.socialmediaapi.controller.comment;
 
 import com.elleined.socialmediaapi.dto.CommentDTO;
+import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.mapper.CommentMapper;
+import com.elleined.socialmediaapi.mapper.main.CommentMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
+import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
+import com.elleined.socialmediaapi.service.notification.NotificationService;
 import com.elleined.socialmediaapi.service.notification.comment.reader.CommentMentionNotificationReader;
 import com.elleined.socialmediaapi.service.notification.comment.reader.CommentNotificationReader;
 import com.elleined.socialmediaapi.service.notification.comment.reader.CommentReactNotificationReader;
+import com.elleined.socialmediaapi.service.react.ReactionService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +37,9 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentMapper commentMapper;
 
+    private final NotificationService notificationService;
+
     private final WSService wsService;
-
-    private final CommentReactNotificationReader commentReactNotificationReader;
-    private final CommentMentionNotificationReader commentMentionNotificationReader;
-    private final CommentNotificationReader commentNotificationReader;
-
-    private final ModalTrackerService modalTrackerService;
 
     @GetMapping
     public List<CommentDTO> getAllByPost(@PathVariable("currentUserId") int currentUserId,
@@ -46,12 +47,13 @@ public class CommentController {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        commentNotificationReader.readAll(currentUser, post);
-        commentReactNotificationReader.readAll(currentUser, post);
-        commentMentionNotificationReader.readAll(currentUser, post);
+        List<Comment> comments = commentService.getAllByPost(currentUser, post);
 
-        modalTrackerService.saveTrackerByUserId(currentUserId, postId, Type.COMMENT);
-        return commentService.getAllByPost(currentUser, post).stream()
+//        commentNotificationReader.readAll(currentUser, post);
+//        commentReactNotificationReader.readAll(currentUser, post);
+//        commentMentionNotificationReader.readAll(currentUser, post);
+
+        return comments.stream()
                 .map(commentMapper::toDTO)
                 .toList();
     }

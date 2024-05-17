@@ -1,6 +1,8 @@
 package com.elleined.socialmediaapi.service.main.reply;
 
 import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
@@ -49,12 +51,12 @@ public class ReplyServiceImpl implements ReplyService {
                       MultipartFile attachedPicture,
                       Set<User> mentionedUsers,
                       Set<String> keywords) throws EmptyBodyException,
-            ClosedCommentSectionException,
+            CommentSectionException,
             ResourceNotFoundException,
             BlockedException, IOException {
 
         if (FieldUtil.isNotValid(body)) throw new EmptyBodyException("Reply body cannot be empty!");
-        if (comment.isCommentSectionClosed()) throw new ClosedCommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
+        if (comment.isCommentSectionClosed()) throw new CommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
         if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, comment.getCreator())) throw new BlockedException("Cannot reply because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCreator())) throw new BlockedException("Cannot reply because this user block you already!");
@@ -71,9 +73,9 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void delete(User currentUser, Comment comment, Reply reply) throws NotOwnedException {
-        if (comment.hasNot(reply)) throw new NotOwnedException("Comment with id of " + comment.getId() +  " does not have reply with id of " + reply.getId());
-        if (currentUser.notOwned(reply)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
+    public void delete(User currentUser, Comment comment, Reply reply) throws ResourceNotOwnedException {
+        if (comment.hasNot(reply)) throw new ResourceNotOwnedException("Comment with id of " + comment.getId() +  " does not have reply with id of " + reply.getId());
+        if (currentUser.notOwned(reply)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
 
         reply.setStatus(Forum.Status.INACTIVE);
         replyRepository.save(reply);
@@ -84,10 +86,10 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Reply update(User currentUser, Reply reply, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
-            NotOwnedException {
+            ResourceNotOwnedException {
 
         if (reply.getBody().equals(newBody)) return reply;
-        if (currentUser.notOwned(reply)) throw new NotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
+        if (currentUser.notOwned(reply)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
 
         reply.setBody(newBody);
         reply.setAttachedPicture(newAttachedPicture);

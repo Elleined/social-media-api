@@ -2,6 +2,13 @@ package com.elleined.socialmediaapi.controller;
 
 import com.elleined.socialmediaapi.dto.ResponseMessage;
 import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.friend.FriendException;
+import com.elleined.socialmediaapi.exception.friend.FriendRequestException;
+import com.elleined.socialmediaapi.exception.mention.MentionException;
+import com.elleined.socialmediaapi.exception.note.NoteException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
+import com.elleined.socialmediaapi.exception.vote.VoteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -22,10 +29,10 @@ public class ExceptionController {
 
     @ExceptionHandler({
             BlockedException.class,
-            NotOwnedException.class,
+            ResourceNotOwnedException.class,
             EmptyBodyException.class,
-            ClosedCommentSectionException.class,
-            UpvoteException.class,
+            CommentSectionException.class,
+            VoteException.class,
             MentionException.class,
             FriendException.class,
             FriendRequestException.class,

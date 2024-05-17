@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.service.react;
 
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.react.React;
 import com.elleined.socialmediaapi.model.user.User;

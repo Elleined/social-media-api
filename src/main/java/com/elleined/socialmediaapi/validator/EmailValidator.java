@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.validator;
 
 
-import exception.field.EmailException;
+import com.elleined.socialmediaapi.exception.field.EmailException;
 
 public class EmailValidator {
 

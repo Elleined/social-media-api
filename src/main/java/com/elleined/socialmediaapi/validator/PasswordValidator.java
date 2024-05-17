@@ -1,8 +1,8 @@
 package com.elleined.socialmediaapi.validator;
 
 
-import exception.field.PasswordException;
-import utility.StringUtil;
+import com.elleined.socialmediaapi.exception.field.PasswordException;
+import com.elleined.socialmediaapi.utility.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;

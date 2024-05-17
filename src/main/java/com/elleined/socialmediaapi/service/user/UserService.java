@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.service.user;
 
-import com.elleined.socialmediaapi.exception.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.request.user.UserRequest;
 

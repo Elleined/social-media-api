@@ -1,6 +1,9 @@
 package com.elleined.socialmediaapi.service.friend;
 
-import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.friend.FriendException;
+import com.elleined.socialmediaapi.exception.friend.FriendRequestException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.friend.FriendRequestMapper;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.user.User;
@@ -36,7 +39,7 @@ public class FriendServiceImpl implements FriendService {
         if (currentUser.isFriendsWith(requestingUser))
             throw new FriendException("Cannot accept friend request! because you're already friends.");
         if (!currentUser.hasSendFriendRequestTo(requestingUser))
-            throw new NotOwnedException("Cannot accept friend request! because you don't receive this friend request.");
+            throw new ResourceNotOwnedException("Cannot accept friend request! because you don't receive this friend request.");
 
         currentUser.getFriends().add(requestingUser);
         requestingUser.getFriends().add(currentUser);
@@ -52,7 +55,7 @@ public class FriendServiceImpl implements FriendService {
         User requestingUser = friendRequest.getCreator();
 
         if (!currentUser.hasSendFriendRequestTo(requestingUser))
-            throw new NotOwnedException("Cannot delete friend request! because you don't have sent this friend request.");
+            throw new ResourceNotOwnedException("Cannot delete friend request! because you don't have sent this friend request.");
 
         int friendRequestId = friendRequest.getId();
         currentUser.getReceiveFriendRequests().remove(friendRequest);
