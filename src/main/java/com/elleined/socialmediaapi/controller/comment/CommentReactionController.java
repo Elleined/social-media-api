@@ -5,7 +5,7 @@ import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.react.Emoji;
-import com.elleined.socialmediaapi.model.react.React;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
@@ -76,13 +76,13 @@ public class CommentReactionController {
         Emoji emoji = emojiService.getById(emojiId);
 
         if (reactionService.isAlreadyReactedTo(currentUser, post, comment)) {
-            React react = reactionService.getByUserReaction(currentUser, post, comment);
-            reactionService.update(currentUser, post, comment, react, emoji);
-            return reactionMapper.toDTO(react);
+            Reaction reaction = reactionService.getByUserReaction(currentUser, post, comment);
+            reactionService.update(currentUser, post, comment, reaction, emoji);
+            return reactionMapper.toDTO(reaction);
         }
 
-        React react = reactionService.save(currentUser, post, comment, emoji);
-        return reactionMapper.toDTO(react);
+        Reaction reaction = reactionService.save(currentUser, post, comment, emoji);
+        return reactionMapper.toDTO(reaction);
     }
 
     @DeleteMapping("/{reactionId}")
@@ -94,8 +94,8 @@ public class CommentReactionController {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
-        React react = reactionService.getById(reactionId);
+        Reaction reaction = reactionService.getById(reactionId);
 
-        reactionService.delete(currentUser, post, comment, react);
+        reactionService.delete(currentUser, post, comment, reaction);
     }
 }

@@ -3,7 +3,7 @@ package com.elleined.socialmediaapi.mapper.react;
 import com.elleined.socialmediaapi.dto.react.ReactDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
 import com.elleined.socialmediaapi.model.react.Emoji;
-import com.elleined.socialmediaapi.model.react.React;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
-public interface ReactionMapper extends CustomMapper<React, ReactDTO> {
+public interface ReactionMapper extends CustomMapper<Reaction, ReactDTO> {
 
     @Override
     @Mappings({
@@ -25,7 +25,7 @@ public interface ReactionMapper extends CustomMapper<React, ReactDTO> {
             @Mapping(target = "replyIds", expression = "java(react.getAllReplyIds())"),
             @Mapping(target = "notificationIds", expression = "java(react.getAllNotificationIds())")
     })
-    ReactDTO toDTO(React react);
+    ReactDTO toDTO(Reaction reaction);
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
@@ -38,6 +38,6 @@ public interface ReactionMapper extends CustomMapper<React, ReactDTO> {
             @Mapping(target = "replies", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "notifications", expression = "java(new java.util.HashSet<>())")
     })
-    React toEntity(User creator,
-                   @Context Emoji emoji);
+    Reaction toEntity(User creator,
+                      @Context Emoji emoji);
 }

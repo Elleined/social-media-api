@@ -74,7 +74,7 @@ public class FriendServiceImpl implements FriendService {
             throw new FriendRequestException("Cannot sent friend request! because this user already sent you a friend request!");
         if (currentUser.isFriendsWith(userToAdd))
             throw new FriendException("Cannot sent friend request! because you're already friends.");
-        if (blockService.isBlockedBy(currentUser, userToAdd))
+        if (blockService.isBlockedByYou(currentUser, userToAdd))
             throw new BlockedException("Cannot sent friend request! because you blocked the author of this post with id of !" + userToAdd.getId());
         if (blockService.isYouBeenBlockedBy(currentUser, userToAdd))
             throw  new BlockedException("Cannot sent friend request! because this user with id of " + userToAdd.getId() + " already blocked you");

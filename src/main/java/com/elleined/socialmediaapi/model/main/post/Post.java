@@ -6,7 +6,7 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.react.React;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -89,7 +89,7 @@ public class Post extends Forum {
                     nullable = false
             )
     )
-    private Set<React> reactions;
+    private Set<Reaction> reactions;
 
     @ManyToMany
     @JoinTable(
@@ -152,7 +152,7 @@ public class Post extends Forum {
                 List<Comment> comments,
                 Set<HashTag> hashTags,
                 Set<Mention> mentions,
-                Set<React> reactions,
+                Set<Reaction> reactions,
                 Set<User> savingUsers,
                 Set<User> sharers,
                 Set<Notification> notifications) {
@@ -169,19 +169,6 @@ public class Post extends Forum {
     }
 
     public enum CommentSectionStatus {OPEN, CLOSED}
-
-    public boolean isCommentSectionClosed() {
-        return this.getCommentSectionStatus() == CommentSectionStatus.CLOSED;
-    }
-    public boolean isCommentSectionOpen() {
-        return this.getCommentSectionStatus() == CommentSectionStatus.OPEN;
-    }
-    public boolean owned(Comment comment) {
-        return this.getComments().stream().anyMatch(comment::equals);
-    }
-    public boolean notOwned(Comment comment) {
-        return this.getComments().stream().noneMatch(comment::equals);
-    }
 
     public Set<Integer> getAllHashTagIds() {
         return this.getHashTags().stream()

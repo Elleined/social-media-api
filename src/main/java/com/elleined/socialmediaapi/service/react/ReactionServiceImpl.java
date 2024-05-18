@@ -8,7 +8,7 @@ import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.react.Emoji;
-import com.elleined.socialmediaapi.model.react.React;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.react.ReactionRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
@@ -39,32 +39,32 @@ public class ReactionServiceImpl implements ReactionService {
     private final ReactionMapper reactionMapper;
 
     @Override
-    public React getById(int id) throws ResourceNotFoundException {
+    public Reaction getById(int id) throws ResourceNotFoundException {
         return reactionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reaction with id of " + id + " doesn't exists!"));
     }
 
     @Override
-    public React save(User currentUser, Post post, Emoji emoji) {
+    public Reaction save(User currentUser, Post post, Emoji emoji) {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot react to this post! because post might be already deleted or doesn't exists!");
 
-        if (blockService.isBlockedBy(currentUser, post.getCreator()))
+        if (blockService.isBlockedByYou(currentUser, post.getCreator()))
             throw new BlockedException("Cannot react to this post! because you blocked this user already!");
 
         if (blockService.isYouBeenBlockedBy(currentUser, post.getCreator()))
             throw new BlockedException("Cannot react to this post! because this user block you already!");
 
-        React react = reactionMapper.toEntity(currentUser, emoji);
-        reactionRepository.save(react);
+        Reaction reaction = reactionMapper.toEntity(currentUser, emoji);
+        reactionRepository.save(reaction);
 
-        post.getReactions().add(react);
+        post.getReactions().add(reaction);
         postService.save(post);
         log.debug("Reacting to post with id of {} success with emoji id of {}", post.getId(), emoji.getId());
-        return react;
+        return reaction;
     }
 
     @Override
-    public React save(User currentUser, Post post, Comment comment, Emoji emoji) {
+    public Reaction save(User currentUser, Post post, Comment comment, Emoji emoji) {
         if (post.notOwned(comment))
             throw new ResourceNotOwnedException("Cannot react to this comment! because post doesn't owned this comment!");
 
@@ -74,23 +74,23 @@ public class ReactionServiceImpl implements ReactionService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot react to this comment! because comment might be already deleted or doesn't exists!");
 
-        if (blockService.isBlockedBy(currentUser, comment.getCreator()))
+        if (blockService.isBlockedByYou(currentUser, comment.getCreator()))
             throw new BlockedException("Cannot react to this comment! because you blocked this user already!");
 
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
             throw new BlockedException("Cannot react to this comment! because this user block you already!");
 
-        React react = reactionMapper.toEntity(currentUser, emoji);
-        reactionRepository.save(react);
+        Reaction reaction = reactionMapper.toEntity(currentUser, emoji);
+        reactionRepository.save(reaction);
 
-        comment.getReactions().add(react);
+        comment.getReactions().add(reaction);
         commentService.save(comment);
         log.debug("Reacting to comment with id of {} success with emoji id of {}", comment.getId(), emoji.getId());
-        return react;
+        return reaction;
     }
 
     @Override
-    public React save(User currentUser, Post post, Comment comment, Reply reply, Emoji emoji) {
+    public Reaction save(User currentUser, Post post, Comment comment, Reply reply, Emoji emoji) {
         if (post.notOwned(comment))
             throw new ResourceNotOwnedException("Cannot react to this reply! because post doesn't owned this comment!");
 
@@ -106,43 +106,43 @@ public class ReactionServiceImpl implements ReactionService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot react to this reply! because reply might be already deleted or doesn't exists!");
 
-        if (blockService.isBlockedBy(currentUser, comment.getCreator()))
+        if (blockService.isBlockedByYou(currentUser, comment.getCreator()))
             throw new BlockedException("Cannot react to this reply! because you blocked this user already!");
 
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
             throw new BlockedException("Cannot react to this reply! because this user block you already!");
 
-        React react = reactionMapper.toEntity(currentUser, emoji);
-        reactionRepository.save(react);
+        Reaction reaction = reactionMapper.toEntity(currentUser, emoji);
+        reactionRepository.save(reaction);
 
-        reply.getReactions().add(react);
+        reply.getReactions().add(reaction);
         replyService.save(reply);
         log.debug("Reacting to reply with id of {} success with emoji id of {}", reply.getId(), emoji.getId());
-        return react;
+        return reaction;
     }
 
     @Override
-    public void update(User currentUser, Post post, React react, Emoji emoji) {
+    public void update(User currentUser, Post post, Reaction reaction, Emoji emoji) {
         if (currentUser.notOwned(post))
             throw new ResourceNotOwnedException("Cannot update reaction to this post! because current user doesn't owned this post!");
 
-        if (currentUser.notOwned(react))
+        if (currentUser.notOwned(reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this post! because current user doesn't owned this reaction!");
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot update reaction to this post! because post might be already deleted or doesn't exists!");
 
-        react.setEmoji(emoji);
-        reactionRepository.save(react);
+        reaction.setEmoji(emoji);
+        reactionRepository.save(reaction);
         log.debug("Updating current user reaction to post with id of {} success with emoji id of {}", post.getId(), emoji.getId());
     }
 
     @Override
-    public void update(User currentUser, Post post, Comment comment, React react, Emoji emoji) {
+    public void update(User currentUser, Post post, Comment comment, Reaction reaction, Emoji emoji) {
         if (currentUser.notOwned(comment))
             throw new ResourceNotOwnedException("Cannot update reaction this comment! because current user doesn't owned this comment!");
 
-        if (currentUser.notOwned(react))
+        if (currentUser.notOwned(reaction))
             throw new ResourceNotOwnedException("Cannot update reaction this comment! because current user doesn't owned this reaction!");
 
         if (post.isInactive())
@@ -151,17 +151,17 @@ public class ReactionServiceImpl implements ReactionService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot update reaction this comment! because comment might be already deleted or doesn't exists!");
 
-        react.setEmoji(emoji);
-        reactionRepository.save(react);
+        reaction.setEmoji(emoji);
+        reactionRepository.save(reaction);
         log.debug("Updating current user reaction to comment with id of {} success with emoji id of {}", comment.getId(), emoji.getId());
     }
 
     @Override
-    public void update(User currentUser, Post post, Comment comment, Reply reply, React react, Emoji emoji) {
+    public void update(User currentUser, Post post, Comment comment, Reply reply, Reaction reaction, Emoji emoji) {
         if (currentUser.notOwned(reply))
             throw new ResourceNotOwnedException("Cannot update reaction to this reply! because current user doesn't owned this reply!");
 
-        if (currentUser.notOwned(react))
+        if (currentUser.notOwned(reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this reply! because current user doesn't owned this reaction!");
 
         if (post.isInactive())
@@ -173,32 +173,32 @@ public class ReactionServiceImpl implements ReactionService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot update reaction to this reply! because reply might be already deleted or doesn't exists!");
 
-        react.setEmoji(emoji);
-        reactionRepository.save(react);
+        reaction.setEmoji(emoji);
+        reactionRepository.save(reaction);
         log.debug("Updating current user reaction to reply with id of {} success with emoji id of {}", reply.getId(), emoji.getId());
     }
 
     @Override
-    public void delete(User currentUser, Post post, React react) {
+    public void delete(User currentUser, Post post, Reaction reaction) {
         if (currentUser.notOwned(post))
             throw new ResourceNotOwnedException("Cannot delete reaction to this post! because current user doesn't owned this post!");
 
-        if (currentUser.notOwned(react))
+        if (currentUser.notOwned(reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this post! because current user doesn't owned this reaction!");
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction to this post! because post might be already deleted or doesn't exists!");
 
-        reactionRepository.delete(react);
+        reactionRepository.delete(reaction);
         log.debug("Deleting reaction to post with id of {} success!", post.getId());
     }
 
     @Override
-    public void delete(User currentUser, Post post, Comment comment, React react) {
+    public void delete(User currentUser, Post post, Comment comment, Reaction reaction) {
         if (currentUser.notOwned(comment))
             throw new ResourceNotOwnedException("Cannot delete reaction this comment! because current user doesn't owned this comment!");
 
-        if (currentUser.notOwned(react))
+        if (currentUser.notOwned(reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction this comment! because current user doesn't owned this reaction!");
 
         if (post.isInactive())
@@ -207,16 +207,16 @@ public class ReactionServiceImpl implements ReactionService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction this comment! because comment might be already deleted or doesn't exists!");
 
-        reactionRepository.delete(react);
+        reactionRepository.delete(reaction);
         log.debug("Deleting reaction to comment with id of {} success!", comment.getId());
     }
 
     @Override
-    public void delete(User currentUser, Post post, Comment comment, Reply reply, React react) {
+    public void delete(User currentUser, Post post, Comment comment, Reply reply, Reaction reaction) {
         if (currentUser.notOwned(reply))
             throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because current user doesn't owned this reply!");
 
-        if (currentUser.notOwned(react))
+        if (currentUser.notOwned(reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because current user doesn't owned this reaction!");
 
         if (post.isInactive())
@@ -228,24 +228,24 @@ public class ReactionServiceImpl implements ReactionService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction to this reply! because reply might be already deleted or doesn't exists!");
 
-        reactionRepository.delete(react);
+        reactionRepository.delete(reaction);
         log.debug("Deleting reaction to reply with id of {} success!", reply.getId());
     }
 
 
     @Override
-    public List<React> getAll(User currentUser, Post post) {
+    public List<Reaction> getAll(User currentUser, Post post) {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve reactions to this post! because this might be already deleted or doesn't exists!");
 
         return post.getReactions().stream()
-                .sorted(Comparator.comparing(React::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(Reaction::getCreatedAt).reversed())
                 .toList();
 
     }
 
     @Override
-    public List<React> getAll(User currentUser, Post post, Comment comment) {
+    public List<Reaction> getAll(User currentUser, Post post, Comment comment) {
         if (post.notOwned(comment))
             throw new ResourceNotOwnedException("Cannot get all reactions to this comment! because post doesn't have this comment!");
 
@@ -256,12 +256,12 @@ public class ReactionServiceImpl implements ReactionService {
             throw new ResourceNotFoundException("Cannot get all reactions to this comment! because comment might be already deleted or doesn't exists!");
 
         return comment.getReactions().stream()
-                .sorted(Comparator.comparing(React::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(Reaction::getCreatedAt).reversed())
                 .toList();
     }
 
     @Override
-    public List<React> getAll(User currentUser, Post post, Comment comment, Reply reply) {
+    public List<Reaction> getAll(User currentUser, Post post, Comment comment, Reply reply) {
         if (post.notOwned(comment))
             throw new ResourceNotOwnedException("Current user doesn't owned this comment!");
 
@@ -278,7 +278,7 @@ public class ReactionServiceImpl implements ReactionService {
             throw new ResourceNotFoundException("Cannot get all reactions to this reply! because reply might be already deleted or doesn't exists!");
 
         return reply.getReactions().stream()
-                .sorted(Comparator.comparing(React::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(Reaction::getCreatedAt).reversed())
                 .toList();
     }
 
@@ -288,7 +288,7 @@ public class ReactionServiceImpl implements ReactionService {
             throw new ResourceNotFoundException("Cannot retrieve user already reacted to this post! because this might be already deleted or doesn't exists!");
 
         return post.getReactions().stream()
-                .map(React::getCreator)
+                .map(Reaction::getCreator)
                 .anyMatch(currentUser::equals);
     }
 
@@ -301,7 +301,7 @@ public class ReactionServiceImpl implements ReactionService {
             throw new ResourceNotFoundException("Cannot retrieve user already reacted to this comment! because comment might be already deleted or doesn't exists!");
 
         return comment.getReactions().stream()
-                .map(React::getCreator)
+                .map(Reaction::getCreator)
                 .anyMatch(currentUser::equals);
     }
 
@@ -317,12 +317,12 @@ public class ReactionServiceImpl implements ReactionService {
             throw new ResourceNotFoundException("Cannot retrieve user already reacted to this reply! because reply might be already deleted or doesn't exists!");
 
         return reply.getReactions().stream()
-                .map(React::getCreator)
+                .map(Reaction::getCreator)
                 .anyMatch(currentUser::equals);
     }
 
     @Override
-    public React getByUserReaction(User currentUser, Post post) {
+    public Reaction getByUserReaction(User currentUser, Post post) {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve react by user to this post! because this might be already deleted or doesn't exists!");
 
@@ -333,7 +333,7 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public React getByUserReaction(User currentUser, Post post, Comment comment) {
+    public Reaction getByUserReaction(User currentUser, Post post, Comment comment) {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve react by user to this comment! because post might be already deleted or doesn't exists!");
 
@@ -347,7 +347,7 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public React getByUserReaction(User currentUser, Post post, Comment comment, Reply reply) {
+    public Reaction getByUserReaction(User currentUser, Post post, Comment comment, Reply reply) {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve react by user to this reply! because post might be already deleted or doesn't exists!");
 

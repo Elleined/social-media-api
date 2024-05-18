@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 @Setter
-public class React extends PrimaryKeyIdentity {
+public class Reaction extends PrimaryKeyIdentity {
 
     @ManyToOne(optional = false)
     @JoinColumn(
@@ -56,15 +56,15 @@ public class React extends PrimaryKeyIdentity {
     private Set<Notification> notifications;
 
     @Builder
-    public React(int id,
-                 LocalDateTime createdAt,
-                 LocalDateTime updatedAt,
-                 User creator,
-                 Emoji emoji,
-                 Set<Post> posts,
-                 Set<Comment> comments,
-                 Set<Reply> replies,
-                 Set<Notification> notifications) {
+    public Reaction(int id,
+                    LocalDateTime createdAt,
+                    LocalDateTime updatedAt,
+                    User creator,
+                    Emoji emoji,
+                    Set<Post> posts,
+                    Set<Comment> comments,
+                    Set<Reply> replies,
+                    Set<Notification> notifications) {
         super(id, createdAt, updatedAt);
         this.creator = creator;
         this.emoji = emoji;
@@ -72,13 +72,6 @@ public class React extends PrimaryKeyIdentity {
         this.comments = comments;
         this.replies = replies;
         this.notifications = notifications;
-    }
-
-    public boolean ownedBy(User currentUser) {
-        return this.getCreator().equals(currentUser);
-    }
-    public boolean notOwnedBy(User currentUser) {
-        return !ownedBy(currentUser);
     }
 
     public Set<Integer> getAllPostIds() {

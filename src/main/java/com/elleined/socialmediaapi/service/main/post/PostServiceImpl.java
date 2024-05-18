@@ -121,7 +121,7 @@ public class PostServiceImpl implements PostService {
     public List<Post> getAll(User currentUser) {
         return postRepository.findAll().stream()
                 .filter(Post::isActive)
-                .filter(post -> !blockService.isBlockedBy(currentUser, post.getCreator()))
+                .filter(post -> !blockService.isBlockedByYou(currentUser, post.getCreator()))
                 .filter(post -> !blockService.isYouBeenBlockedBy(currentUser, post.getCreator()))
                 .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .toList();

@@ -8,7 +8,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.react.React;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -96,7 +96,7 @@ public class Comment extends Forum {
                     nullable = false
             )
     )
-    private Set<React> reactions;
+    private Set<Reaction> reactions;
 
     @ManyToMany
     @JoinTable(
@@ -128,7 +128,7 @@ public class Comment extends Forum {
                    List<Vote> votes,
                    Set<HashTag> hashTags,
                    Set<Mention> mentions,
-                   Set<React> reactions,
+                   Set<Reaction> reactions,
                    Set<Notification> notifications) {
         super(id, createdAt, updatedAt, body, status, attachedPicture, creator);
         this.pinnedReply = pinnedReply;
@@ -139,13 +139,6 @@ public class Comment extends Forum {
         this.mentions = mentions;
         this.reactions = reactions;
         this.notifications = notifications;
-    }
-
-    public boolean has(Reply reply) {
-        return this.getReplies().stream().anyMatch(reply::equals);
-    }
-    public boolean hasNot(Reply reply) {
-        return !has(reply);
     }
 
     public List<Integer> getAllReplyIds() {

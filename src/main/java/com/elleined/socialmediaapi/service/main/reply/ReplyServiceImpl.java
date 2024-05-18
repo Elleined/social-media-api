@@ -58,7 +58,7 @@ public class ReplyServiceImpl implements ReplyService {
         if (FieldUtil.isNotValid(body)) throw new EmptyBodyException("Reply body cannot be empty!");
         if (comment.isCommentSectionClosed()) throw new CommentSectionException("Cannot reply to this comment because author already closed the comment section for this post!");
         if (comment.isInactive()) throw new ResourceNotFoundException("The comment you trying to reply is either be deleted or does not exists anymore!");
-        if (blockService.isBlockedBy(currentUser, comment.getCreator())) throw new BlockedException("Cannot reply because you blocked this user already!");
+        if (blockService.isBlockedByYou(currentUser, comment.getCreator())) throw new BlockedException("Cannot reply because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCreator())) throw new BlockedException("Cannot reply because this user block you already!");
 
         Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
@@ -106,7 +106,7 @@ public class ReplyServiceImpl implements ReplyService {
         List<Reply> replies = new ArrayList<>(comment.getReplies().stream()
                 .filter(Reply::isActive)
                 .filter(reply -> !reply.equals(pinnedReply))
-                .filter(reply -> !blockService.isBlockedBy(currentUser, reply.getCreator()))
+                .filter(reply -> !blockService.isBlockedByYou(currentUser, reply.getCreator()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getCreator()))
                 .sorted(Comparator.comparing(Reply::getCreatedAt).reversed())
                 .toList());

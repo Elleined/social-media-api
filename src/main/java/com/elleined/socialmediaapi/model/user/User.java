@@ -8,7 +8,7 @@ import com.elleined.socialmediaapi.model.main.vote.Vote;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
-import com.elleined.socialmediaapi.model.react.React;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -75,7 +75,7 @@ public class User extends PrimaryKeyIdentity {
     private List<Reply> replies;
 
     @OneToMany(mappedBy = "creator")
-    private List<React> reactions;
+    private List<Reaction> reactions;
 
     @OneToMany(mappedBy = "creator")
     private List<Vote> votedComments;
@@ -165,7 +165,7 @@ public class User extends PrimaryKeyIdentity {
                 List<Post> posts,
                 List<Comment> comments,
                 List<Reply> replies,
-                List<React> reactions,
+                List<Reaction> reactions,
                 List<Vote> votedComments,
                 Set<Post> savedPosts,
                 Set<Post> sharedPosts,
@@ -193,57 +193,6 @@ public class User extends PrimaryKeyIdentity {
         this.friends = friends;
         this.followers = followers;
         this.followings = followings;
-    }
-
-    public boolean notOwned(Post post) {
-        return this.getPosts().stream().noneMatch(post::equals);
-    }
-    public boolean notOwned(Comment comment) {
-        return this.getComments().stream().noneMatch(comment::equals);
-    }
-    public boolean notOwned(Reply reply) {
-        return this.getReplies().stream().noneMatch(reply::equals);
-    }
-    public boolean notOwned(React react) {
-        return this.getReactions().stream().noneMatch(react::equals);
-    }
-
-    // Comment
-    public boolean isAlreadyVoted(Comment comment) {
-        return this.getVotedComments().stream()
-                .map(Vote::getComment)
-                .anyMatch(comment::equals);
-    }
-
-    // Story
-    public boolean hasStory() {
-        return this.getStory() != null;
-    }
-    public boolean doesNotHaveStory() {
-        return this.getStory() == null;
-    }
-
-    // Note
-    public boolean hasNote() {
-        return this.getNote() != null;
-    }
-    public boolean doesNotHaveNote() {
-        return this.getNote() == null;
-    }
-
-    // Friend
-    public boolean isFriendsWith(User anotherUser) {
-        return this.getFriends().contains(anotherUser);
-    }
-    public boolean hasSendFriendRequestTo(User userToAdd) {
-        return this.getSentFriendRequests().stream()
-                .map(FriendRequest::getRequestedUser)
-                .anyMatch(userToAdd::equals);
-    }
-    public boolean hasReceiveFriendRequestTo(User userToAdd) {
-        return userToAdd.getSentFriendRequests().stream()
-                .map(FriendRequest::getRequestedUser)
-                .anyMatch(this::equals);
     }
 
     // Get all id

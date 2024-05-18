@@ -10,7 +10,7 @@ public interface BlockService {
 
     void unBlockUser(User currentUser, User userToBeUnblocked);
 
-    boolean isBlockedBy(User currentUser, User userToCheck);
+    boolean isBlockedByYou(User currentUser, User userToCheck);
 
     boolean isYouBeenBlockedBy(User currentUser, User suspectedUser);
 

@@ -6,7 +6,7 @@ import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.react.React;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,7 +57,7 @@ public class Notification extends PrimaryKeyIdentity {
                     nullable = false
             )
     )
-    private Set<React> reactions;
+    private Set<Reaction> reactions;
 
     @ManyToMany
     @JoinTable(
@@ -100,7 +100,7 @@ public class Notification extends PrimaryKeyIdentity {
                         Set<Post> posts,
                         Set<Comment> comments,
                         Set<Reply> replies,
-                        Set<React> reactions,
+                        Set<Reaction> reactions,
                         Set<Mention> mentions,
                         Set<FriendRequest> friendRequests) {
         super(id, createdAt, updatedAt);

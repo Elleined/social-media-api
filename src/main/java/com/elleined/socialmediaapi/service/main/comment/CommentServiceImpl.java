@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
         if (FieldUtil.isNotValid(body)) throw new FieldException("Comment body cannot be empty! Please provide text for your comment");
         if (post.isCommentSectionClosed()) throw new CommentSectionException("Cannot comment because author already closed the comment section for this post!");
         if (post.isInactive()) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
-        if (blockService.isBlockedBy(currentUser, post.getCreator())) throw new BlockedException("Cannot comment because you blocked this user already!");
+        if (blockService.isBlockedByYou(currentUser, post.getCreator())) throw new BlockedException("Cannot comment because you blocked this user already!");
         if (blockService.isYouBeenBlockedBy(currentUser, post.getCreator())) throw new BlockedException("Cannot comment because this user block you already!");
 
         Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
@@ -97,7 +96,7 @@ public class CommentServiceImpl implements CommentService {
                 .stream()
                 .filter(Comment::isActive)
                 .filter(comment -> !comment.equals(pinnedComment))
-                .filter(comment -> !blockService.isBlockedBy(currentUser, comment.getCreator()))
+                .filter(comment -> !blockService.isBlockedByYou(currentUser, comment.getCreator()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
                 .toList());
         if (pinnedComment != null) comments.add(0, pinnedComment); // Prioritizing pinned comment

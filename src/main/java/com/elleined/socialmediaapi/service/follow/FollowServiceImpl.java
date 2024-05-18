@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.service.follow;
 
 import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.resource.ResourceAlreadyExistsException;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
@@ -21,8 +22,14 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public void follow(User currentUser, User userToFollow) {
-        if (blockService.isBlockedBy(currentUser, userToFollow)) throw new BlockedException("Cannot follow because you blocked this user already!");
-        if (blockService.isYouBeenBlockedBy(currentUser, userToFollow)) throw new BlockedException("Cannot follow because this user block you already!");
+        if (blockService.isBlockedByYou(currentUser, userToFollow))
+            throw new BlockedException("Cannot follow because you blocked this user already!");
+
+        if (blockService.isYouBeenBlockedBy(currentUser, userToFollow))
+            throw new BlockedException("Cannot follow because this user block you already!");
+
+        if (alreadyFollows(currentUser, userToFollow))
+            throw new ResourceAlreadyExistsException("Cannot follow because you've already followed this user!");
 
         currentUser.getFollowings().add(userToFollow);
         userToFollow.getFollowers().add(currentUser);

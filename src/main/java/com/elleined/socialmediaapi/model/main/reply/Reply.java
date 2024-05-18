@@ -6,7 +6,7 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.react.React;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -82,7 +82,7 @@ public class Reply extends Forum {
                     nullable = false
             )
     )
-    private Set<React> reactions;
+    private Set<Reaction> reactions;
 
     @ManyToMany
     @JoinTable(
@@ -111,7 +111,7 @@ public class Reply extends Forum {
                  Comment comment,
                  Set<HashTag> hashTags,
                  Set<Mention> mentions,
-                 Set<React> reactions,
+                 Set<Reaction> reactions,
                  Set<Notification> notifications) {
         super(id, createdAt, updatedAt, body, status, attachedPicture, creator);
         this.comment = comment;

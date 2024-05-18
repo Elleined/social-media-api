@@ -43,7 +43,7 @@ public class MentionServiceImpl implements MentionService {
     public List<User> getSuggestedMentions(User currentUser, String name) {
         return userRepository.fetchAllByProperty(name).stream()
                 .filter(suggestedUser -> !suggestedUser.equals(currentUser))
-                .filter(suggestedUser -> !blockService.isBlockedBy(currentUser, suggestedUser))
+                .filter(suggestedUser -> !blockService.isBlockedByYou(currentUser, suggestedUser))
                 .filter(suggestedUser -> !blockService.isYouBeenBlockedBy(currentUser, suggestedUser))
                 .toList();
     }

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -19,11 +20,25 @@ public class EmojiServiceImpl implements EmojiService {
 
     @Override
     public List<Emoji> getAll() {
-        return emojiRepository.findAll();
+        return emojiRepository.findAll().stream()
+                .sorted(Comparator.comparing(Emoji::getType))
+                .toList();
+    }
+
+    @Override
+    public Emoji save(Emoji emoji) {
+        return emojiRepository.save(emoji);
     }
 
     @Override
     public Emoji getById(int id) throws ResourceNotFoundException {
         return emojiRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Emoji with id of " + id + " doesn't exists"));
+    }
+
+    @Override
+    public List<Emoji> getAllById(List<Integer> ids) {
+        return emojiRepository.findAllById(ids).stream()
+                .sorted(Comparator.comparing(Emoji::getType))
+                .toList();
     }
 }

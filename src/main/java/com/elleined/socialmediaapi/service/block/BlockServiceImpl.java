@@ -19,7 +19,14 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public void blockUser(User currentUser, User userToBeBlocked) throws BlockedException {
-        if (currentUser.getId() == userToBeBlocked.getId()) throw new BlockedException("You cannot blocked yourself!");
+        if (currentUser.getId() == userToBeBlocked.getId())
+            throw new BlockedException("Cannot block user! because you cannot blocked yourself!");
+
+        if (isBlockedByYou(currentUser, userToBeBlocked))
+            throw new BlockedException("Cannot block this user! because you already blocked this user!");
+
+        if (isYouBeenBlockedBy(currentUser, userToBeBlocked))
+            throw new BlockedException("Cannot block this user! because you've already been block by this user!");
 
         currentUser.getBlockedUsers().add(userToBeBlocked);
         userRepository.save(currentUser);
@@ -28,13 +35,19 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public void unBlockUser(User currentUser, User userToBeUnblocked) {
+        if (!isBlockedByYou(currentUser, userToBeUnblocked))
+            throw new BlockedException("Cannot unblock this user! because you are not blocked this user!");
+
+        if (!isYouBeenBlockedBy(currentUser, userToBeUnblocked))
+            throw new BlockedException("Cannot unblock this user! because you are not been block by this user!");
+
         currentUser.getBlockedUsers().remove(userToBeUnblocked);
         userRepository.save(currentUser);
         log.debug("User {} unblocked user {} successfully", currentUser.getId(), userToBeUnblocked.getId());
     }
 
     @Override
-    public boolean isBlockedBy(User currentUser, User userToCheck) {
+    public boolean isBlockedByYou(User currentUser, User userToCheck) {
         return currentUser.getBlockedUsers().stream().anyMatch(userToCheck::equals);
     }
 

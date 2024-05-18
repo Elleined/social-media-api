@@ -73,7 +73,7 @@ public class VoteServiceImpl implements VoteService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot vote this comment! because this comment might already deleted or doesn't exists!");
 
-        if (blockService.isBlockedBy(currentUser, comment.getCreator()))
+        if (blockService.isBlockedByYou(currentUser, comment.getCreator()))
             throw new BlockedException("Cannot vote this comment! because you blocked this user already!");
 
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))

@@ -1,11 +1,7 @@
 package com.elleined.socialmediaapi.service.emoji;
 
-import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.react.Emoji;
+import com.elleined.socialmediaapi.service.CustomService;
 
-import java.util.List;
-
-public interface EmojiService {
-    List<Emoji> getAll();
-    Emoji getById(int id) throws ResourceNotFoundException;
+public interface EmojiService extends CustomService<Emoji> {
 }

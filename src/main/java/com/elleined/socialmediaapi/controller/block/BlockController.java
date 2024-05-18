@@ -1,13 +1,11 @@
 package com.elleined.socialmediaapi.controller.block;
 
-import com.elleined.socialmediaapi.dto.APIResponse;
 import com.elleined.socialmediaapi.dto.user.UserDTO;
 import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -37,7 +35,7 @@ public class BlockController {
         User currentUser = userService.getById(currentUserId);
         User userToCheck = userService.getById(userToCheckId);
 
-        return blockService.isBlockedBy(currentUser, userToCheck);
+        return blockService.isBlockedByYou(currentUser, userToCheck);
     }
 
     @GetMapping("/check/{suspectedBlockerId}/you-been-blocked")
