@@ -3,6 +3,7 @@ package com.elleined.socialmediaapi.model.main.comment;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
+import com.elleined.socialmediaapi.model.main.comment.vote.Vote;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
@@ -45,6 +46,9 @@ public class Comment extends Forum {
 
     @OneToMany(mappedBy = "comment")
     private List<Reply> replies;
+
+    @OneToMany(mappedBy = "comment")
+    private List<Vote> votes;
 
     @ManyToMany
     @JoinTable(
@@ -96,22 +100,6 @@ public class Comment extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_comment_vote",
-            joinColumns = @JoinColumn(
-                    name = "comment_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "user_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            )
-    )
-    private Set<User> userVotes;
-
-    @ManyToMany
-    @JoinTable(
             name = "tbl_comment_notification",
             joinColumns = @JoinColumn(
                     name = "comment_id",
@@ -137,19 +125,19 @@ public class Comment extends Forum {
                    Reply pinnedReply,
                    Post post,
                    List<Reply> replies,
+                   List<Vote> votes,
                    Set<HashTag> hashTags,
                    Set<Mention> mentions,
                    Set<React> reactions,
-                   Set<User> userVotes,
                    Set<Notification> notifications) {
         super(id, createdAt, updatedAt, body, status, attachedPicture, creator);
         this.pinnedReply = pinnedReply;
         this.post = post;
         this.replies = replies;
+        this.votes = votes;
         this.hashTags = hashTags;
         this.mentions = mentions;
         this.reactions = reactions;
-        this.userVotes = userVotes;
         this.notifications = notifications;
     }
 
@@ -177,11 +165,6 @@ public class Comment extends Forum {
     }
     public Set<Integer> getAllReactionIds() {
         return this.getReactions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-    public Set<Integer> getAllUserVoteIds() {
-        return this.getUserVotes().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }

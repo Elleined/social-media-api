@@ -4,6 +4,7 @@ import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.comment.vote.Vote;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
@@ -76,11 +77,11 @@ public class User extends PrimaryKeyIdentity {
     @OneToMany(mappedBy = "creator")
     private List<React> reactions;
 
+    @OneToMany(mappedBy = "creator")
+    private List<Vote> votedComments;
+
     @ManyToMany(mappedBy = "savingUsers")
     private Set<Post> savedPosts;
-
-    @ManyToMany(mappedBy = "userVotes")
-    private Set<Comment> votedComments;
 
     @ManyToMany(mappedBy = "sharers")
     private Set<Post> sharedPosts;
@@ -165,8 +166,8 @@ public class User extends PrimaryKeyIdentity {
                 List<Comment> comments,
                 List<Reply> replies,
                 List<React> reactions,
+                List<Vote> votedComments,
                 Set<Post> savedPosts,
-                Set<Comment> votedComments,
                 Set<Post> sharedPosts,
                 Set<User> blockedUsers,
                 Set<User> friends,
@@ -185,8 +186,8 @@ public class User extends PrimaryKeyIdentity {
         this.comments = comments;
         this.replies = replies;
         this.reactions = reactions;
-        this.savedPosts = savedPosts;
         this.votedComments = votedComments;
+        this.savedPosts = savedPosts;
         this.sharedPosts = sharedPosts;
         this.blockedUsers = blockedUsers;
         this.friends = friends;
