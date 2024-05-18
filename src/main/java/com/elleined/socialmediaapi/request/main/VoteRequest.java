@@ -16,6 +16,9 @@ public class VoteRequest extends Request {
     @Positive(message = "Please provide your id")
     private int creatorId;
 
+    @NotBlank(message = "Please provide the post id")
+    private int postId;
+
     @NotBlank(message = "Please provide the comment id")
     private int commentId;
 
@@ -24,9 +27,11 @@ public class VoteRequest extends Request {
 
     @Builder
     public VoteRequest(int creatorId,
+                       int postId,
                        int commentId,
                        Vote.Verdict verdict) {
         this.creatorId = creatorId;
+        this.postId = postId;
         this.commentId = commentId;
         this.verdict = verdict;
     }

@@ -19,13 +19,13 @@ public interface ReactionService {
     React save(User currentUser, Post post, Comment comment, Emoji emoji);
     React save(User currentUser, Post post, Comment comment, Reply reply, Emoji emoji);
 
-    React update(User currentUser, Post post, React react, Emoji emoji);
-    React update(User currentUser, Post post, Comment comment, React react, Emoji emoji);
-    React update(User currentUser, Post post, Comment comment, Reply reply, React react, Emoji emoji);
+    void update(User currentUser, Post post, React react, Emoji emoji);
+    void update(User currentUser, Post post, Comment comment, React react, Emoji emoji);
+    void update(User currentUser, Post post, Comment comment, Reply reply, React react, Emoji emoji);
 
-    void delete(User currentUser, Post post, React react, Emoji emoji);
-    void delete(User currentUser, Post post, Comment comment, React react, Emoji emoji);
-    void delete(User currentUser, Post post, Comment comment, Reply reply, React react, Emoji emoji);
+    void delete(User currentUser, Post post, React react);
+    void delete(User currentUser, Post post, Comment comment, React react);
+    void delete(User currentUser, Post post, Comment comment, Reply reply, React react);
 
     List<React> getAll(User currentUser, Post post);
     List<React> getAll(User currentUser, Post post, Comment comment);
@@ -34,6 +34,10 @@ public interface ReactionService {
     boolean isAlreadyReactedTo(User currentUser, Post post);
     boolean isAlreadyReactedTo(User currentUser, Post post, Comment comment);
     boolean isAlreadyReactedTo(User currentUser, Post post, Comment comment, Reply reply);
+
+    React getByUserReaction(User currentUser, Post post);
+    React getByUserReaction(User currentUser, Post post, Comment comment);
+    React getByUserReaction(User currentUser, Post post, Comment comment, Reply reply);
 
     default List<React> getAllByEmoji(User currentUser, Post post, Emoji emoji) {
         return this.getAll(currentUser, post).stream()

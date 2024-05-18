@@ -5,6 +5,7 @@ import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.react.Emoji;
+import com.elleined.socialmediaapi.model.react.React;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
@@ -47,7 +48,7 @@ public class CommentReactionController {
                 .toList();
     }
 
-    @GetMapping
+    @GetMapping("/emoji")
     public List<ReactDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
                                         @PathVariable("postId") int postId,
                                         @PathVariable("commentId") int commentId,
@@ -74,13 +75,14 @@ public class CommentReactionController {
         Comment comment = commentService.getById(commentId);
         Emoji emoji = emojiService.getById(emojiId);
 
-        if (currentUser.isAlreadyReactedTo(comment)) {
-            CommentReact commentReact = reactionService.getByUserReaction(currentUser, comment);
-            reactionService.update(currentUser, comment, commentReact, emoji);
-            return reactionMapper.toDTO(commentReact);
+        if (reactionService.isAlreadyReactedTo(currentUser, post, comment)) {
+            React react = reactionService.getByUserReaction(currentUser, post, comment);
+            reactionService.update(currentUser, post, comment, react, emoji);
+            return reactionMapper.toDTO(react);
         }
-        CommentReact commentReact = reactionService.save(currentUser, comment, emoji);
-        return reactionMapper.toDTO(commentReact);
+
+        React react = reactionService.save(currentUser, post, comment, emoji);
+        return reactionMapper.toDTO(react);
     }
 
     @DeleteMapping("/{reactionId}")
@@ -88,9 +90,12 @@ public class CommentReactionController {
                        @PathVariable("postId") int postId,
                        @PathVariable("commentId") int commentId,
                        @PathVariable("reactionId") int reactionId) {
+
         User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
-        CommentReact commentReact = reactionService.getById(reactionId);
-        reactionService.delete(currentUser, commentReact);
+        React react = reactionService.getById(reactionId);
+
+        reactionService.delete(currentUser, post, comment, react);
     }
 }

@@ -29,7 +29,6 @@ public class CommentPinReplyController {
 
     private final ReplyService replyService;
 
-
     @PatchMapping("/pin-reply/{replyId}")
     public CommentDTO pinReply(@PathVariable("currentUserId") int currentUserId,
                                @PathVariable("commentId") int commentId,

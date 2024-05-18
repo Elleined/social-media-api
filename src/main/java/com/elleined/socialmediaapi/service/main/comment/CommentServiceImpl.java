@@ -54,11 +54,7 @@ public class CommentServiceImpl implements CommentService {
                         String body,
                         MultipartFile attachedPicture,
                         Set<User> mentionedUsers,
-                        Set<String> keywords)
-            throws ResourceNotFoundException,
-            CommentSectionException,
-            BlockedException,
-            IOException {
+                        Set<String> keywords) {
 
         if (FieldUtil.isNotValid(body)) throw new FieldException("Comment body cannot be empty! Please provide text for your comment");
         if (post.isCommentSectionClosed()) throw new CommentSectionException("Cannot comment because author already closed the comment section for this post!");
