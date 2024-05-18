@@ -12,6 +12,14 @@ public interface PostServiceRestriction {
         return post.getCommentSectionStatus() == Post.CommentSectionStatus.OPEN;
     }
 
+    default boolean hasPinnedComment(Post post) {
+        return post.getPinnedComment() != null;
+    }
+
+    default boolean doesNotHavePinnedComment(Post post) {
+        return post.getPinnedComment() == null;
+    }
+
     default boolean owned(Post post, Comment comment) {
         return post.getComments().stream().anyMatch(comment::equals);
     }

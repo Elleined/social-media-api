@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,33 +24,41 @@ public class HashTagServiceImpl implements HashTagService {
     private final HashTagMapper hashTagMapper;
 
     @Override
-    public Set<HashTag> getAll() {
-        return new HashSet<>(hashTagRepository.findAll());
+    public HashTag save(HashTag hashTag) {
+        return hashTagRepository.save(hashTag);
+    }
+
+    @Override
+    public HashTag getById(int id) throws ResourceNotFoundException {
+        return hashTagRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("HashTag with id of " + id + " doesn't exists!"));
+    }
+
+    @Override
+    public List<HashTag> getAll() {
+        return hashTagRepository.findAll().stream()
+                .sorted(Comparator.comparing(HashTag::getCreatedAt).reversed())
+                .toList();
+    }
+
+    @Override
+    public List<HashTag> getAllById(List<Integer> ids) {
+        return hashTagRepository.findAllById(ids).stream()
+                .sorted(Comparator.comparing(HashTag::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override
     public boolean isExists(String keyword) {
         return hashTagRepository.findAll().stream()
                 .map(HashTag::getKeyword)
-                .noneMatch(keyword::equalsIgnoreCase);
-    }
-
-    @Override
-    public List<HashTag> getAllById(Set<Integer> ids) {
-        return hashTagRepository.findAllById(ids);
-    }
-
-    @Override
-    public HashTag getByKeyword(String keyword) {
-        return hashTagRepository.findAll().stream()
-                .filter(hashTag -> hashTag.getKeyword().equalsIgnoreCase(keyword))
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Hashtag with keyword of " + keyword + " does not exists!"));
+                .anyMatch(keyword::equalsIgnoreCase);
     }
 
     @Override
     public HashTag save(String keyword) {
-        if (isExists(keyword)) throw new ResourceAlreadyExistsException("Hashtag with keyword of " + keyword + " already exists!");
+        if (isExists(keyword))
+            throw new ResourceAlreadyExistsException("Hashtag with keyword of " + keyword + " already exists!");
+
         HashTag hashTag = hashTagMapper.toEntity(keyword);
         hashTagRepository.save(hashTag);
         log.debug("Saving hashtag success!");

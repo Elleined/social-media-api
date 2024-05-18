@@ -16,13 +16,15 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class NoteServiceImpl implements NoteService {
+public class NoteServiceImpl implements NoteService, NoteServiceRestriction {
     private final NoteRepository noteRepository;
     private final NoteMapper noteMapper;
 
     @Override
     public Note save(User currentUser, String thought) throws NoteException {
-        if (currentUser.hasNote()) throw new NoteException("Creating note failed! because you already have note existing!");
+        if (hasNote(currentUser))
+            throw new NoteException("Creating note failed! because you already have note existing!");
+
         Note note = noteMapper.toEntity(currentUser, thought);
         noteRepository.save(note);
         log.debug("Note with id of {} saved successfully!", note.getId());
@@ -31,7 +33,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Note update(User currentUser, String newThought) {
-        if (currentUser.doesNotHaveNote()) throw new NoteException("Updating note failed! because current user has no note");
+        if (doesNotHaveNote(currentUser))
+            throw new NoteException("Updating note failed! because current user has no note");
+
         Note note = currentUser.getNote();
         note.setThought(newThought);
         noteRepository.save(note);
@@ -41,7 +45,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public void delete(User currentUser, Note note) {
-        if (currentUser.doesNotHaveNote()) throw new NoteException("Deleting note failed! because current user has no note");
+        if (doesNotHaveNote(currentUser))
+            throw new NoteException("Deleting note failed! because current user has no note");
+
         noteRepository.delete(note);
         log.debug("Note with id of {} deleted successfully", note.getId());
     }

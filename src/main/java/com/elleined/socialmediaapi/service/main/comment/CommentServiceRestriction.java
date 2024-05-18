@@ -6,12 +6,20 @@ import com.elleined.socialmediaapi.model.main.vote.Vote;
 import com.elleined.socialmediaapi.model.user.User;
 
 public interface CommentServiceRestriction {
-    default boolean has(User currentUser, Reply reply) {
-        return currentUser.getReplies().stream().anyMatch(reply::equals);
+    default boolean owned(Comment comment, Reply reply) {
+        return comment.getReplies().stream().anyMatch(reply::equals);
     }
 
-    default boolean hasNot(User currentUser, Reply reply) {
-        return !this.has(currentUser, reply);
+    default boolean notOwned(Comment comment, Reply reply) {
+        return !this.owned(comment, reply);
+    }
+
+    default boolean hasPinnedReply(Comment comment ) {
+        return comment.getPinnedReply() != null;
+    }
+
+    default boolean doesNotHavePinnedReply(Comment comment ) {
+        return comment.getPinnedReply() == null;
     }
 
     default boolean isAlreadyVoted(User currentUser, Comment comment) {
