@@ -1,7 +1,9 @@
 package com.elleined.socialmediaapi.service.main.comment;
 
-import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.exception.CommentSectionException;
 import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.field.FieldException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
@@ -56,10 +58,9 @@ public class CommentServiceImpl implements CommentService {
             throws ResourceNotFoundException,
             CommentSectionException,
             BlockedException,
-            EmptyBodyException,
             IOException {
 
-        if (FieldUtil.isNotValid(body)) throw new EmptyBodyException("Comment body cannot be empty! Please provide text for your comment");
+        if (FieldUtil.isNotValid(body)) throw new FieldException("Comment body cannot be empty! Please provide text for your comment");
         if (post.isCommentSectionClosed()) throw new CommentSectionException("Cannot comment because author already closed the comment section for this post!");
         if (post.isInactive()) throw new ResourceNotFoundException("The post you trying to comment is either be deleted or does not exists anymore!");
         if (blockService.isBlockedBy(currentUser, post.getCreator())) throw new BlockedException("Cannot comment because you blocked this user already!");
@@ -105,6 +106,11 @@ public class CommentServiceImpl implements CommentService {
                 .toList());
         if (pinnedComment != null) comments.add(0, pinnedComment); // Prioritizing pinned comment
         return comments;
+    }
+
+    @Override
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
     }
 
     @Override

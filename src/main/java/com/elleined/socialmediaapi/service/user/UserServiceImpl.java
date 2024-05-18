@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllById(Set<Integer> ids) {
+    public Set<User> getAllById(Set<Integer> ids) {
         return new HashSet<>(userRepository.findAllById(ids));
     }
 

@@ -59,6 +59,7 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "friends", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "followers", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "followings", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "reactions", expression = "java(new java.util.HashSet<>())")
     })
     User toEntity(String name,
                   String email,

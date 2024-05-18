@@ -4,7 +4,7 @@ import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
-import com.elleined.socialmediaapi.model.main.comment.vote.Vote;
+import com.elleined.socialmediaapi.model.main.vote.Vote;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
@@ -209,8 +209,10 @@ public class User extends PrimaryKeyIdentity {
     }
 
     // Comment
-    public boolean isAlreadyUpvoted(Comment comment) {
-        return this.getVotedComments().stream().anyMatch(comment::equals);
+    public boolean isAlreadyVoted(Comment comment) {
+        return this.getVotedComments().stream()
+                .map(Vote::getComment)
+                .anyMatch(comment::equals);
     }
 
     // Story

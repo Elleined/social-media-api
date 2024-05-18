@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.model.main.comment.vote;
+package com.elleined.socialmediaapi.model.main.vote;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
