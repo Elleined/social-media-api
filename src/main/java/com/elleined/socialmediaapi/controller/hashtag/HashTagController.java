@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts/hashtags")
+@RequestMapping("/forum/hashtags")
 public class HashTagController {
     private final HashTagService hashTagService;
     private final HashTagMapper hashTagMapper;

@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.service.story;
 
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.story.StoryException;
 import com.elleined.socialmediaapi.mapper.story.StoryMapper;
 import com.elleined.socialmediaapi.model.story.Story;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -32,6 +32,11 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
+    public Story getById(int id) throws ResourceNotFoundException {
+        return storyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Story with id of " + id + " doesn't exists!"));
+    }
+
+    @Override
     public List<Story> getAll() {
         return storyRepository.findAll().stream()
                 .sorted(Comparator.comparing(Story::getCreatedAt).reversed())
@@ -39,7 +44,7 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<Story> getAllById(Set<Integer> ids) {
+    public List<Story> getAllById(List<Integer> ids) {
         return storyRepository.findAllById(ids).stream()
                 .sorted(Comparator.comparing(Story::getCreatedAt).reversed())
                 .toList();

@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.service.user;
 
 import com.elleined.socialmediaapi.exception.field.EmailException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllById(Set<Integer> ids) {
-        return userRepository.findAllById(ids);
+        return new HashSet<>(userRepository.findAllById(ids));
     }
 
     @Override

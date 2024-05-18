@@ -3,6 +3,7 @@ package com.elleined.socialmediaapi.service.friend;
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.friend.FriendException;
 import com.elleined.socialmediaapi.exception.friend.FriendRequestException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.friend.FriendRequestMapper;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
@@ -103,6 +104,11 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public Set<User> getAllFriends(User currentUser) {
         return currentUser.getFriends();
+    }
+
+    @Override
+    public List<FriendRequest> getAllById(List<Integer> ids) {
+        return friendRequestRepository.findAllById(ids);
     }
 
     @Override

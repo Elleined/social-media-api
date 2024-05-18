@@ -1,21 +1,12 @@
 package com.elleined.socialmediaapi.controller.comment;
 
-import com.elleined.socialmediaapi.dto.CommentDTO;
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
-import com.elleined.socialmediaapi.mapper.CommentMapper;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
-import com.elleined.socialmediaapi.service.mention.MentionService;
-import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
-import com.elleined.socialmediaapi.service.notification.NotificationService;
-import com.elleined.socialmediaapi.service.notification.comment.reader.CommentMentionNotificationReader;
-import com.elleined.socialmediaapi.service.notification.comment.reader.CommentNotificationReader;
-import com.elleined.socialmediaapi.service.notification.comment.reader.CommentReactNotificationReader;
-import com.elleined.socialmediaapi.service.react.ReactionService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +28,6 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentMapper commentMapper;
 
-    private final NotificationService notificationService;
-
     private final WSService wsService;
 
     @GetMapping
@@ -47,13 +36,14 @@ public class CommentController {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        List<Comment> comments = commentService.getAllByPost(currentUser, post);
+        return commentService.getAllByPost(currentUser, post).stream()
+                .map(commentMapper::toDTO)
+                .toList();
+    }
 
-//        commentNotificationReader.readAll(currentUser, post);
-//        commentReactNotificationReader.readAll(currentUser, post);
-//        commentMentionNotificationReader.readAll(currentUser, post);
-
-        return comments.stream()
+    @GetMapping("/get-all-by-id")
+    public List<CommentDTO> getAllById(@RequestBody List<Integer> ids) {
+        return commentService.getAllById(ids).stream()
                 .map(commentMapper::toDTO)
                 .toList();
     }
@@ -89,17 +79,18 @@ public class CommentController {
         return commentMapper.toDTO(comment);
     }
 
-    @PatchMapping("/{commentId}/body")
-    public CommentDTO updateBody(@PathVariable("currentUserId") int currentUserId,
-                                        @PathVariable("postId") int postId,
-                                        @PathVariable("commentId") int commentId,
-                                        @RequestParam("newCommentBody") String newCommentBody) {
+    @PatchMapping("/{commentId}")
+    public CommentDTO update(@PathVariable("currentUserId") int currentUserId,
+                             @PathVariable("postId") int postId,
+                             @PathVariable("commentId") int commentId,
+                             @RequestParam("newBody") String newBody,
+                             @RequestParam("newAttachedPicture") String newAttachedPicture) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        Comment updatedComment = commentService.updateBody(currentUser, post, comment, , newCommentBody);
+        Comment updatedComment = commentService.update(currentUser, post, comment, newBody, newAttachedPicture);
         wsService.broadcast(updatedComment);
 
         return commentMapper.toDTO(updatedComment);

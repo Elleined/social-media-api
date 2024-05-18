@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.controller.reply;
 
 import com.elleined.socialmediaapi.dto.ReplyDTO;
+import com.elleined.socialmediaapi.dto.user.UserDTO;
 import com.elleined.socialmediaapi.mapper.ReplyMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
@@ -56,6 +57,13 @@ public class ReplyController {
         modalTrackerService.saveTrackerByUserId(currentUserId, commentId, Type.REPLY);
         return replyService.getAllByComment(currentUser, comment).stream()
                 .map(replyMapper::toDTO)
+                .toList();
+    }
+
+    @GetMapping("/get-all-by-id")
+    public List<UserDTO> getAllById(@RequestBody List<Integer> ids) {
+        return userService.getAllById(ids).stream()
+                .map(userMapper::toDTO)
                 .toList();
     }
 

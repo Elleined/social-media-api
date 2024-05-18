@@ -7,12 +7,15 @@ import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
+import com.elleined.socialmediaapi.model.react.React;
 import com.elleined.socialmediaapi.model.story.Story;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,6 +72,9 @@ public class User extends PrimaryKeyIdentity {
 
     @OneToMany(mappedBy = "creator")
     private List<Reply> replies;
+
+    @OneToMany(mappedBy = "creator")
+    private List<React> reactions;
 
     @ManyToMany(mappedBy = "savingUsers")
     private Set<Post> savedPosts;
@@ -143,6 +149,51 @@ public class User extends PrimaryKeyIdentity {
     )
     private Set<User> followings;
 
+    @Builder
+    public User(int id,
+                LocalDateTime createdAt,
+                LocalDateTime updatedAt,
+                String name,
+                String email,
+                String picture,
+                String UUID,
+                Note note,
+                Story story,
+                Set<FriendRequest> sentFriendRequests,
+                Set<FriendRequest> receiveFriendRequests,
+                List<Post> posts,
+                List<Comment> comments,
+                List<Reply> replies,
+                List<React> reactions,
+                Set<Post> savedPosts,
+                Set<Comment> votedComments,
+                Set<Post> sharedPosts,
+                Set<User> blockedUsers,
+                Set<User> friends,
+                Set<User> followers,
+                Set<User> followings) {
+        super(id, createdAt, updatedAt);
+        this.name = name;
+        this.email = email;
+        this.picture = picture;
+        this.UUID = UUID;
+        this.note = note;
+        this.story = story;
+        this.sentFriendRequests = sentFriendRequests;
+        this.receiveFriendRequests = receiveFriendRequests;
+        this.posts = posts;
+        this.comments = comments;
+        this.replies = replies;
+        this.reactions = reactions;
+        this.savedPosts = savedPosts;
+        this.votedComments = votedComments;
+        this.sharedPosts = sharedPosts;
+        this.blockedUsers = blockedUsers;
+        this.friends = friends;
+        this.followers = followers;
+        this.followings = followings;
+    }
+
     public boolean notOwned(Post post) {
         return this.getPosts().stream().noneMatch(post::equals);
     }
@@ -152,7 +203,9 @@ public class User extends PrimaryKeyIdentity {
     public boolean notOwned(Reply reply) {
         return this.getReplies().stream().noneMatch(reply::equals);
     }
-
+    public boolean notOwned(React react) {
+        return this.getReactions().stream().noneMatch(react::equals);
+    }
 
     // Comment
     public boolean isAlreadyUpvoted(Comment comment) {

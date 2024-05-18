@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.controller.user.follow;
 
-import com.elleined.socialmediaapi.dto.UserDTO;
-import com.elleined.socialmediaapi.mapper.UserMapper;
+import com.elleined.socialmediaapi.dto.user.UserDTO;
+import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.follow.FollowService;
 import com.elleined.socialmediaapi.service.user.UserService;

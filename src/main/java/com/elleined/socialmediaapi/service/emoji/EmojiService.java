@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.service.emoji;
 
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.react.Emoji;
 
 import java.util.List;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users/{currentUserId}/posts/{postId}/comments")
-public class CommentUpvoteController {
+public class CommentVoteController {
     private final UserService userService;
 
     private final CommentService commentService;

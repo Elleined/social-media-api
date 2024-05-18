@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.service.hashtag;
 
 import com.elleined.socialmediaapi.exception.resource.ResourceAlreadyExistsException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.hashtag.HashTagMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.repository.hashtag.HashTagRepository;

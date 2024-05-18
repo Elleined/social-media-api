@@ -12,19 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StoryRequest extends Request {
-    @Positive(message = "Please provide your id")
-    private int creatorId;
-
     @NotBlank(message = "Please provide your content")
     private String content;
 
     private String attachPicture;
 
     @Builder
-    public StoryRequest(int creatorId,
-                        String content,
-                        String attachPicture) {
-        this.creatorId = creatorId;
+    public StoryRequest(String content, String attachPicture) {
         this.content = content;
         this.attachPicture = attachPicture;
     }

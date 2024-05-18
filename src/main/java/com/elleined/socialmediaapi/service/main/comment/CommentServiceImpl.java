@@ -113,7 +113,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getAllById(Set<Integer> ids) {
+    public List<Comment> getAllById(List<Integer> ids) {
         return commentRepository.findAllById(ids);
     }
 

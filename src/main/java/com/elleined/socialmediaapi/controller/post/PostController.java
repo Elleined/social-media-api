@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.controller.post;
 
 import com.elleined.socialmediaapi.dto.PostDTO;
+import com.elleined.socialmediaapi.dto.user.UserDTO;
 import com.elleined.socialmediaapi.mapper.PostMapper;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
@@ -43,6 +44,20 @@ public class PostController {
         modalTrackerService.saveTrackerByUserId(currentUserId, 0, Type.POST);
         return postService.getAll(currentUser).stream()
                 .map(postMapper::toDTO)
+                .toList();
+    }
+
+    @GetMapping("/get-all-by-id")
+    public List<UserDTO> getAllById(@RequestBody List<Integer> ids) {
+        return userService.getAllById(ids).stream()
+                .map(userMapper::toDTO)
+                .toList();
+    }
+
+    @GetMapping("/get-all-by-id")
+    public List<UserDTO> getAllById(@RequestBody List<Integer> ids) {
+        return userService.getAllById(ids).stream()
+                .map(userMapper::toDTO)
                 .toList();
     }
 

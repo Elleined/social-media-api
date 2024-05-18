@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
-public interface ReactMapper extends CustomMapper<React, ReactDTO> {
+public interface ReactionMapper extends CustomMapper<React, ReactDTO> {
 
     @Override
     @Mappings({

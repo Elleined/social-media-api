@@ -196,4 +196,7 @@ public class Comment extends Forum {
         return this.getPost().isCommentSectionClosed();
     }
 
+    public boolean notOwned(Reply reply) {
+        return !this.getReplies().contains(reply);
+    }
 }
