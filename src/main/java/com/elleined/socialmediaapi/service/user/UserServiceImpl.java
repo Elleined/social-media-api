@@ -11,9 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,11 +24,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(UserRequest userRequest) {
-        if (isEmailAlreadyExists(userRequest.getEmail())) throw new EmailException("Cannot save user! Because this email already exists!");
+        if (isEmailAlreadyExists(userRequest.getEmail()))
+            throw new EmailException("Cannot save user! Because this email already exists!");
+
         User user = userMapper.toEntity(userRequest.getName(), userRequest.getEmail(), userRequest.getPicture());
         userRepository.save(user);
         log.debug("User with id of {} saved successfully!", user.getId());
         return user;
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     @Override
@@ -38,8 +44,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> getAllById(Set<Integer> ids) {
-        return new HashSet<>(userRepository.findAllById(ids));
+    public List<User> getAll() {
+        return userRepository.findAll().stream()
+                .sorted(Comparator.comparingInt(User::getId))
+                .toList();
+    }
+
+    @Override
+    public List<User> getAllById(List<Integer> ids) {
+        return userRepository.findAllById(ids).stream()
+                .sorted(Comparator.comparingInt(User::getId))
+                .toList();
     }
 
     @Override

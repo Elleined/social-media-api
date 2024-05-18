@@ -1,10 +1,11 @@
 package com.elleined.socialmediaapi.service.main.reply;
 
-import com.elleined.socialmediaapi.exception.*;
+import com.elleined.socialmediaapi.exception.CommentSectionException;
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.CustomService;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 public interface ReplyService extends CustomService<Reply> {
     Reply save(User currentUser,
+               Post post,
                Comment comment,
                String body,
                MultipartFile attachedPicture,
@@ -24,11 +26,13 @@ public interface ReplyService extends CustomService<Reply> {
             ResourceNotOwnedException,
             BlockedException, IOException;
 
-    void delete(User currentUser, Comment comment, Reply reply) throws ResourceNotOwnedException;
+    void delete(User currentUser, Post post, Comment comment, Reply reply) throws ResourceNotOwnedException;
 
-    Reply update(User currentUser, Reply reply, String newBody, String newAttachedPicture)
+    Reply update(User currentUser, Post post, Comment comment, Reply reply, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 
-    List<Reply> getAllByComment(User currentUser, Comment comment) throws ResourceNotFoundException;
+    List<Reply> getAllByComment(User currentUser, Post post, Comment comment) throws ResourceNotFoundException;
+
+    void reactivate(Reply reply);
 }

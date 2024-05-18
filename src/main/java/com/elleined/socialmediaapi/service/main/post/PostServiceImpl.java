@@ -1,8 +1,11 @@
 package com.elleined.socialmediaapi.service.main.post;
 
-import com.elleined.socialmediaapi.exception.block.BlockedException;
+import com.elleined.socialmediaapi.exception.field.FieldException;
+import com.elleined.socialmediaapi.exception.resource.ResourceAlreadyExistsException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.main.PostMapper;
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
@@ -15,6 +18,7 @@ import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.mention.MentionService;
+import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.utility.FieldUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +26,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class PostServiceImpl implements PostService {
+public class PostServiceImpl implements PostService, PostServiceRestriction {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
@@ -44,16 +46,17 @@ public class PostServiceImpl implements PostService {
 
     private final CommentRepository commentRepository;
 
+    private final UserServiceRestriction userServiceRestriction;
 
     @Override
     public Post save(User currentUser,
                      String body,
                      MultipartFile attachedPicture,
                      Set<User> mentionedUsers,
-                     Set<String> keywords) throws EmptyBodyException, BlockedException, ResourceNotFoundException, IOException {
+                     Set<String> keywords) {
 
         if (FieldUtil.isNotValid(body))
-            throw new EmptyBodyException("Body cannot be empty! Please provide text for your post to be posted!");
+            throw new FieldException("Cannot save post! because body cannot be empty! Please provide text for your post to be posted!");
 
         Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
         Set<HashTag> hashTags = hashTagService.saveAll(keywords);
@@ -69,7 +72,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void delete(User currentUser, Post post) throws ResourceNotOwnedException {
-        if (currentUser.notOwned(post)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+        if (post.isInactive())
+            throw new ResourceNotFoundException("Cannot delete post! because post might already been deleted or doesn't exists!");
+
+        if (userServiceRestriction.notOwned(currentUser, post))
+            throw new ResourceNotOwnedException("Cannot delete post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+
         post.setStatus(Forum.Status.INACTIVE);
         postRepository.save(post);
 
@@ -85,8 +93,14 @@ public class PostServiceImpl implements PostService {
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
-        if (post.getBody().equals(newBody)) return post;
-        if (currentUser.notOwned(post)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+        if (post.isInactive())
+            throw new ResourceNotFoundException("Cannot delete post! because post might already been deleted or doesn't exists!");
+
+        if (post.getBody().equals(newBody))
+            return post;
+
+        if (userServiceRestriction.notOwned(currentUser, post))
+            throw new ResourceNotOwnedException("Cannot update post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
         post.setBody(newBody);
         post.setAttachedPicture(newAttachedPicture);
@@ -97,14 +111,25 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post updateCommentSectionStatus(User currentUser, Post post) {
-        if (currentUser.notOwned(post)) throw new ResourceNotOwnedException("User with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+        if (post.isInactive())
+            throw new ResourceNotFoundException("Cannot delete post! because post might already been deleted or doesn't exists!");
 
-        if (post.isCommentSectionOpen()) post.setCommentSectionStatus(Post.CommentSectionStatus.CLOSED);
-        else post.setCommentSectionStatus(Post.CommentSectionStatus.OPEN);
+        if (userServiceRestriction.notOwned(currentUser, post))
+            throw new ResourceNotOwnedException("Cannot update comment section! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+
+        if (isCommentSectionOpen(post))
+            post.setCommentSectionStatus(Post.CommentSectionStatus.CLOSED);
+        else
+            post.setCommentSectionStatus(Post.CommentSectionStatus.OPEN);
 
         postRepository.save(post);
         log.debug("Comment section of Post with id of {} are now {}", post.getId(), post.getCommentSectionStatus().name());
         return post;
+    }
+
+    @Override
+    public Post save(Post post) {
+        return postRepository.save(post);
     }
 
     @Override
@@ -113,8 +138,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllById(Set<Integer> ids) {
-        return postRepository.findAllById(ids);
+    public List<Post> getAll() {
+        return postRepository.findAll().stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                .toList();
+    }
+
+
+    @Override
+    public List<Post> getAllById(List<Integer> ids) {
+        return postRepository.findAllById(ids).stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override
@@ -123,13 +158,24 @@ public class PostServiceImpl implements PostService {
                 .filter(Post::isActive)
                 .filter(post -> !blockService.isBlockedByYou(currentUser, post.getCreator()))
                 .filter(post -> !blockService.isYouBeenBlockedBy(currentUser, post.getCreator()))
-                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }
 
     @Override
+    public void reactivate(Post post) {
+        post.setStatus(Forum.Status.ACTIVE);
+        postRepository.save(post);
+        log.debug("Reactivation post success!");
+    }
+
+    @Override
     public Post savedPost(User currentUser, Post postToSaved) {
-        if (postToSaved.isInactive()) throw new ResourceNotFoundException("Post with id of " + postToSaved.getId() + " does not exists or already deleted!") ;
+        if (postToSaved.isInactive())
+            throw new ResourceNotFoundException("Cannot saved post! because post with id of " + postToSaved.getId() + " does not exists or already deleted!") ;
+
+        if (alreadySaved(currentUser, postToSaved))
+            throw new ResourceAlreadyExistsException("Cannot saved post! because post is already been saved!");
 
         currentUser.getSavedPosts().add(postToSaved);
         postToSaved.getSavingUsers().add(currentUser);
@@ -142,6 +188,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void unSavedPost(User currentUser, Post postToUnSave) {
+        if (notSaved(currentUser, postToUnSave))
+            throw new ResourceNotFoundException("Cannot unsaved post! because there's no saved post!");
+
         currentUser.getSavedPosts().remove(postToUnSave);
         postToUnSave.getSavingUsers().remove(currentUser);
 
@@ -151,15 +200,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Set<Post> getAllSavedPosts(User currentUser) {
+    public List<Post> getAllSavedPosts(User currentUser) {
         return currentUser.getSavedPosts().stream()
                 .filter(Post::isActive)
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override
     public Post sharePost(User currentUser, Post postToShare) {
-        if (postToShare.isInactive()) throw new ResourceNotFoundException("Post with id of " + postToShare.getId() + " does not exists or already deleted!") ;
+        if (postToShare.isInactive())
+            throw new ResourceNotFoundException("Cannot share post! because post with id of " + postToShare.getId() + " does not exists or already deleted!") ;
+
+        if (alreadyShare(currentUser, postToShare))
+            throw new ResourceAlreadyExistsException("Cannot share post! because post already been shared!");
 
         currentUser.getSharedPosts().add(postToShare);
         postToShare.getSharers().add(currentUser);
@@ -172,6 +226,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void unSharePost(User currentUser, Post postToUnShare) {
+        if (notShare(currentUser, postToUnShare))
+            throw new ResourceNotFoundException("Cannot unshare post! because there's no share post!");
+
         currentUser.getSharedPosts().remove(postToUnShare);
         postToUnShare.getSharers().remove(currentUser);
 
@@ -181,9 +238,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Set<Post> getAllSharedPosts(User currentUser) {
+    public List<Post> getAllSharedPosts(User currentUser) {
         return currentUser.getSharedPosts().stream()
                 .filter(Post::isActive)
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
+                .toList();
     }
 }

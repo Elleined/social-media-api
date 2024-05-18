@@ -14,7 +14,9 @@ import com.elleined.socialmediaapi.repository.main.VoteRepository;
 import com.elleined.socialmediaapi.request.main.VoteRequest;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
+import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;
 import com.elleined.socialmediaapi.service.main.post.PostService;
+import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,9 @@ public class VoteServiceImpl implements VoteService {
 
     private final BlockService blockService;
 
+    private final PostServiceRestriction postServiceRestriction;
+    private final CommentServiceRestriction commentServiceRestriction;
+
     @Override
     public Vote save(Vote vote) {
         return voteRepository.save(vote);
@@ -51,8 +56,17 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
+    public List<Vote> getAll() {
+        return voteRepository.findAll().stream()
+                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
+                .toList();
+    }
+
+    @Override
     public List<Vote> getAllById(List<Integer> ids) {
-        return voteRepository.findAllById(ids);
+        return voteRepository.findAllById(ids).stream()
+                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override
@@ -61,10 +75,10 @@ public class VoteServiceImpl implements VoteService {
         Post post = postService.getById(voteRequest.getPostId());
         Comment comment = commentService.getById(voteRequest.getCommentId());
 
-        if (currentUser.isAlreadyVoted(comment))
+        if (commentServiceRestriction.isAlreadyVoted(currentUser, comment))
             throw new ResourceAlreadyExistsException("Cannot vote this comment! because you already voted this comment!");
 
-        if (post.notOwned(comment))
+        if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot vote this comment! because this post doesn't have this comment!");
 
         if (post.isInactive())
@@ -91,7 +105,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public List<Vote> getAll(Post post, Comment comment) {
-        if (post.notOwned(comment))
+        if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot get all vote to this comment! because this post doesn't have this comment!");
 
         if (post.isInactive())

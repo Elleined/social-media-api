@@ -14,6 +14,7 @@ public interface MentionService extends CustomService<Mention> {
 
 
     default Set<Mention> saveAll(User mentioningUser, Set<User> mentionedUsers) {
+        if (mentionedUsers.isEmpty()) return null;
         return mentionedUsers.stream()
                 .map(mentionedUser -> this.save(mentioningUser, mentionedUser))
                 .collect(Collectors.toSet());

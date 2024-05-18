@@ -3,16 +3,10 @@ package com.elleined.socialmediaapi.service.user;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.request.user.UserRequest;
+import com.elleined.socialmediaapi.service.CustomService;
 
-import java.util.List;
-import java.util.Set;
-
-public interface UserService {
+public interface UserService extends CustomService<User> {
     User save(UserRequest userRequest);
-
-    User getById(int userId) throws ResourceNotFoundException;
-
-    Set<User> getAllById(Set<Integer> ids);
 
     User getByUUID(String UUID) throws ResourceNotFoundException;
 

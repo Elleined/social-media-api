@@ -25,6 +25,7 @@ public interface CommentService extends CustomService<Comment> {
             CommentSectionException,
             BlockedException,
             IOException;
+
     List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException;
 
     void delete(User currentUser, Post post, Comment comment);
@@ -32,4 +33,6 @@ public interface CommentService extends CustomService<Comment> {
     Comment update(User currentUser, Post post, Comment comment, String newBody, String newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
+
+    void reactivate(Comment comment);
 }

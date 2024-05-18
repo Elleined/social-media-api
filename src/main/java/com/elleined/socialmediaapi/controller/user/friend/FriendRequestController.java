@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.controller.user.friend;
 
 import com.elleined.socialmediaapi.dto.friend.FriendRequestDTO;
-import com.elleined.socialmediaapi.dto.user.UserDTO;
 import com.elleined.socialmediaapi.mapper.friend.FriendRequestMapper;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.user.User;

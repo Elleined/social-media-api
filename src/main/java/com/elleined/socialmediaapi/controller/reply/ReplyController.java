@@ -55,7 +55,7 @@ public class ReplyController {
         replyMentionNotificationReader.readAll(currentUser, comment);
 
         modalTrackerService.saveTrackerByUserId(currentUserId, commentId, Type.REPLY);
-        return replyService.getAllByComment(currentUser, comment).stream()
+        return replyService.getAllByComment(currentUser, , comment).stream()
                 .map(replyMapper::toDTO)
                 .toList();
     }
@@ -78,7 +78,7 @@ public class ReplyController {
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
         Comment comment = commentService.getById(commentId);
-        Reply reply = replyService.save(currentUser, comment, body, attachedPicture, mentionedUsers, keywords);
+        Reply reply = replyService.save(currentUser, , comment, body, attachedPicture, mentionedUsers, keywords);
         wsService.broadcast(reply);
         return replyMapper.toDTO(reply);
     }
@@ -92,7 +92,7 @@ public class ReplyController {
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
 
-        replyService.delete(currentUser, comment, reply);
+        replyService.delete(currentUser, , comment, reply);
         wsService.broadcast(reply);
         return replyMapper.toDTO(reply);
     }

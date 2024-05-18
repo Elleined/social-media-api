@@ -33,21 +33,5 @@ public interface PostService extends SavedPostService, SharePostService, CustomS
 
     List<Post> getAll(User currentUser);
 
-    @Override
-    Post savedPost(User currentUser, Post postToSaved);
-
-    @Override
-    void unSavedPost(User currentUser, Post postToUnSave);
-
-    @Override
-    Set<Post> getAllSavedPosts(User currentUser);
-
-    @Override
-    Post sharePost(User currentUser, Post postToShare);
-
-    @Override
-    void unSharePost(User currentUser, Post postToUnShare);
-
-    @Override
-    Set<Post> getAllSharedPosts(User currentUser);
+    void reactivate(Post post);
 }
