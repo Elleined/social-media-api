@@ -24,8 +24,7 @@ import java.util.Set;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
-public class FriendServiceImpl implements FriendService {
-
+public class FriendServiceImpl implements FriendService, FriendServiceRestriction {
     private final UserRepository userRepository;
 
     private final FriendRequestRepository friendRequestRepository;
@@ -37,9 +36,10 @@ public class FriendServiceImpl implements FriendService {
     public void acceptFriendRequest(User currentUser, FriendRequest friendRequest) {
         User requestingUser = friendRequest.getCreator();
 
-        if (currentUser.isFriendsWith(requestingUser))
+        if (isFriendsWith(currentUser, requestingUser))
             throw new FriendException("Cannot accept friend request! because you're already friends.");
-        if (!currentUser.hasSendFriendRequestTo(requestingUser))
+
+        if (hasNotSendFriendRequestTo(currentUser, requestingUser))
             throw new ResourceNotOwnedException("Cannot accept friend request! because you don't receive this friend request.");
 
         currentUser.getFriends().add(requestingUser);
@@ -55,7 +55,7 @@ public class FriendServiceImpl implements FriendService {
     public void deleteFriendRequest(User currentUser, FriendRequest friendRequest) {
         User requestingUser = friendRequest.getCreator();
 
-        if (!currentUser.hasSendFriendRequestTo(requestingUser))
+        if (hasNotSendFriendRequestTo(currentUser, requestingUser))
             throw new ResourceNotOwnedException("Cannot delete friend request! because you don't have sent this friend request.");
 
         int friendRequestId = friendRequest.getId();
@@ -68,14 +68,18 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void sendFriendRequest(User currentUser, User userToAdd) {
-        if (currentUser.hasSendFriendRequestTo(userToAdd))
+        if (hasSendFriendRequestTo(currentUser, userToAdd))
             throw new FriendRequestException("Cannot sent friend request! becuase you already sent friend request to this user!");
-        if (currentUser.hasReceiveFriendRequestTo(userToAdd))
+
+        if (hasReceiveFriendRequestTo(currentUser, userToAdd))
             throw new FriendRequestException("Cannot sent friend request! because this user already sent you a friend request!");
-        if (currentUser.isFriendsWith(userToAdd))
+
+        if (isFriendsWith(currentUser, userToAdd))
             throw new FriendException("Cannot sent friend request! because you're already friends.");
+
         if (blockService.isBlockedByYou(currentUser, userToAdd))
             throw new BlockedException("Cannot sent friend request! because you blocked the author of this post with id of !" + userToAdd.getId());
+
         if (blockService.isYouBeenBlockedBy(currentUser, userToAdd))
             throw  new BlockedException("Cannot sent friend request! because this user with id of " + userToAdd.getId() + " already blocked you");
 
@@ -91,8 +95,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void unFriend(User currentUser, User userToUnFriend) {
-        if (!currentUser.isFriendsWith(userToUnFriend))
+        if (notFriendsWith(currentUser, userToUnFriend))
             throw new FriendException("Cannot unfriend! because you're not friends.");
+
         currentUser.getFriends().remove(userToUnFriend);
         userToUnFriend.getFriends().remove(currentUser);
 
@@ -108,7 +113,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<FriendRequest> getAllById(List<Integer> ids) {
-        return friendRequestRepository.findAllById(ids);
+        return friendRequestRepository.findAllById(ids).stream()
+                .sorted(Comparator.comparing(FriendRequest::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override
@@ -119,7 +126,19 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    public FriendRequest save(FriendRequest friendRequest) {
+        return friendRequestRepository.save(friendRequest);
+    }
+
+    @Override
     public FriendRequest getById(int id) throws ResourceNotFoundException {
         return friendRequestRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Friend request with id of " + id + " does not exists!"));
+    }
+
+    @Override
+    public List<FriendRequest> getAll() {
+        return friendRequestRepository.findAll().stream()
+                .sorted(Comparator.comparing(FriendRequest::getCreatedAt).reversed())
+                .toList();
     }
 }
