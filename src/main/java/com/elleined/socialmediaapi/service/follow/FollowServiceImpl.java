@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.service.follow;
 
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.resource.ResourceAlreadyExistsException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class FollowServiceImpl implements FollowService {
+public class FollowServiceImpl implements FollowService, FollowServiceRestriction {
     private final UserRepository userRepository;
     private final BlockService blockService;
 
@@ -41,6 +42,9 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public void unFollow(User currentUser, User userToUnFollow) {
+        if (notFollows(currentUser, userToUnFollow))
+            throw new ResourceNotFoundException("Cannot unfollow this user! because you're not following this user!");
+
         currentUser.getFollowings().remove(userToUnFollow);
         userToUnFollow.getFollowers().remove(currentUser);
 
