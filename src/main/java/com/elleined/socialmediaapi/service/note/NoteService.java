@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.service.note;
 
 import com.elleined.socialmediaapi.exception.note.NoteException;
+import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.user.User;
 
@@ -10,5 +11,6 @@ public interface NoteService {
     void delete(User currentUser, Note note);
     Note getNote(User currentUser);
 
+    Note getById(int id) throws ResourceNotFoundException;
     void deleteAllExpiresNotes();
 }

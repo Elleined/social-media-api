@@ -16,9 +16,7 @@ public interface HashTagMapper extends CustomMapper<HashTag, HashTagDTO> {
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "keyword", source = "keyword"),
-            @Mapping(target = "postIds", expression = "java(hashTag.getAllPostIds())"),
-            @Mapping(target = "commentIds", expression = "java(hashTag.getAllCommentIds())"),
-            @Mapping(target = "replyIds", expression = "java(hashTag.getAllReplyIds())")
+            @Mapping(target = "postIds", expression = "java(hashTag.getAllPostIds())")
     })
     HashTagDTO toDTO(HashTag hashTag);
 
@@ -27,9 +25,7 @@ public interface HashTagMapper extends CustomMapper<HashTag, HashTagDTO> {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "keyword", expression = "java(keyword)"),
-            @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "comments", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "replies", expression = "java(new java.util.HashSet<>())")
+            @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())")
     })
     HashTag toEntity(String keyword);
 }

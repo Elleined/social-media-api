@@ -5,7 +5,7 @@ import com.elleined.socialmediaapi.mapper.vote.VoteMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.vote.Vote;
-import com.elleined.socialmediaapi.request.main.VoteRequest;
+import com.elleined.socialmediaapi.request.vote.VoteRequest;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
@@ -23,7 +23,6 @@ public class CommentVoteController {
     private final VoteService voteService;
     private final VoteMapper voteMapper;
 
-    private final UserService userService;
     private final PostService postService;
     private final CommentService commentService;
 

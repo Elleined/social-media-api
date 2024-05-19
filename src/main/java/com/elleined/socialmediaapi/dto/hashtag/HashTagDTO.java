@@ -15,21 +15,15 @@ import java.util.Set;
 public class HashTagDTO extends DTO {
     private String keyword;
     private Set<Integer> postIds;
-    private Set<Integer> commentIds;
-    private Set<Integer> replyIds;
 
     @Builder
     public HashTagDTO(int id,
                       LocalDateTime createdAt,
                       LocalDateTime updatedAt,
                       String keyword,
-                      Set<Integer> postIds,
-                      Set<Integer> commentIds,
-                      Set<Integer> replyIds) {
+                      Set<Integer> postIds) {
         super(id, createdAt, updatedAt);
         this.keyword = keyword;
         this.postIds = postIds;
-        this.commentIds = commentIds;
-        this.replyIds = replyIds;
     }
 }

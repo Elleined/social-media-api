@@ -12,7 +12,7 @@ public interface FriendService extends CustomService<FriendRequest> {
     List<FriendRequest> getAllFriendRequests(User currentUser);
 
     void acceptFriendRequest(User currentUser, FriendRequest friendRequest);
-    void deleteFriendRequest(User currentUser, FriendRequest friendRequest);
+    void rejectFriendRequest(User currentUser, FriendRequest friendRequest);
 
     void sendFriendRequest(User currentUser, User userToAdd);
 

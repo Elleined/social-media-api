@@ -52,7 +52,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     }
 
     @Override
-    public void deleteFriendRequest(User currentUser, FriendRequest friendRequest) {
+    public void rejectFriendRequest(User currentUser, FriendRequest friendRequest) {
         User requestingUser = friendRequest.getCreator();
 
         if (hasNotSendFriendRequestTo(currentUser, requestingUser))

@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.model.main.comment;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
-import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
@@ -49,22 +48,6 @@ public class Comment extends Forum {
 
     @OneToMany(mappedBy = "comment")
     private List<Vote> votes;
-
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_comment_hashtag",
-            joinColumns = @JoinColumn(
-                    name = "comment_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "hashtag_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            )
-    )
-    private Set<HashTag> hashTags;
 
     @ManyToMany
     @JoinTable(
@@ -126,7 +109,6 @@ public class Comment extends Forum {
                    Post post,
                    List<Reply> replies,
                    List<Vote> votes,
-                   Set<HashTag> hashTags,
                    Set<Mention> mentions,
                    Set<Reaction> reactions,
                    Set<Notification> notifications) {
@@ -135,7 +117,6 @@ public class Comment extends Forum {
         this.post = post;
         this.replies = replies;
         this.votes = votes;
-        this.hashTags = hashTags;
         this.mentions = mentions;
         this.reactions = reactions;
         this.notifications = notifications;
@@ -146,11 +127,7 @@ public class Comment extends Forum {
                 .map(PrimaryKeyIdentity::getId)
                 .toList();
     }
-    public Set<Integer> getAllHashTagIds() {
-        return this.getHashTags().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
+
     public Set<Integer> getAllMentionIds() {
         return this.getMentions().stream()
                 .map(PrimaryKeyIdentity::getId)
@@ -166,13 +143,5 @@ public class Comment extends Forum {
         return this.getNotifications().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
-    }
-
-    public boolean isCommentSectionClosed() {
-        return this.getPost().isCommentSectionClosed();
-    }
-
-    public boolean notOwned(Reply reply) {
-        return !this.getReplies().contains(reply);
     }
 }

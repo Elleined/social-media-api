@@ -11,7 +11,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.vote.Vote;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.VoteRepository;
-import com.elleined.socialmediaapi.request.main.VoteRequest;
+import com.elleined.socialmediaapi.request.vote.VoteRequest;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;

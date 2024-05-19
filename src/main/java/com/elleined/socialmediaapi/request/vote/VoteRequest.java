@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.request.main;
+package com.elleined.socialmediaapi.request.vote;
 
 import com.elleined.socialmediaapi.model.main.vote.Vote;
 import com.elleined.socialmediaapi.request.Request;

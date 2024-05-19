@@ -1,17 +1,16 @@
 package com.elleined.socialmediaapi.controller.user.note;
 
-import com.elleined.socialmediaapi.dto.NoteDTO;
+import com.elleined.socialmediaapi.dto.note.NoteDTO;
 import com.elleined.socialmediaapi.mapper.note.NoteMapper;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.note.NoteService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users/{currentUserId}/note")
+@RequestMapping("/users/{currentUserId}/notes")
 @RequiredArgsConstructor
 public class NoteController {
     private final UserService userService;
@@ -30,18 +29,19 @@ public class NoteController {
 
     @PatchMapping
     public NoteDTO update(@PathVariable("currentUserId") int currentUserId,
-                       @RequestParam("newThought") String newThought) {
+                          @RequestParam("newThought") String newThought) {
 
         User currentUser = userService.getById(currentUserId);
         Note note = noteService.update(currentUser, newThought);
         return noteMapper.toDTO(note);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Note> delete(@PathVariable("currentUserId") int currentUserId) {
+    @DeleteMapping("{noteId}")
+    public void delete(@PathVariable("currentUserId") int currentUserId,
+                       @PathVariable("noteId") int noteId) {
         User currentUser = userService.getById(currentUserId);
-        noteService.delete(currentUser);
-        return ResponseEntity.noContent().build();
+        Note note = noteService.getById(noteId);
+        noteService.delete(currentUser, note);
     }
 
     @GetMapping

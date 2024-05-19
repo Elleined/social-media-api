@@ -1,14 +1,10 @@
 package com.elleined.socialmediaapi.controller.post;
 
-import com.elleined.socialmediaapi.dto.PostDTO;
-import com.elleined.socialmediaapi.dto.user.UserDTO;
-import com.elleined.socialmediaapi.mapper.PostMapper;
+import com.elleined.socialmediaapi.dto.main.PostDTO;
+import com.elleined.socialmediaapi.mapper.main.PostMapper;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.main.post.PostService;
-import com.elleined.socialmediaapi.service.mt.ModalTrackerService;
-import com.elleined.socialmediaapi.service.notification.post.reader.PostMentionNotificationReader;
-import com.elleined.socialmediaapi.service.notification.post.reader.PostReactNotificationReader;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,35 +26,20 @@ public class PostController {
 
     private final PostService postService;
     private final PostMapper postMapper;
-    private final PostReactNotificationReader postReactNotificationReader;
-    private final PostMentionNotificationReader postMentionNotificationReader;
-
-    private final ModalTrackerService modalTrackerService;
 
     @GetMapping
     public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
 
-        postReactNotificationReader.readAll(currentUser);
-        postMentionNotificationReader.readAll(currentUser);
-
-        modalTrackerService.saveTrackerByUserId(currentUserId, 0, Type.POST);
         return postService.getAll(currentUser).stream()
                 .map(postMapper::toDTO)
                 .toList();
     }
 
     @GetMapping("/get-all-by-id")
-    public List<UserDTO> getAllById(@RequestBody List<Integer> ids) {
-        return userService.getAllById(ids).stream()
-                .map(userMapper::toDTO)
-                .toList();
-    }
-
-    @GetMapping("/get-all-by-id")
-    public List<UserDTO> getAllById(@RequestBody List<Integer> ids) {
-        return userService.getAllById(ids).stream()
-                .map(userMapper::toDTO)
+    public List<PostDTO> getAllById(@RequestBody List<Integer> ids) {
+        return postService.getAllById(ids).stream()
+                .map(postMapper::toDTO)
                 .toList();
     }
 
@@ -69,14 +51,15 @@ public class PostController {
                         @RequestParam(required = false, name = "keywords") Set<String> keywords) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
-        Set<User> mentionedUsers = userService.getAllById(mentionedUserIds);
+        Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
+
         Post post = postService.save(currentUser, body, attachedPicture, mentionedUsers, keywords);
         return postMapper.toDTO(post);
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<PostDTO> delete(@PathVariable("currentUserId") int currentUserId,
-                                              @PathVariable("postId") int postId) {
+                                          @PathVariable("postId") int postId) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
@@ -95,15 +78,16 @@ public class PostController {
         return postMapper.toDTO(updatedPost);
     }
 
-    @PatchMapping("/{postId}/body")
+    @PutMapping("/{postId}")
     public PostDTO updateBody(@PathVariable("currentUserId") int currentUserId,
-                                  @PathVariable("postId") int postId,
-                                  @RequestParam("newPostBody") String newPostBody) {
+                              @PathVariable("postId") int postId,
+                              @RequestParam("newBody,") String newBody,
+                              @RequestParam("newAttachedPicture") String newAttachedPicture) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        Post updatedPost = postService.updateBody(currentUser, post, newPostBody);
+        Post updatedPost = postService.update(currentUser, post, newBody, newAttachedPicture);
         return postMapper.toDTO(updatedPost);
     }
 }

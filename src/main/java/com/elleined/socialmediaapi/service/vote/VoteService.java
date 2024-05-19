@@ -3,7 +3,7 @@ package com.elleined.socialmediaapi.service.vote;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.vote.Vote;
-import com.elleined.socialmediaapi.request.main.VoteRequest;
+import com.elleined.socialmediaapi.request.vote.VoteRequest;
 import com.elleined.socialmediaapi.service.CustomService;
 
 import java.util.List;

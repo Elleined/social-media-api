@@ -29,8 +29,6 @@ public class FriendController {
                 .collect(Collectors.toSet());
     }
 
-
-
     @DeleteMapping("/{userToUnFriendId}")
     public void unFriend(@PathVariable("currentUserId") int currentUserId,
                          @PathVariable("userToUnFriendId") int userToUnFriendId) {

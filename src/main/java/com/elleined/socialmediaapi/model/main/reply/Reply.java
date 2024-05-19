@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.model.main.reply;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
-import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.mention.Mention;
@@ -34,23 +33,6 @@ public class Reply extends Forum {
             updatable = false
     )
     private Comment comment;
-
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_reply_hashtag",
-            joinColumns = @JoinColumn(
-                    name = "reply_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "hashtag_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            )
-    )
-    private Set<HashTag> hashTags;
-
 
     @ManyToMany
     @JoinTable(
@@ -109,23 +91,16 @@ public class Reply extends Forum {
                  String attachedPicture,
                  User creator,
                  Comment comment,
-                 Set<HashTag> hashTags,
                  Set<Mention> mentions,
                  Set<Reaction> reactions,
                  Set<Notification> notifications) {
         super(id, createdAt, updatedAt, body, status, attachedPicture, creator);
         this.comment = comment;
-        this.hashTags = hashTags;
         this.mentions = mentions;
         this.reactions = reactions;
         this.notifications = notifications;
     }
 
-    public Set<Integer> getAllHashTagIds() {
-        return this.getHashTags().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
     public Set<Integer> getAllMentionIds() {
         return this.getMentions().stream()
                 .map(PrimaryKeyIdentity::getId)
