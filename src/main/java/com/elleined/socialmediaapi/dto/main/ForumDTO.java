@@ -17,11 +17,9 @@ public abstract class ForumDTO extends DTO {
     private Forum.Status status;
     private String attachedPicture;
     private int creatorId;
-    private Set<Integer> hashTagIds;
     private Set<Integer> mentionIds;
     private Set<Integer> reactionIds;
     private Set<Integer> notificationIds;
-
 
     public ForumDTO(int id,
                     LocalDateTime createdAt,
@@ -30,7 +28,6 @@ public abstract class ForumDTO extends DTO {
                     Forum.Status status,
                     String attachedPicture,
                     int creatorId,
-                    Set<Integer> hashTagIds,
                     Set<Integer> mentionIds,
                     Set<Integer> reactionIds,
                     Set<Integer> notificationIds) {
@@ -39,7 +36,6 @@ public abstract class ForumDTO extends DTO {
         this.status = status;
         this.attachedPicture = attachedPicture;
         this.creatorId = creatorId;
-        this.hashTagIds = hashTagIds;
         this.mentionIds = mentionIds;
         this.reactionIds = reactionIds;
         this.notificationIds = notificationIds;

@@ -33,7 +33,9 @@ public class Emoji extends PrimaryKeyIdentity {
         this.type = type;
     }
 
-    public Emoji(Type type) {
+
+    public Emoji(LocalDateTime createdAt, LocalDateTime updatedAt, Type type) {
+        super(createdAt, updatedAt);
         this.type = type;
     }
 

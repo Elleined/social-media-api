@@ -53,13 +53,13 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "comments", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "replies", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "savedPosts", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "votedComments", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "votedComments", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "sharedPosts", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "blockedUsers", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "friends", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "followers", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "followings", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "reactions", expression = "java(new java.util.HashSet<>())")
+            @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())")
     })
     User toEntity(String name,
                   String email,

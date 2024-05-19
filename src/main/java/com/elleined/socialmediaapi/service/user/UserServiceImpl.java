@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserServiceRestriction {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 

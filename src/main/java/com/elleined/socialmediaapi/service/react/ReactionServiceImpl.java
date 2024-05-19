@@ -13,6 +13,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.react.ReactionRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
+import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
@@ -42,6 +43,7 @@ public class ReactionServiceImpl implements ReactionService {
 
     private final UserServiceRestriction userServiceRestriction;
     private final PostServiceRestriction postServiceRestriction;
+    private final CommentServiceRestriction commentServiceRestriction;
 
     @Override
     public Reaction getById(int id) throws ResourceNotFoundException {
@@ -99,7 +101,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot react to this reply! because post doesn't owned this comment!");
 
-        if (comment.notOwned(reply))
+        if (commentServiceRestriction.notOwned(comment, reply))
             throw new ResourceNotOwnedException("Cannot react to this reply! because comment doesn't owned this reply!");
 
         if (post.isInactive())
@@ -270,7 +272,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Current user doesn't owned this comment!");
 
-        if (comment.notOwned(reply))
+        if (commentServiceRestriction.notOwned(comment, reply))
             throw new ResourceNotOwnedException("Current user doesn't owned this reply!");
 
         if (post.isInactive())

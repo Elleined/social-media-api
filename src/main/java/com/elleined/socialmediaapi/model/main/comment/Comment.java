@@ -47,7 +47,7 @@ public class Comment extends Forum {
     private List<Reply> replies;
 
     @OneToMany(mappedBy = "comment")
-    private List<Vote> votes;
+    private List<Vote> voters;
 
     @ManyToMany
     @JoinTable(
@@ -108,7 +108,7 @@ public class Comment extends Forum {
                    Reply pinnedReply,
                    Post post,
                    List<Reply> replies,
-                   List<Vote> votes,
+                   List<Vote> voters,
                    Set<Mention> mentions,
                    Set<Reaction> reactions,
                    Set<Notification> notifications) {
@@ -116,7 +116,7 @@ public class Comment extends Forum {
         this.pinnedReply = pinnedReply;
         this.post = post;
         this.replies = replies;
-        this.votes = votes;
+        this.voters = voters;
         this.mentions = mentions;
         this.reactions = reactions;
         this.notifications = notifications;
@@ -135,6 +135,12 @@ public class Comment extends Forum {
     }
     public Set<Integer> getAllReactionIds() {
         return this.getReactions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllVotersIds() {
+        return this.getVoters().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }

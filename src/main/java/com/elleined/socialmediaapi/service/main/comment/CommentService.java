@@ -19,8 +19,7 @@ public interface CommentService extends CustomService<Comment> {
                  Post post,
                  String body,
                  MultipartFile attachedPicture,
-                 Set<User> mentionedUsers,
-                 Set<String> keywords)
+                 Set<User> mentionedUsers)
             throws ResourceNotFoundException,
             CommentSectionException,
             BlockedException,

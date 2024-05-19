@@ -29,7 +29,7 @@ public interface StoryMapper extends CustomMapper<Story, StoryDTO> {
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "content", expression = "java(content)"),
             @Mapping(target = "attachPicture", expression = "java(attachPicture)"),
-            @Mapping(target = "creatorId", expression = "java(creator)"),
+            @Mapping(target = "creator", expression = "java(creator)"),
     })
     Story toEntity(User creator,
                    String content,

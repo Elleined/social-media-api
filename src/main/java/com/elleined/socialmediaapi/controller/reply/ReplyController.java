@@ -72,7 +72,7 @@ public class ReplyController {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentionedUsers, keywords);
+        Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentionedUsers);
         wsService.broadcast(reply);
         return replyMapper.toDTO(reply);
     }

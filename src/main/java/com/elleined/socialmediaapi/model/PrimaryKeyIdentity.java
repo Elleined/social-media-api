@@ -34,4 +34,9 @@ public abstract class PrimaryKeyIdentity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public PrimaryKeyIdentity(LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

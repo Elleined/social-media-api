@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class EmojiPopulator implements Populator {
     @Override
     public void populate() {
         List<Emoji> emojis = Arrays.stream(Emoji.Type.values())
-                .map(Emoji::new)
+                .map(type -> new Emoji(LocalDateTime.now(), LocalDateTime.now(), type))
                 .toList();
 
         emojiRepository.saveAll(emojis);

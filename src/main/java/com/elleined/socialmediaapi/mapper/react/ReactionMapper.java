@@ -20,10 +20,10 @@ public interface ReactionMapper extends CustomMapper<Reaction, ReactionDTO> {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "creatorId", source = "creator.id"),
             @Mapping(target = "emojiId", source = "emoji.id"),
-            @Mapping(target = "postIds", expression = "java(react.getAllPostIds())"),
-            @Mapping(target = "commentIds", expression = "java(react.getAllCommentIds())"),
-            @Mapping(target = "replyIds", expression = "java(react.getAllReplyIds())"),
-            @Mapping(target = "notificationIds", expression = "java(react.getAllNotificationIds())")
+            @Mapping(target = "postIds", expression = "java(reaction.getAllPostIds())"),
+            @Mapping(target = "commentIds", expression = "java(reaction.getAllCommentIds())"),
+            @Mapping(target = "replyIds", expression = "java(reaction.getAllReplyIds())"),
+            @Mapping(target = "notificationIds", expression = "java(reaction.getAllNotificationIds())")
     })
     ReactionDTO toDTO(Reaction reaction);
 

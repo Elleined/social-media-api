@@ -27,7 +27,6 @@ public class CommentDTO extends ForumDTO {
                       Forum.Status status,
                       String attachedPicture,
                       int creatorId,
-                      Set<Integer> hashTagIds,
                       Set<Integer> mentionIds,
                       Set<Integer> reactionIds,
                       Set<Integer> notificationIds,
@@ -35,7 +34,7 @@ public class CommentDTO extends ForumDTO {
                       int pinnedReplyId,
                       List<Integer> replyIds,
                       Set<Integer> userVoteIds) {
-        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, hashTagIds, mentionIds, reactionIds, notificationIds);
+        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, mentionIds, reactionIds, notificationIds);
         this.postId = postId;
         this.pinnedReplyId = pinnedReplyId;
         this.replyIds = replyIds;

@@ -21,8 +21,7 @@ public interface ReplyService extends CustomService<Reply> {
                Comment comment,
                String body,
                MultipartFile attachedPicture,
-               Set<User> mentionedUsers,
-               Set<String> keywords) throws CommentSectionException,
+               Set<User> mentionedUsers) throws CommentSectionException,
             ResourceNotOwnedException,
             BlockedException, IOException;
 

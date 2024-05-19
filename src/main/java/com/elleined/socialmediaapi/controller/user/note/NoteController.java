@@ -66,7 +66,7 @@ public class NoteController {
         noteService.delete(currentUser, note);
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public NoteDTO getNote(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         Note note = noteService.getNote(currentUser);

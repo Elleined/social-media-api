@@ -3,7 +3,6 @@ package com.elleined.socialmediaapi.model.main;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,7 +40,6 @@ public abstract class Forum extends PrimaryKeyIdentity {
     )
     private User creator;
 
-    @Builder
     public Forum(int id,
                  LocalDateTime createdAt,
                  LocalDateTime updatedAt,

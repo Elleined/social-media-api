@@ -18,6 +18,7 @@ public class PostDTO extends ForumDTO {
     private Post.CommentSectionStatus commentSectionStatus;
     private int pinnedCommentId;
     private List<Integer> commentIds;
+    private Set<Integer> hashTagIds;
     private Set<Integer> savingUserIds;
     private Set<Integer> sharerIds;
 
@@ -29,19 +30,20 @@ public class PostDTO extends ForumDTO {
                    Forum.Status status,
                    String attachedPicture,
                    int creatorId,
-                   Set<Integer> hashTagIds,
                    Set<Integer> mentionIds,
                    Set<Integer> reactionIds,
                    Set<Integer> notificationIds,
                    Post.CommentSectionStatus commentSectionStatus,
                    int pinnedCommentId,
                    List<Integer> commentIds,
+                   Set<Integer> hashTagIds,
                    Set<Integer> savingUserIds,
                    Set<Integer> sharerIds) {
-        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, hashTagIds, mentionIds, reactionIds, notificationIds);
+        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, mentionIds, reactionIds, notificationIds);
         this.commentSectionStatus = commentSectionStatus;
         this.pinnedCommentId = pinnedCommentId;
         this.commentIds = commentIds;
+        this.hashTagIds = hashTagIds;
         this.savingUserIds = savingUserIds;
         this.sharerIds = sharerIds;
     }

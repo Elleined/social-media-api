@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.mapper.main;
 
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
-import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
@@ -30,11 +29,10 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "notificationIds", expression = "java(comment.getAllNotificationIds())"),
             @Mapping(target = "postId", source = "post.id"),
             @Mapping(target = "pinnedReplyId", source = "pinnedReply.id"),
-            @Mapping(target = "hashTagIds", expression = "java(comment.getAllHashTagIds())"),
             @Mapping(target = "mentionIds", expression = "java(comment.getAllMentionIds())"),
             @Mapping(target = "reactionIds", expression = "java(comment.getAllReactionIds())"),
             @Mapping(target = "replyIds", expression = "java(comment.getAllReplyIds())"),
-            @Mapping(target = "userVoteIds", expression = "java(comment.getAllUserVoteIds())"),
+            @Mapping(target = "userVoteIds", expression = "java(comment.getAllVotersIds())"),
     })
     CommentDTO toDTO(Comment comment);
 
@@ -49,16 +47,14 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "notifications", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "post", expression = "java(post)"),
             @Mapping(target = "pinnedReply", expression = "java(null)"),
-            @Mapping(target = "hashTags", expression = "java(hashTags)"),
             @Mapping(target = "mentions", expression = "java(mentions)"),
             @Mapping(target = "reactions", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "replies", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "userVotes", expression = "java(new java.util.HashSet<>())")
+            @Mapping(target = "replies", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "voters", expression = "java(new java.util.ArrayList<>())")
     })
     Comment toEntity(User creator,
                      Post post,
                      @Context String body,
                      String attachedPicture,
-                     Set<HashTag> hashTags,
                      Set<Mention> mentions);
 }

@@ -64,7 +64,7 @@ public class CommentController {
         Post post = postService.getById(postId);
         Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
 
-        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers, keywords);
+        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers);
         wsService.broadcast(comment);
         return commentMapper.toDTO(comment);
     }

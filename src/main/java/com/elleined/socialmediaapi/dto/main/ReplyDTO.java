@@ -23,12 +23,11 @@ public class ReplyDTO extends ForumDTO {
                     Forum.Status status,
                     String attachedPicture,
                     int creatorId,
-                    Set<Integer> hashTagIds,
                     Set<Integer> mentionIds,
                     Set<Integer> reactionIds,
                     Set<Integer> notificationIds,
                     int commentId) {
-        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, hashTagIds, mentionIds, reactionIds, notificationIds);
+        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, mentionIds, reactionIds, notificationIds);
         this.commentId = commentId;
     }
 }
