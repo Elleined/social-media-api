@@ -6,6 +6,7 @@ import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.request.user.UserRequest;
+import com.elleined.socialmediaapi.validator.EmailValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,16 @@ public class UserServiceImpl implements UserService, UserServiceRestriction {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    private final EmailValidator emailValidator;
+
     @Override
     public User save(UserRequest userRequest) {
-        if (isEmailAlreadyExists(userRequest.getEmail()))
+        String email = userRequest.getEmail();
+        if (isEmailAlreadyExists(email))
             throw new EmailException("Cannot save user! Because this email already exists!");
+        emailValidator.validate(email);
 
-        User user = userMapper.toEntity(userRequest.getName(), userRequest.getEmail(), userRequest.getPicture());
+        User user = userMapper.toEntity(userRequest.getName(), email, userRequest.getPicture());
         userRepository.save(user);
         log.debug("User with id of {} saved successfully!", user.getId());
         return user;

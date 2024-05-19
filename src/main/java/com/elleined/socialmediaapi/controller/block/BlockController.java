@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/blocked-users")
+@RequestMapping("/users/{currentUserId}")
 public class BlockController {
     private final BlockService blockService;
 
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @GetMapping
+    @GetMapping("/blocked-users")
     public Set<UserDTO> getAllBlockedUserOf(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         return blockService.getAllBlockedUsers(currentUser).stream()
@@ -28,7 +28,7 @@ public class BlockController {
                 .collect(Collectors.toSet());
     }
 
-    @GetMapping("/check/{userToCheckId}/blocked-by-you")
+    @GetMapping("/blocked-by-you/{userToCheckId}")
     public boolean isBlockedBy(@PathVariable("currentUserId") int currentUserId,
                                @PathVariable("userToCheckId") int userToCheckId) {
 
@@ -38,7 +38,7 @@ public class BlockController {
         return blockService.isBlockedByYou(currentUser, userToCheck);
     }
 
-    @GetMapping("/check/{suspectedBlockerId}/you-been-blocked")
+    @GetMapping("/you-been-blocked-by/{suspectedBlockerId}")
     public boolean isYouBeenBlockedBy(@PathVariable("currentUserId") int currentUserId,
                                       @PathVariable("suspectedBlockerId") int suspectedBlockerId) {
 
@@ -47,9 +47,9 @@ public class BlockController {
         return blockService.isYouBeenBlockedBy(currentUser, suspectedBlocker);
     }
 
-    @PatchMapping("{userToBeBlockedId}/block")
+    @PatchMapping("/{userToBeBlockedId}/block")
     public void blockUser(@PathVariable("currentUserId") int currentUserId,
-                                 @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
+                          @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
 
         User currentUser = userService.getById(currentUserId);
         User userToBeBlocked = userService.getById(userToBeBlockedId);
@@ -59,7 +59,7 @@ public class BlockController {
 
     @PatchMapping("/{userToBeUnblockedId}/unblock")
     public void unblockUser(@PathVariable("currentUserId") int currentUserId,
-                                   @PathVariable("userToBeUnblockedId") int userToBeUnblockedId) {
+                            @PathVariable("userToBeUnblockedId") int userToBeUnblockedId) {
 
         User currentUser = userService.getById(currentUserId);
         User userToBeUnblocked = userService.getById(userToBeUnblockedId);

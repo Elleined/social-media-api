@@ -19,7 +19,7 @@ import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
-import com.elleined.socialmediaapi.utility.FieldUtil;
+import com.elleined.socialmediaapi.validator.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,6 +48,8 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     private final UserServiceRestriction userServiceRestriction;
 
+    private final FieldValidator fieldValidator;
+
     @Override
     public Post save(User currentUser,
                      String body,
@@ -55,7 +57,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
                      Set<User> mentionedUsers,
                      Set<String> keywords) {
 
-        if (FieldUtil.isNotValid(body))
+        if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save post! because body cannot be empty! Please provide text for your post to be posted!");
 
         Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);

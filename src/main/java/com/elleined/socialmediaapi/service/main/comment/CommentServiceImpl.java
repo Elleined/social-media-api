@@ -21,7 +21,7 @@ import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
-import com.elleined.socialmediaapi.utility.FieldUtil;
+import com.elleined.socialmediaapi.validator.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,10 +48,11 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     private final PostPinCommentService postPinCommentService;
 
     private final MentionService mentionService;
-    private final HashTagService hashTagService;
 
     private final UserServiceRestriction userServiceRestriction;
     private final PostServiceRestriction postServiceRestriction;
+
+    private final FieldValidator fieldValidator;
 
     @Override
     public Comment save(User currentUser,
@@ -60,7 +61,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
                         MultipartFile attachedPicture,
                         Set<User> mentionedUsers) {
 
-        if (FieldUtil.isNotValid(body))
+        if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save comment! because comment body cannot be empty! Please provide text for your comment");
 
         if (post.isInactive())

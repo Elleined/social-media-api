@@ -1,11 +1,11 @@
-package com.elleined.socialmediaapi.service;
+package com.elleined.socialmediaapi.validator;
 
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public interface Formatter {
+public interface DateUtility {
     static String formatDate(LocalDate date) {
         String month = date.getMonth().name();
         String finalMonth = month

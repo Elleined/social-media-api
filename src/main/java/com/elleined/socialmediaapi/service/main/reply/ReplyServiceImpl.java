@@ -15,13 +15,12 @@ import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.ReplyRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
-import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.pin.CommentPinReplyService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
-import com.elleined.socialmediaapi.utility.FieldUtil;
+import com.elleined.socialmediaapi.validator.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,11 +46,12 @@ public class ReplyServiceImpl implements ReplyService {
     private final CommentPinReplyService commentPinReplyService;
 
     private final MentionService mentionService;
-    private final HashTagService hashTagService;
 
     private final PostServiceRestriction postServiceRestriction;
     private final CommentServiceRestriction commentServiceRestriction;
     private final UserServiceRestriction userServiceRestriction;
+
+    private final FieldValidator fieldValidator;
 
     @Override
     public Reply save(User currentUser,
@@ -78,7 +78,7 @@ public class ReplyServiceImpl implements ReplyService {
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
             throw new BlockedException("Cannot save reply! because cannot reply because this user block you already!");
 
-        if (FieldUtil.isNotValid(body))
+        if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save reply! because reply body cannot be empty!");
 
         Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
