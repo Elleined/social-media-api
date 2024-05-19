@@ -36,10 +36,7 @@ public class BlockServiceImpl implements BlockService {
     @Override
     public void unBlockUser(User currentUser, User userToBeUnblocked) {
         if (!isBlockedByYou(currentUser, userToBeUnblocked))
-            throw new BlockedException("Cannot unblock this user! because you are not blocked this user!");
-
-        if (!isYouBeenBlockedBy(currentUser, userToBeUnblocked))
-            throw new BlockedException("Cannot unblock this user! because you are not been block by this user!");
+            throw new BlockedException("Cannot unblock this user! because you do not blocked this user!");
 
         currentUser.getBlockedUsers().remove(userToBeUnblocked);
         userRepository.save(currentUser);
