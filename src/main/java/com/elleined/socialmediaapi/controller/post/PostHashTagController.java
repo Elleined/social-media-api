@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.controller.hashtag;
+package com.elleined.socialmediaapi.controller.post;
 
 import com.elleined.socialmediaapi.dto.hashtag.HashTagDTO;
 import com.elleined.socialmediaapi.dto.main.PostDTO;
@@ -13,8 +13,8 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/forum/posts/hashtags")
-public class HashTagController {
+@RequestMapping("/posts/hashtags")
+public class PostHashTagController {
     private final HashTagService hashTagService;
     private final HashTagMapper hashTagMapper;
 
@@ -39,7 +39,6 @@ public class HashTagController {
                 .map(hashTagMapper::toDTO)
                 .toList();
     }
-
 
     @GetMapping("/keyword")
     List<PostDTO> getAllByKeyword(@RequestParam("keyword") String keyword) {

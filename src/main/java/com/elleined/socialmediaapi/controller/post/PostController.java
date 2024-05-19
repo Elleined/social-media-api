@@ -1,9 +1,7 @@
 package com.elleined.socialmediaapi.controller.post;
 
-import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.main.PostDTO;
 import com.elleined.socialmediaapi.mapper.main.PostMapper;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.main.post.PostService;
@@ -52,11 +50,10 @@ public class PostController {
 
     @PostMapping
     public PostDTO save(@PathVariable("currentUserId") int currentUserId,
-                        @RequestParam("body") String body,
-                        @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
-                        @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
-                        @RequestParam(required = false, name = "keywords") Set<String> keywords) throws IOException {
-
+                        @RequestPart("body") String body,
+                        @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
+                        @RequestPart(required = false, name = "keywords") Set<String> keywords,
+                        @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture) throws IOException {
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
 
@@ -87,8 +84,8 @@ public class PostController {
     @PutMapping("/{postId}")
     public PostDTO update(@PathVariable("currentUserId") int currentUserId,
                           @PathVariable("postId") int postId,
-                          @RequestParam("newBody,") String newBody,
-                          @RequestParam("newAttachedPicture") String newAttachedPicture) {
+                          @RequestPart("newBody") String newBody,
+                          @RequestPart(required = false, name = "newAttachedPicture") MultipartFile newAttachedPicture) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);

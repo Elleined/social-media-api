@@ -7,11 +7,11 @@ import com.elleined.socialmediaapi.mapper.story.StoryMapper;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.story.StoryRepository;
-import com.elleined.socialmediaapi.request.story.StoryRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
 import java.util.List;
@@ -25,11 +25,12 @@ public class StoryServiceImpl implements StoryService, StoryServiceRestriction {
     private final StoryMapper storyMapper;
 
     @Override
-    public Story save(User currentUser, StoryRequest storyRequest) {
+    public Story save(User currentUser, String content, MultipartFile attachedPicture) {
         if (hasStory(currentUser))
             throw new ResourceAlreadyExistsException("Cannot save story because you've already created one. please delete first then create again!");
 
-        Story story = storyMapper.toEntity(currentUser, storyRequest.getContent(), storyRequest.getAttachPicture());
+        String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
+        Story story = storyMapper.toEntity(currentUser, content, picture);
         storyRepository.save(story);
         log.debug("saving story success");
         return story;

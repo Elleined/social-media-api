@@ -3,11 +3,7 @@ package com.elleined.socialmediaapi.controller.user.story;
 import com.elleined.socialmediaapi.dto.story.StoryDTO;
 import com.elleined.socialmediaapi.mapper.story.StoryMapper;
 import com.elleined.socialmediaapi.model.story.Story;
-import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.request.story.StoryRequest;
 import com.elleined.socialmediaapi.service.story.StoryService;
-import com.elleined.socialmediaapi.service.user.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

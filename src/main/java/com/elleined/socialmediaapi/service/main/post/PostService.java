@@ -25,7 +25,7 @@ public interface PostService extends SavedPostService, SharePostService, CustomS
 
     void delete(User currentUser, Post post) throws ResourceNotOwnedException;
 
-    Post update(User currentUser, Post post, String newBody, String newAttachedPicture)
+    Post update(User currentUser, Post post, String newBody, MultipartFile newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 

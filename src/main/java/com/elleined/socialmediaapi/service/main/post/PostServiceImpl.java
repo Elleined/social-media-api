@@ -91,7 +91,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     }
 
     @Override
-    public Post update(User currentUser, Post post, String newBody, String newAttachedPicture)
+    public Post update(User currentUser, Post post, String newBody, MultipartFile newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
@@ -104,8 +104,10 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
         if (userServiceRestriction.notOwned(currentUser, post))
             throw new ResourceNotOwnedException("Cannot update post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
+        String picture = newAttachedPicture == null ? null : newAttachedPicture.getOriginalFilename();
+
         post.setBody(newBody);
-        post.setAttachedPicture(newAttachedPicture);
+        post.setAttachedPicture(picture);
         postRepository.save(post);
         log.debug("Post with id of {} updated with the new body of {}", post.getId(), newBody);
         return post;

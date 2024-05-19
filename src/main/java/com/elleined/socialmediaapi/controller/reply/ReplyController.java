@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.controller.reply;
 
-import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
 import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
@@ -71,7 +70,7 @@ public class ReplyController {
                          @PathVariable("commentId") int commentId,
                          @RequestParam("body") String body,
                          @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
-                         @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
+                         @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));

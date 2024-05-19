@@ -11,7 +11,6 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.vote.Vote;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.VoteRepository;
-import com.elleined.socialmediaapi.request.vote.VoteRequest;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;
@@ -70,11 +69,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public Vote save(VoteRequest voteRequest) {
-        User currentUser = userService.getById(voteRequest.getCreatorId());
-        Post post = postService.getById(voteRequest.getPostId());
-        Comment comment = commentService.getById(voteRequest.getCommentId());
-
+    public Vote save(User currentUser, Post post, Comment comment, Vote.Verdict verdict) {
         if (commentServiceRestriction.isAlreadyVoted(currentUser, comment))
             throw new ResourceAlreadyExistsException("Cannot vote this comment! because you already voted this comment!");
 
@@ -93,7 +88,7 @@ public class VoteServiceImpl implements VoteService {
         if (blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
             throw new BlockedException("Cannot vote this comment! because this user block you already!");
 
-        Vote vote = voteMapper.toEntity(currentUser, comment, voteRequest.getVerdict());
+        Vote vote = voteMapper.toEntity(currentUser, comment, verdict);
         voteRepository.save(vote);
 
         comment.getVoters().add(vote);

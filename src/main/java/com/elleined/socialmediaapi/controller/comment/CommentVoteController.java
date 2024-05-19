@@ -5,11 +5,11 @@ import com.elleined.socialmediaapi.mapper.vote.VoteMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.vote.Vote;
-import com.elleined.socialmediaapi.request.vote.VoteRequest;
+import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
+import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.vote.VoteService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/users/{currentUserId}/posts/{postId}/comments/{commentId}/votes")
 public class CommentVoteController {
+    private final UserService userService;
+
     private final VoteService voteService;
     private final VoteMapper voteMapper;
 
@@ -66,8 +68,16 @@ public class CommentVoteController {
     }
 
     @PostMapping
-    public VoteDTO save(@Valid @RequestBody VoteRequest voteRequest) {
-        Vote vote = voteService.save(voteRequest);
+    public VoteDTO save(@PathVariable("currentUserId") int currentUserId,
+                        @PathVariable("postId") int postId,
+                        @PathVariable("commentId") int commentId,
+                        @RequestParam("verdict") Vote.Verdict verdict) {
+
+        User currentUser = userService.getById(commentId);
+        Post post = postService.getById(postId);
+        Comment comment = commentService.getById(commentId);
+
+        Vote vote = voteService.save(currentUser, post, comment, verdict);
         return voteMapper.toDTO(vote);
     }
 }

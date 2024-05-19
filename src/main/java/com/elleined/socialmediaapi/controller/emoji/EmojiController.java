@@ -1,9 +1,7 @@
 package com.elleined.socialmediaapi.controller.emoji;
 
-import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.reaction.EmojiDTO;
 import com.elleined.socialmediaapi.mapper.emoji.EmojiMapper;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/forum/emojis")
+@RequestMapping("/emojis")
 public class EmojiController {
     private final EmojiService emojiService;
     private final EmojiMapper emojiMapper;
