@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{currentUserId}/posts/{postId}/shared-posts")
+@RequestMapping("/users/{currentUserId}/shared-posts")
 public class SharedPostController {
     private final UserService userService;
     private final PostService postService;
@@ -27,7 +27,7 @@ public class SharedPostController {
                 .toList();
     }
 
-    @PostMapping
+    @PostMapping("/{postId}")
     public PostDTO sharePost(@PathVariable("currentUserId") int currentUserId,
                              @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);
@@ -37,9 +37,9 @@ public class SharedPostController {
         return postMapper.toDTO(sharedPost);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{postId}")
     public void unSharePost(@PathVariable("currentUserId") int currentUserId,
-                                               @PathVariable("postId") int postId) {
+                            @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 

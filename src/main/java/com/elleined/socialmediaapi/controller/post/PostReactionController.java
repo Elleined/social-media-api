@@ -43,8 +43,8 @@ public class PostReactionController {
 
     @GetMapping("/emoji")
     public List<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
-                                                       @PathVariable("postId") int postId,
-                                                       @RequestParam("emojiId") int emojiId) {
+                                           @PathVariable("postId") int postId,
+                                           @RequestParam("emojiId") int emojiId) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
@@ -57,7 +57,7 @@ public class PostReactionController {
 
     @PostMapping
     public ReactionDTO save(@PathVariable("currentUserId") int currentUserId,
-                          @PathVariable("postId") int postId,
+                            @PathVariable("postId") int postId,
                             @RequestParam("emojiId") int emojiId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);

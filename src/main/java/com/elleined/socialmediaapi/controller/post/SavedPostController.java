@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{currentUserId}/posts/{postId}/saved-posts")
+@RequestMapping("/users/{currentUserId}/saved-posts")
 public class SavedPostController {
     private final UserService userService;
 
@@ -22,14 +22,13 @@ public class SavedPostController {
 
     @GetMapping
     public List<PostDTO> getAllSavedPost(@PathVariable("currentUserId") int currentUserId) {
-
         User currentUser = userService.getById(currentUserId);
         return postService.getAllSavedPosts(currentUser).stream()
                 .map(postMapper::toDTO)
                 .toList();
     }
 
-    @PostMapping
+    @PostMapping("/{postId}")
     public PostDTO savedPost(@PathVariable("currentUserId") int currentUserId,
                              @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);
@@ -38,7 +37,7 @@ public class SavedPostController {
         return postMapper.toDTO(post);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{postId}")
     public void unSavedPost(@PathVariable("currentUserId") int currentUserId,
                             @PathVariable("postId") int postId) {
 

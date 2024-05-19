@@ -64,6 +64,7 @@ public class HashTagServiceImpl implements HashTagService {
     @Override
     public List<Post> getAllByKeyword(String keyword) {
         return hashTagRepository.getAllByKeyword(keyword).stream()
+                .filter(Post::isActive)
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }
