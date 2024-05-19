@@ -1,9 +1,17 @@
 package com.elleined.socialmediaapi.controller.user;
 
+import com.elleined.socialmediaapi.dto.note.NoteDTO;
+import com.elleined.socialmediaapi.dto.story.StoryDTO;
 import com.elleined.socialmediaapi.dto.user.UserDTO;
+import com.elleined.socialmediaapi.mapper.note.NoteMapper;
+import com.elleined.socialmediaapi.mapper.story.StoryMapper;
 import com.elleined.socialmediaapi.mapper.user.UserMapper;
+import com.elleined.socialmediaapi.model.note.Note;
+import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.request.user.UserRequest;
+import com.elleined.socialmediaapi.service.note.NoteService;
+import com.elleined.socialmediaapi.service.story.StoryService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +49,15 @@ public class UserController {
     public UserDTO getByUUID(@PathVariable("uuid") String uuid) {
         User user = userService.getByUUID(uuid);
         return userMapper.toDTO(user);
+    }
+
+    @GetMapping("/{currentUserId}/mention/suggested-users")
+    public List<UserDTO> getAllSuggestedMentions(@PathVariable("currentUserId") int currentUserId,
+                                                 @RequestParam("name") String name) {
+
+        User currentUser = userService.getById(currentUserId);
+        return userService.getAllSuggestedMentions(currentUser, name).stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 }

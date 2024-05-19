@@ -29,7 +29,7 @@ public class FriendController {
                 .collect(Collectors.toSet());
     }
 
-    @DeleteMapping("/{userToUnFriendId}")
+    @DeleteMapping("/{userToUnFriendId}/unFriend")
     public void unFriend(@PathVariable("currentUserId") int currentUserId,
                          @PathVariable("userToUnFriendId") int userToUnFriendId) {
         User currentUser = userService.getById(currentUserId);

@@ -15,25 +15,16 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/stories")
+@RequestMapping("/stories")
 public class StoryController {
     private final StoryService storyService;
     private final StoryMapper storyMapper;
-
-    private final UserService userService;
 
     @GetMapping
     public List<StoryDTO> getAll() {
         return storyService.getAll().stream()
                 .map(storyMapper::toDTO)
                 .toList();
-    }
-
-    @GetMapping("/user")
-    public StoryDTO getStory(@PathVariable("currentUserId") int currentUserId) {
-        User currentUser = userService.getById(currentUserId);
-        Story story = storyService.getStory(currentUser);
-        return storyMapper.toDTO(story);
     }
 
     @GetMapping("/{id}")
@@ -47,21 +38,5 @@ public class StoryController {
         return storyService.getAllById(ids).stream()
                 .map(storyMapper::toDTO)
                 .toList();
-    }
-
-    @PostMapping
-    public StoryDTO save(@PathVariable("currentUserId") int currentUserId,
-                         @Valid @RequestBody StoryRequest storyRequest) {
-        User currentUser = userService.getById(currentUserId);
-        Story story = storyService.save(currentUser, storyRequest);
-        return storyMapper.toDTO(story);
-    }
-
-    @DeleteMapping("/{storyId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
-                       @PathVariable("storyId") int storyId) {
-        User currentUser = userService.getById(currentUserId);
-        Story story = storyService.getById(storyId);
-        storyService.delete(currentUser, story);
     }
 }

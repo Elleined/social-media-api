@@ -1,8 +1,15 @@
 package com.elleined.socialmediaapi.controller;
 
 import com.elleined.socialmediaapi.dto.APIResponse;
+import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.credential.CredentialException;
+import com.elleined.socialmediaapi.exception.field.FieldException;
+import com.elleined.socialmediaapi.exception.friend.FriendException;
+import com.elleined.socialmediaapi.exception.mention.MentionException;
+import com.elleined.socialmediaapi.exception.note.NoteException;
 import com.elleined.socialmediaapi.exception.resource.ResourceException;
+import com.elleined.socialmediaapi.exception.story.StoryException;
+import com.elleined.socialmediaapi.exception.vote.VoteException;
 import jakarta.transaction.SystemException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +29,25 @@ public class ExceptionController {
         return new ResponseEntity<>(responseMessage, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CredentialException.class)
-    public ResponseEntity<APIResponse> handleCredentialException(CredentialException ex) {
+    @ExceptionHandler({
+            CredentialException.class,
+            BlockedException.class
+    })
+    public ResponseEntity<APIResponse> handleCredentialException(RuntimeException ex) {
         var responseMessage = new APIResponse(HttpStatus.FORBIDDEN, ex.getMessage());
         return new ResponseEntity<>(responseMessage, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(SystemException.class)
-    public ResponseEntity<APIResponse> handleSystemException(SystemException ex) {
+    @ExceptionHandler({
+            FieldException.class,
+            FriendException.class,
+            MentionException.class,
+            NoteException.class,
+            StoryException.class,
+            VoteException.class,
+            SystemException.class
+    })
+    public ResponseEntity<APIResponse> handleSystemException(RuntimeException ex) {
         var responseMessage = new APIResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
     }

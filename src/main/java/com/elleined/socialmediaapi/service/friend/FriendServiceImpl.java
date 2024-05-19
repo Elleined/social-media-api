@@ -39,7 +39,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
         if (isFriendsWith(currentUser, requestingUser))
             throw new FriendException("Cannot accept friend request! because you're already friends.");
 
-        if (hasNotSendFriendRequestTo(currentUser, requestingUser))
+        if (hasNotReceiveFriendRequest(currentUser, requestingUser))
             throw new ResourceNotOwnedException("Cannot accept friend request! because you don't receive this friend request.");
 
         currentUser.getFriends().add(requestingUser);
@@ -55,7 +55,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     public void rejectFriendRequest(User currentUser, FriendRequest friendRequest) {
         User requestingUser = friendRequest.getCreator();
 
-        if (hasNotSendFriendRequestTo(currentUser, requestingUser))
+        if (hasNotReceiveFriendRequest(currentUser, requestingUser))
             throw new ResourceNotOwnedException("Cannot delete friend request! because you don't have sent this friend request.");
 
         int friendRequestId = friendRequest.getId();
@@ -68,14 +68,17 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
 
     @Override
     public void sendFriendRequest(User currentUser, User userToAdd) {
-        if (hasSendFriendRequestTo(currentUser, userToAdd))
-            throw new FriendRequestException("Cannot sent friend request! becuase you already sent friend request to this user!");
+        if (hasSendFriendRequest(currentUser, userToAdd))
+            throw new FriendRequestException("Cannot sent friend request! because you already sent friend request to this user!");
 
-        if (hasReceiveFriendRequestTo(currentUser, userToAdd))
+        if (hasReceiveFriendRequest(currentUser, userToAdd))
             throw new FriendRequestException("Cannot sent friend request! because this user already sent you a friend request!");
 
         if (isFriendsWith(currentUser, userToAdd))
             throw new FriendException("Cannot sent friend request! because you're already friends.");
+
+        if (isSendingToHimself(currentUser, userToAdd))
+            throw new FriendRequestException("Cannot sent friend request! you cannot sent friend request to yourself!");
 
         if (blockService.isBlockedByYou(currentUser, userToAdd))
             throw new BlockedException("Cannot sent friend request! because you blocked the author of this post with id of !" + userToAdd.getId());

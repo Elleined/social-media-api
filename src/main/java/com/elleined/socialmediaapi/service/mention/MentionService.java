@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 public interface MentionService extends CustomService<Mention> {
     Mention save(User mentioningUser, User mentionedUser);
-    List<User> getAllSuggestedMentions(User currentUser, String name);
 
 
     default Set<Mention> saveAll(User mentioningUser, Set<User> mentionedUsers) {

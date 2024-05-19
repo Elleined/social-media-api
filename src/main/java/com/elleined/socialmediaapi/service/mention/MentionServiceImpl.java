@@ -37,15 +37,6 @@ public class MentionServiceImpl implements MentionService {
     }
 
     @Override
-    public List<User> getAllSuggestedMentions(User currentUser, String name) {
-        return userRepository.fetchAllByProperty(name).stream()
-                .filter(suggestedUser -> !suggestedUser.equals(currentUser))
-                .filter(suggestedUser -> !blockService.isBlockedByYou(currentUser, suggestedUser))
-                .filter(suggestedUser -> !blockService.isYouBeenBlockedBy(currentUser, suggestedUser))
-                .toList();
-    }
-
-    @Override
     public Mention save(Mention mention) {
         return mentionRepository.save(mention);
     }

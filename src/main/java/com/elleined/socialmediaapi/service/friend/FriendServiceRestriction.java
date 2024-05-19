@@ -13,19 +13,23 @@ public interface FriendServiceRestriction {
         return !isFriendsWith(currentUser, anotherUser);
     }
 
-    default boolean hasSendFriendRequestTo(User currentUser, User userToAdd) {
+    default boolean hasSendFriendRequest(User currentUser, User userToAdd) {
         return currentUser.getSentFriendRequests().stream()
                 .map(FriendRequest::getRequestedUser)
                 .anyMatch(userToAdd::equals);
     }
 
-    default boolean hasNotSendFriendRequestTo(User currentUser, User userToAdd) {
-        return !hasSendFriendRequestTo(currentUser, userToAdd);
-    }
-
-    default boolean hasReceiveFriendRequestTo(User currentUser, User userToAdd) {
+    default boolean hasReceiveFriendRequest(User currentUser, User userToAdd) {
         return userToAdd.getSentFriendRequests().stream()
                 .map(FriendRequest::getRequestedUser)
                 .anyMatch(currentUser::equals);
+    }
+
+    default boolean hasNotReceiveFriendRequest(User currentUser, User userToAdd) {
+        return !hasReceiveFriendRequest(currentUser, userToAdd);
+    }
+
+    default boolean isSendingToHimself(User currentUser, User userToAdd) {
+        return currentUser.getId() == userToAdd.getId();
     }
 }
