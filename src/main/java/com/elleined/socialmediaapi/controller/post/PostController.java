@@ -8,7 +8,6 @@ import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,13 +57,12 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<PostDTO> delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@PathVariable("currentUserId") int currentUserId,
                                           @PathVariable("postId") int postId) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         postService.delete(currentUser, post);
-        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{postId}/comment-section-status")
@@ -79,7 +77,7 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public PostDTO updateBody(@PathVariable("currentUserId") int currentUserId,
+    public PostDTO update(@PathVariable("currentUserId") int currentUserId,
                               @PathVariable("postId") int postId,
                               @RequestParam("newBody,") String newBody,
                               @RequestParam("newAttachedPicture") String newAttachedPicture) {

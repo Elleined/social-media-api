@@ -1,9 +1,7 @@
 package com.elleined.socialmediaapi.controller.post;
 
-import com.elleined.socialmediaapi.dto.CommentDTO;
-import com.elleined.socialmediaapi.dto.PostDTO;
-import com.elleined.socialmediaapi.mapper.CommentMapper;
-import com.elleined.socialmediaapi.mapper.PostMapper;
+import com.elleined.socialmediaapi.dto.main.PostDTO;
+import com.elleined.socialmediaapi.mapper.main.PostMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
@@ -12,7 +10,10 @@ import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,15 +26,6 @@ public class PostPinCommentController {
     private final PostPinCommentService postPinCommentService;
 
     private final CommentService commentService;
-    private final CommentMapper commentMapper;
-
-
-    @GetMapping("/pinned-comment")
-    public CommentDTO getPinnedComment(@PathVariable("postId") int postId) {
-        Post post = postService.getById(postId);
-        Comment pinnedComment = postPinCommentService.getPinned(post);
-        return commentMapper.toDTO(pinnedComment);
-    }
 
     @PatchMapping("/pin-comment/{commentId}")
     public PostDTO pinComment(@PathVariable("currentUserId") int currentUserId,

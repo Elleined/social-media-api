@@ -3,6 +3,7 @@ package com.elleined.socialmediaapi.service.note;
 import com.elleined.socialmediaapi.exception.note.NoteException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.note.NoteMapper;
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.note.NoteRepository;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -59,8 +61,27 @@ public class NoteServiceImpl implements NoteService, NoteServiceRestriction {
     }
 
     @Override
+    public Note save(Note note) {
+        return noteRepository.save(note);
+    }
+
+    @Override
     public Note getById(int id) throws ResourceNotFoundException {
         return noteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Note with id of " + id + " doesn't exists!"));
+    }
+
+    @Override
+    public List<Note> getAll() {
+        return noteRepository.findAll().stream()
+                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
+                .toList();
+    }
+
+    @Override
+    public List<Note> getAllById(List<Integer> ids) {
+        return noteRepository.findAllById(ids).stream()
+                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
+                .toList();
     }
 
     @Override

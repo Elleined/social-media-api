@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.controller.emoji;
 
-import com.elleined.socialmediaapi.dto.react.EmojiDTO;
+import com.elleined.socialmediaapi.dto.reaction.EmojiDTO;
 import com.elleined.socialmediaapi.mapper.emoji.EmojiMapper;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import lombok.RequiredArgsConstructor;

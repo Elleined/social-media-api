@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.controller.comment;
 
-import com.elleined.socialmediaapi.dto.react.ReactDTO;
+import com.elleined.socialmediaapi.dto.reaction.ReactionDTO;
 import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
@@ -35,9 +35,9 @@ public class CommentReactionController {
     private final EmojiService emojiService;
 
     @GetMapping
-    public List<ReactDTO> getAll(@PathVariable("currentUserId") int currentUserId,
-                                 @PathVariable("postId") int postId,
-                                 @PathVariable("commentId") int commentId) {
+    public List<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+                                    @PathVariable("postId") int postId,
+                                    @PathVariable("commentId") int commentId) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
@@ -49,10 +49,10 @@ public class CommentReactionController {
     }
 
     @GetMapping("/emoji")
-    public List<ReactDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
-                                        @PathVariable("postId") int postId,
-                                        @PathVariable("commentId") int commentId,
-                                        @RequestParam("emojiId") int emojiId) {
+    public List<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+                                           @PathVariable("postId") int postId,
+                                           @PathVariable("commentId") int commentId,
+                                           @RequestParam("emojiId") int emojiId) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
@@ -65,10 +65,10 @@ public class CommentReactionController {
     }
 
     @PostMapping
-    public ReactDTO save(@PathVariable("currentUserId") int currentUserId,
-                         @PathVariable("postId") int postId,
-                         @PathVariable("commentId") int commentId,
-                         @RequestParam("emojiId") int emojiId) {
+    public ReactionDTO save(@PathVariable("currentUserId") int currentUserId,
+                            @PathVariable("postId") int postId,
+                            @PathVariable("commentId") int commentId,
+                            @RequestParam("emojiId") int emojiId) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);

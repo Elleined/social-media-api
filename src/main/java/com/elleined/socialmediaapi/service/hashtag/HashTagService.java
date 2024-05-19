@@ -1,10 +1,7 @@
 package com.elleined.socialmediaapi.service.hashtag;
 
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
-import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.CustomService;
 
 import java.util.List;

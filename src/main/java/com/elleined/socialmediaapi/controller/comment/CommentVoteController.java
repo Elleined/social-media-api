@@ -8,7 +8,6 @@ import com.elleined.socialmediaapi.model.main.vote.Vote;
 import com.elleined.socialmediaapi.request.vote.VoteRequest;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
-import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.vote.VoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class CommentVoteController {
     private final CommentService commentService;
 
     @GetMapping
-    List<VoteDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public List<VoteDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                          @PathVariable("postId") int postId,
                          @PathVariable("commentId") int commentId) {
 
@@ -40,7 +39,7 @@ public class CommentVoteController {
     }
 
     @GetMapping("/verdict")
-    List<VoteDTO> getAllByVerdict(@PathVariable("currentUserId") int currentUserId,
+    public List<VoteDTO> getAllByVerdict(@PathVariable("currentUserId") int currentUserId,
                                   @PathVariable("postId") int postId,
                                   @PathVariable("commentId") int commentId,
                                   @RequestParam("verdict") Vote.Verdict verdict) {

@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.dto.react;
+package com.elleined.socialmediaapi.dto.reaction;
 
 import com.elleined.socialmediaapi.dto.DTO;
 import com.elleined.socialmediaapi.model.react.Emoji;

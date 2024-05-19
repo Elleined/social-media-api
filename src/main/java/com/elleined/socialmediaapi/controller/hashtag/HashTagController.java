@@ -4,8 +4,6 @@ import com.elleined.socialmediaapi.dto.hashtag.HashTagDTO;
 import com.elleined.socialmediaapi.dto.main.PostDTO;
 import com.elleined.socialmediaapi.mapper.hashtag.HashTagMapper;
 import com.elleined.socialmediaapi.mapper.main.PostMapper;
-import com.elleined.socialmediaapi.model.hashtag.HashTag;
-import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,10 +25,10 @@ public class HashTagController {
     private final PostMapper postMapper;
 
     @GetMapping
-    public Set<HashTagDTO> getAll() {
+    public List<HashTagDTO> getAll() {
         return hashTagService.getAll().stream()
                 .map(hashTagMapper::toDTO)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @GetMapping("/keyword")

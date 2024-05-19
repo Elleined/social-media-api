@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.mapper.react;
 
-import com.elleined.socialmediaapi.dto.react.ReactDTO;
+import com.elleined.socialmediaapi.dto.reaction.ReactionDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.react.Reaction;
@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
-public interface ReactionMapper extends CustomMapper<Reaction, ReactDTO> {
+public interface ReactionMapper extends CustomMapper<Reaction, ReactionDTO> {
 
     @Override
     @Mappings({
@@ -25,7 +25,7 @@ public interface ReactionMapper extends CustomMapper<Reaction, ReactDTO> {
             @Mapping(target = "replyIds", expression = "java(react.getAllReplyIds())"),
             @Mapping(target = "notificationIds", expression = "java(react.getAllNotificationIds())")
     })
-    ReactDTO toDTO(Reaction reaction);
+    ReactionDTO toDTO(Reaction reaction);
 
     @Mappings({
             @Mapping(target = "id", ignore = true),

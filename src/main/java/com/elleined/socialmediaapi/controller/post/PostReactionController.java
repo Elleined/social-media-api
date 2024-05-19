@@ -1,9 +1,10 @@
 package com.elleined.socialmediaapi.controller.post;
 
-import com.elleined.socialmediaapi.dto.ReactionDTO;
-import com.elleined.socialmediaapi.mapper.react.PostReactionMapper;
+import com.elleined.socialmediaapi.dto.reaction.ReactionDTO;
+import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.react.Emoji;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
@@ -23,51 +24,63 @@ public class PostReactionController {
     private final UserService userService;
 
     private final PostService postService;
-    private final ReactionService<Post, PostReact> postReactionService;
-    private final PostReactionMapper postReactionMapper;
+
+    private final ReactionService reactionService;
+    private final ReactionMapper reactionMapper;
 
     private final EmojiService emojiService;
+
     @GetMapping
-    public List<ReactionDTO> getAll(@PathVariable("postId") int postId) {
+    public List<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+                                    @PathVariable("postId") int postId) {
+
+        User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        return postReactionService.getAll(post).stream()
-                .map(postReactionMapper::toDTO)
+        return reactionService.getAll(currentUser, post).stream()
+                .map(reactionMapper::toDTO)
                 .toList();
     }
 
-    @GetMapping("/type")
-    public List<ReactionDTO> getAllReactionByEmojiType(@PathVariable("postId") int postId,
-                                                       @RequestParam("type") Emoji.Type type) {
+    @GetMapping("/emoji")
+    public List<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+                                                       @PathVariable("postId") int postId,
+                                                       @RequestParam("emojiId") int emojiId) {
+
+        User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        return postReactionService.getAllReactionByEmojiType(post, type).stream()
-                .map(postReactionMapper::toDTO)
+        Emoji emoji = emojiService.getById(emojiId);
+
+        return reactionService.getAllByEmoji(currentUser, post, emoji).stream()
+                .map(reactionMapper::toDTO)
                 .toList();
     }
 
     @PostMapping
     public ReactionDTO save(@PathVariable("currentUserId") int currentUserId,
                           @PathVariable("postId") int postId,
-                          @RequestParam("type") Emoji.Type type) {
+                            @RequestParam("emojiId") int emojiId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        Emoji emoji = emojiService.getByType(type);
+        Emoji emoji = emojiService.getById(emojiId);
 
-        if (currentUser.isAlreadyReactedTo(post)) {
-            PostReact postReact = postReactionService.getByUserReaction(currentUser, post);
-            postReactionService.update(currentUser, post, postReact, emoji);
-            return postReactionMapper.toDTO(postReact);
+        if (reactionService.isAlreadyReactedTo(currentUser, post)) {
+            Reaction reaction = reactionService.getByUserReaction(currentUser, post);
+            reactionService.update(currentUser, post, reaction, emoji);
+            return reactionMapper.toDTO(reaction);
         }
-        PostReact postReact = postReactionService.save(currentUser, post, emoji);
-        return postReactionMapper.toDTO(postReact);
+
+        Reaction reaction = reactionService.save(currentUser, post, emoji);
+        return reactionMapper.toDTO(reaction);
     }
 
     @DeleteMapping("/{reactionId}")
     public void delete(@PathVariable("currentUserId") int currentUserId,
                        @PathVariable("postId") int postId,
                        @PathVariable("reactionId") int reactionId) {
+
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        PostReact postReact = postReactionService.getById(reactionId);
-        postReactionService.delete(currentUser, postReact);
+        Reaction reaction = reactionService.getById(reactionId);
+        reactionService.delete(currentUser, post, reaction);
     }
 }

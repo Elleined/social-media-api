@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.dto.react;
+package com.elleined.socialmediaapi.dto.reaction;
 
 import com.elleined.socialmediaapi.dto.DTO;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ReactDTO extends DTO {
+public class ReactionDTO extends DTO {
     private int creatorId;
     private Set<Integer> notificationIds;
     private int emojiId;
@@ -21,15 +21,15 @@ public class ReactDTO extends DTO {
     private Set<Integer> replyIds;
 
     @Builder
-    public ReactDTO(int id,
-                    LocalDateTime createdAt,
-                    LocalDateTime updatedAt,
-                    int creatorId,
-                    Set<Integer> notificationIds,
-                    int emojiId,
-                    Set<Integer> postIds,
-                    Set<Integer> commentIds,
-                    Set<Integer> replyIds) {
+    public ReactionDTO(int id,
+                       LocalDateTime createdAt,
+                       LocalDateTime updatedAt,
+                       int creatorId,
+                       Set<Integer> notificationIds,
+                       int emojiId,
+                       Set<Integer> postIds,
+                       Set<Integer> commentIds,
+                       Set<Integer> replyIds) {
         super(id, createdAt, updatedAt);
         this.creatorId = creatorId;
         this.notificationIds = notificationIds;

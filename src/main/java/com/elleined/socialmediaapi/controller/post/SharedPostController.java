@@ -1,17 +1,15 @@
 package com.elleined.socialmediaapi.controller.post;
 
-import com.elleined.socialmediaapi.dto.PostDTO;
-import com.elleined.socialmediaapi.mapper.PostMapper;
+import com.elleined.socialmediaapi.dto.main.PostDTO;
+import com.elleined.socialmediaapi.mapper.main.PostMapper;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,11 +20,11 @@ public class SharedPostController {
     private final PostMapper postMapper;
 
     @GetMapping
-    public Set<PostDTO> getAllSharedPost(@PathVariable("currentUserId") int currentUserId) {
+    public List<PostDTO> getAllSharedPost(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
         return postService.getAllSharedPosts(currentUser).stream()
                 .map(postMapper::toDTO)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @PostMapping
@@ -40,12 +38,11 @@ public class SharedPostController {
     }
 
     @DeleteMapping
-    public ResponseEntity<PostDTO> unSharePost(@PathVariable("currentUserId") int currentUserId,
+    public void unSharePost(@PathVariable("currentUserId") int currentUserId,
                                                @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
         postService.unSharePost(currentUser, post);
-        return ResponseEntity.noContent().build();
     }
 }
