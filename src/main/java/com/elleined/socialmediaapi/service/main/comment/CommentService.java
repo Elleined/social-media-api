@@ -25,7 +25,7 @@ public interface CommentService extends CustomService<Comment> {
             BlockedException,
             IOException;
 
-    List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException;
+    List<Comment> getAll(User currentUser, Post post) throws ResourceNotFoundException;
 
     void delete(User currentUser, Post post, Comment comment);
 

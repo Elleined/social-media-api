@@ -29,6 +29,12 @@ public class FriendRequestController {
                 .toList();
     }
 
+    @GetMapping("/{id}")
+    public FriendRequestDTO getById(@PathVariable("id") int id) {
+        FriendRequest friendRequest = friendService.getById(id);
+        return friendRequestMapper.toDTO(friendRequest);
+    }
+
     @GetMapping("/get-all-by-id")
     public List<FriendRequestDTO> getAllById(@RequestBody List<Integer> ids) {
         return friendService.getAllById(ids).stream()

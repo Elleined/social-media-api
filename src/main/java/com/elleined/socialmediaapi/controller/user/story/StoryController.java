@@ -29,6 +29,13 @@ public class StoryController {
                 .toList();
     }
 
+    @GetMapping("/user")
+    public StoryDTO getStory(@PathVariable("currentUserId") int currentUserId) {
+        User currentUser = userService.getById(currentUserId);
+        Story story = storyService.getStory(currentUser);
+        return storyMapper.toDTO(story);
+    }
+
     @GetMapping("/{id}")
     public StoryDTO getById(@PathVariable("id") int id) {
         Story story = storyService.getById(id);

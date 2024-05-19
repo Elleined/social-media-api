@@ -5,7 +5,6 @@ import com.elleined.socialmediaapi.mapper.main.CommentMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
@@ -27,22 +26,26 @@ public class CommentController {
 
     private final PostService postService;
 
-    private final HashTagService hashTagService;
-
     private final CommentService commentService;
     private final CommentMapper commentMapper;
 
     private final WSService wsService;
 
     @GetMapping
-    public List<CommentDTO> getAllByPost(@PathVariable("currentUserId") int currentUserId,
-                                         @PathVariable("postId") int postId) {
+    public List<CommentDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+                                   @PathVariable("postId") int postId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        return commentService.getAllByPost(currentUser, post).stream()
+        return commentService.getAll(currentUser, post).stream()
                 .map(commentMapper::toDTO)
                 .toList();
+    }
+
+    @GetMapping("/{id}")
+    public CommentDTO getById(@PathVariable("id") int id) {
+        Comment comment = commentService.getById(id);
+        return commentMapper.toDTO(comment);
     }
 
     @GetMapping("/get-all-by-id")
@@ -57,8 +60,7 @@ public class CommentController {
                            @PathVariable("postId") int postId,
                            @RequestParam("body") String body,
                            @RequestPart(required = false, value = "attachedPicture") MultipartFile attachedPicture,
-                           @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
-                           @RequestParam(required = false, name = "keywords") Set<String> keywords) throws IOException {
+                           @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);

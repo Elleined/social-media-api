@@ -27,8 +27,8 @@ public class CommentVoteController {
 
     @GetMapping
     public List<VoteDTO> getAll(@PathVariable("currentUserId") int currentUserId,
-                         @PathVariable("postId") int postId,
-                         @PathVariable("commentId") int commentId) {
+                                @PathVariable("postId") int postId,
+                                @PathVariable("commentId") int commentId) {
 
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
@@ -38,11 +38,24 @@ public class CommentVoteController {
                 .toList();
     }
 
+    @GetMapping("/{id}")
+    public VoteDTO getById(@PathVariable("id") int id) {
+        Vote vote = voteService.getById(id);
+        return voteMapper.toDTO(vote);
+    }
+
+    @GetMapping("/get-all-by-id")
+    public List<VoteDTO> getAllById(@RequestBody List<Integer> ids) {
+        return voteService.getAllById(ids).stream()
+                .map(voteMapper::toDTO)
+                .toList();
+    }
+
     @GetMapping("/verdict")
     public List<VoteDTO> getAllByVerdict(@PathVariable("currentUserId") int currentUserId,
-                                  @PathVariable("postId") int postId,
-                                  @PathVariable("commentId") int commentId,
-                                  @RequestParam("verdict") Vote.Verdict verdict) {
+                                         @PathVariable("postId") int postId,
+                                         @PathVariable("commentId") int commentId,
+                                         @RequestParam("verdict") Vote.Verdict verdict) {
 
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);

@@ -1,7 +1,9 @@
 package com.elleined.socialmediaapi.controller.post;
 
+import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.main.PostDTO;
 import com.elleined.socialmediaapi.mapper.main.PostMapper;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.main.post.PostService;
@@ -35,6 +37,12 @@ public class PostController {
                 .toList();
     }
 
+    @GetMapping("/{id}")
+    public PostDTO getById(@PathVariable("id") int id) {
+        Post post = postService.getById(id);
+        return postMapper.toDTO(post);
+    }
+
     @GetMapping("/get-all-by-id")
     public List<PostDTO> getAllById(@RequestBody List<Integer> ids) {
         return postService.getAllById(ids).stream()
@@ -58,7 +66,7 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     public void delete(@PathVariable("currentUserId") int currentUserId,
-                                          @PathVariable("postId") int postId) {
+                       @PathVariable("postId") int postId) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
@@ -78,9 +86,9 @@ public class PostController {
 
     @PutMapping("/{postId}")
     public PostDTO update(@PathVariable("currentUserId") int currentUserId,
-                              @PathVariable("postId") int postId,
-                              @RequestParam("newBody,") String newBody,
-                              @RequestParam("newAttachedPicture") String newAttachedPicture) {
+                          @PathVariable("postId") int postId,
+                          @RequestParam("newBody,") String newBody,
+                          @RequestParam("newAttachedPicture") String newAttachedPicture) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);

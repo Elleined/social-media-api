@@ -157,7 +157,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public List<Reply> getAllByComment(User currentUser, Post post, Comment comment) throws ResourceNotFoundException {
+    public List<Reply> getAll(User currentUser, Post post, Comment comment) throws ResourceNotFoundException {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot update reply! because post with id of " + post.getId() + " does not exists or already deleted!") ;
 

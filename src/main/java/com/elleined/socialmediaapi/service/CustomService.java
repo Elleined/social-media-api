@@ -11,6 +11,8 @@ public interface CustomService<ENTITY extends PrimaryKeyIdentity> {
     List<ENTITY> getAll();
     List<ENTITY> getAllById(List<Integer> ids);
 
+
+
     default List<ENTITY> saveAll(List<ENTITY> entities) {
         return entities.stream()
                 .map(this::save)

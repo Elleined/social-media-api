@@ -16,7 +16,6 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.ReplyRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
-import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
@@ -110,7 +109,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public List<Comment> getAllByPost(User currentUser, Post post) throws ResourceNotFoundException {
+    public List<Comment> getAll(User currentUser, Post post) throws ResourceNotFoundException {
         Comment pinnedComment = post.getPinnedComment();
         List<Comment> comments = new ArrayList<>(post.getComments()
                 .stream()

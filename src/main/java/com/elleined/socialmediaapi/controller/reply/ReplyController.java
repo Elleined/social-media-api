@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.controller.reply;
 
+import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
 import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
@@ -39,16 +40,22 @@ public class ReplyController {
     private final WSService wsService;
 
     @GetMapping
-    public List<ReplyDTO> getAllByComment(@PathVariable("currentUserId") int currentUserId,
-                                          @PathVariable("postId") int postId,
-                                          @PathVariable("commentId") int commentId) {
+    public List<ReplyDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+                                 @PathVariable("postId") int postId,
+                                 @PathVariable("commentId") int commentId) {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        return replyService.getAllByComment(currentUser, post, comment).stream()
+        return replyService.getAll(currentUser, post, comment).stream()
                 .map(replyMapper::toDTO)
                 .toList();
+    }
+
+    @GetMapping("/{id}")
+    public ReplyDTO getById(@PathVariable("id") int id) {
+        Reply reply = replyService.getById(id);
+        return replyMapper.toDTO(reply);
     }
 
     @GetMapping("/get-all-by-id")
@@ -64,8 +71,7 @@ public class ReplyController {
                          @PathVariable("commentId") int commentId,
                          @RequestParam("body") String body,
                          @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
-                         @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
-                         @RequestParam(required = false, name = "keywords") Set<String> keywords) throws IOException {
+                         @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
@@ -95,11 +101,11 @@ public class ReplyController {
 
     @PatchMapping("/{replyId}")
     public ReplyDTO update(@PathVariable("currentUserId") int currentUserId,
-                               @PathVariable("postId") int postId,
-                               @PathVariable("commentId") int commentId,
-                               @PathVariable("replyId") int replyId,
-                               @RequestParam("newBody") String newBody,
-                               @RequestParam("newAttachedPicture") String newAttachedPicture) {
+                           @PathVariable("postId") int postId,
+                           @PathVariable("commentId") int commentId,
+                           @PathVariable("replyId") int replyId,
+                           @RequestParam("newBody") String newBody,
+                           @RequestParam("newAttachedPicture") String newAttachedPicture) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
