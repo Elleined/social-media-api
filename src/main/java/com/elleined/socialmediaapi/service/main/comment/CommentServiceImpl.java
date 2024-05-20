@@ -11,13 +11,13 @@ import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
-import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.ReplyRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
+import com.elleined.socialmediaapi.service.main.reply.ReplyService;
 import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -43,7 +44,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
 
-    private final ReplyRepository replyRepository;
+    private final ReplyService replyService;
 
     private final PostPinCommentService postPinCommentService;
 
@@ -97,16 +98,12 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot delete comment! because this comment might already been deleted or doesn't exists!");
 
-        comment.setStatus(Forum.Status.INACTIVE);
-        commentRepository.save(comment);
-
         if (post.getPinnedComment() != null && post.getPinnedComment().equals(comment))
             postPinCommentService.unpin(post);
 
-        List<Reply> replies = comment.getReplies();
-        replies.forEach(reply -> reply.setStatus(Forum.Status.INACTIVE));
-        replyRepository.saveAll(replies);
-        log.debug("Comment with id of {} are now inactive!", comment.getId());
+        updateStatus(currentUser, post, comment, Forum.Status.INACTIVE);
+        comment.getReplies().forEach(reply -> replyService.delete(currentUser, post, comment, reply));
+        log.debug("Comment with id of {} and related replies are now inactive!", comment.getId());
     }
 
     @Override
@@ -169,6 +166,8 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
         comment.setBody(newBody);
         comment.setAttachedPicture(picture);
+        comment.setUpdatedAt(LocalDateTime.now());
+
         commentRepository.save(comment);
         log.debug("Updating comment success");
         return comment;
@@ -188,8 +187,22 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotFoundException("Cannot reactivate comment! because comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
 
-        comment.setStatus(Forum.Status.ACTIVE);
+        updateStatus(currentUser, post, comment, Forum.Status.ACTIVE);
+        comment.getReplies().forEach(reply -> replyService.reactivate(currentUser, post, comment, reply));
+        log.debug("Comment with id of {} and related replies are now active!", comment.getId());
+    }
+
+    @Override
+    public void updateStatus(User currentUser, Post post, Comment comment, Forum.Status status) {
+        if (userServiceRestriction.notOwned(currentUser, comment))
+            throw new ResourceNotOwnedException("Cannot update comment status! because user with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
+
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotFoundException("Cannot update comment status! because comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
+
+        comment.setStatus(status);
+        comment.setUpdatedAt(LocalDateTime.now());
         commentRepository.save(comment);
-        log.debug("Reactivation comment success!");
+        log.debug("Updating comment status with id of {} success to {}", comment.getId(), status);
     }
 }

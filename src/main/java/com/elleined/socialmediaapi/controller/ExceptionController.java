@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.controller;
 
 import com.elleined.socialmediaapi.dto.APIResponse;
+import com.elleined.socialmediaapi.exception.CommentSectionException;
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.credential.CredentialException;
 import com.elleined.socialmediaapi.exception.field.FieldException;
@@ -45,7 +46,8 @@ public class ExceptionController {
             NoteException.class,
             StoryException.class,
             VoteException.class,
-            SystemException.class
+            CommentSectionException.class,
+            SystemException.class,
     })
     public ResponseEntity<APIResponse> handleSystemException(RuntimeException ex) {
         var responseMessage = new APIResponse(HttpStatus.BAD_REQUEST, ex.getMessage());

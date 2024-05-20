@@ -8,7 +8,6 @@ import com.elleined.socialmediaapi.mapper.main.PostMapper;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
@@ -17,6 +16,7 @@ import com.elleined.socialmediaapi.repository.main.PostRepository;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
+import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -41,10 +42,10 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
 
+    private final CommentService commentService;
+
     private final MentionService mentionService;
     private final HashTagService hashTagService;
-
-    private final CommentRepository commentRepository;
 
     private final UserServiceRestriction userServiceRestriction;
 
@@ -80,14 +81,9 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
         if (userServiceRestriction.notOwned(currentUser, post))
             throw new ResourceNotOwnedException("Cannot delete post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
-        post.setStatus(Forum.Status.INACTIVE);
-        postRepository.save(post);
-
-        List<Comment> comments = post.getComments();
-        comments.forEach(comment -> comment.setStatus(Forum.Status.INACTIVE));
-        commentRepository.saveAll(comments);
-
-        log.debug("Post with id of {} are now inactive", post.getId());
+        updateStatus(currentUser, post, Forum.Status.INACTIVE);
+        post.getComments().forEach(comment -> commentService.delete(currentUser, post, comment));
+        log.debug("Post with id of {} and related comments are now inactive", post.getId());
     }
 
     @Override
@@ -108,6 +104,8 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
         post.setBody(newBody);
         post.setAttachedPicture(picture);
+        post.setUpdatedAt(LocalDateTime.now());
+
         postRepository.save(post);
         log.debug("Post with id of {} updated with the new body of {}", post.getId(), newBody);
         return post;
@@ -126,6 +124,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
         else
             post.setCommentSectionStatus(Post.CommentSectionStatus.OPEN);
 
+        post.setUpdatedAt(LocalDateTime.now());
         postRepository.save(post);
         log.debug("Comment section of Post with id of {} are now {}", post.getId(), post.getCommentSectionStatus().name());
         return post;
@@ -174,9 +173,20 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
         if (userServiceRestriction.notOwned(currentUser, post))
             throw new ResourceNotOwnedException("Cannot reactivate post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
-        post.setStatus(Forum.Status.ACTIVE);
+        updateStatus(currentUser, post, Forum.Status.ACTIVE);
+        post.getComments().forEach(comment -> commentService.reactivate(currentUser, post, comment));
+        log.debug("Post with of {} and related comment are now active!", post.getId());
+    }
+
+    @Override
+    public void updateStatus(User currentUser, Post post, Forum.Status status) {
+        if (userServiceRestriction.notOwned(currentUser, post))
+            throw new ResourceNotOwnedException("Cannot update post status! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+
+        post.setStatus(status);
+        post.setUpdatedAt(LocalDateTime.now());
         postRepository.save(post);
-        log.debug("Reactivation post success!");
+        log.debug("Updating post status with id of {} success to {}", post.getId(), status );
     }
 
     @Override

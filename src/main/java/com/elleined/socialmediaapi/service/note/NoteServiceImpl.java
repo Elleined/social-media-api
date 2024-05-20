@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class NoteServiceImpl implements NoteService, NoteServiceRestriction {
 
         Note note = currentUser.getNote();
         note.setThought(newThought);
+        note.setUpdatedAt(LocalDateTime.now());
         noteRepository.save(note);
         log.debug("Note with id of {} updated with new thought of {}", note.getId(), newThought);
         return note;

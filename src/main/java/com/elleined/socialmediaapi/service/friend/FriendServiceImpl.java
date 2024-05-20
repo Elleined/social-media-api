@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -60,6 +61,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
 
         int friendRequestId = friendRequest.getId();
         currentUser.getReceiveFriendRequests().remove(friendRequest);
+        friendRequest.setUpdatedAt(LocalDateTime.now());
 
         userRepository.save(currentUser);
         friendRequestRepository.delete(friendRequest);

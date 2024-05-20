@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -140,6 +141,7 @@ public class ReactionServiceImpl implements ReactionService {
             throw new ResourceNotFoundException("Cannot update reaction to this post! because post might be already deleted or doesn't exists!");
 
         reaction.setEmoji(emoji);
+        reaction.setUpdatedAt(LocalDateTime.now());
         reactionRepository.save(reaction);
         log.debug("Updating current user reaction to post with id of {} success with emoji id of {}", post.getId(), emoji.getId());
     }
@@ -159,6 +161,8 @@ public class ReactionServiceImpl implements ReactionService {
             throw new ResourceNotFoundException("Cannot update reaction this comment! because comment might be already deleted or doesn't exists!");
 
         reaction.setEmoji(emoji);
+        reaction.setUpdatedAt(LocalDateTime.now());
+
         reactionRepository.save(reaction);
         log.debug("Updating current user reaction to comment with id of {} success with emoji id of {}", comment.getId(), emoji.getId());
     }
@@ -181,6 +185,8 @@ public class ReactionServiceImpl implements ReactionService {
             throw new ResourceNotFoundException("Cannot update reaction to this reply! because reply might be already deleted or doesn't exists!");
 
         reaction.setEmoji(emoji);
+        reaction.setUpdatedAt(LocalDateTime.now());
+
         reactionRepository.save(reaction);
         log.debug("Updating current user reaction to reply with id of {} success with emoji id of {}", reply.getId(), emoji.getId());
     }

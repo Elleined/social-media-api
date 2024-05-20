@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -115,9 +116,10 @@ public class ReplyServiceImpl implements ReplyService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot delete reply! because reply might be already deleted or doesn't exists!");
 
-        reply.setStatus(Forum.Status.INACTIVE);
-        replyRepository.save(reply);
-        if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply)) commentPinReplyService.unpin(comment);
+        if (comment.getPinnedReply() != null && comment.getPinnedReply().equals(reply))
+            commentPinReplyService.unpin(comment);
+
+        updateStatus(currentUser, post, comment, reply, Forum.Status.INACTIVE);
         log.debug("Reply with id of {} are now inactive!", reply.getId());
     }
 
@@ -154,6 +156,8 @@ public class ReplyServiceImpl implements ReplyService {
 
         reply.setBody(newBody);
         reply.setAttachedPicture(picture);
+        reply.setUpdatedAt(LocalDateTime.now());
+
         replyRepository.save(reply);
         log.debug("Updating reply success");
         return reply;
@@ -181,6 +185,9 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void reactivate(User currentUser, Post post, Comment comment, Reply reply) {
+        if (userServiceRestriction.notOwned(currentUser, reply))
+            throw new ResourceNotOwnedException("Cannot reactivate reply! because user with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
+
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot reactivate reply! because post doesn't owned this comment!");
 
@@ -196,9 +203,25 @@ public class ReplyServiceImpl implements ReplyService {
         if (reply.isActive())
             throw new ResourceNotFoundException("Cannot reactivate reply! because reply are not deleted or doesn't exists!");
 
-        reply.setStatus(Forum.Status.ACTIVE);
+        updateStatus(currentUser, post, comment, reply, Forum.Status.ACTIVE);
+        log.debug("Reply with id of {} are now active!", reply.getId());
+    }
+
+    @Override
+    public void updateStatus(User currentUser, Post post, Comment comment, Reply reply, Forum.Status status) {
+        if (userServiceRestriction.notOwned(currentUser, reply))
+            throw new ResourceNotOwnedException("Cannot update reply status! because user with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
+
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotOwnedException("Cannot update reply status! because post doesn't owned this comment!");
+
+        if (commentServiceRestriction.notOwned(comment, reply))
+            throw new ResourceNotOwnedException("Cannot update reply status! because comment doesn't owned this reply!");
+
+        reply.setStatus(status);
+        reply.setUpdatedAt(LocalDateTime.now());
         replyRepository.save(reply);
-        log.debug("Reactivation reply success!");
+        log.debug("Updating eply status with id of {} success to {}", reply.getId(), status);
     }
 
     @Override

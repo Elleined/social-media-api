@@ -5,6 +5,7 @@ import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
+import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
@@ -36,4 +37,6 @@ public interface ReplyService extends CustomService<Reply> {
     List<Reply> getAll(User currentUser, Post post, Comment comment) throws ResourceNotFoundException;
 
     void reactivate(User currentUser, Post post, Comment comment, Reply reply);
+
+    void updateStatus(User currentUser, Post post, Comment comment, Reply reply, Forum.Status status);
 }
