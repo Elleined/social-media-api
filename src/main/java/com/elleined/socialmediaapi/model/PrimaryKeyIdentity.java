@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
+@SuperBuilder(builderMethodName = "primaryKeyIdentityBuilder")
 @NoArgsConstructor
-@SuperBuilder
 public abstract class PrimaryKeyIdentity {
 
     @Id

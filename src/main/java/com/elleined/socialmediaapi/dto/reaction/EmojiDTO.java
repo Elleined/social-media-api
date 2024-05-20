@@ -6,21 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
+@Setter
+@SuperBuilder(builderMethodName = "emojiDtoBuilder")
 @NoArgsConstructor
 public class EmojiDTO extends DTO {
     private Emoji.Type type;
-
-    @Builder
-    public EmojiDTO(int id,
-                    LocalDateTime createdAt,
-                    LocalDateTime updatedAt,
-                    Emoji.Type type) {
-        super(id, createdAt, updatedAt);
-        this.type = type;
-    }
 }

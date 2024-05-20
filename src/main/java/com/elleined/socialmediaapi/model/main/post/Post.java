@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_post")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "postBuilder")
 @NoArgsConstructor
 public class Post extends Forum {
 

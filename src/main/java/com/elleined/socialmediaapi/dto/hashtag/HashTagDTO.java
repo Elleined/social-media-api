@@ -5,25 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder(builderMethodName = "hashTagDtoBuilder")
+@NoArgsConstructor
 public class HashTagDTO extends DTO {
     private String keyword;
     private Set<Integer> postIds;
-
-    @Builder
-    public HashTagDTO(int id,
-                      LocalDateTime createdAt,
-                      LocalDateTime updatedAt,
-                      String keyword,
-                      Set<Integer> postIds) {
-        super(id, createdAt, updatedAt);
-        this.keyword = keyword;
-        this.postIds = postIds;
-    }
 }

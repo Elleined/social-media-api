@@ -1,14 +1,14 @@
 package com.elleined.socialmediaapi.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@SuperBuilder(builderMethodName = "dtoBuilder")
 @NoArgsConstructor
 public abstract class DTO {
     private int id;

@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.model.main.reply;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.mention.Mention;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_reply")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "replyBuilder")
 @NoArgsConstructor
 public class Reply extends Forum {
 
@@ -35,6 +36,22 @@ public class Reply extends Forum {
             updatable = false
     )
     private Comment comment;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_reply_hashtag",
+            joinColumns = @JoinColumn(
+                    name = "post_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "hashtag_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
+    private Set<HashTag> hashTags;
 
     @ManyToMany
     @JoinTable(

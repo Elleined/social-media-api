@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_comment_vote")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "voteBuilder")
 @NoArgsConstructor
 public class Vote extends PrimaryKeyIdentity {
 

@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder(builderMethodName = "reactionDtoBuilder")
+@NoArgsConstructor
 public class ReactionDTO extends DTO {
     private int creatorId;
     private Set<Integer> notificationIds;
@@ -19,23 +21,4 @@ public class ReactionDTO extends DTO {
     private Set<Integer> postIds;
     private Set<Integer> commentIds;
     private Set<Integer> replyIds;
-
-    @Builder
-    public ReactionDTO(int id,
-                       LocalDateTime createdAt,
-                       LocalDateTime updatedAt,
-                       int creatorId,
-                       Set<Integer> notificationIds,
-                       int emojiId,
-                       Set<Integer> postIds,
-                       Set<Integer> commentIds,
-                       Set<Integer> replyIds) {
-        super(id, createdAt, updatedAt);
-        this.creatorId = creatorId;
-        this.notificationIds = notificationIds;
-        this.emojiId = emojiId;
-        this.postIds = postIds;
-        this.commentIds = commentIds;
-        this.replyIds = replyIds;
-    }
 }

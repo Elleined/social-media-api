@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_note")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "noteBuilder")
 @NoArgsConstructor
 public class Note extends PrimaryKeyIdentity {
 

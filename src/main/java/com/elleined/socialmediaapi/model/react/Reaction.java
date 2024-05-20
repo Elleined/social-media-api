@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_react")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "reactionBuilder")
 @NoArgsConstructor
 public class Reaction extends PrimaryKeyIdentity {
 

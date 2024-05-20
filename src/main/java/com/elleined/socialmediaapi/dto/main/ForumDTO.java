@@ -5,13 +5,15 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder(builderMethodName = "forumDtoBuilder")
+@NoArgsConstructor
 public abstract class ForumDTO extends DTO {
     private String body;
     private Forum.Status status;
@@ -20,24 +22,4 @@ public abstract class ForumDTO extends DTO {
     private Set<Integer> mentionIds;
     private Set<Integer> reactionIds;
     private Set<Integer> notificationIds;
-
-    public ForumDTO(int id,
-                    LocalDateTime createdAt,
-                    LocalDateTime updatedAt,
-                    String body,
-                    Forum.Status status,
-                    String attachedPicture,
-                    int creatorId,
-                    Set<Integer> mentionIds,
-                    Set<Integer> reactionIds,
-                    Set<Integer> notificationIds) {
-        super(id, createdAt, updatedAt);
-        this.body = body;
-        this.status = status;
-        this.attachedPicture = attachedPicture;
-        this.creatorId = creatorId;
-        this.mentionIds = mentionIds;
-        this.reactionIds = reactionIds;
-        this.notificationIds = notificationIds;
-    }
 }

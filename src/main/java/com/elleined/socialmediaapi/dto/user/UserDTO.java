@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@SuperBuilder(builderMethodName = "userDtoBuilder")
 @NoArgsConstructor
 public class UserDTO extends DTO {
     private String name;
@@ -32,47 +34,4 @@ public class UserDTO extends DTO {
     private Set<Integer> friendIds;
     private Set<Integer> followerIds;
     private Set<Integer> followingIds;
-
-    @Builder
-    public UserDTO(int id,
-                   LocalDateTime createdAt,
-                   LocalDateTime updatedAt,
-                   String name,
-                   String email,
-                   String picture,
-                   String UUID,
-                   int noteId,
-                   int storyId,
-                   Set<Integer> sentFriendRequestIds,
-                   Set<Integer> receiveFriendRequestIds,
-                   List<Integer> postIds,
-                   List<Integer> commentIds,
-                   List<Integer> replyIds,
-                   Set<Integer> savedPostIds,
-                   Set<Integer> votedCommentIds,
-                   Set<Integer> sharedPostIds,
-                   Set<Integer> blockedUserIds,
-                   Set<Integer> friendIds,
-                   Set<Integer> followerIds,
-                   Set<Integer> followingIds) {
-        super(id, createdAt, updatedAt);
-        this.name = name;
-        this.email = email;
-        this.picture = picture;
-        this.UUID = UUID;
-        this.noteId = noteId;
-        this.storyId = storyId;
-        this.sentFriendRequestIds = sentFriendRequestIds;
-        this.receiveFriendRequestIds = receiveFriendRequestIds;
-        this.postIds = postIds;
-        this.commentIds = commentIds;
-        this.replyIds = replyIds;
-        this.savedPostIds = savedPostIds;
-        this.votedCommentIds = votedCommentIds;
-        this.sharedPostIds = sharedPostIds;
-        this.blockedUserIds = blockedUserIds;
-        this.friendIds = friendIds;
-        this.followerIds = followerIds;
-        this.followingIds = followingIds;
-    }
 }

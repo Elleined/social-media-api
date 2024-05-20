@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_friend_request")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "friendRequestBuilder")
 @NoArgsConstructor
 public class FriendRequest extends PrimaryKeyIdentity {
 

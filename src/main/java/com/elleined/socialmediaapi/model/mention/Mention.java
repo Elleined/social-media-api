@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_mention")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "mentionBuilder")
 @NoArgsConstructor
 public class Mention extends PrimaryKeyIdentity {
 

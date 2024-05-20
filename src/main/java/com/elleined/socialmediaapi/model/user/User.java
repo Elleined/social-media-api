@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_user")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "userBuilder")
 @NoArgsConstructor
 public class User extends PrimaryKeyIdentity {
 

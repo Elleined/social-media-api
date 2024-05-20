@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
 @Setter
+@SuperBuilder(builderMethodName = "notificationDtoBuilder")
 @NoArgsConstructor
 public class NotificationDTO extends DTO {
     private String message;
@@ -22,27 +24,4 @@ public class NotificationDTO extends DTO {
     private Set<Integer> reactIds;
     private Set<Integer> mentionIds;
     private Set<Integer> friendRequestIds;
-
-    @Builder
-    public NotificationDTO(int id,
-                           LocalDateTime createdAt,
-                           LocalDateTime updatedAt,
-                           String message,
-                           Notification.Status status,
-                           Set<Integer> postIds,
-                           Set<Integer> commentIds,
-                           Set<Integer> replyIds,
-                           Set<Integer> reactIds,
-                           Set<Integer> mentionIds,
-                           Set<Integer> friendRequestIds) {
-        super(id, createdAt, updatedAt);
-        this.message = message;
-        this.status = status;
-        this.postIds = postIds;
-        this.commentIds = commentIds;
-        this.replyIds = replyIds;
-        this.reactIds = reactIds;
-        this.mentionIds = mentionIds;
-        this.friendRequestIds = friendRequestIds;
-    }
 }

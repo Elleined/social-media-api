@@ -5,29 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder(builderMethodName = "replyDtoBuilder")
+@NoArgsConstructor
 public class ReplyDTO extends ForumDTO {
     private int commentId;
-
-    @Builder
-    public ReplyDTO(int id,
-                    LocalDateTime createdAt,
-                    LocalDateTime updatedAt,
-                    String body,
-                    Forum.Status status,
-                    String attachedPicture,
-                    int creatorId,
-                    Set<Integer> mentionIds,
-                    Set<Integer> reactionIds,
-                    Set<Integer> notificationIds,
-                    int commentId) {
-        super(id, createdAt, updatedAt, body, status, attachedPicture, creatorId, mentionIds, reactionIds, notificationIds);
-        this.commentId = commentId;
-    }
 }

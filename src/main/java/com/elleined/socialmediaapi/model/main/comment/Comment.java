@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_comment")
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(builderMethodName = "commentBuilder")
 @NoArgsConstructor
 public class Comment extends Forum {
 
@@ -48,6 +48,22 @@ public class Comment extends Forum {
 
     @OneToMany(mappedBy = "comment")
     private List<Vote> voters;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_comment_hashtag",
+            joinColumns = @JoinColumn(
+                    name = "comment_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "hashtag_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
+    private Set<HashTag> hashTags;
 
     @ManyToMany
     @JoinTable(
