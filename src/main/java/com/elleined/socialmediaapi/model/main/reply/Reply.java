@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,9 +21,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_reply")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class Reply extends Forum {
 
     @ManyToOne(optional = false)
@@ -81,25 +83,6 @@ public class Reply extends Forum {
             )
     )
     private Set<Notification> notifications;
-
-    @Builder
-    public Reply(int id,
-                 LocalDateTime createdAt,
-                 LocalDateTime updatedAt,
-                 String body,
-                 Status status,
-                 String attachedPicture,
-                 User creator,
-                 Comment comment,
-                 Set<Mention> mentions,
-                 Set<Reaction> reactions,
-                 Set<Notification> notifications) {
-        super(id, createdAt, updatedAt, body, status, attachedPicture, creator);
-        this.comment = comment;
-        this.mentions = mentions;
-        this.reactions = reactions;
-        this.notifications = notifications;
-    }
 
     public Set<Integer> getAllMentionIds() {
         return this.getMentions().stream()

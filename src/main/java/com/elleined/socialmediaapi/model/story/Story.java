@@ -7,14 +7,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tbl_story")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class Story extends PrimaryKeyIdentity {
 
     @Column(
@@ -34,19 +36,6 @@ public class Story extends PrimaryKeyIdentity {
             unique = true
     )
     private User creator;
-
-    @Builder
-    public Story(int id,
-                 LocalDateTime createdAt,
-                 LocalDateTime updatedAt,
-                 String content,
-                 String attachPicture,
-                 User creator) {
-        super(id, createdAt, updatedAt);
-        this.content = content;
-        this.attachPicture = attachPicture;
-        this.creator = creator;
-    }
 
     public boolean isExpired() {
         LocalDateTime storyCreation = this.getCreatedAt();

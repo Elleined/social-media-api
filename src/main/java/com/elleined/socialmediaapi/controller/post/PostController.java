@@ -26,15 +26,6 @@ public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
 
-    @GetMapping
-    public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
-        User currentUser = userService.getById(currentUserId);
-
-        return postService.getAll(currentUser).stream()
-                .map(postMapper::toDTO)
-                .toList();
-    }
-
     @GetMapping("/{id}")
     public PostDTO getById(@PathVariable("id") int id) {
         Post post = postService.getById(id);
@@ -48,12 +39,22 @@ public class PostController {
                 .toList();
     }
 
+    @GetMapping
+    public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
+        User currentUser = userService.getById(currentUserId);
+
+        return postService.getAll(currentUser).stream()
+                .map(postMapper::toDTO)
+                .toList();
+    }
+
     @PostMapping
     public PostDTO save(@PathVariable("currentUserId") int currentUserId,
                         @RequestPart("body") String body,
                         @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
                         @RequestPart(required = false, name = "keywords") Set<String> keywords,
                         @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture) throws IOException {
+
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
 

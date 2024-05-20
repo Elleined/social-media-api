@@ -7,15 +7,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "tbl_note")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class Note extends PrimaryKeyIdentity {
 
     @Column(
@@ -32,17 +34,6 @@ public class Note extends PrimaryKeyIdentity {
             updatable = false
     )
     private User creator;
-
-    @Builder
-    public Note(int id,
-                LocalDateTime createdAt,
-                LocalDateTime updatedAt,
-                String thought,
-                User creator) {
-        super(id, createdAt, updatedAt);
-        this.thought = thought;
-        this.creator = creator;
-    }
 
     public boolean isExpired() {
         LocalDateTime noteCreation = this.getCreatedAt();

@@ -99,7 +99,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<Vote> getAll(Post post, Comment comment) {
+    public List<Vote> getAll(User currentUser, Post post, Comment comment) {
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot get all vote to this comment! because this post doesn't have this comment!");
 

@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,9 +20,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_mention")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class Mention extends PrimaryKeyIdentity {
 
     @ManyToOne(optional = false)
@@ -53,26 +55,6 @@ public class Mention extends PrimaryKeyIdentity {
 
     @ManyToMany(mappedBy = "mentions")
     private Set<Notification> notifications;
-
-    @Builder
-    public Mention(int id,
-                   LocalDateTime createdAt,
-                   LocalDateTime updatedAt,
-                   User creator,
-                   User mentionedUser,
-                   Set<Post> posts,
-                   Set<Comment> comments,
-                   Set<Reply> replies,
-                   Set<Notification> notifications) {
-        super(id, createdAt, updatedAt);
-        this.creator = creator;
-        this.mentionedUser = mentionedUser;
-        this.posts = posts;
-        this.comments = comments;
-        this.replies = replies;
-        this.notifications = notifications;
-    }
-
 
     public Set<Integer> getAllPostIds() {
         return this.getPosts().stream()

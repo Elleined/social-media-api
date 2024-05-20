@@ -3,15 +3,15 @@ package com.elleined.socialmediaapi.model.main;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 public abstract class Forum extends PrimaryKeyIdentity {
 
@@ -40,19 +40,6 @@ public abstract class Forum extends PrimaryKeyIdentity {
     )
     private User creator;
 
-    public Forum(int id,
-                 LocalDateTime createdAt,
-                 LocalDateTime updatedAt,
-                 String body,
-                 Status status,
-                 String attachedPicture,
-                 User creator) {
-        super(id, createdAt, updatedAt);
-        this.body = body;
-        this.status = status;
-        this.attachedPicture = attachedPicture;
-        this.creator = creator;
-    }
 
     public boolean isActive() {
         return this.getStatus() == Status.ACTIVE;

@@ -103,8 +103,8 @@ public class ReplyController {
                            @PathVariable("postId") int postId,
                            @PathVariable("commentId") int commentId,
                            @PathVariable("replyId") int replyId,
-                           @RequestParam("newBody") String newBody,
-                           @RequestParam("newAttachedPicture") String newAttachedPicture) {
+                           @RequestPart("newBody") String newBody,
+                           @RequestPart(required = false, name = "newAttachedPicture") MultipartFile newAttachedPicture) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);

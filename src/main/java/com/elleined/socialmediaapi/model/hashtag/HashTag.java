@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -18,9 +19,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_hashtag")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class HashTag extends PrimaryKeyIdentity {
 
     @Column(
@@ -34,17 +36,6 @@ public class HashTag extends PrimaryKeyIdentity {
 
     @ManyToMany(mappedBy = "hashTags")
     private Set<Post> posts;
-
-    @Builder
-    public HashTag(int id,
-                   LocalDateTime createdAt,
-                   LocalDateTime updatedAt,
-                   String keyword,
-                   Set<Post> posts) {
-        super(id, createdAt, updatedAt);
-        this.keyword = keyword;
-        this.posts = posts;
-    }
 
     public Set<Integer> getAllPostIds() {
         return this.getPosts().stream()

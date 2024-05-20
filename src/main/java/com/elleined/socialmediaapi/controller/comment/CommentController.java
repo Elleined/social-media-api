@@ -58,9 +58,9 @@ public class CommentController {
     @PostMapping
     public CommentDTO save(@PathVariable("currentUserId") int currentUserId,
                            @PathVariable("postId") int postId,
-                           @RequestParam("body") String body,
+                           @RequestPart("body") String body,
                            @RequestPart(required = false, value = "attachedPicture") MultipartFile attachedPicture,
-                           @RequestParam(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
+                           @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
@@ -89,8 +89,8 @@ public class CommentController {
     public CommentDTO update(@PathVariable("currentUserId") int currentUserId,
                              @PathVariable("postId") int postId,
                              @PathVariable("commentId") int commentId,
-                             @RequestParam("newBody") String newBody,
-                             @RequestParam("newAttachedPicture") String newAttachedPicture) {
+                             @RequestPart("newBody") String newBody,
+                             @RequestPart(required = false, name = "newAttachedPicture") MultipartFile newAttachedPicture) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);

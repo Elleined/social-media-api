@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -19,9 +20,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_notification")
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
 public class Notification extends PrimaryKeyIdentity {
 
     @Column(name = "message")
@@ -90,29 +92,6 @@ public class Notification extends PrimaryKeyIdentity {
             )
     )
     private Set<FriendRequest> friendRequests;
-
-    @Builder
-    public Notification(int id,
-                        LocalDateTime createdAt,
-                        LocalDateTime updatedAt,
-                        String message,
-                        Status status,
-                        Set<Post> posts,
-                        Set<Comment> comments,
-                        Set<Reply> replies,
-                        Set<Reaction> reactions,
-                        Set<Mention> mentions,
-                        Set<FriendRequest> friendRequests) {
-        super(id, createdAt, updatedAt);
-        this.message = message;
-        this.status = status;
-        this.posts = posts;
-        this.comments = comments;
-        this.replies = replies;
-        this.reactions = reactions;
-        this.mentions = mentions;
-        this.friendRequests = friendRequests;
-    }
 
     public enum Status {
         READ,

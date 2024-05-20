@@ -148,7 +148,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public Comment update(User currentUser, Post post, Comment comment, String newBody, String newAttachedPicture)
+    public Comment update(User currentUser, Post post, Comment comment, String newBody, MultipartFile newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
@@ -164,8 +164,10 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot update comment! because this comment might already been deleted or doesn't exists!");
 
+        String picture = newAttachedPicture == null ? null : newAttachedPicture.getOriginalFilename();
+
         comment.setBody(newBody);
-        comment.setAttachedPicture(newAttachedPicture);
+        comment.setAttachedPicture(picture);
         commentRepository.save(comment);
         log.debug("Updating comment success");
         return comment;

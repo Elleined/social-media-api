@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts/{postId}")
+@RequestMapping("/users/{currentUserId}/posts/{postId}/pin-comment")
 public class PostPinCommentController {
     private final UserService userService;
 
@@ -27,7 +27,7 @@ public class PostPinCommentController {
 
     private final CommentService commentService;
 
-    @PatchMapping("/pin-comment/{commentId}")
+    @PatchMapping("/{commentId}")
     public PostDTO pinComment(@PathVariable("currentUserId") int currentUserId,
                               @PathVariable("postId") int postId,
                               @PathVariable("commentId") int commentId) {

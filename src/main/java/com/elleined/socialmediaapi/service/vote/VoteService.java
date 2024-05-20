@@ -11,10 +11,10 @@ import java.util.List;
 public interface VoteService extends CustomService<Vote> {
     Vote save(User currentUser, Post post, Comment comment, Vote.Verdict verdict);
 
-    List<Vote> getAll(Post post, Comment comment);
+    List<Vote> getAll(User currentUser, Post post, Comment comment);
 
-    default List<Vote> getAll(Post post, Comment comment, Vote.Verdict verdict) {
-        return this.getAll(post, comment).stream()
+    default List<Vote> getAll(User currentUser, Post post, Comment comment, Vote.Verdict verdict) {
+        return this.getAll(currentUser, post, comment).stream()
                 .filter(vote -> vote.getVerdict().equals(verdict))
                 .toList();
     }

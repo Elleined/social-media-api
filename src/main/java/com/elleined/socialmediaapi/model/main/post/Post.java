@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,9 +22,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_post")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class Post extends Forum {
 
     @Column(
@@ -138,35 +140,6 @@ public class Post extends Forum {
             )
     )
     private Set<Notification> notifications;
-
-    @Builder
-    public Post(int id,
-                LocalDateTime createdAt,
-                LocalDateTime updatedAt,
-                String body,
-                Status status,
-                String attachedPicture,
-                User creator,
-                CommentSectionStatus commentSectionStatus,
-                Comment pinnedComment,
-                List<Comment> comments,
-                Set<HashTag> hashTags,
-                Set<Mention> mentions,
-                Set<Reaction> reactions,
-                Set<User> savingUsers,
-                Set<User> sharers,
-                Set<Notification> notifications) {
-        super(id, createdAt, updatedAt, body, status, attachedPicture, creator);
-        this.commentSectionStatus = commentSectionStatus;
-        this.pinnedComment = pinnedComment;
-        this.comments = comments;
-        this.hashTags = hashTags;
-        this.mentions = mentions;
-        this.reactions = reactions;
-        this.savingUsers = savingUsers;
-        this.sharers = sharers;
-        this.notifications = notifications;
-    }
 
     public enum CommentSectionStatus {OPEN, CLOSED}
 

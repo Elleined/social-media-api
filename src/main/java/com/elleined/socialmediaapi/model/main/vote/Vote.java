@@ -8,15 +8,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "tbl_comment_vote")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class Vote extends PrimaryKeyIdentity {
 
     @ManyToOne(optional = false)
@@ -43,19 +45,6 @@ public class Vote extends PrimaryKeyIdentity {
             nullable = false
     )
     private Verdict verdict;
-
-    @Builder
-    public Vote(int id,
-                LocalDateTime createdAt,
-                LocalDateTime updatedAt,
-                User creator,
-                Comment comment,
-                Verdict verdict) {
-        super(id, createdAt, updatedAt);
-        this.creator = creator;
-        this.comment = comment;
-        this.verdict = verdict;
-    }
 
     public enum Verdict {
         UP_VOTE,

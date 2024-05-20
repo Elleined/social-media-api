@@ -121,7 +121,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public Reply update(User currentUser, Post post, Comment comment, Reply reply, String newBody, String newAttachedPicture)
+    public Reply update(User currentUser, Post post, Comment comment, Reply reply, String newBody, MultipartFile newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
@@ -149,8 +149,10 @@ public class ReplyServiceImpl implements ReplyService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot update reply! because reply might be already deleted or doesn't exists!");
 
+        String picture = newAttachedPicture == null ? null : newAttachedPicture.getOriginalFilename();
+
         reply.setBody(newBody);
-        reply.setAttachedPicture(newAttachedPicture);
+        reply.setAttachedPicture(picture);
         replyRepository.save(reply);
         log.debug("Updating reply success");
         return reply;

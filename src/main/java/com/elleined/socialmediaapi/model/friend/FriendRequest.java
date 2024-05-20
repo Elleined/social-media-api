@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -16,9 +17,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_friend_request")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class FriendRequest extends PrimaryKeyIdentity {
 
     @ManyToOne(optional = false)
@@ -41,19 +43,6 @@ public class FriendRequest extends PrimaryKeyIdentity {
 
     @ManyToMany(mappedBy = "friendRequests")
     private Set<Notification> notifications;
-
-    @Builder
-    public FriendRequest(int id,
-                         LocalDateTime createdAt,
-                         LocalDateTime updatedAt,
-                         User creator,
-                         User requestedUser,
-                         Set<Notification> notifications) {
-        super(id, createdAt, updatedAt);
-        this.creator = creator;
-        this.requestedUser = requestedUser;
-        this.notifications = notifications;
-    }
 
     public Set<Integer> getAllNotificationIds() {
         return this.getNotifications().stream()

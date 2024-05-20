@@ -27,7 +27,7 @@ public interface ReplyService extends CustomService<Reply> {
 
     void delete(User currentUser, Post post, Comment comment, Reply reply) throws ResourceNotOwnedException;
 
-    Reply update(User currentUser, Post post, Comment comment, Reply reply, String newBody, String newAttachedPicture)
+    Reply update(User currentUser, Post post, Comment comment, Reply reply, String newBody, MultipartFile newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 

@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,9 +25,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_user")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class User extends PrimaryKeyIdentity {
 
     @Column(
@@ -149,51 +151,6 @@ public class User extends PrimaryKeyIdentity {
             )
     )
     private Set<User> followings;
-
-    @Builder
-    public User(int id,
-                LocalDateTime createdAt,
-                LocalDateTime updatedAt,
-                String name,
-                String email,
-                String picture,
-                String UUID,
-                Note note,
-                Story story,
-                Set<FriendRequest> sentFriendRequests,
-                Set<FriendRequest> receiveFriendRequests,
-                List<Post> posts,
-                List<Comment> comments,
-                List<Reply> replies,
-                List<Reaction> reactions,
-                List<Vote> votedComments,
-                Set<Post> savedPosts,
-                Set<Post> sharedPosts,
-                Set<User> blockedUsers,
-                Set<User> friends,
-                Set<User> followers,
-                Set<User> followings) {
-        super(id, createdAt, updatedAt);
-        this.name = name;
-        this.email = email;
-        this.picture = picture;
-        this.UUID = UUID;
-        this.note = note;
-        this.story = story;
-        this.sentFriendRequests = sentFriendRequests;
-        this.receiveFriendRequests = receiveFriendRequests;
-        this.posts = posts;
-        this.comments = comments;
-        this.replies = replies;
-        this.reactions = reactions;
-        this.votedComments = votedComments;
-        this.savedPosts = savedPosts;
-        this.sharedPosts = sharedPosts;
-        this.blockedUsers = blockedUsers;
-        this.friends = friends;
-        this.followers = followers;
-        this.followings = followings;
-    }
 
     // Get all id
     public Set<Integer> getAllBlockedUserIds() {

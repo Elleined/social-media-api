@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -21,9 +22,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_react")
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class Reaction extends PrimaryKeyIdentity {
 
     @ManyToOne(optional = false)
@@ -54,25 +56,6 @@ public class Reaction extends PrimaryKeyIdentity {
 
     @ManyToMany(mappedBy = "reactions")
     private Set<Notification> notifications;
-
-    @Builder
-    public Reaction(int id,
-                    LocalDateTime createdAt,
-                    LocalDateTime updatedAt,
-                    User creator,
-                    Emoji emoji,
-                    Set<Post> posts,
-                    Set<Comment> comments,
-                    Set<Reply> replies,
-                    Set<Notification> notifications) {
-        super(id, createdAt, updatedAt);
-        this.creator = creator;
-        this.emoji = emoji;
-        this.posts = posts;
-        this.comments = comments;
-        this.replies = replies;
-        this.notifications = notifications;
-    }
 
     public Set<Integer> getAllPostIds() {
         return this.getPosts().stream()
