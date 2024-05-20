@@ -175,7 +175,19 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public void reactivate(Comment comment) {
+    public void reactivate(User currentUser, Post post, Comment comment) {
+        if (comment.isActive())
+            throw new ResourceNotFoundException("Cannot reactivate comment! because this comment are not deleted or doesn't exists!");
+
+        if (userServiceRestriction.notOwned(currentUser, comment))
+            throw new ResourceNotOwnedException("Cannot reactivate comment! because user with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
+
+        if (post.isInactive())
+            throw new ResourceNotFoundException("Cannot reactivate comment! because post might already been deleted or doesn't exists!");
+
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotFoundException("Cannot reactivate comment! because comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
+
         comment.setStatus(Forum.Status.ACTIVE);
         commentRepository.save(comment);
         log.debug("Reactivation comment success!");

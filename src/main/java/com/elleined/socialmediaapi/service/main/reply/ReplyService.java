@@ -35,5 +35,5 @@ public interface ReplyService extends CustomService<Reply> {
 
     List<Reply> getAll(User currentUser, Post post, Comment comment) throws ResourceNotFoundException;
 
-    void reactivate(Reply reply);
+    void reactivate(User currentUser, Post post, Comment comment, Reply reply);
 }

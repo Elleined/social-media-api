@@ -94,4 +94,15 @@ public class PostController {
         Post updatedPost = postService.update(currentUser, post, newBody, newAttachedPicture);
         return postMapper.toDTO(updatedPost);
     }
+
+    @PatchMapping("/{postId}/reactivate")
+    public PostDTO reactivate(@PathVariable("currentUserId") int currentUserId,
+                              @PathVariable("postId") int postId) {
+
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+
+        postService.reactivate(currentUser, post);
+        return postMapper.toDTO(post);
+    }
 }

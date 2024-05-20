@@ -33,5 +33,5 @@ public interface PostService extends SavedPostService, SharePostService, CustomS
 
     List<Post> getAll(User currentUser);
 
-    void reactivate(Post post);
+    void reactivate(User currentUser, Post post);
 }

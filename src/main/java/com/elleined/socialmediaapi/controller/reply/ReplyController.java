@@ -121,4 +121,19 @@ public class ReplyController {
         wsService.broadcast(updatedReply);
         return replyMapper.toDTO(updatedReply);
     }
+
+    @PatchMapping("/{replyId}/reactivate")
+    public ReplyDTO reactivate(@PathVariable("currentUserId") int currentUserId,
+                               @PathVariable("postId") int postId,
+                               @PathVariable("commentId") int commentId,
+                               @PathVariable("replyId") int replyId) {
+
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        Comment comment = commentService.getById(commentId);
+        Reply reply = replyService.getById(replyId);
+
+        replyService.reactivate(currentUser, post, comment, reply);
+        return replyMapper.toDTO(reply);
+    }
 }

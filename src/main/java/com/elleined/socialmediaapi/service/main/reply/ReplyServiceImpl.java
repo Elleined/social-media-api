@@ -180,7 +180,22 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void reactivate(Reply reply) {
+    public void reactivate(User currentUser, Post post, Comment comment, Reply reply) {
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotOwnedException("Cannot reactivate reply! because post doesn't owned this comment!");
+
+        if (commentServiceRestriction.notOwned(comment, reply))
+            throw new ResourceNotOwnedException("Cannot reactivate reply! because comment doesn't owned this reply!");
+
+        if (post.isInactive())
+            throw new ResourceNotFoundException("Cannot reactivate reply! because post might be already deleted or doesn't exists!");
+
+        if (comment.isInactive())
+            throw new ResourceNotFoundException("Cannot reactivate reply! because comment might be already deleted or doesn't exists!");
+
+        if (reply.isActive())
+            throw new ResourceNotFoundException("Cannot reactivate reply! because reply are not deleted or doesn't exists!");
+
         reply.setStatus(Forum.Status.ACTIVE);
         replyRepository.save(reply);
         log.debug("Reactivation reply success!");

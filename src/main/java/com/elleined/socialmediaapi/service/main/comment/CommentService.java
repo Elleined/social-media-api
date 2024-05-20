@@ -11,7 +11,6 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.CustomService;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -34,5 +33,5 @@ public interface CommentService extends CustomService<Comment> {
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 
-    void reactivate(Comment comment);
+    void reactivate(User currentUser, Post post, Comment comment);
 }

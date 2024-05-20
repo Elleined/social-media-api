@@ -167,7 +167,13 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     }
 
     @Override
-    public void reactivate(Post post) {
+    public void reactivate(User currentUser, Post post) {
+        if (post.isActive())
+            throw new ResourceNotFoundException("Cannot reactivate post! because post are not deleted or doesn't exists!");
+
+        if (userServiceRestriction.notOwned(currentUser, post))
+            throw new ResourceNotOwnedException("Cannot reactivate post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
+
         post.setStatus(Forum.Status.ACTIVE);
         postRepository.save(post);
         log.debug("Reactivation post success!");

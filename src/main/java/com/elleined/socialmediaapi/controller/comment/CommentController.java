@@ -106,4 +106,18 @@ public class CommentController {
 
         return commentMapper.toDTO(updatedComment);
     }
+
+    @PatchMapping("/{commentId}/reactivate")
+    public CommentDTO reactivate(@PathVariable("currentUserId") int currentUserId,
+                                 @PathVariable("postId") int postId,
+                                 @PathVariable("commentId") int commentId) {
+
+        User currentUser = userService.getById(currentUserId);
+        Post post = postService.getById(postId);
+        Comment comment = commentService.getById(commentId);
+
+        commentService.reactivate(currentUser, post, comment);
+
+        return commentMapper.toDTO(comment);
+    }
 }
