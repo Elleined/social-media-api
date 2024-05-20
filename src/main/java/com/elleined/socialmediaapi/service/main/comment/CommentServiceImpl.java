@@ -7,6 +7,7 @@ import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
@@ -58,7 +59,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
                         Post post,
                         String body,
                         MultipartFile attachedPicture,
-                        Set<User> mentionedUsers) {
+                        Set<User> mentionedUsers, Set<HashTag> hashTags) {
 
         if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save comment! because comment body cannot be empty! Please provide text for your comment");
@@ -78,7 +79,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
         Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
 
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        Comment comment = commentMapper.toEntity(currentUser, post, body, picture, mentions);
+        Comment comment = commentMapper.toEntity(currentUser, post, body, picture, mentions, hashTags);
         commentRepository.save(comment);
 
         log.debug("Comment with id of {} saved successfully", comment.getId());

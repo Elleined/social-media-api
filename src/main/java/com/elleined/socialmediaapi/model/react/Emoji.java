@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.model.react;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,19 +17,14 @@ import java.time.LocalDateTime;
 @Setter
 @SuperBuilder(builderMethodName = "emojiBuilder")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Emoji extends PrimaryKeyIdentity {
 
-    @Enumerated(EnumType.STRING)
     @Column(
             name = "emoji_type",
             nullable = false
     )
-    private Type type;
-
-    public Emoji(LocalDateTime createdAt, LocalDateTime updatedAt, Type type) {
-        super(createdAt, updatedAt);
-        this.type = type;
-    }
+    private String type;
 
     public enum Type {
         LIKE,

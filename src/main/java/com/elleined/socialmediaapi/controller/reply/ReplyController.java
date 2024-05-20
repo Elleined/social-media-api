@@ -2,10 +2,12 @@ package com.elleined.socialmediaapi.controller.reply;
 
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
 import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
@@ -35,6 +37,8 @@ public class ReplyController {
 
     private final ReplyService replyService;
     private final ReplyMapper replyMapper;
+
+    private final HashTagService hashTagService;
 
     private final WSService wsService;
 
@@ -70,14 +74,16 @@ public class ReplyController {
                          @PathVariable("commentId") int commentId,
                          @RequestParam("body") String body,
                          @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
-                         @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
+                         @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
+                         @RequestPart(required = false, name = "hashTagIds") Set<Integer> hashTagIds) throws IOException {
 
         User currentUser = userService.getById(currentUserId);
         Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
+        Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentionedUsers);
+        Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentionedUsers, hashTags);
         wsService.broadcast(reply);
         return replyMapper.toDTO(reply);
     }

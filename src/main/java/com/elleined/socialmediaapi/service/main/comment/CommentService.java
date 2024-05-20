@@ -4,6 +4,7 @@ import com.elleined.socialmediaapi.exception.CommentSectionException;
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
@@ -19,11 +20,11 @@ public interface CommentService extends CustomService<Comment> {
                  Post post,
                  String body,
                  MultipartFile attachedPicture,
-                 Set<User> mentionedUsers)
+                 Set<User> mentionedUsers,
+                 Set<HashTag> hashTags)
             throws ResourceNotFoundException,
             CommentSectionException,
-            BlockedException,
-            IOException;
+            BlockedException;
 
     List<Comment> getAll(User currentUser, Post post) throws ResourceNotFoundException;
 

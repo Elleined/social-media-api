@@ -112,6 +112,12 @@ public class Reply extends Forum {
                 .collect(Collectors.toSet());
     }
 
+    public Set<Integer> getAllHashTagIds() {
+        return this.getHashTags().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
     public Set<Integer> getAllNotificationIds() {
         return this.getNotifications().stream()
                 .map(PrimaryKeyIdentity::getId)

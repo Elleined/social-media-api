@@ -18,4 +18,12 @@ public interface EmojiMapper extends CustomMapper<Emoji, EmojiDTO> {
             @Mapping(target = "type", source = "type"),
     })
     EmojiDTO toDTO(Emoji emoji);
+
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "type", expression = "java(type)"),
+    })
+    Emoji toEntity(String type);
 }

@@ -7,6 +7,7 @@ import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
@@ -58,7 +59,7 @@ public class ReplyServiceImpl implements ReplyService {
                       Post post, Comment comment,
                       String body,
                       MultipartFile attachedPicture,
-                      Set<User> mentionedUsers) {
+                      Set<User> mentionedUsers, Set<HashTag> hashTags) {
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot save reply! because post with id of " + post.getId() + " does not exists or already deleted!") ;
@@ -84,7 +85,7 @@ public class ReplyServiceImpl implements ReplyService {
         Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
 
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        Reply reply = replyMapper.toEntity(currentUser, comment, body, picture, mentions);
+        Reply reply = replyMapper.toEntity(currentUser, comment, body, picture, mentions, hashTags);
         replyRepository.save(reply);
 
         log.debug("Reply with id of {} saved successfully!", reply.getId());

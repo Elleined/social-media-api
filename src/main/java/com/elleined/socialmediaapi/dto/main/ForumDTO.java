@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.dto.main;
 
 import com.elleined.socialmediaapi.dto.DTO;
 import com.elleined.socialmediaapi.model.main.Forum;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public abstract class ForumDTO extends DTO {
     private Forum.Status status;
     private String attachedPicture;
     private int creatorId;
+    private Set<Integer> hashTagIds;
     private Set<Integer> mentionIds;
     private Set<Integer> reactionIds;
     private Set<Integer> notificationIds;

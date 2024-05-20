@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.mapper.main;
 
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
@@ -28,6 +29,7 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
             @Mapping(target = "creatorId", source = "creator.id"),
             @Mapping(target = "notificationIds", expression = "java(reply.getAllNotificationIds())"),
             @Mapping(target = "commentId", source = "comment.id"),
+            @Mapping(target = "hashTagIds", expression = "java(reply.getAllHashTagIds())"),
             @Mapping(target = "mentionIds", expression = "java(reply.getAllMentionIds())"),
             @Mapping(target = "reactionIds", expression = "java(reply.getAllReactionIds())"),
     })
@@ -43,6 +45,7 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
             @Mapping(target = "creator", expression = "java(creator)"),
             @Mapping(target = "notifications", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "comment", expression = "java(comment)"),
+            @Mapping(target = "hashTags", expression = "java(hashTags)"),
             @Mapping(target = "mentions", expression = "java(mentions)"),
             @Mapping(target = "reactions", expression = "java(new java.util.HashSet<>())"),
     })
@@ -50,5 +53,6 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
                    Comment comment,
                    @Context String body,
                    String attachedPicture,
-                   Set<Mention> mentions);
+                   Set<Mention> mentions,
+                   Set<HashTag> hashTags);
 }

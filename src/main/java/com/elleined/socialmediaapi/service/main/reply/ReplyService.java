@@ -4,6 +4,7 @@ import com.elleined.socialmediaapi.exception.CommentSectionException;
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
@@ -21,7 +22,8 @@ public interface ReplyService extends CustomService<Reply> {
                Comment comment,
                String body,
                MultipartFile attachedPicture,
-               Set<User> mentionedUsers) throws CommentSectionException,
+               Set<User> mentionedUsers,
+               Set<HashTag> hashTags) throws CommentSectionException,
             ResourceNotOwnedException,
             BlockedException, IOException;
 

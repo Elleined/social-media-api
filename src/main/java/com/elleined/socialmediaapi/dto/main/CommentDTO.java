@@ -1,10 +1,7 @@
 package com.elleined.socialmediaapi.dto.main;
 
 import com.elleined.socialmediaapi.model.main.Forum;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -20,4 +17,5 @@ public class CommentDTO extends ForumDTO {
     private int pinnedReplyId;
     private List<Integer> replyIds;
     private Set<Integer> userVoteIds;
+
 }

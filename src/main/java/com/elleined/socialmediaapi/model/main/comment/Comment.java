@@ -120,6 +120,12 @@ public class Comment extends Forum {
                 .toList();
     }
 
+    public Set<Integer> getAllHashTagIds() {
+        return this.getHashTags().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
     public Set<Integer> getAllMentionIds() {
         return this.getMentions().stream()
                 .map(PrimaryKeyIdentity::getId)

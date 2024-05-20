@@ -20,7 +20,7 @@ public class PostDTO extends ForumDTO {
     private Post.CommentSectionStatus commentSectionStatus;
     private int pinnedCommentId;
     private List<Integer> commentIds;
-    private Set<Integer> hashTagIds;
     private Set<Integer> savingUserIds;
     private Set<Integer> sharerIds;
+
 }

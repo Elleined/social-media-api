@@ -2,9 +2,11 @@ package com.elleined.socialmediaapi.controller.comment;
 
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
@@ -13,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,8 @@ public class CommentController {
 
     private final CommentService commentService;
     private final CommentMapper commentMapper;
+
+    private final HashTagService hashTagService;
 
     private final WSService wsService;
 
@@ -60,13 +63,15 @@ public class CommentController {
                            @PathVariable("postId") int postId,
                            @RequestPart("body") String body,
                            @RequestPart(required = false, value = "attachedPicture") MultipartFile attachedPicture,
-                           @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) throws IOException {
+                           @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
+                           @RequestPart(required = false, name = "hashTagIds") Set<Integer> hashTagIds) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
+        Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
 
-        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers);
+        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers, hashTags);
         wsService.broadcast(comment);
         return commentMapper.toDTO(comment);
     }
