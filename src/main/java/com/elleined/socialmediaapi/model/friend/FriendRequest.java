@@ -4,10 +4,7 @@ import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -19,7 +16,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_friend_request")
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "friendRequestBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class FriendRequest extends PrimaryKeyIdentity {
 

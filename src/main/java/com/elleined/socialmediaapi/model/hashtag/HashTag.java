@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_hashtag")
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "hashTagBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class HashTag extends PrimaryKeyIdentity {
 

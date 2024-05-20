@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,8 +11,8 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "primaryKeyIdentityBuilder")
 @NoArgsConstructor
+@SuperBuilder
 public abstract class PrimaryKeyIdentity {
 
     @Id
@@ -35,9 +34,4 @@ public abstract class PrimaryKeyIdentity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public PrimaryKeyIdentity(LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }

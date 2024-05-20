@@ -1,19 +1,16 @@
-package com.elleined.socialmediaapi.dto.main;
+package com.elleined.socialmediaapi.dto.vote;
 
 import com.elleined.socialmediaapi.dto.DTO;
-import com.elleined.socialmediaapi.model.main.vote.Vote;
-import lombok.Builder;
+import com.elleined.socialmediaapi.model.vote.Vote;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
-
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "voteDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class VoteDTO extends DTO {
     private int creatorId;

@@ -15,9 +15,8 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_emoji")
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "emojiBuilder")
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Emoji extends PrimaryKeyIdentity {
 
     @Column(

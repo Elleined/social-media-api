@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_story")
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "storyBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class Story extends PrimaryKeyIdentity {
 

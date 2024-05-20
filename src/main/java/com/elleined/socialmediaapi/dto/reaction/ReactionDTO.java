@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "reactionDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class ReactionDTO extends DTO {
     private int creatorId;

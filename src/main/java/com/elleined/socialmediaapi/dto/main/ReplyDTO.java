@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "replyDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class ReplyDTO extends ForumDTO {
     private int commentId;

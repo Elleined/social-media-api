@@ -5,16 +5,14 @@ import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.main.vote.Vote;
+import com.elleined.socialmediaapi.model.vote.Vote;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.react.Reaction;
-import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,7 +21,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_comment")
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "commentBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class Comment extends Forum {
 

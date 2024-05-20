@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "dtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public abstract class DTO {
     private int id;

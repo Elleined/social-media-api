@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "postDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class PostDTO extends ForumDTO {
     private Post.CommentSectionStatus commentSectionStatus;

@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "mentionDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class MentionDTO extends DTO {
     private int creatorId;

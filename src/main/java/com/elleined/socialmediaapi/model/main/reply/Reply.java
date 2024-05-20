@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_reply")
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "replyBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class Reply extends Forum {
 

@@ -1,10 +1,10 @@
 package com.elleined.socialmediaapi.controller.comment;
 
-import com.elleined.socialmediaapi.dto.main.VoteDTO;
+import com.elleined.socialmediaapi.dto.vote.VoteDTO;
 import com.elleined.socialmediaapi.mapper.vote.VoteMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
-import com.elleined.socialmediaapi.model.main.vote.Vote;
+import com.elleined.socialmediaapi.model.vote.Vote;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;

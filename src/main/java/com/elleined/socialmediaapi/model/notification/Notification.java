@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Table(name = "tbl_notification")
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "notificationBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class Notification extends PrimaryKeyIdentity {
 

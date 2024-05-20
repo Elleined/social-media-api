@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "emojiDtoBuilder")
+@SuperBuilder
+@NoArgsConstructor
 public class EmojiDTO extends DTO {
     private Emoji.Type type;
 }

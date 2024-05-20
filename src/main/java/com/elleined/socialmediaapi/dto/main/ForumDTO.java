@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "forumDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public abstract class ForumDTO extends DTO {
     private String body;

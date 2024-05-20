@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "friendRequestDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class FriendRequestDTO extends DTO {
     private Integer creatorId;

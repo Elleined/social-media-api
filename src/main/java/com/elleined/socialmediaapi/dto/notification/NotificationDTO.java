@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "notificationDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class NotificationDTO extends DTO {
     private String message;

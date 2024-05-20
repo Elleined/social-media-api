@@ -1,9 +1,9 @@
 package com.elleined.socialmediaapi.mapper.vote;
 
-import com.elleined.socialmediaapi.dto.main.VoteDTO;
+import com.elleined.socialmediaapi.dto.vote.VoteDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
-import com.elleined.socialmediaapi.model.main.vote.Vote;
+import com.elleined.socialmediaapi.model.vote.Vote;
 import com.elleined.socialmediaapi.model.user.User;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

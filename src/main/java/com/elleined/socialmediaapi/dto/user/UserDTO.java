@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "userDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class UserDTO extends DTO {
     private String name;

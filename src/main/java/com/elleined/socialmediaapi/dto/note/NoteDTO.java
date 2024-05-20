@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "noteDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class NoteDTO extends DTO {
     private String thought;

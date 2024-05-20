@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.model.main.vote;
+package com.elleined.socialmediaapi.model.vote;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_comment_vote")
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "voteBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class Vote extends PrimaryKeyIdentity {
 

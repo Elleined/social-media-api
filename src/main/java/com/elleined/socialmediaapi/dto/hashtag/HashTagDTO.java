@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "hashTagDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class HashTagDTO extends DTO {
     private String keyword;

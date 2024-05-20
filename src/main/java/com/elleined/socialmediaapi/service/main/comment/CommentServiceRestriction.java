@@ -2,7 +2,7 @@ package com.elleined.socialmediaapi.service.main.comment;
 
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.main.vote.Vote;
+import com.elleined.socialmediaapi.model.vote.Vote;
 import com.elleined.socialmediaapi.model.user.User;
 
 public interface CommentServiceRestriction {

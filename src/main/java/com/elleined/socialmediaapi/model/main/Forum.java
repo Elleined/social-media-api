@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "forumBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public abstract class Forum extends PrimaryKeyIdentity {
 

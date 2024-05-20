@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@SuperBuilder(builderMethodName = "commentDtoBuilder")
+@SuperBuilder
 @NoArgsConstructor
 public class CommentDTO extends ForumDTO {
     private int postId;
