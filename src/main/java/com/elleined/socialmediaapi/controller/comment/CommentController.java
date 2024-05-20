@@ -80,7 +80,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public CommentDTO delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@PathVariable("currentUserId") int currentUserId,
                              @PathVariable("postId") int postId,
                              @PathVariable("commentId") int commentId) {
 
@@ -92,7 +92,6 @@ public class CommentController {
         comment.getReplies().forEach(reply -> replyService.delete(currentUser, post, comment, reply));
 
         wsService.broadcast(comment);
-        return commentMapper.toDTO(comment);
     }
 
     @PutMapping("/{commentId}")

@@ -131,9 +131,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public void update(User currentUser, Post post, Reaction reaction, Emoji emoji) {
-        if (userServiceRestriction.notOwned(currentUser, post))
-            throw new ResourceNotOwnedException("Cannot update reaction to this post! because current user doesn't owned this post!");
-
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this post! because current user doesn't owned this reaction!");
 
@@ -148,9 +145,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public void update(User currentUser, Post post, Comment comment, Reaction reaction, Emoji emoji) {
-        if (userServiceRestriction.notOwned(currentUser, comment))
-            throw new ResourceNotOwnedException("Cannot update reaction this comment! because current user doesn't owned this comment!");
-
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction this comment! because current user doesn't owned this reaction!");
 
@@ -169,9 +163,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public void update(User currentUser, Post post, Comment comment, Reply reply, Reaction reaction, Emoji emoji) {
-        if (userServiceRestriction.notOwned(currentUser, reply))
-            throw new ResourceNotOwnedException("Cannot update reaction to this reply! because current user doesn't owned this reply!");
-
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this reply! because current user doesn't owned this reaction!");
 
@@ -193,9 +184,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public void delete(User currentUser, Post post, Reaction reaction) {
-        if (userServiceRestriction.notOwned(currentUser, post))
-            throw new ResourceNotOwnedException("Cannot delete reaction to this post! because current user doesn't owned this post!");
-
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this post! because current user doesn't owned this reaction!");
 
@@ -208,9 +196,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public void delete(User currentUser, Post post, Comment comment, Reaction reaction) {
-        if (userServiceRestriction.notOwned(currentUser, comment))
-            throw new ResourceNotOwnedException("Cannot delete reaction this comment! because current user doesn't owned this comment!");
-
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction this comment! because current user doesn't owned this reaction!");
 
@@ -226,9 +211,6 @@ public class ReactionServiceImpl implements ReactionService {
 
     @Override
     public void delete(User currentUser, Post post, Comment comment, Reply reply, Reaction reaction) {
-        if (userServiceRestriction.notOwned(currentUser, reply))
-            throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because current user doesn't owned this reply!");
-
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because current user doesn't owned this reaction!");
 

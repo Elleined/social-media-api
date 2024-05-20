@@ -89,7 +89,7 @@ public class ReplyController {
     }
 
     @DeleteMapping("/{replyId}")
-    public ReplyDTO delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@PathVariable("currentUserId") int currentUserId,
                            @PathVariable("postId") int postId,
                            @PathVariable("commentId") int commentId,
                            @PathVariable("replyId") int replyId) {
@@ -101,10 +101,9 @@ public class ReplyController {
 
         replyService.delete(currentUser, post, comment, reply);
         wsService.broadcast(reply);
-        return replyMapper.toDTO(reply);
     }
 
-    @PatchMapping("/{replyId}")
+    @PutMapping("/{replyId}")
     public ReplyDTO update(@PathVariable("currentUserId") int currentUserId,
                            @PathVariable("postId") int postId,
                            @PathVariable("commentId") int commentId,
