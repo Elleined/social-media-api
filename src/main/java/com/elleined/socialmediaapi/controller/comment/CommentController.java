@@ -9,6 +9,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
+import com.elleined.socialmediaapi.service.main.reply.ReplyService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class CommentController {
 
     private final CommentService commentService;
     private final CommentMapper commentMapper;
+
+    private final ReplyService replyService;
 
     private final HashTagService hashTagService;
 
@@ -86,6 +89,8 @@ public class CommentController {
         Comment comment = commentService.getById(commentId);
 
         commentService.delete(currentUser, post, comment);
+        comment.getReplies().forEach(reply -> replyService.delete(currentUser, post, comment, reply));
+
         wsService.broadcast(comment);
         return commentMapper.toDTO(comment);
     }
@@ -117,7 +122,7 @@ public class CommentController {
         Comment comment = commentService.getById(commentId);
 
         commentService.reactivate(currentUser, post, comment);
-
+        comment.getReplies().forEach(reply -> replyService.reactivate(currentUser, post, comment, reply));
         return commentMapper.toDTO(comment);
     }
 }

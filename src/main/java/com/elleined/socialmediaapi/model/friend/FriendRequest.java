@@ -4,10 +4,11 @@ import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 

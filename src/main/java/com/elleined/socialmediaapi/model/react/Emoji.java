@@ -1,14 +1,13 @@
 package com.elleined.socialmediaapi.model.react;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDateTime;
 
 
 @Entity

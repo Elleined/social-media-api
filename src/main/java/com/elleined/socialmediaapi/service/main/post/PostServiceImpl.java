@@ -11,12 +11,10 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.PostRepository;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
-import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
@@ -41,8 +39,6 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
-
-    private final CommentService commentService;
 
     private final MentionService mentionService;
     private final HashTagService hashTagService;
@@ -82,7 +78,6 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
             throw new ResourceNotOwnedException("Cannot delete post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
         updateStatus(currentUser, post, Forum.Status.INACTIVE);
-        post.getComments().forEach(comment -> commentService.delete(currentUser, post, comment));
         log.debug("Post with id of {} and related comments are now inactive", post.getId());
     }
 
@@ -174,7 +169,6 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
             throw new ResourceNotOwnedException("Cannot reactivate post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
         updateStatus(currentUser, post, Forum.Status.ACTIVE);
-        post.getComments().forEach(comment -> commentService.reactivate(currentUser, post, comment));
         log.debug("Post with of {} and related comment are now active!", post.getId());
     }
 

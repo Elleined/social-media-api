@@ -4,6 +4,7 @@ import com.elleined.socialmediaapi.dto.main.PostDTO;
 import com.elleined.socialmediaapi.mapper.main.PostMapper;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,8 @@ public class PostController {
 
     private final PostService postService;
     private final PostMapper postMapper;
+
+    private final CommentService commentService;
 
     @GetMapping("/{id}")
     public PostDTO getById(@PathVariable("id") int id) {
@@ -68,7 +71,9 @@ public class PostController {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
+
         postService.delete(currentUser, post);
+        post.getComments().forEach(comment -> commentService.delete(currentUser, post, comment));
     }
 
     @PatchMapping("/{postId}/comment-section-status")
@@ -103,6 +108,7 @@ public class PostController {
         Post post = postService.getById(postId);
 
         postService.reactivate(currentUser, post);
+        post.getComments().forEach(comment -> commentService.reactivate(currentUser, post, comment));
         return postMapper.toDTO(post);
     }
 }

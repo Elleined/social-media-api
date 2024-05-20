@@ -14,10 +14,8 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
-import com.elleined.socialmediaapi.repository.main.ReplyRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
-import com.elleined.socialmediaapi.service.main.reply.ReplyService;
 import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
@@ -43,8 +41,6 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
-
-    private final ReplyService replyService;
 
     private final PostPinCommentService postPinCommentService;
 
@@ -102,7 +98,6 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
             postPinCommentService.unpin(post);
 
         updateStatus(currentUser, post, comment, Forum.Status.INACTIVE);
-        comment.getReplies().forEach(reply -> replyService.delete(currentUser, post, comment, reply));
         log.debug("Comment with id of {} and related replies are now inactive!", comment.getId());
     }
 
@@ -188,7 +183,6 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
             throw new ResourceNotFoundException("Cannot reactivate comment! because comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
 
         updateStatus(currentUser, post, comment, Forum.Status.ACTIVE);
-        comment.getReplies().forEach(reply -> replyService.reactivate(currentUser, post, comment, reply));
         log.debug("Comment with id of {} and related replies are now active!", comment.getId());
     }
 

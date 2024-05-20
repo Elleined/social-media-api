@@ -5,12 +5,14 @@ import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.vote.Vote;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.vote.Vote;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;

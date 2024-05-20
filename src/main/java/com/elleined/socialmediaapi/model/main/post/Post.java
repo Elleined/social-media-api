@@ -9,13 +9,11 @@ import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
