@@ -27,6 +27,7 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "postIds", expression = "java(user.getAllPostIds())"),
             @Mapping(target = "commentIds", expression = "java(user.getAllCommentIds())"),
             @Mapping(target = "replyIds", expression = "java(user.getAllReplyIds())"),
+            @Mapping(target = "reactionIds", expression = "java(user.getAllReactionIds())"),
             @Mapping(target = "savedPostIds", expression = "java(user.getAllSavedPostIds())"),
             @Mapping(target = "votedCommentIds", expression = "java(user.getAllVotedCommentIds())"),
             @Mapping(target = "sharedPostIds", expression = "java(user.getAllSharedPostIds())"),
@@ -52,6 +53,7 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "posts", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "comments", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "replies", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "savedPosts", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "votedComments", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "sharedPosts", expression = "java(new java.util.HashSet<>())"),
@@ -59,7 +61,6 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "friends", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "followers", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "followings", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())")
     })
     User toEntity(String name,
                   String email,

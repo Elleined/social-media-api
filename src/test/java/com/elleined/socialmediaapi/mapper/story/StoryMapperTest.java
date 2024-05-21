@@ -20,7 +20,7 @@ class StoryMapperTest {
     private final StoryMapper storyMapper = Mappers.getMapper(StoryMapper.class);
 
     @Test
-    @DisplayName("")
+    @DisplayName("to DTO")
     void toDTO() {
         // Pre defined values
 
@@ -60,7 +60,7 @@ class StoryMapperTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("to entity")
     void toEntity() {
         // Pre defined values
 

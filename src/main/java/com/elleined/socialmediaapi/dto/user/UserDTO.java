@@ -32,4 +32,5 @@ public class UserDTO extends DTO {
     private Set<Integer> friendIds;
     private Set<Integer> followerIds;
     private Set<Integer> followingIds;
+    private List<Integer> reactionIds;
 }

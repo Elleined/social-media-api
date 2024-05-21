@@ -207,19 +207,25 @@ public class User extends PrimaryKeyIdentity {
 
     public List<Integer> getAllPostIds() {
         return this.getPosts().stream()
-                .map(Forum::getId)
+                .map(PrimaryKeyIdentity::getId)
                 .toList();
     }
 
     public List<Integer> getAllCommentIds() {
         return this.getComments().stream()
-                .map(Forum::getId)
+                .map(PrimaryKeyIdentity::getId)
                 .toList();
     }
 
     public List<Integer> getAllReplyIds() {
         return this.getReplies().stream()
-                .map(Forum::getId)
+                .map(PrimaryKeyIdentity::getId)
+                .toList();
+    }
+
+    public List<Integer> getAllReactionIds() {
+        return this.getReactions().stream()
+                .map(PrimaryKeyIdentity::getId)
                 .toList();
     }
 }
