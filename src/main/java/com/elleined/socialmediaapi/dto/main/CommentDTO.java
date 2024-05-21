@@ -16,6 +16,6 @@ public class CommentDTO extends ForumDTO {
     private int postId;
     private int pinnedReplyId;
     private List<Integer> replyIds;
-    private Set<Integer> userVoteIds;
+    private Set<Integer> voteIds;
 
 }

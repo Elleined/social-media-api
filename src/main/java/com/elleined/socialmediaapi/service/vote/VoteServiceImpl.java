@@ -91,7 +91,7 @@ public class VoteServiceImpl implements VoteService {
         Vote vote = voteMapper.toEntity(currentUser, comment, verdict);
         voteRepository.save(vote);
 
-        comment.getVoters().add(vote);
+        comment.getVotes().add(vote);
         commentService.save(comment);
 
         log.debug("Saving vote success to comment with id of {}", comment.getId());
@@ -109,7 +109,7 @@ public class VoteServiceImpl implements VoteService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot get all vote to this comment! because this comment might already deleted or doesn't exists!");
 
-        return comment.getVoters().stream()
+        return comment.getVotes().stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }

@@ -34,7 +34,7 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "mentionIds", expression = "java(comment.getAllMentionIds())"),
             @Mapping(target = "reactionIds", expression = "java(comment.getAllReactionIds())"),
             @Mapping(target = "replyIds", expression = "java(comment.getAllReplyIds())"),
-            @Mapping(target = "userVoteIds", expression = "java(comment.getAllVotersIds())"),
+            @Mapping(target = "voteIds", expression = "java(comment.getAllVoteIds())"),
     })
     CommentDTO toDTO(Comment comment);
 
@@ -53,7 +53,7 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "mentions", expression = "java(mentions)"),
             @Mapping(target = "reactions", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "replies", expression = "java(new java.util.ArrayList<>())"),
-            @Mapping(target = "voters", expression = "java(new java.util.ArrayList<>())")
+            @Mapping(target = "votes", expression = "java(new java.util.ArrayList<>())")
     })
     Comment toEntity(User creator,
                      Post post,

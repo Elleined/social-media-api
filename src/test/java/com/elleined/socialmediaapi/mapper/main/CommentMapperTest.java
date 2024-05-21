@@ -1,12 +1,12 @@
 package com.elleined.socialmediaapi.mapper.main;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-import com.elleined.socialmediaapi.dto.main.PostDTO;
+import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 @ExtendWith(MockitoExtension.class)
-class PostMapperTest {
+class CommentMapperTest {
 
-    private final PostMapper postMapper = Mappers.getMapper(PostMapper.class);
+    private final CommentMapper commentMapper = Mappers.getMapper(CommentMapper.class);
 
     @Test
     @DisplayName("")
@@ -29,9 +29,7 @@ class PostMapperTest {
         // Pre defined values
 
         // Expected Value
-
-        // Mock data
-        Post expected = Post.builder()
+        Comment expected = Comment.builder()
                 .id(1)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
@@ -42,24 +40,27 @@ class PostMapperTest {
                         .id(1)
                         .build())
                 .notifications(new HashSet<>())
-                .commentSectionStatus(Post.CommentSectionStatus.OPEN)
-                .pinnedComment(Comment.builder()
+                .post(Post.builder()
+                        .id(1)
+                        .build())
+                .pinnedReply(Reply.builder()
                         .id(1)
                         .build())
                 .hashTags(new HashSet<>())
                 .mentions(new HashSet<>())
                 .reactions(new HashSet<>())
-                .comments(new ArrayList<>())
-                .savingUsers(new HashSet<>())
-                .sharers(new HashSet<>())
+                .replies(new ArrayList<>())
+                .votes(new ArrayList<>())
                 .build();
+
+        // Mock data
 
         // Set up method
 
         // Stubbing methods
 
         // Calling the method
-        PostDTO actual = postMapper.toDTO(expected);
+        CommentDTO actual = commentMapper.toDTO(expected);
 
         // Behavior Verifications
 
@@ -78,9 +79,9 @@ class PostMapperTest {
 
         assertNotNull(actual.getNotificationIds());
 
-        assertNotNull(actual.getCommentSectionStatus());
+        assertEquals(1, actual.getPostId());
 
-        assertEquals(1, actual.getPinnedCommentId());
+        assertEquals(1, actual.getPinnedReplyId());
 
         assertNotNull(actual.getHashTagIds());
 
@@ -88,11 +89,9 @@ class PostMapperTest {
 
         assertNotNull(actual.getReactionIds());
 
-        assertNotNull(actual.getCommentIds());
+        assertNotNull(actual.getReplyIds());
 
-        assertNotNull(actual.getSavingUserIds());
-
-        assertNotNull(actual.getSharerIds());
+        assertNotNull(actual.getVoteIds());
     }
 
     @Test
@@ -109,7 +108,8 @@ class PostMapperTest {
         // Stubbing methods
 
         // Calling the method
-        Post actual = postMapper.toEntity(new User(),
+        Comment actual = commentMapper.toEntity(new User(),
+                new Post(),
                 "Body",
                 "Attached picture path",
                 new HashSet<>(),
@@ -122,6 +122,8 @@ class PostMapperTest {
         assertNotNull(actual.getCreatedAt());
         assertNotNull(actual.getUpdatedAt());
 
+        assertNotNull(actual.getUpdatedAt());
+
         assertNotNull(actual.getBody());
 
         assertNotNull(actual.getStatus());
@@ -132,9 +134,9 @@ class PostMapperTest {
 
         assertNotNull(actual.getNotifications());
 
-        assertNotNull(actual.getCommentSectionStatus());
+        assertNotNull(actual.getPost());
 
-        assertNull(actual.getPinnedComment());
+        assertNull(actual.getPinnedReply());
 
         assertNotNull(actual.getHashTags());
 
@@ -142,10 +144,8 @@ class PostMapperTest {
 
         assertNotNull(actual.getReactions());
 
-        assertNotNull(actual.getComments());
+        assertNotNull(actual.getReplies());
 
-        assertNotNull(actual.getSavingUsers());
-
-        assertNotNull(actual.getSharers());
+        assertNotNull(actual.getVotes());
     }
 }

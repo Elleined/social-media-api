@@ -47,7 +47,7 @@ public class Comment extends Forum {
     private List<Reply> replies;
 
     @OneToMany(mappedBy = "comment")
-    private List<Vote> voters;
+    private List<Vote> votes;
 
     @ManyToMany
     @JoinTable(
@@ -137,8 +137,8 @@ public class Comment extends Forum {
                 .collect(Collectors.toSet());
     }
 
-    public Set<Integer> getAllVotersIds() {
-        return this.getVoters().stream()
+    public Set<Integer> getAllVoteIds() {
+        return this.getVotes().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
