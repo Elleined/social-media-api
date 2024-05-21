@@ -24,17 +24,6 @@ import java.util.stream.Collectors;
 @SuperBuilder
 @NoArgsConstructor
 public class Notification extends PrimaryKeyIdentity {
-
-    @Column(name = "message")
-    private String message;
-
-    @Enumerated(EnumType.STRING)
-    @Column(
-            name = "status",
-            nullable = false
-    )
-    private Status status;
-
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "sender_id",
@@ -52,6 +41,16 @@ public class Notification extends PrimaryKeyIdentity {
             updatable = false
     )
     private User receiver;
+
+    @Column(name = "message")
+    private String message;
+
+    @Enumerated(EnumType.STRING)
+    @Column(
+            name = "status",
+            nullable = false
+    )
+    private Status status;
 
     @ManyToMany(mappedBy = "notifications")
     private Set<Post> posts;
