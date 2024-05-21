@@ -1,48 +1,46 @@
-package com.elleined.socialmediaapi.mapper.friend;
+package com.elleined.socialmediaapi.mapper.hashtag;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.elleined.socialmediaapi.dto.friend.FriendRequestDTO;
-import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.dto.hashtag.HashTagDTO;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
-class FriendRequestMapperTest {
+class HashTagMapperTest {
 
-    private final FriendRequestMapper friendRequestMapper = Mappers.getMapper(FriendRequestMapper.class);
+    private final HashTagMapper hashTagMapper = Mappers.getMapper(HashTagMapper.class);
 
     @Test
     @DisplayName("to DTO")
     void toDTO() {
+        // Pre defined values
+
         // Expected Value
-        // Mock data
-        FriendRequest expected = FriendRequest.builder()
+        HashTag expected = HashTag.builder()
                 .id(1)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .creator(new User())
-                .requestedUser(new User())
-                .notifications(new HashSet<>())
+                .keyword("Keyword")
+                .posts(new HashSet<>())
                 .build();
+
+        // Mock data
 
         // Set up method
 
         // Stubbing methods
 
         // Calling the method
-        FriendRequestDTO actual = friendRequestMapper.toDTO(expected);
+        HashTagDTO actual = hashTagMapper.toDTO(expected);
 
         // Behavior Verifications
 
@@ -51,16 +49,16 @@ class FriendRequestMapperTest {
         assertNotNull(actual.getCreatedAt());
         assertNotNull(actual.getUpdatedAt());
 
-        assertNotNull(expected.getCreator());
+        assertNotNull(expected.getKeyword());
 
-        assertNotNull(expected.getRequestedUser());
-
-        assertNotNull(expected.getNotifications());
+        assertNotNull(expected.getAllPostIds());
     }
 
     @Test
     @DisplayName("to entity")
     void toEntity() {
+        // Pre defined values
+
         // Expected Value
 
         // Mock data
@@ -70,7 +68,7 @@ class FriendRequestMapperTest {
         // Stubbing methods
 
         // Calling the method
-        FriendRequest actual = friendRequestMapper.toEntity(new User(), new User());
+        HashTag actual = hashTagMapper.toEntity("Keyword");
 
         // Behavior Verifications
 
@@ -79,10 +77,8 @@ class FriendRequestMapperTest {
         assertNotNull(actual.getCreatedAt());
         assertNotNull(actual.getUpdatedAt());
 
-        assertNotNull(actual.getCreator());
+        assertNotNull(actual.getKeyword());
 
-        assertNotNull(actual.getRequestedUser());
-
-        assertNotNull(actual.getNotifications());
+        assertNotNull(actual.getAllPostIds());
     }
 }
