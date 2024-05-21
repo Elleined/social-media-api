@@ -1,10 +1,10 @@
-package com.elleined.socialmediaapi.mapper.mention;
+package com.elleined.socialmediaapi.mapper.note;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.elleined.socialmediaapi.dto.mention.MentionDTO;
-import com.elleined.socialmediaapi.model.mention.Mention;
+import com.elleined.socialmediaapi.dto.note.NoteDTO;
+import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.user.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,12 +13,11 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 @ExtendWith(MockitoExtension.class)
-class MentionMapperTest {
+class NoteMapperTest {
 
-    private final MentionMapper mentionMapper = Mappers.getMapper(MentionMapper.class);
+    private final NoteMapper noteMapper = Mappers.getMapper(NoteMapper.class);
 
     @Test
     @DisplayName("to DTO")
@@ -26,30 +25,24 @@ class MentionMapperTest {
         // Pre defined values
 
         // Expected Value
-
-        // Mock data
-        Mention expected = Mention.builder()
+        Note expected = Note.builder()
                 .id(1)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .thought("Thought")
                 .creator(User.builder()
                         .id(1)
                         .build())
-                .mentionedUser(User.builder()
-                        .id(1)
-                        .build())
-                .posts(new HashSet<>())
-                .comments(new HashSet<>())
-                .replies(new HashSet<>())
-                .notifications(new HashSet<>())
                 .build();
+
+        // Mock data
 
         // Set up method
 
         // Stubbing methods
 
         // Calling the method
-        MentionDTO actual = mentionMapper.toDTO(expected);
+        NoteDTO actual = noteMapper.toDTO(expected);
 
         // Behavior Verifications
 
@@ -58,17 +51,9 @@ class MentionMapperTest {
         assertNotNull(actual.getCreatedAt());
         assertNotNull(actual.getUpdatedAt());
 
+        assertNotNull(actual.getThought());
+
         assertEquals(1, actual.getCreatorId());
-
-        assertEquals(1, actual.getMentionedUserId());
-
-        assertNotNull(actual.getPostIds());
-
-        assertNotNull(actual.getCommentIds());
-
-        assertNotNull(actual.getReplyIds());
-
-        assertNotNull(actual.getNotificationIds());
     }
 
     @Test
@@ -85,7 +70,7 @@ class MentionMapperTest {
         // Stubbing methods
 
         // Calling the method
-        Mention actual = mentionMapper.toEntity(new User(), new User());
+        Note actual = noteMapper.toEntity(new User(), "Thought");
 
         // Behavior Verifications
 
@@ -94,16 +79,8 @@ class MentionMapperTest {
         assertNotNull(actual.getCreatedAt());
         assertNotNull(actual.getUpdatedAt());
 
+        assertNotNull(actual.getThought());
+
         assertNotNull(actual.getCreator());
-
-        assertNotNull(actual.getMentionedUser());
-
-        assertNotNull(actual.getPosts());
-
-        assertNotNull(actual.getComments());
-
-        assertNotNull(actual.getAllReplyIds());
-
-        assertNotNull(actual.getAllNotificationIds());
     }
 }
