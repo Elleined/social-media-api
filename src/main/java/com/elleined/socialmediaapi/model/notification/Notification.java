@@ -7,6 +7,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,24 @@ public class Notification extends PrimaryKeyIdentity {
             nullable = false
     )
     private Status status;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "sender_id",
+            referencedColumnName = "id",
+            nullable = false,
+            updatable = false
+    )
+    private User sender;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "receiver_id",
+            referencedColumnName = "id",
+            nullable = false,
+            updatable = false
+    )
+    private User receiver;
 
     @ManyToMany(mappedBy = "notifications")
     private Set<Post> posts;
@@ -101,26 +120,31 @@ public class Notification extends PrimaryKeyIdentity {
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
+
     public Set<Integer> getAllCommentIds() {
         return this.getComments().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
+
     public Set<Integer> getAllReplyIds() {
         return this.getReplies().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
+
     public Set<Integer> getAllReactionIds() {
         return this.getReactions().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
+
     public Set<Integer> getAllMentionIds() {
         return this.getMentions().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
+
     public Set<Integer> getAllFriendRequestIds() {
         return this.getFriendRequests().stream()
                 .map(PrimaryKeyIdentity::getId)

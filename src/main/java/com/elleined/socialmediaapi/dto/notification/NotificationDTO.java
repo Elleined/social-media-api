@@ -14,6 +14,8 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 public class NotificationDTO extends DTO {
+    private int senderId;
+    private int receiverId;
     private String message;
     private Notification.Status status;
     private Set<Integer> postIds;
