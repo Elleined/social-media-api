@@ -12,5 +12,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class EmojiDTO extends DTO {
-    private Emoji.Type type;
+    private String type;
 }
