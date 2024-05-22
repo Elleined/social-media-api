@@ -10,9 +10,15 @@ public interface BlockService {
 
     void unBlockUser(User currentUser, User userToBeUnblocked);
 
-    boolean isBlockedByYou(User currentUser, User userToCheck);
+    default boolean isBlockedByYou(User currentUser, User userToCheck) {
+        return currentUser.getBlockedUsers().contains(userToCheck);
+    }
 
-    boolean isYouBeenBlockedBy(User currentUser, User suspectedUser);
+    default boolean isYouBeenBlockedBy(User currentUser, User suspectedUser) {
+        return suspectedUser.getBlockedUsers().contains(currentUser);
+    }
 
-    Set<User> getAllBlockedUsers(User currentUser);
+    default Set<User> getAllBlockedUsers(User currentUser) {
+        return currentUser.getBlockedUsers();
+    }
 }
