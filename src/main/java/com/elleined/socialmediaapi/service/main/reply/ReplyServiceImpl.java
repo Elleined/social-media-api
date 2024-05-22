@@ -124,7 +124,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public Reply update(User currentUser, Post post, Comment comment, Reply reply, String newBody, MultipartFile newAttachedPicture)
+    public void update(User currentUser, Post post, Comment comment, Reply reply, String newBody, MultipartFile newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 

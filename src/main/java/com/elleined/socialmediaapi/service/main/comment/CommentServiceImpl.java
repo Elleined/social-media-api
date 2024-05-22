@@ -141,7 +141,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public Comment update(User currentUser, Post post, Comment comment, String newBody, MultipartFile newAttachedPicture)
+    public void update(User currentUser, Post post, Comment comment, String newBody, MultipartFile newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 

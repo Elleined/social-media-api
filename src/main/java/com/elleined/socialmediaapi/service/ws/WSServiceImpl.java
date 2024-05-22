@@ -2,12 +2,12 @@ package com.elleined.socialmediaapi.service.ws;
 
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
+import com.elleined.socialmediaapi.dto.notification.NotificationDTO;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
 import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
-import com.elleined.socialmediaapi.model.main.reply.Reply;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -18,12 +18,8 @@ import org.springframework.web.util.HtmlUtils;
 public class WSServiceImpl implements WSService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    private final CommentMapper commentMapper;
-    private final ReplyMapper replyMapper;
-
     @Override
-    public void broadcast(Comment comment) {
-        CommentDTO commentDTO = commentMapper.toDTO(comment);
+    public void broadcast(CommentDTO commentDTO) {
         commentDTO.setBody(HtmlUtils.htmlEscape(commentDTO.getBody()));
 
         final String destination = "/discussion/posts/" + commentDTO.getPostId() + "/comments";
@@ -32,12 +28,16 @@ public class WSServiceImpl implements WSService {
     }
 
     @Override
-    public void broadcast(Reply reply) {
-        ReplyDTO replyDTO = replyMapper.toDTO(reply);
+    public void broadcast(ReplyDTO replyDTO) {
         replyDTO.setBody(HtmlUtils.htmlEscape(replyDTO.getBody()));
 
         final String destination = "/discussion/posts/comments/" + replyDTO.getCommentId() + "/replies";
         simpMessagingTemplate.convertAndSend(destination, replyDTO);
         log.debug("Reply with id of {} and body of {} broadcast successfully to {}", replyDTO.getId(), replyDTO.getBody(), destination);
+    }
+
+    @Override
+    public void broadcast(NotificationDTO notificationDTO) {
+        throw new NotYetImplementedException("Please dont use this this is not yet implemented!");
     }
 }

@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
 public class EmojiServiceImpl implements EmojiService {
     private final EmojiRepository emojiRepository;
 

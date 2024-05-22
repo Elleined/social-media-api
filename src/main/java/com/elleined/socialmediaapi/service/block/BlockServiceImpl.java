@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class BlockServiceImpl implements BlockService {
     private final UserRepository userRepository;
 

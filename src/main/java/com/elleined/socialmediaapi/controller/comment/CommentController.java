@@ -75,8 +75,10 @@ public class CommentController {
         Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers, hashTags);
-        wsService.broadcast(comment);
-        return commentMapper.toDTO(comment);
+        CommentDTO commentDTO = commentMapper.toDTO(comment);
+        wsService.broadcast(commentDTO);
+
+        return commentDTO;
     }
 
     @DeleteMapping("/{commentId}")
@@ -91,7 +93,8 @@ public class CommentController {
         commentService.delete(currentUser, post, comment);
         comment.getReplies().forEach(reply -> replyService.delete(currentUser, post, comment, reply));
 
-        wsService.broadcast(comment);
+        CommentDTO commentDTO = commentMapper.toDTO(comment);
+        wsService.broadcast(commentDTO);
     }
 
     @PutMapping("/{commentId}")
@@ -105,10 +108,12 @@ public class CommentController {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        Comment updatedComment = commentService.update(currentUser, post, comment, newBody, newAttachedPicture);
-        wsService.broadcast(updatedComment);
+        commentService.update(currentUser, post, comment, newBody, newAttachedPicture);
 
-        return commentMapper.toDTO(updatedComment);
+        CommentDTO commentDTO = commentMapper.toDTO(comment);
+        wsService.broadcast(commentDTO);
+
+        return commentDTO;
     }
 
     @PatchMapping("/{commentId}/reactivate")

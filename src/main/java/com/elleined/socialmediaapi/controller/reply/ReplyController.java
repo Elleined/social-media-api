@@ -84,8 +84,11 @@ public class ReplyController {
         Comment comment = commentService.getById(commentId);
 
         Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentionedUsers, hashTags);
-        wsService.broadcast(reply);
-        return replyMapper.toDTO(reply);
+
+        ReplyDTO replyDTO = replyMapper.toDTO(reply);
+        wsService.broadcast(replyDTO);
+
+        return replyDTO;
     }
 
     @DeleteMapping("/{replyId}")
@@ -100,7 +103,9 @@ public class ReplyController {
         Reply reply = replyService.getById(replyId);
 
         replyService.delete(currentUser, post, comment, reply);
-        wsService.broadcast(reply);
+
+        ReplyDTO replyDTO = replyMapper.toDTO(reply);
+        wsService.broadcast(replyDTO);
     }
 
     @PutMapping("/{replyId}")
@@ -116,9 +121,12 @@ public class ReplyController {
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
 
-        Reply updatedReply = replyService.update(currentUser, post, comment, reply, newBody, newAttachedPicture);
-        wsService.broadcast(updatedReply);
-        return replyMapper.toDTO(updatedReply);
+        replyService.update(currentUser, post, comment, reply, newBody, newAttachedPicture);
+
+        ReplyDTO replyDTO = replyMapper.toDTO(reply);
+        wsService.broadcast(replyDTO);
+
+        return replyDTO;
     }
 
     @PatchMapping("/{replyId}/reactivate")

@@ -30,7 +30,7 @@ public interface CommentService extends CustomService<Comment> {
 
     void delete(User currentUser, Post post, Comment comment);
 
-    Comment update(User currentUser, Post post, Comment comment, String newBody, MultipartFile newAttachedPicture)
+    void update(User currentUser, Post post, Comment comment, String newBody, MultipartFile newAttachedPicture)
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 
