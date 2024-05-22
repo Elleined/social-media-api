@@ -128,8 +128,7 @@ public class ReplyServiceImpl implements ReplyService {
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
-        if (reply.getBody().equals(newBody))
-            return reply;
+        if (reply.getBody().equals(newBody)) return;
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot update reply! because post with id of " + post.getId() + " does not exists or already deleted!") ;
@@ -160,7 +159,6 @@ public class ReplyServiceImpl implements ReplyService {
 
         replyRepository.save(reply);
         log.debug("Updating reply success");
-        return reply;
     }
 
     @Override

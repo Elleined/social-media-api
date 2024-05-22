@@ -145,8 +145,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
-        if (comment.getBody().equals(newBody))
-            return comment;
+        if (comment.getBody().equals(newBody)) return;
 
         if (userServiceRestriction.notOwned(currentUser, comment))
             throw new ResourceNotOwnedException("Cannot update comment! because user with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
@@ -165,7 +164,6 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
         commentRepository.save(comment);
         log.debug("Updating comment success");
-        return comment;
     }
 
     @Override

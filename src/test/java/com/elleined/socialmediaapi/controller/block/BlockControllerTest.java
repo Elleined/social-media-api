@@ -72,8 +72,8 @@ class BlockControllerTest {
     }
 
     @Test
-    @DisplayName("")
-    void isBlocked() {
+    @DisplayName("Is blocked")
+    void isBlocked() throws Exception {
         // Pre defined values
 
         // Expected Value
@@ -83,17 +83,25 @@ class BlockControllerTest {
         // Set up method
 
         // Stubbing methods
+        when(userService.getById(anyInt())).thenReturn(new User());
+        when(blockService.isBlockedByYou(any(User.class), any(User.class))).thenReturn(false);
+        when(blockService.isYouBeenBlockedBy(any(User.class), any(User.class))).thenReturn(false);
 
         // Calling the method
+        mockMvc.perform(get("/users/{currentUserId}/is-blocked/{otherUserId}", 1, 2))
+                .andExpect(status().isOk());
 
         // Behavior Verifications
+        verify(userService, times(2)).getById(anyInt());
+        verify(blockService).isBlockedByYou(any(User.class), any(User.class));
+        verify(blockService).isYouBeenBlockedBy(any(User.class), any(User.class));
 
         // Assertions
     }
 
     @Test
-    @DisplayName("")
-    void blockUser() {
+    @DisplayName("Block user")
+    void blockUser() throws Exception {
         // Pre defined values
 
         // Expected Value
@@ -103,17 +111,23 @@ class BlockControllerTest {
         // Set up method
 
         // Stubbing methods
+        when(userService.getById(anyInt())).thenReturn(new User());
+        doNothing().when(blockService).blockUser(any(User.class), any(User.class));
 
         // Calling the method
+        mockMvc.perform(patch("/users/{currentUserId}/block/{userToBeBlockedId}", 1, 2))
+                .andExpect(status().isOk());
 
         // Behavior Verifications
+        verify(userService, times(2)).getById(anyInt());
+        verify(blockService).blockUser(any(User.class), any(User.class));
 
         // Assertions
     }
 
     @Test
-    @DisplayName("")
-    void unblockUser() {
+    @DisplayName("Unblock user")
+    void unblockUser() throws Exception {
         // Pre defined values
 
         // Expected Value
@@ -123,10 +137,16 @@ class BlockControllerTest {
         // Set up method
 
         // Stubbing methods
+        when(userService.getById(anyInt())).thenReturn(new User());
+        doNothing().when(blockService).unBlockUser(any(User.class), any(User.class));
 
         // Calling the method
+        mockMvc.perform(patch("/users/{currentUserId}/unblock/{userToBeUnblockedId}", 1, 2))
+                .andExpect(status().isOk());
 
         // Behavior Verifications
+        verify(userService, times(2)).getById(anyInt());
+        verify(blockService).unBlockUser(any(User.class), any(User.class));
 
         // Assertions
     }
