@@ -79,7 +79,7 @@ class EmojiControllerTest {
         when(emojiMapper.toDTO(any(Emoji.class))).thenReturn(new EmojiDTO());
 
         // Calling the method
-        mockMvc.perform(get("/emojis/{emojiId}", 1))
+        mockMvc.perform(get("/emojis/{id}", 1))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
