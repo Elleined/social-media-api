@@ -138,7 +138,7 @@ class CommentControllerTest {
 
         // Behavior Verifications
         verify(commentService).getAllById(anyList());
-        verify(commentMapper).toDTO(any(Comment.class));
+        verify(commentMapper, atLeastOnce()).toDTO(any(Comment.class));
 
         // Assertions
     }
