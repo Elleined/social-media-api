@@ -1,11 +1,5 @@
 package com.elleined.socialmediaapi.controller.block;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
 import com.elleined.socialmediaapi.dto.user.UserDTO;
 import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
@@ -18,19 +12,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.HashSet;
 import java.util.Set;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(BlockController.class)
-@TestPropertySource(properties = {
-        "PORT=8081"
-})
 class BlockControllerTest {
 
     @Autowired

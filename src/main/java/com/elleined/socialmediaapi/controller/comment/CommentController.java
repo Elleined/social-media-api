@@ -83,8 +83,8 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     public void delete(@PathVariable("currentUserId") int currentUserId,
-                             @PathVariable("postId") int postId,
-                             @PathVariable("commentId") int commentId) {
+                       @PathVariable("postId") int postId,
+                       @PathVariable("commentId") int commentId) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
