@@ -12,8 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -56,14 +55,12 @@ public class FollowServiceImpl implements FollowService, FollowServiceRestrictio
     }
 
     @Override
-    public Set<User> getAllFollowers(User currentUser, Pageable pageable) {
-        return userRepository.findAllFollowers(currentUser, pageable).stream()
-                .collect(Collectors.toSet());
+    public List<User> getAllFollowers(User currentUser, Pageable pageable) {
+        return userRepository.findAllFollowers(currentUser, pageable).getContent();
     }
 
     @Override
-    public Set<User> getAllFollowing(User currentUser, Pageable pageable) {
-        return userRepository.findAllFollowings(currentUser, pageable).stream()
-                .collect(Collectors.toSet());
+    public List<User> getAllFollowing(User currentUser, Pageable pageable) {
+        return userRepository.findAllFollowings(currentUser, pageable).getContent();
     }
 }

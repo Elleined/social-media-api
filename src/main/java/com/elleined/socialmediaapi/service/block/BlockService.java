@@ -4,7 +4,7 @@ import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Set;
+import java.util.List;
 
 public interface BlockService {
     void blockUser(User currentUser, User userToBeBlocked) throws BlockedException;
@@ -19,5 +19,5 @@ public interface BlockService {
         return suspectedUser.getBlockedUsers().contains(currentUser);
     }
 
-    Set<User> getAllBlockedUsers(User currentUser, Pageable pageable);
+    List<User> getAllBlockedUsers(User currentUser, Pageable pageable);
 }

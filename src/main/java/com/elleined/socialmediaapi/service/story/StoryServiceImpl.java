@@ -49,9 +49,7 @@ public class StoryServiceImpl implements StoryService, StoryServiceRestriction {
 
     @Override
     public List<Story> getAll(Pageable pageable) {
-        return storyRepository.findAll(pageable).stream()
-                .sorted(Comparator.comparing(Story::getCreatedAt).reversed())
-                .toList();
+        return storyRepository.findAll(pageable).getContent();
     }
 
     @Override

@@ -241,8 +241,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve reactions to this post! because this might be already deleted or doesn't exists!");
 
-        return postRepository.findAllReactions(post, pageable).stream()
-                .toList();
+        return postRepository.findAllReactions(post, pageable).getContent();
     }
 
     @Override
@@ -256,8 +255,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot get all reactions to this comment! because comment might be already deleted or doesn't exists!");
 
-        return commentRepository.findAllReactions(comment, pageable).stream()
-                .toList();
+        return commentRepository.findAllReactions(comment, pageable).getContent();
     }
 
     @Override
@@ -277,8 +275,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot get all reactions to this reply! because reply might be already deleted or doesn't exists!");
 
-        return replyRepository.findAllReactions(reply, pageable).stream()
-                .toList();
+        return replyRepository.findAllReactions(reply, pageable).getContent();
     }
 
     @Override

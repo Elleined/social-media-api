@@ -178,11 +178,18 @@ public class ReplyServiceImpl implements ReplyService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot get all replies! because the comment you trying to reply is either be deleted or does not exists anymore!");
 
-        return commentRepository.findAllReplies(comment, pageable).stream()
+        Reply pinnedReply = comment.getPinnedReply();
+        List<Reply> replies = commentRepository.findAllReplies(comment, pageable).stream()
                 .filter(Reply::isActive)
+                .filter(reply -> !reply.equals(pinnedReply))
                 .filter(reply -> !blockService.isBlockedByYou(currentUser, reply.getCreator()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getCreator()))
                 .toList();
+
+        if (fieldValidator.isValid(pinnedReply))
+            replies.add(0, pinnedReply);
+
+        return replies;
     }
 
     @Override
@@ -238,9 +245,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public List<Reply> getAll(Pageable pageable) {
-        return replyRepository.findAll(pageable).stream()
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
-                .toList();
+        return replyRepository.findAll(pageable).getContent();
     }
 
     @Override

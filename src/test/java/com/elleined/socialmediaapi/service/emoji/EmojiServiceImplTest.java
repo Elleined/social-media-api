@@ -21,7 +21,6 @@ class EmojiServiceImplTest {
     private EmojiServiceImpl emojiService;
 
     @Test
-    @DisplayName("")
     void getAll() {
         // Pre defined values
 
@@ -41,7 +40,6 @@ class EmojiServiceImplTest {
     }
 
     @Test
-    @DisplayName("")
     void save() {
         // Pre defined values
 
@@ -61,7 +59,6 @@ class EmojiServiceImplTest {
     }
 
     @Test
-    @DisplayName("")
     void getById() {
         // Pre defined values
 
@@ -81,7 +78,6 @@ class EmojiServiceImplTest {
     }
 
     @Test
-    @DisplayName("")
     void getAllById() {
         // Pre defined values
 

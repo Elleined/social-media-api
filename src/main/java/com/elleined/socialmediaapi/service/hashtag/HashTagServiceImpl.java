@@ -35,9 +35,7 @@ public class HashTagServiceImpl implements HashTagService {
 
     @Override
     public List<HashTag> getAll(Pageable pageable) {
-        return hashTagRepository.findAll().stream()
-                .sorted(Comparator.comparing(HashTag::getCreatedAt).reversed())
-                .toList();
+        return hashTagRepository.findAll(pageable).getContent();
     }
 
     @Override

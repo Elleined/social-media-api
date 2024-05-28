@@ -11,6 +11,9 @@ public class FieldValidator {
     public final boolean isValid(String field) {
         return field != null && !field.isBlank() && !field.isEmpty();
     }
+    public final boolean isValid(Object object) {
+        return object != null;
+    }
 
     public final boolean isNotValid(String field) {
         return field == null || field.isEmpty() || field.isBlank();
@@ -23,6 +26,7 @@ public class FieldValidator {
     public final boolean isNotValid(Object object) {
         return object == null;
     }
+
 
     public final boolean containsDigit(String field) {
         return FieldValidator.toCharArray( field ).stream().anyMatch(Character::isDigit);

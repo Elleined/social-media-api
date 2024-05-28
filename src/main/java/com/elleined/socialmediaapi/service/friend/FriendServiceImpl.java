@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -114,9 +112,8 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     }
 
     @Override
-    public Set<User> getAllFriends(User currentUser, Pageable pageable) {
-        return userRepository.findAllFriends(currentUser, pageable).stream()
-                .collect(Collectors.toSet());
+    public List<User> getAllFriends(User currentUser, Pageable pageable) {
+        return userRepository.findAllFriends(currentUser, pageable).getContent();
     }
 
     @Override
@@ -128,8 +125,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
 
     @Override
     public List<FriendRequest> getAllFriendRequests(User currentUser, Pageable pageable) {
-        return userRepository.findAllFriendRequests(currentUser, pageable).stream()
-                .toList();
+        return userRepository.findAllFriendRequests(currentUser, pageable).getContent();
     }
 
     @Override
@@ -144,8 +140,6 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
 
     @Override
     public List<FriendRequest> getAll(Pageable pageable) {
-        return friendRequestRepository.findAll(pageable).stream()
-                .sorted(Comparator.comparing(FriendRequest::getCreatedAt).reversed())
-                .toList();
+        return friendRequestRepository.findAll(pageable).getContent();
     }
 }

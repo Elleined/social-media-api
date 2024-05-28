@@ -6,10 +6,9 @@ import com.elleined.socialmediaapi.service.CustomService;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Set;
 
 public interface FriendService extends CustomService<FriendRequest> {
-    Set<User> getAllFriends(User currentUser, Pageable pageable);
+    List<User> getAllFriends(User currentUser, Pageable pageable);
     List<FriendRequest> getAllFriendRequests(User currentUser, Pageable pageable);
 
     void acceptFriendRequest(User currentUser, FriendRequest friendRequest);

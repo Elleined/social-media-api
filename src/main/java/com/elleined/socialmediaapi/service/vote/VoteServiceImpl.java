@@ -53,9 +53,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public List<Vote> getAll(Pageable pageable) {
-        return voteRepository.findAll(pageable).stream()
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
-                .toList();
+        return voteRepository.findAll(pageable).getContent();
     }
 
     @Override
@@ -106,7 +104,6 @@ public class VoteServiceImpl implements VoteService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot get all vote to this comment! because this comment might already deleted or doesn't exists!");
 
-        return commentRepository.findAllVotes(comment, pageable).stream()
-                .toList();
+        return commentRepository.findAllVotes(comment, pageable).getContent();
     }
 }

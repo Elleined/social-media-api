@@ -138,8 +138,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     @Override
     public List<Post> getAll(Pageable pageable) {
-        return postRepository.findAll(pageable).stream()
-                .toList();
+        return postRepository.findAll(pageable).getContent();
     }
 
 

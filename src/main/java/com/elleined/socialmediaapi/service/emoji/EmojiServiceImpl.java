@@ -21,9 +21,7 @@ public class EmojiServiceImpl implements EmojiService {
 
     @Override
     public List<Emoji> getAll(Pageable pageable) {
-        return emojiRepository.findAll(pageable).stream()
-                .sorted(Comparator.comparing(Emoji::getType))
-                .toList();
+        return emojiRepository.findAll(pageable).getContent();
     }
 
     @Override

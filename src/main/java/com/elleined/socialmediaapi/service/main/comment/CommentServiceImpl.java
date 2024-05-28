@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -106,11 +107,24 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     @Override
     public List<Comment> getAll(User currentUser, Post post, Pageable pageable) throws ResourceNotFoundException {
-        return postRepository.findAllComments(post, pageable).stream()
+        if (post.isInactive())
+            throw new ResourceNotFoundException("Cannot save comment! because the post you trying to comment is either be deleted or does not exists anymore!");
+
+        if (postServiceRestriction.isCommentSectionClosed(post))
+            throw new CommentSectionException("Cannot save comment! because cannot comment because author already closed the comment section for this post!");
+
+        Comment pinnedComment = post.getPinnedComment();
+        List<Comment> comments = new java.util.ArrayList<>(postRepository.findAllComments(post, pageable).stream()
                 .filter(Comment::isActive)
+                .filter(comment -> !comment.equals(pinnedComment))
                 .filter(comment -> !blockService.isBlockedByYou(currentUser, comment.getCreator()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
-                .toList();
+                .toList());
+
+        if (fieldValidator.isValid(pinnedComment)) // Prioritizing pinned comment
+            comments.add(0, pinnedComment);
+
+        return comments;
     }
 
     @Override
@@ -125,9 +139,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     @Override
     public List<Comment> getAll(Pageable pageable) {
-        return commentRepository.findAll(pageable).stream()
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
-                .toList();
+        return commentRepository.findAll(pageable).getContent();
     }
 
     @Override
