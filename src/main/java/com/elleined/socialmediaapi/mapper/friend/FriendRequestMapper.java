@@ -18,8 +18,7 @@ public interface FriendRequestMapper extends CustomMapper<FriendRequest, FriendR
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "requestedUserId", source = "requestedUser.id"),
-            @Mapping(target = "notificationIds", expression = "java(friendRequest.getAllNotificationIds())")
+            @Mapping(target = "requestedUserId", source = "requestedUser.id")
     })
     FriendRequestDTO toDTO(FriendRequest friendRequest);
 
@@ -28,8 +27,7 @@ public interface FriendRequestMapper extends CustomMapper<FriendRequest, FriendR
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "requestedUser", expression = "java(requestedUser)"),
-            @Mapping(target = "notifications", expression = "java(new java.util.HashSet<>())")
+            @Mapping(target = "requestedUser", expression = "java(requestedUser)")
     })
     FriendRequest toEntity(User creator,
                            @Context User requestedUser);

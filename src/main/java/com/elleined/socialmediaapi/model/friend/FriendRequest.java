@@ -1,16 +1,15 @@
 package com.elleined.socialmediaapi.model.friend;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
-import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.user.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Entity
@@ -38,13 +37,4 @@ public class FriendRequest extends PrimaryKeyIdentity {
             updatable = false
     )
     private User requestedUser;
-
-    @ManyToMany(mappedBy = "friendRequests")
-    private Set<Notification> notifications;
-
-    public Set<Integer> getAllNotificationIds() {
-        return this.getNotifications().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
 }

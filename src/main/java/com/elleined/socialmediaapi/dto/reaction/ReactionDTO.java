@@ -14,7 +14,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class ReactionDTO extends DTO {
     private int creatorId;
-    private Set<Integer> notificationIds;
     private int emojiId;
     private Set<Integer> postIds;
     private Set<Integer> commentIds;

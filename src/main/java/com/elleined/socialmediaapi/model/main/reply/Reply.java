@@ -5,7 +5,6 @@ import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.react.Reaction;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -82,22 +81,6 @@ public class Reply extends Forum {
     )
     private Set<Reaction> reactions;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_reply_notification",
-            joinColumns = @JoinColumn(
-                    name = "reply_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "notification_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            )
-    )
-    private Set<Notification> notifications;
-
     public Set<Integer> getAllMentionIds() {
         return this.getMentions().stream()
                 .map(PrimaryKeyIdentity::getId)
@@ -111,12 +94,6 @@ public class Reply extends Forum {
 
     public Set<Integer> getAllHashTagIds() {
         return this.getHashTags().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllNotificationIds() {
-        return this.getNotifications().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }

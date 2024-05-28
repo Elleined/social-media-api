@@ -6,7 +6,6 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.vote.Vote;
 import jakarta.persistence.*;
@@ -97,23 +96,6 @@ public class Comment extends Forum {
     )
     private Set<Reaction> reactions;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_comment_notification",
-            joinColumns = @JoinColumn(
-                    name = "comment_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "notification_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            )
-    )
-    private Set<Notification> notifications;
-
-
     public List<Integer> getAllReplyIds() {
         return this.getReplies().stream()
                 .map(PrimaryKeyIdentity::getId)
@@ -139,12 +121,6 @@ public class Comment extends Forum {
 
     public Set<Integer> getAllVoteIds() {
         return this.getVotes().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllNotificationIds() {
-        return this.getNotifications().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }

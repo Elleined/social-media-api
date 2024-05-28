@@ -15,7 +15,6 @@ import java.util.Set;
 public class MentionDTO extends DTO {
     private int creatorId;
     private int mentionedUserId;
-    private Set<Integer> notificationIds;
     private Set<Integer> postIds;
     private Set<Integer> commentIds;
     private Set<Integer> replyIds;

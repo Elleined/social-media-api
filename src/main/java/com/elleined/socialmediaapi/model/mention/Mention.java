@@ -5,7 +5,6 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -51,9 +50,6 @@ public class Mention extends PrimaryKeyIdentity {
     @ManyToMany(mappedBy = "mentions")
     private Set<Reply> replies;
 
-    @ManyToMany(mappedBy = "mentions")
-    private Set<Notification> notifications;
-
     public Set<Integer> getAllPostIds() {
         return this.getPosts().stream()
                 .map(Forum::getId)
@@ -69,12 +65,6 @@ public class Mention extends PrimaryKeyIdentity {
     public Set<Integer> getAllReplyIds() {
         return this.getReplies().stream()
                 .map(Forum::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllNotificationIds() {
-        return this.getNotifications().stream()
-                .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
 }

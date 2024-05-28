@@ -15,5 +15,4 @@ import java.util.Set;
 public class FriendRequestDTO extends DTO {
     private Integer creatorId;
     private Integer requestedUserId;
-    private Set<Integer> notificationIds;
 }

@@ -5,7 +5,6 @@ import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
@@ -157,12 +156,6 @@ public class Post extends Forum {
 
     public Set<Integer> getAllSharerIds() {
         return this.getSharers().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllNotificationIds() {
-        return this.getNotifications().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }

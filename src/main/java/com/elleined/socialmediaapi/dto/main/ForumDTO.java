@@ -21,5 +21,4 @@ public abstract class ForumDTO extends DTO {
     private Set<Integer> hashTagIds;
     private Set<Integer> mentionIds;
     private Set<Integer> reactionIds;
-    private Set<Integer> notificationIds;
 }
