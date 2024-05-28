@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.controller.comment;
 
-import com.elleined.socialmediaapi.controller.comment.CommentVoteController;
 import com.elleined.socialmediaapi.dto.vote.VoteDTO;
 import com.elleined.socialmediaapi.mapper.vote.VoteMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
@@ -63,7 +62,7 @@ class CommentVoteControllerTest {
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
         when(commentService.getById(anyInt())).thenReturn(new Comment());
-        when(voteService.getAll(any(User.class), any(Post.class), any(Comment.class))).thenReturn(List.of(new Vote()));
+        when(voteService.getAll(any(User.class), any(Post.class), any(Comment.class), )).thenReturn(List.of(new Vote()));
         when(voteMapper.toDTO(any(Vote.class))).thenReturn(new VoteDTO());
 
         // Calling the method
@@ -74,7 +73,7 @@ class CommentVoteControllerTest {
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
         verify(commentService).getById(anyInt());
-        verify(voteService).getAll(any(User.class), any(Post.class), any(Comment.class));
+        verify(voteService).getAll(any(User.class), any(Post.class), any(Comment.class), );
         verify(voteMapper, atLeastOnce()).toDTO(any(Vote.class));
 
         // Assertions
@@ -147,7 +146,7 @@ class CommentVoteControllerTest {
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
         when(commentService.getById(anyInt())).thenReturn(new Comment());
-        when(voteService.getAll(any(User.class), any(Post.class), any(Comment.class), any(Vote.Verdict.class))).thenReturn(List.of(new Vote()));
+        when(voteService.getAll(any(User.class), any(Post.class), any(Comment.class), any(Vote.Verdict.class), )).thenReturn(List.of(new Vote()));
         when(voteMapper.toDTO(any(Vote.class))).thenReturn(new VoteDTO());
 
         // Calling the method
@@ -159,7 +158,7 @@ class CommentVoteControllerTest {
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
         verify(commentService).getById(anyInt());
-        verify(voteService).getAll(any(User.class), any(Post.class), any(Comment.class), any(Vote.Verdict.class));
+        verify(voteService).getAll(any(User.class), any(Post.class), any(Comment.class), any(Vote.Verdict.class), );
         verify(voteMapper, atLeastOnce()).toDTO(any(Vote.class));
 
         // Assertions

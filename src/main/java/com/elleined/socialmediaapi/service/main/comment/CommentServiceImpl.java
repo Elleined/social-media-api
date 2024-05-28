@@ -22,6 +22,7 @@ import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -102,7 +103,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public List<Comment> getAll(User currentUser, Post post) throws ResourceNotFoundException {
+    public List<Comment> getAll(User currentUser, Post post, Pageable pageable) throws ResourceNotFoundException {
         Comment pinnedComment = post.getPinnedComment();
         List<Comment> comments = new ArrayList<>(post.getComments()
                 .stream()
@@ -127,7 +128,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public List<Comment> getAll() {
+    public List<Comment> getAll(Pageable pageable) {
         return commentRepository.findAll().stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();

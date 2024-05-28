@@ -24,6 +24,7 @@ import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -162,7 +163,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public List<Reply> getAll(User currentUser, Post post, Comment comment) throws ResourceNotFoundException {
+    public List<Reply> getAll(User currentUser, Post post, Comment comment, Pageable pageable) throws ResourceNotFoundException {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot update reply! because post with id of " + post.getId() + " does not exists or already deleted!") ;
 
@@ -233,7 +234,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public List<Reply> getAll() {
+    public List<Reply> getAll(Pageable pageable) {
         return replyRepository.findAll().stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();

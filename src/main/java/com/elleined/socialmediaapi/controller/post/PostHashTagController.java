@@ -42,7 +42,7 @@ public class PostHashTagController {
 
     @GetMapping("/keyword")
     List<PostDTO> getAllByKeyword(@RequestParam("keyword") String keyword) {
-        return hashTagService.getAllByKeyword(keyword).stream()
+        return hashTagService.getAllByKeyword(keyword, ).stream()
                 .map(postMapper::toDTO)
                 .toList();
     }

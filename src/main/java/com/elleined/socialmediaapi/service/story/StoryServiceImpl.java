@@ -9,6 +9,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.story.StoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +48,7 @@ public class StoryServiceImpl implements StoryService, StoryServiceRestriction {
     }
 
     @Override
-    public List<Story> getAll() {
+    public List<Story> getAll(Pageable pageable) {
         return storyRepository.findAll().stream()
                 .sorted(Comparator.comparing(Story::getCreatedAt).reversed())
                 .toList();

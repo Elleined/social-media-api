@@ -7,6 +7,7 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.CustomService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public interface PostService extends SavedPostService, SharePostService, CustomS
 
     Post updateCommentSectionStatus(User currentUser, Post post);
 
-    List<Post> getAll(User currentUser);
+    List<Post> getAll(User currentUser, Pageable pageable);
 
     void reactivate(User currentUser, Post post);
 

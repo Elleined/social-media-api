@@ -19,6 +19,7 @@ import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +56,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<Vote> getAll() {
+    public List<Vote> getAll(Pageable pageable) {
         return voteRepository.findAll().stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
@@ -99,7 +100,7 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<Vote> getAll(User currentUser, Post post, Comment comment) {
+    public List<Vote> getAll(User currentUser, Post post, Comment comment, Pageable pageable) {
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot get all vote to this comment! because this post doesn't have this comment!");
 

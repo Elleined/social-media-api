@@ -25,10 +25,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -74,7 +72,7 @@ class CommentControllerTest {
         // Stubbing methods
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
-        when(commentService.getAll(any(User.class), any(Post.class))).thenReturn(List.of(new Comment()));
+        when(commentService.getAll(any(User.class), any(Post.class), )).thenReturn(List.of(new Comment()));
         when(commentMapper.toDTO(any(Comment.class))).thenReturn(new CommentDTO());
 
         // Calling the method
@@ -84,7 +82,7 @@ class CommentControllerTest {
         // Behavior Verifications
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
-        verify(commentService).getAll(any(User.class), any(Post.class));
+        verify(commentService).getAll(any(User.class), any(Post.class), );
         verify(commentMapper, atLeastOnce()).toDTO(any(Comment.class));
 
         // Assertions

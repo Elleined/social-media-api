@@ -1,15 +1,12 @@
 package com.elleined.socialmediaapi.controller.emoji;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.reaction.EmojiDTO;
 import com.elleined.socialmediaapi.mapper.emoji.EmojiMapper;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import com.fasterxml.jackson.databind.ObjectMapper;

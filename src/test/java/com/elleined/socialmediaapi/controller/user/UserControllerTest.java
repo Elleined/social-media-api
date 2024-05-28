@@ -1,15 +1,12 @@
 package com.elleined.socialmediaapi.controller.user;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.elleined.socialmediaapi.dto.reaction.EmojiDTO;
 import com.elleined.socialmediaapi.dto.user.UserDTO;
 import com.elleined.socialmediaapi.mapper.user.UserMapper;
-import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.request.user.UserRequest;
 import com.elleined.socialmediaapi.service.user.UserService;
@@ -23,7 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -161,7 +157,7 @@ class UserControllerTest {
 
         // Stubbing methods
         when(userService.getById(anyInt())).thenReturn(new User());
-        when(userService.getAllSuggestedMentions(any(User.class), anyString())).thenReturn(List.of(new User()));
+        when(userService.getAllSuggestedMentions(any(User.class), anyString(), )).thenReturn(List.of(new User()));
         when(userMapper.toDTO(any(User.class))).thenReturn(new UserDTO());
 
         // Calling the method
@@ -171,7 +167,7 @@ class UserControllerTest {
 
         // Behavior Verifications
         verify(userService).getById(anyInt());
-        verify(userService).getAllSuggestedMentions(any(User.class), anyString());
+        verify(userService).getAllSuggestedMentions(any(User.class), anyString(), );
         verify(userMapper, atLeastOnce()).toDTO(any(User.class));
 
         // Assertions

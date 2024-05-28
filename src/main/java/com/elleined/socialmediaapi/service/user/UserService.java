@@ -4,6 +4,7 @@ import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.request.user.UserRequest;
 import com.elleined.socialmediaapi.service.CustomService;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface UserService extends CustomService<User> {
 
     boolean isEmailAlreadyExists(String email);
 
-    List<User> getAllSuggestedMentions(User currentUser, String name);
+    List<User> getAllSuggestedMentions(User currentUser, String name, Pageable pageable);
 }

@@ -8,6 +8,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.repository.hashtag.HashTagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,7 @@ public class HashTagServiceImpl implements HashTagService {
     }
 
     @Override
-    public List<HashTag> getAll() {
+    public List<HashTag> getAll(Pageable pageable) {
         return hashTagRepository.findAll().stream()
                 .sorted(Comparator.comparing(HashTag::getCreatedAt).reversed())
                 .toList();
@@ -62,7 +63,7 @@ public class HashTagServiceImpl implements HashTagService {
     }
 
     @Override
-    public List<Post> getAllByKeyword(String keyword) {
+    public List<Post> getAllByKeyword(String keyword, Pageable pageable) {
         return hashTagRepository.getAllByKeyword(keyword).stream()
                 .filter(Post::isActive)
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())

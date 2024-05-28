@@ -13,6 +13,7 @@ import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,7 +113,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     }
 
     @Override
-    public Set<User> getAllFriends(User currentUser) {
+    public Set<User> getAllFriends(User currentUser, Pageable pageable) {
         return currentUser.getFriends();
     }
 
@@ -124,7 +125,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     }
 
     @Override
-    public List<FriendRequest> getAllFriendRequests(User currentUser) {
+    public List<FriendRequest> getAllFriendRequests(User currentUser, Pageable pageable) {
         return currentUser.getReceiveFriendRequests().stream()
                 .sorted(Comparator.comparing(FriendRequest::getCreatedAt).reversed())
                 .toList();
@@ -141,7 +142,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     }
 
     @Override
-    public List<FriendRequest> getAll() {
+    public List<FriendRequest> getAll(Pageable pageable) {
         return friendRequestRepository.findAll().stream()
                 .sorted(Comparator.comparing(FriendRequest::getCreatedAt).reversed())
                 .toList();

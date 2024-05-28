@@ -36,7 +36,7 @@ public class PostReactionController {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        return reactionService.getAll(currentUser, post).stream()
+        return reactionService.getAll(currentUser, post, ).stream()
                 .map(reactionMapper::toDTO)
                 .toList();
     }

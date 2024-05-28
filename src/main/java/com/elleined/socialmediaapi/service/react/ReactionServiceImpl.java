@@ -20,6 +20,7 @@ import com.elleined.socialmediaapi.service.main.reply.ReplyService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -229,7 +230,7 @@ public class ReactionServiceImpl implements ReactionService {
 
 
     @Override
-    public List<Reaction> getAll(User currentUser, Post post) {
+    public List<Reaction> getAll(User currentUser, Post post, Pageable pageable) {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve reactions to this post! because this might be already deleted or doesn't exists!");
 
@@ -240,7 +241,7 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public List<Reaction> getAll(User currentUser, Post post, Comment comment) {
+    public List<Reaction> getAll(User currentUser, Post post, Comment comment, Pageable pageable) {
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot get all reactions to this comment! because post doesn't have this comment!");
 
@@ -256,7 +257,7 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public List<Reaction> getAll(User currentUser, Post post, Comment comment, Reply reply) {
+    public List<Reaction> getAll(User currentUser, Post post, Comment comment, Reply reply, Pageable pageable) {
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Current user doesn't owned this comment!");
 

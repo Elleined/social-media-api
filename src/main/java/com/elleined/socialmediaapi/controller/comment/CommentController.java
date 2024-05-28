@@ -43,7 +43,7 @@ public class CommentController {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        return commentService.getAll(currentUser, post).stream()
+        return commentService.getAll(currentUser, post, ).stream()
                 .map(commentMapper::toDTO)
                 .toList();
     }

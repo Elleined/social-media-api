@@ -22,7 +22,7 @@ public class UserFollowingController {
     @GetMapping
     public List<UserDTO> getAllFollowing(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return followService.getAllFollowing(currentUser).stream()
+        return followService.getAllFollowing(currentUser, ).stream()
                 .map(userMapper::toDTO)
                 .toList();
     }

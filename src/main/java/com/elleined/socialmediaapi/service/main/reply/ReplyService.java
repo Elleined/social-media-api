@@ -11,6 +11,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.CustomService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public interface ReplyService extends CustomService<Reply> {
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 
-    List<Reply> getAll(User currentUser, Post post, Comment comment) throws ResourceNotFoundException;
+    List<Reply> getAll(User currentUser, Post post, Comment comment, Pageable pageable) throws ResourceNotFoundException;
 
     void reactivate(User currentUser, Post post, Comment comment, Reply reply);
 

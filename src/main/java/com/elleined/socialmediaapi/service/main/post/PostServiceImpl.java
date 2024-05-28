@@ -20,6 +20,7 @@ import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -136,7 +137,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     }
 
     @Override
-    public List<Post> getAll() {
+    public List<Post> getAll(Pageable pageable) {
         return postRepository.findAll().stream()
                 .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .toList();
@@ -151,7 +152,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     }
 
     @Override
-    public List<Post> getAll(User currentUser) {
+    public List<Post> getAll(User currentUser, Pageable pageable) {
         return postRepository.findAll().stream()
                 .filter(Post::isActive)
                 .filter(post -> !blockService.isBlockedByYou(currentUser, post.getCreator()))

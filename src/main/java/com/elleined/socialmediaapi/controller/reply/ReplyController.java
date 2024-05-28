@@ -50,7 +50,7 @@ public class ReplyController {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        return replyService.getAll(currentUser, post, comment).stream()
+        return replyService.getAll(currentUser, post, comment, ).stream()
                 .map(replyMapper::toDTO)
                 .toList();
     }

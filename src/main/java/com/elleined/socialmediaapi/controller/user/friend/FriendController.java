@@ -24,7 +24,7 @@ public class FriendController {
     @GetMapping
     public Set<UserDTO> getAllFriends(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return friendService.getAllFriends(currentUser).stream()
+        return friendService.getAllFriends(currentUser, ).stream()
                 .map(userMapper::toDTO)
                 .collect(Collectors.toSet());
     }

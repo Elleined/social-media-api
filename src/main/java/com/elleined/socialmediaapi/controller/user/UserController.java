@@ -48,7 +48,7 @@ public class UserController {
                                                  @RequestParam("name") String name) {
 
         User currentUser = userService.getById(currentUserId);
-        return userService.getAllSuggestedMentions(currentUser, name).stream()
+        return userService.getAllSuggestedMentions(currentUser, name, ).stream()
                 .map(userMapper::toDTO)
                 .toList();
     }

@@ -36,7 +36,7 @@ public class CommentVoteController {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        return voteService.getAll(currentUser, post, comment).stream()
+        return voteService.getAll(currentUser, post, comment, ).stream()
                 .map(voteMapper::toDTO)
                 .toList();
     }
@@ -64,7 +64,7 @@ public class CommentVoteController {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        return voteService.getAll(currentUser, post, comment, verdict).stream()
+        return voteService.getAll(currentUser, post, comment, verdict, ).stream()
                 .map(voteMapper::toDTO)
                 .toList();
     }

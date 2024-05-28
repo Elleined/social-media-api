@@ -46,7 +46,7 @@ public class PostController {
     public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
 
-        return postService.getAll(currentUser).stream()
+        return postService.getAll(currentUser, ).stream()
                 .map(postMapper::toDTO)
                 .toList();
     }

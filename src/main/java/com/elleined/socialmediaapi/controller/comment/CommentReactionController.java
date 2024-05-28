@@ -43,7 +43,7 @@ public class CommentReactionController {
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        return reactionService.getAll(currentUser, post, comment).stream()
+        return reactionService.getAll(currentUser, post, comment, ).stream()
                 .map(reactionMapper::toDTO)
                 .toList();
     }

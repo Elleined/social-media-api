@@ -49,7 +49,7 @@ public class ReplyReactionController {
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
 
-        return reactionService.getAll(currentUser, post, comment, reply).stream()
+        return reactionService.getAll(currentUser, post, comment, reply, ).stream()
                 .map(reactionMapper::toDTO)
                 .toList();
     }

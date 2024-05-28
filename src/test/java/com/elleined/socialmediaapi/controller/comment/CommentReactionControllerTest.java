@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.controller.comment;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -27,7 +26,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +63,7 @@ class CommentReactionControllerTest {
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
         when(commentService.getById(anyInt())).thenReturn(new Comment());
-        when(reactionService.getAll(any(User.class), any(Post.class), any(Comment.class))).thenReturn(List.of(new Reaction()));
+        when(reactionService.getAll(any(User.class), any(Post.class), any(Comment.class), )).thenReturn(List.of(new Reaction()));
         when(reactionMapper.toDTO(any(Reaction.class))).thenReturn(new ReactionDTO());
 
         // Calling the method
@@ -76,7 +74,7 @@ class CommentReactionControllerTest {
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
         verify(commentService).getById(anyInt());
-        verify(reactionService).getAll(any(User.class), any(Post.class), any(Comment.class));
+        verify(reactionService).getAll(any(User.class), any(Post.class), any(Comment.class), );
         verify(reactionMapper, atLeastOnce()).toDTO(any(Reaction.class));
 
         // Assertions
