@@ -1,6 +1,8 @@
 package com.elleined.socialmediaapi.model.story;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.mention.Mention;
+import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "tbl_story")
@@ -35,6 +38,38 @@ public class Story extends PrimaryKeyIdentity {
             unique = true
     )
     private User creator;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_story_mention",
+            joinColumns = @JoinColumn(
+                    name = "story_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "mention_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
+    private Set<Mention> mentions;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_story_reaction",
+            joinColumns = @JoinColumn(
+                    name = "story_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "reaction_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
+    private Set<Reaction> reactions;
 
     public boolean isExpired() {
         LocalDateTime storyCreation = this.getCreatedAt();
