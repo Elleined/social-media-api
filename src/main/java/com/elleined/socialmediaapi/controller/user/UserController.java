@@ -7,6 +7,9 @@ import com.elleined.socialmediaapi.request.user.UserRequest;
 import com.elleined.socialmediaapi.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,10 +48,16 @@ public class UserController {
 
     @GetMapping("/{currentUserId}/mention/suggested-users")
     public List<UserDTO> getAllSuggestedMentions(@PathVariable("currentUserId") int currentUserId,
-                                                 @RequestParam("name") String name) {
+                                                 @RequestParam("name") String name,
+                                                 @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                                 @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                                 @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                                 @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         User currentUser = userService.getById(currentUserId);
-        return userService.getAllSuggestedMentions(currentUser, name, ).stream()
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+
+        return userService.getAllSuggestedMentions(currentUser, name, pageable).stream()
                 .map(userMapper::toDTO)
                 .toList();
     }

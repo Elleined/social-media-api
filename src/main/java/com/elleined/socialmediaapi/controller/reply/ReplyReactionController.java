@@ -16,6 +16,9 @@ import com.elleined.socialmediaapi.service.react.ReactionService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,14 +45,19 @@ public class ReplyReactionController {
     public List<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                     @PathVariable("postId") int postId,
                                     @PathVariable("commentId") int commentId,
-                                    @PathVariable("replyId") int replyId) {
+                                    @PathVariable("replyId") int replyId,
+                                    @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                    @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                    @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                    @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return reactionService.getAll(currentUser, post, comment, reply, ).stream()
+        return reactionService.getAll(currentUser, post, comment, reply, pageable).stream()
                 .map(reactionMapper::toDTO)
                 .toList();
     }
@@ -59,15 +67,20 @@ public class ReplyReactionController {
                                                    @PathVariable("postId") int postId,
                                                    @PathVariable("commentId") int commentId,
                                                    @PathVariable("replyId") int replyId,
-                                                   @RequestParam("emojiId") int emojiId) {
+                                                   @RequestParam("emojiId") int emojiId,
+                                           @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                           @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                           @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                           @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
         Emoji emoji = emojiService.getById(emojiId);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return reactionService.getAllByEmoji(currentUser, post, comment, reply, emoji).stream()
+        return reactionService.getAllByEmoji(currentUser, post, comment, reply, emoji, pageable).stream()
                 .map(reactionMapper::toDTO)
                 .toList();
     }

@@ -7,6 +7,9 @@ import com.elleined.socialmediaapi.mapper.main.PostMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +24,13 @@ public class PostHashTagController {
     private final PostMapper postMapper;
 
     @GetMapping
-    public List<HashTagDTO> getAll() {
-        return hashTagService.getAll().stream()
+    public List<HashTagDTO> getAll(@RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                   @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                   @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                   @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+        return hashTagService.getAll(pageable).stream()
                 .map(hashTagMapper::toDTO)
                 .toList();
     }
@@ -41,8 +49,14 @@ public class PostHashTagController {
     }
 
     @GetMapping("/keyword")
-    List<PostDTO> getAllByKeyword(@RequestParam("keyword") String keyword) {
-        return hashTagService.getAllByKeyword(keyword, ).stream()
+    List<PostDTO> getAllByKeyword(@RequestParam("keyword") String keyword,
+                                  @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                  @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                  @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                  @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+        return hashTagService.getAllByKeyword(keyword, pageable).stream()
                 .map(postMapper::toDTO)
                 .toList();
     }

@@ -9,6 +9,9 @@ import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,10 +46,16 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId) {
-        User currentUser = userService.getById(currentUserId);
+    public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+                                @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        return postService.getAll(currentUser, ).stream()
+        User currentUser = userService.getById(currentUserId);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+
+        return postService.getAll(currentUser, pageable).stream()
                 .map(postMapper::toDTO)
                 .toList();
     }

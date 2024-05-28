@@ -15,6 +15,9 @@ import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,12 +48,18 @@ public class ReplyController {
     @GetMapping
     public List<ReplyDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                  @PathVariable("postId") int postId,
-                                 @PathVariable("commentId") int commentId) {
+                                 @PathVariable("commentId") int commentId,
+                                 @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                 @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                 @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                 @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return replyService.getAll(currentUser, post, comment, ).stream()
+        return replyService.getAll(currentUser, post, comment, pageable).stream()
                 .map(replyMapper::toDTO)
                 .toList();
     }

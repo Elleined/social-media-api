@@ -11,6 +11,9 @@ import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.vote.VoteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,13 +33,18 @@ public class CommentVoteController {
     @GetMapping
     public List<VoteDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                 @PathVariable("postId") int postId,
-                                @PathVariable("commentId") int commentId) {
+                                @PathVariable("commentId") int commentId,
+                                @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return voteService.getAll(currentUser, post, comment, ).stream()
+        return voteService.getAll(currentUser, post, comment, pageable).stream()
                 .map(voteMapper::toDTO)
                 .toList();
     }
@@ -58,13 +66,18 @@ public class CommentVoteController {
     public List<VoteDTO> getAllByVerdict(@PathVariable("currentUserId") int currentUserId,
                                          @PathVariable("postId") int postId,
                                          @PathVariable("commentId") int commentId,
-                                         @RequestParam("verdict") Vote.Verdict verdict) {
+                                         @RequestParam("verdict") Vote.Verdict verdict,
+                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                         @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                         @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                         @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return voteService.getAll(currentUser, post, comment, verdict, ).stream()
+        return voteService.getAll(currentUser, post, comment, verdict, pageable).stream()
                 .map(voteMapper::toDTO)
                 .toList();
     }

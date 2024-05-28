@@ -6,10 +6,10 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.follow.FollowService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,9 +23,16 @@ public class UserFollowerController {
     private final FollowService followService;
 
     @GetMapping
-    public List<UserDTO> getAllFollowers(@PathVariable("currentUserId") int currentUserId) {
+    public List<UserDTO> getAllFollowers(@PathVariable("currentUserId") int currentUserId,
+                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                         @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                         @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                         @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+
         User currentUser = userService.getById(currentUserId);
-        return followService.getAllFollowers(currentUser, ).stream()
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+
+        return followService.getAllFollowers(currentUser, pageable).stream()
                 .map(userMapper::toDTO)
                 .toList();
     }

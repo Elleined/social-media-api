@@ -7,6 +7,9 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.friend.FriendService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,9 +25,16 @@ public class FriendRequestController {
     private final FriendRequestMapper friendRequestMapper;
 
     @GetMapping
-    public List<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId) {
+    public List<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId,
+                                                       @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                                       @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                                       @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                                       @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+
         User currentUser = userService.getById(currentUserId);
-        return friendService.getAllFriendRequests(currentUser, ).stream()
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+
+        return friendService.getAllFriendRequests(currentUser, pageable).stream()
                 .map(friendRequestMapper::toDTO)
                 .toList();
     }

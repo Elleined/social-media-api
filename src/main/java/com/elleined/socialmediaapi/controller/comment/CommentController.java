@@ -13,6 +13,9 @@ import com.elleined.socialmediaapi.service.main.reply.ReplyService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,11 +42,17 @@ public class CommentController {
 
     @GetMapping
     public List<CommentDTO> getAll(@PathVariable("currentUserId") int currentUserId,
-                                   @PathVariable("postId") int postId) {
+                                   @PathVariable("postId") int postId,
+                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                   @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                   @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                   @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return commentService.getAll(currentUser, post, ).stream()
+        return commentService.getAll(currentUser, post, pageable).stream()
                 .map(commentMapper::toDTO)
                 .toList();
     }
