@@ -5,10 +5,12 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -50,5 +52,10 @@ public class BlockServiceImpl implements BlockService {
         userRepository.save(currentUser);
         userRepository.save(userToBeUnblocked);
         log.debug("User {} unblocked user {} successfully", currentUser.getId(), userToBeUnblocked.getId());
+    }
+
+    @Override
+    public Set<User> getAllBlockedUsers(User currentUser, Pageable pageable) {
+        return userRepository.findAllBlockedUsers(currentUser, pageable).stream().collect(Collectors.toSet());
     }
 }

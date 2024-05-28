@@ -138,8 +138,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     @Override
     public List<Post> getAll(Pageable pageable) {
-        return postRepository.findAll().stream()
-                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+        return postRepository.findAll(pageable).stream()
                 .toList();
     }
 
@@ -153,11 +152,10 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     @Override
     public List<Post> getAll(User currentUser, Pageable pageable) {
-        return postRepository.findAll().stream()
+        return postRepository.findAll(pageable).stream()
                 .filter(Post::isActive)
                 .filter(post -> !blockService.isBlockedByYou(currentUser, post.getCreator()))
                 .filter(post -> !blockService.isYouBeenBlockedBy(currentUser, post.getCreator()))
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }
 
@@ -215,10 +213,9 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     }
 
     @Override
-    public List<Post> getAllSavedPosts(User currentUser) {
-        return currentUser.getSavedPosts().stream()
+    public List<Post> getAllSavedPosts(User currentUser, Pageable pageable) {
+        return userRepository.findAllSavedPosts(currentUser, pageable).stream()
                 .filter(Post::isActive)
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }
 
@@ -253,10 +250,9 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     }
 
     @Override
-    public List<Post> getAllSharedPosts(User currentUser) {
-        return currentUser.getSharedPosts().stream()
+    public List<Post> getAllSharedPosts(User currentUser, Pageable pageable) {
+        return userRepository.findAllSharedPosts(currentUser, pageable).stream()
                 .filter(Post::isActive)
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }
 }

@@ -75,7 +75,7 @@ public class NoteServiceImpl implements NoteService, NoteServiceRestriction {
 
     @Override
     public List<Note> getAll(Pageable pageable) {
-        return noteRepository.findAll().stream()
+        return noteRepository.findAll(pageable).stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }

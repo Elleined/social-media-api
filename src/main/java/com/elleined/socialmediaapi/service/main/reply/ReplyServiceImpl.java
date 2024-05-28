@@ -14,6 +14,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.ReplyRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;
@@ -40,6 +41,7 @@ import java.util.Set;
 @Service
 @Transactional
 public class ReplyServiceImpl implements ReplyService {
+    private final CommentRepository commentRepository;
 
     private final ReplyRepository replyRepository;
     private final ReplyMapper replyMapper;
@@ -165,21 +167,22 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public List<Reply> getAll(User currentUser, Post post, Comment comment, Pageable pageable) throws ResourceNotFoundException {
         if (post.isInactive())
-            throw new ResourceNotFoundException("Cannot update reply! because post with id of " + post.getId() + " does not exists or already deleted!") ;
+            throw new ResourceNotFoundException("Cannot get all replies! because post with id of " + post.getId() + " does not exists or already deleted!") ;
+
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotOwnedException("Cannot get all replies! because post doesn't have this comment!");
+
+        if (postServiceRestriction.isCommentSectionClosed(post))
+            throw new CommentSectionException("Cannot get all replies! because cannot reply to this comment because author already closed the comment section for this post!");
 
         if (comment.isInactive())
-            throw new ResourceNotFoundException("Comment with id of " + comment.getId() + " might already been deleted or does not exists anymore!");
+            throw new ResourceNotFoundException("Cannot get all replies! because the comment you trying to reply is either be deleted or does not exists anymore!");
 
-        Reply pinnedReply = comment.getPinnedReply();
-        List<Reply> replies = new ArrayList<>(comment.getReplies().stream()
+        return commentRepository.findAllReplies(comment, pageable).stream()
                 .filter(Reply::isActive)
-                .filter(reply -> !reply.equals(pinnedReply))
                 .filter(reply -> !blockService.isBlockedByYou(currentUser, reply.getCreator()))
                 .filter(reply -> !blockService.isYouBeenBlockedBy(currentUser, reply.getCreator()))
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
-                .toList());
-        if (pinnedReply != null) replies.add(0, pinnedReply); // Prioritizing pinned reply
-        return replies;
+                .toList();
     }
 
     @Override
@@ -235,7 +238,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public List<Reply> getAll(Pageable pageable) {
-        return replyRepository.findAll().stream()
+        return replyRepository.findAll(pageable).stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }

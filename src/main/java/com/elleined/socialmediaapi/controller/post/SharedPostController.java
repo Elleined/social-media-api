@@ -22,7 +22,7 @@ public class SharedPostController {
     @GetMapping
     public List<PostDTO> getAllSharedPost(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return postService.getAllSharedPosts(currentUser).stream()
+        return postService.getAllSharedPosts(currentUser, ).stream()
                 .map(postMapper::toDTO)
                 .toList();
     }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -56,11 +57,13 @@ public class FollowServiceImpl implements FollowService, FollowServiceRestrictio
 
     @Override
     public Set<User> getAllFollowers(User currentUser, Pageable pageable) {
-        return currentUser.getFollowers();
+        return userRepository.findAllFollowers(currentUser, pageable).stream()
+                .collect(Collectors.toSet());
     }
 
     @Override
     public Set<User> getAllFollowing(User currentUser, Pageable pageable) {
-        return currentUser.getFollowings();
+        return userRepository.findAllFollowings(currentUser, pageable).stream()
+                .collect(Collectors.toSet());
     }
 }

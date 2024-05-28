@@ -23,7 +23,7 @@ public class SavedPostController {
     @GetMapping
     public List<PostDTO> getAllSavedPost(@PathVariable("currentUserId") int currentUserId) {
         User currentUser = userService.getById(currentUserId);
-        return postService.getAllSavedPosts(currentUser).stream()
+        return postService.getAllSavedPosts(currentUser, ).stream()
                 .map(postMapper::toDTO)
                 .toList();
     }

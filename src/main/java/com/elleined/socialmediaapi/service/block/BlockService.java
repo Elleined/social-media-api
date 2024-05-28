@@ -19,7 +19,5 @@ public interface BlockService {
         return suspectedUser.getBlockedUsers().contains(currentUser);
     }
 
-    default Set<User> getAllBlockedUsers(User currentUser, Pageable pageable) {
-        return currentUser.getBlockedUsers();
-    }
+    Set<User> getAllBlockedUsers(User currentUser, Pageable pageable);
 }

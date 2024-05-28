@@ -14,6 +14,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
+import com.elleined.socialmediaapi.repository.main.PostRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.mention.MentionService;
@@ -28,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +39,8 @@ import java.util.Set;
 @Transactional
 public class CommentServiceImpl implements CommentService, CommentServiceRestriction {
     private final BlockService blockService;
+
+    private final PostRepository postRepository;
 
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
@@ -104,17 +106,11 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     @Override
     public List<Comment> getAll(User currentUser, Post post, Pageable pageable) throws ResourceNotFoundException {
-        Comment pinnedComment = post.getPinnedComment();
-        List<Comment> comments = new ArrayList<>(post.getComments()
-                .stream()
+        return postRepository.findAllComments(post, pageable).stream()
                 .filter(Comment::isActive)
-                .filter(comment -> !comment.equals(pinnedComment))
                 .filter(comment -> !blockService.isBlockedByYou(currentUser, comment.getCreator()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
-                .toList());
-        if (pinnedComment != null) comments.add(0, pinnedComment); // Prioritizing pinned comment
-        return comments;
+                .toList();
     }
 
     @Override
@@ -129,7 +125,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     @Override
     public List<Comment> getAll(Pageable pageable) {
-        return commentRepository.findAll().stream()
+        return commentRepository.findAll(pageable).stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }

@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService, UserServiceRestriction {
 
     @Override
     public List<User> getAll(Pageable pageable) {
-        return userRepository.findAll().stream()
+        return userRepository.findAll(pageable).stream()
                 .sorted(Comparator.comparingInt(User::getId))
                 .toList();
     }
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService, UserServiceRestriction {
 
     @Override
     public List<User> getAllSuggestedMentions(User currentUser, String name, Pageable pageable) {
-        return userRepository.fetchAllByProperty(name).stream()
+        return userRepository.findAllByName(name, pageable).stream()
                 .filter(suggestedUser -> !suggestedUser.equals(currentUser))
                 .filter(suggestedUser -> !blockService.isBlockedByYou(currentUser, suggestedUser))
                 .filter(suggestedUser -> !blockService.isYouBeenBlockedBy(currentUser, suggestedUser))

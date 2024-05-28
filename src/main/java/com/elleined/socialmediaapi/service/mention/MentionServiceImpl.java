@@ -49,7 +49,7 @@ public class MentionServiceImpl implements MentionService {
 
     @Override
     public List<Mention> getAll(Pageable pageable) {
-        return mentionRepository.findAll().stream()
+        return mentionRepository.findAll(pageable).stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }

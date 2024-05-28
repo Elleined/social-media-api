@@ -10,13 +10,12 @@ import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.vote.Vote;
+import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.VoteRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;
-import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
-import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -34,10 +33,7 @@ public class VoteServiceImpl implements VoteService {
     private final VoteRepository voteRepository;
     private final VoteMapper voteMapper;
 
-    private final UserService userService;
-
-    private final PostService postService;
-
+    private final CommentRepository commentRepository;
     private final CommentService commentService;
 
     private final BlockService blockService;
@@ -57,7 +53,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public List<Vote> getAll(Pageable pageable) {
-        return voteRepository.findAll().stream()
+        return voteRepository.findAll(pageable).stream()
                 .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
                 .toList();
     }
@@ -110,8 +106,7 @@ public class VoteServiceImpl implements VoteService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot get all vote to this comment! because this comment might already deleted or doesn't exists!");
 
-        return comment.getVotes().stream()
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
+        return commentRepository.findAllVotes(comment, pageable).stream()
                 .toList();
     }
 }
