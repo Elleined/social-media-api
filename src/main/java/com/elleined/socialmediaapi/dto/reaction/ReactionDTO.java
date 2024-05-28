@@ -18,4 +18,5 @@ public class ReactionDTO extends DTO {
     private Set<Integer> postIds;
     private Set<Integer> commentIds;
     private Set<Integer> replyIds;
+    private Set<Integer> storyIds;
 }

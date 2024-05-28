@@ -21,7 +21,8 @@ public interface MentionMapper extends CustomMapper<Mention, MentionDTO> {
             @Mapping(target = "mentionedUserId", source = "mentionedUser.id"),
             @Mapping(target = "postIds", expression = "java(mention.getAllPostIds())"),
             @Mapping(target = "commentIds", expression = "java(mention.getAllCommentIds())"),
-            @Mapping(target = "replyIds", expression = "java(mention.getAllReplyIds())")
+            @Mapping(target = "replyIds", expression = "java(mention.getAllReplyIds())"),
+            @Mapping(target = "storyIds", expression = "java(mention.getAllStoryIds())")
     })
     MentionDTO toDTO(Mention mention);
 
@@ -33,7 +34,8 @@ public interface MentionMapper extends CustomMapper<Mention, MentionDTO> {
             @Mapping(target = "mentionedUser", expression = "java(mentionedUser)"),
             @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "comments", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "replies", expression = "java(new java.util.HashSet<>())")
+            @Mapping(target = "replies", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "stories", expression = "java(new java.util.HashSet<>())")
     })
     Mention toEntity(User creator,
                      @Context User mentionedUser);

@@ -72,4 +72,10 @@ public class Reaction extends PrimaryKeyIdentity {
                 .map(Forum::getId)
                 .collect(Collectors.toSet());
     }
+
+    public Set<Integer> getAllStoryIds() {
+        return this.getStories().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
 }

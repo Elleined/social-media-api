@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_story")
@@ -77,5 +78,17 @@ public class Story extends PrimaryKeyIdentity {
 
         return LocalDateTime.now().isAfter(storyExpiration) ||
                 LocalDateTime.now().equals(storyExpiration);
+    }
+
+    public Set<Integer> getAllMentionIds() {
+        return this.getMentions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllReactionIds() {
+        return this.getReactions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
 }

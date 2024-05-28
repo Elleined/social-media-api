@@ -22,7 +22,8 @@ public interface ReactionMapper extends CustomMapper<Reaction, ReactionDTO> {
             @Mapping(target = "emojiId", source = "emoji.id"),
             @Mapping(target = "postIds", expression = "java(reaction.getAllPostIds())"),
             @Mapping(target = "commentIds", expression = "java(reaction.getAllCommentIds())"),
-            @Mapping(target = "replyIds", expression = "java(reaction.getAllReplyIds())")
+            @Mapping(target = "replyIds", expression = "java(reaction.getAllReplyIds())"),
+            @Mapping(target = "storyIds", expression = "java(reaction.getAllStoryIds())"),
     })
     ReactionDTO toDTO(Reaction reaction);
 
@@ -34,7 +35,8 @@ public interface ReactionMapper extends CustomMapper<Reaction, ReactionDTO> {
             @Mapping(target = "emoji", expression = "java(emoji)"),
             @Mapping(target = "posts", expression = "java(new java.util.HashSet<>())"),
             @Mapping(target = "comments", expression = "java(new java.util.HashSet<>())"),
-            @Mapping(target = "replies", expression = "java(new java.util.HashSet<>())")
+            @Mapping(target = "replies", expression = "java(new java.util.HashSet<>())"),
+            @Mapping(target = "stories", expression = "java(new java.util.HashSet<>())")
     })
     Reaction toEntity(User creator,
                       @Context Emoji emoji);

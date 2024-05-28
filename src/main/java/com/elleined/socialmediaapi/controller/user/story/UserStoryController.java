@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users/{currentUserId}/story")
@@ -29,9 +32,13 @@ public class UserStoryController {
     @PostMapping
     public StoryDTO save(@PathVariable("currentUserId") int currentUserId,
                          @RequestPart("content") String content,
-                         @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture) {
+                         @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
+                         @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) {
+
         User currentUser = userService.getById(currentUserId);
-        Story story = storyService.save(currentUser, content, attachedPicture);
+        Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
+
+        Story story = storyService.save(currentUser, content, attachedPicture, mentionedUsers);
         return storyMapper.toDTO(story);
     }
 

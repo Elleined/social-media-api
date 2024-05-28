@@ -73,7 +73,7 @@ class StoryMapperTest {
         // Stubbing methods
 
         // Calling the method
-        Story actual = storyMapper.toEntity(new User(), "Content", "Attached Picture Path");
+        Story actual = storyMapper.toEntity(new User(), "Content", "Attached Picture Path", );
 
         // Behavior Verifications
 

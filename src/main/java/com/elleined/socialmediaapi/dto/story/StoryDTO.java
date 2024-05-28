@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -14,4 +16,6 @@ public class StoryDTO extends DTO {
     private String content;
     private String attachPicture;
     private int creatorId;
+    private Set<Integer> mentionIds;
+    private Set<Integer> reactionIds;
 }

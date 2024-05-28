@@ -4,9 +4,11 @@ import com.elleined.socialmediaapi.exception.resource.ResourceAlreadyExistsExcep
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.story.StoryException;
 import com.elleined.socialmediaapi.mapper.story.StoryMapper;
+import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.story.StoryRepository;
+import com.elleined.socialmediaapi.service.mention.MentionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -25,13 +28,17 @@ public class StoryServiceImpl implements StoryService, StoryServiceRestriction {
     private final StoryRepository storyRepository;
     private final StoryMapper storyMapper;
 
+    private final MentionService mentionService;
+
     @Override
-    public Story save(User currentUser, String content, MultipartFile attachedPicture) {
+    public Story save(User currentUser, String content, MultipartFile attachedPicture, Set<User> mentionedUsers) {
         if (hasStory(currentUser))
             throw new ResourceAlreadyExistsException("Cannot save story because you've already created one. please delete first then create again!");
 
+        Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
+
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        Story story = storyMapper.toEntity(currentUser, content, picture);
+        Story story = storyMapper.toEntity(currentUser, content, picture, mentions);
         storyRepository.save(story);
         log.debug("saving story success");
         return story;

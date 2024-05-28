@@ -60,7 +60,8 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
                         Post post,
                         String body,
                         MultipartFile attachedPicture,
-                        Set<User> mentionedUsers, Set<HashTag> hashTags) {
+                        Set<User> mentionedUsers,
+                        Set<HashTag> hashTags) {
 
         if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save comment! because comment body cannot be empty! Please provide text for your comment");
