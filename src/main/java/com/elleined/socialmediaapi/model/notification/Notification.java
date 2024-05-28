@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @SuperBuilder
 @NoArgsConstructor
 public class Notification extends PrimaryKeyIdentity {
+
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "sender_id",
@@ -51,9 +52,6 @@ public class Notification extends PrimaryKeyIdentity {
             nullable = false
     )
     private Status status;
-
-    @ManyToMany(mappedBy = "notifications")
-    private Set<Post> posts;
 
     @ManyToMany(mappedBy = "notifications")
     private Set<Comment> comments;

@@ -1,64 +1,24 @@
 # social-media-api
-An API that supports social media functionality.
-
-# Configuration(Optional)
- - For my front end project im using Jquery and Ajax
- - To receive notification make sure to connect and subscribe to websocket URI
- - First connect in websocket endpoint
-   ```
-   const socket = new SockJS("http://localhost:8081/api/v1/forum/ws");
-   const stompClient = Stomp.over(socket);
-   stompClient.connect({}, onConnected,
-   () => console.log("Could not connect to WebSocket server. Please refresh this page to try again!"));
-   ```
-## For real-time communications of forum subscribe to this topics
-  - for comments
-  ```
-  const commentsTopic = `/discussion/posts/${postId}/comments`;
-  let commentSubscription = stompClient.subscribe(commentsTopic, function (commentDto) {
-      const json = JSON.parse(commentDto.body);
-      // Execute code here
-  });
-  ```
-  - for replies
-  ```
-  const repliesTopic = `/discussion/posts/comments/${commentId}/replies`;
-  let replySubscription = stompClient.subscribe(repliesTopic, function (replyDto) {
-      const json = JSON.parse(replyDto.body);
-      // Execute code here
-  });
-  ```
+REST API that supports social media functionalities
      
 # Features
-- Create, Edit, and Delete a Post with or wthout picture
-- Create, Edit, and Delete a Comment with or wthout picture in a post real time
-- Create, Edit, and Delete a Reply with or wthout picture in a comment real time
-- Like in Post, Comment, and Reply
-- Mention another user in Post, Comment, and Reply
-- Create, Update, Delete Reaction in Post
-- Create, Update, Delete Reaction in Comment
-- Create, Update, Delete Reaction in Reply
+- Create, read, update, and delete post with or without picture
+- Create, read, update, and delete comment with or without picture in a post real time
+- Create, read, update, and delete reply with or without picture in a comment real time
+- Mention another user in post, comment, and reply
+- Create, read, update, and delete reaction in post, comment, and reply
 - Author can close the comment section for his/her every post
-- Create HashTag in post, comment, and reply
+- Create HashTag in post and Link hashtag in comment and reply
 - Comment upvote
 - Pin comment and reply
 - Block another user
-- Save and Unsave post
-- Share and Unshare post
-- Create, update, and delete note
-- Send, Accept, and Cancel friend request
+- Save, un-save, and get all un-save post
+- Share, un-share, and get all un-share post
+- Create, read, update, and delete note
+- Create, read, update, and elete story
+- Send, accept, and reject friend request
 - Follow and Unfollow users
-
-# Technologies used
-- Spring boot
-- Spring mvc
-- Spring websocket
-- Spring data jpa
- - Softwares used
-   - MySQL
-   - Postman
-   - IntelliJ
-  
+ 
 # Run using Docker
 ## 1. Create network
 ```

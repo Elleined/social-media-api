@@ -123,22 +123,6 @@ public class Post extends Forum {
     )
     private Set<User> sharers;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_post_notification",
-            joinColumns = @JoinColumn(
-                    name = "post_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "notification_id",
-                    referencedColumnName = "id",
-                    nullable = false
-            )
-    )
-    private Set<Notification> notifications;
-
     public enum CommentSectionStatus {OPEN, CLOSED}
 
     public Set<Integer> getAllHashTagIds() {
