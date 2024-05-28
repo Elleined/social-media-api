@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -62,18 +63,19 @@ class CommentVoteControllerTest {
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
         when(commentService.getById(anyInt())).thenReturn(new Comment());
-        when(voteService.getAll(any(User.class), any(Post.class), any(Comment.class), )).thenReturn(List.of(new Vote()));
+        when(voteService.getAll(any(User.class), any(Post.class), any(Comment.class), any(Pageable.class))).thenReturn(List.of(new Vote()));
         when(voteMapper.toDTO(any(Vote.class))).thenReturn(new VoteDTO());
 
         // Calling the method
-        mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments/{commentId}/votes", 1, 1, 1))
+        mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments/{commentId}/votes", 1, 1, 1)
+                        .param())
                 .andExpect(status().isOk());
 
         // Behavior Verifications
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
         verify(commentService).getById(anyInt());
-        verify(voteService).getAll(any(User.class), any(Post.class), any(Comment.class), );
+        verify(voteService).getAll(any(User.class), any(Post.class), any(Comment.class), any(Pageable.class));
         verify(voteMapper, atLeastOnce()).toDTO(any(Vote.class));
 
         // Assertions

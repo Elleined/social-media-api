@@ -10,6 +10,9 @@ import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.repository.main.CommentRepository;
+import com.elleined.socialmediaapi.repository.main.PostRepository;
+import com.elleined.socialmediaapi.repository.main.ReplyRepository;
 import com.elleined.socialmediaapi.repository.react.ReactionRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
@@ -34,6 +37,10 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ReactionServiceImpl implements ReactionService {
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
+
     private final BlockService blockService;
 
     private final PostService postService;
@@ -234,10 +241,8 @@ public class ReactionServiceImpl implements ReactionService {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve reactions to this post! because this might be already deleted or doesn't exists!");
 
-        return post.getReactions().stream()
-                .sorted(Comparator.comparing(Reaction::getCreatedAt).reversed())
+        return postRepository.findAllReactions(post, pageable).stream()
                 .toList();
-
     }
 
     @Override
@@ -251,8 +256,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot get all reactions to this comment! because comment might be already deleted or doesn't exists!");
 
-        return comment.getReactions().stream()
-                .sorted(Comparator.comparing(Reaction::getCreatedAt).reversed())
+        return commentRepository.findAllReactions(comment, pageable).stream()
                 .toList();
     }
 
@@ -273,8 +277,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot get all reactions to this reply! because reply might be already deleted or doesn't exists!");
 
-        return reply.getReactions().stream()
-                .sorted(Comparator.comparing(Reaction::getCreatedAt).reversed())
+        return replyRepository.findAllReactions(reply, pageable).stream()
                 .toList();
     }
 
