@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -72,17 +73,21 @@ class CommentControllerTest {
         // Stubbing methods
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
-        when(commentService.getAll(any(User.class), any(Post.class), )).thenReturn(List.of(new Comment()));
+        when(commentService.getAll(any(User.class), any(Post.class), any(Pageable.class))).thenReturn(List.of(new Comment()));
         when(commentMapper.toDTO(any(Comment.class))).thenReturn(new CommentDTO());
 
         // Calling the method
-        mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments", 1, 1))
+        mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments", 1, 1)
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortDirection", "ASC")
+                        .param("sortBy", "id"))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
-        verify(commentService).getAll(any(User.class), any(Post.class), );
+        verify(commentService).getAll(any(User.class), any(Post.class), any(Pageable.class));
         verify(commentMapper, atLeastOnce()).toDTO(any(Comment.class));
 
         // Assertions

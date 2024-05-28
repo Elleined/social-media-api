@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -63,18 +64,22 @@ class CommentReactionControllerTest {
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
         when(commentService.getById(anyInt())).thenReturn(new Comment());
-        when(reactionService.getAll(any(User.class), any(Post.class), any(Comment.class), )).thenReturn(List.of(new Reaction()));
+        when(reactionService.getAll(any(User.class), any(Post.class), any(Comment.class), any(Pageable.class))).thenReturn(List.of(new Reaction()));
         when(reactionMapper.toDTO(any(Reaction.class))).thenReturn(new ReactionDTO());
 
         // Calling the method
-        mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments/{commentId}/reactions", 1, 1, 1))
+        mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments/{commentId}/reactions", 1, 1, 1)
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortDirection", "ASC")
+                        .param("sortBy", "id"))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
         verify(commentService).getById(anyInt());
-        verify(reactionService).getAll(any(User.class), any(Post.class), any(Comment.class), );
+        verify(reactionService).getAll(any(User.class), any(Post.class), any(Comment.class), any(Pageable.class));
         verify(reactionMapper, atLeastOnce()).toDTO(any(Reaction.class));
 
         // Assertions
@@ -95,12 +100,16 @@ class CommentReactionControllerTest {
         when(postService.getById(anyInt())).thenReturn(new Post());
         when(commentService.getById(anyInt())).thenReturn(new Comment());
         when(emojiService.getById(anyInt())).thenReturn(new Emoji());
-        when(reactionService.getAllByEmoji(any(User.class), any(Post.class), any(Comment.class), any(Emoji.class))).thenReturn(List.of(new Reaction()));
+        when(reactionService.getAllByEmoji(any(User.class), any(Post.class), any(Comment.class), any(Emoji.class), any(Pageable.class))).thenReturn(List.of(new Reaction()));
         when(reactionMapper.toDTO(any(Reaction.class))).thenReturn(new ReactionDTO());
 
         // Calling the method
         mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments/{commentId}/reactions/emoji", 1, 1, 1)
-                        .param("emojiId", String.valueOf(1)))
+                        .param("emojiId", String.valueOf(1))
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortDirection", "ASC")
+                        .param("sortBy", "id"))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
@@ -108,7 +117,7 @@ class CommentReactionControllerTest {
         verify(postService).getById(anyInt());
         verify(commentService).getById(anyInt());
         verify(emojiService).getById(anyInt());
-        verify(reactionService).getAllByEmoji(any(User.class), any(Post.class), any(Comment.class), any(Emoji.class));
+        verify(reactionService).getAllByEmoji(any(User.class), any(Post.class), any(Comment.class), any(Emoji.class), any(Pageable.class));
         verify(reactionMapper, atLeastOnce()).toDTO(any(Reaction.class));
 
         // Assertions

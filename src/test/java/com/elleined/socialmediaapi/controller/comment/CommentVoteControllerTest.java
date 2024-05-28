@@ -68,7 +68,10 @@ class CommentVoteControllerTest {
 
         // Calling the method
         mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments/{commentId}/votes", 1, 1, 1)
-                        .param())
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortDirection", "ASC")
+                        .param("sortBy", "id"))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
@@ -148,19 +151,23 @@ class CommentVoteControllerTest {
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
         when(commentService.getById(anyInt())).thenReturn(new Comment());
-        when(voteService.getAll(any(User.class), any(Post.class), any(Comment.class), any(Vote.Verdict.class), )).thenReturn(List.of(new Vote()));
+        when(voteService.getAll(any(User.class), any(Post.class), any(Comment.class), any(Vote.Verdict.class), any(Pageable.class))).thenReturn(List.of(new Vote()));
         when(voteMapper.toDTO(any(Vote.class))).thenReturn(new VoteDTO());
 
         // Calling the method
         mockMvc.perform(get("/users/{currentUserId}/posts/{postId}/comments/{commentId}/votes/verdict", 1, 1, 1)
-                        .param("verdict", Vote.Verdict.UP_VOTE.name()))
+                        .param("verdict", Vote.Verdict.UP_VOTE.name())
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortDirection", "ASC")
+                        .param("sortBy", "id"))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
         verify(commentService).getById(anyInt());
-        verify(voteService).getAll(any(User.class), any(Post.class), any(Comment.class), any(Vote.Verdict.class), );
+        verify(voteService).getAll(any(User.class), any(Post.class), any(Comment.class), any(Vote.Verdict.class), any(Pageable.class));
         verify(voteMapper, atLeastOnce()).toDTO(any(Vote.class));
 
         // Assertions

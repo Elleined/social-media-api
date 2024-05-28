@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -157,17 +158,21 @@ class UserControllerTest {
 
         // Stubbing methods
         when(userService.getById(anyInt())).thenReturn(new User());
-        when(userService.getAllSuggestedMentions(any(User.class), anyString(), )).thenReturn(List.of(new User()));
+        when(userService.getAllSuggestedMentions(any(User.class), anyString(), any(Pageable.class))).thenReturn(List.of(new User()));
         when(userMapper.toDTO(any(User.class))).thenReturn(new UserDTO());
 
         // Calling the method
         mockMvc.perform(get("/users/{currentUserId}/mention/suggested-users", 1)
-                        .param("name", "Name"))
+                        .param("name", "Name")
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortDirection", "ASC")
+                        .param("sortBy", "id"))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
         verify(userService).getById(anyInt());
-        verify(userService).getAllSuggestedMentions(any(User.class), anyString(), );
+        verify(userService).getAllSuggestedMentions(any(User.class), anyString(), any(Pageable.class));
         verify(userMapper, atLeastOnce()).toDTO(any(User.class));
 
         // Assertions

@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -47,15 +48,19 @@ class EmojiControllerTest {
         // Set up method
 
         // Stubbing methods
-        when(emojiService.getAll()).thenReturn(List.of(new Emoji()));
+        when(emojiService.getAll(any(Pageable.class))).thenReturn(List.of(new Emoji()));
         when(emojiMapper.toDTO(any(Emoji.class))).thenReturn(new EmojiDTO());
 
         // Calling the method
-        mockMvc.perform(get("/emojis"))
+        mockMvc.perform(get("/emojis")
+                .param("pageNumber", "1")
+                .param("pageSize", "5")
+                .param("sortDirection", "ASC")
+                .param("sortBy", "id"))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
-        verify(emojiService).getAll();
+        verify(emojiService).getAll(any(Pageable.class));
         verify(emojiMapper).toDTO(any(Emoji.class));
 
         // Assertions

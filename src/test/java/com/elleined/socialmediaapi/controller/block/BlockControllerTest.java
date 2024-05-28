@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Set;
@@ -50,16 +51,20 @@ class BlockControllerTest {
 
         // Stubbing methods
         when(userService.getById(anyInt())).thenReturn(new User());
-        when(blockService.getAllBlockedUsers(any(User.class))).thenReturn(Set.of(new User()));
+        when(blockService.getAllBlockedUsers(any(User.class), any(Pageable.class))).thenReturn(Set.of(new User()));
         when(userMapper.toDTO(any(User.class))).thenReturn(new UserDTO());
 
         // Calling the method
-        mockMvc.perform(get("/users/{currentUserId}/blocked-users", 1))
+        mockMvc.perform(get("/users/{currentUserId}/blocked-users", 1)
+                        .param("pageNumber", "1")
+                        .param("pageSize", "5")
+                        .param("sortDirection", "ASC")
+                        .param("sortBy", "id"))
                 .andExpect(status().isOk());
 
         // Behavior Verifications
         verify(userService).getById(anyInt());
-        verify(blockService).getAllBlockedUsers(any(User.class));
+        verify(blockService).getAllBlockedUsers(any(User.class), any(Pageable.class));
         verify(userMapper, atLeastOnce()).toDTO(any(User.class));
 
         // Assertions

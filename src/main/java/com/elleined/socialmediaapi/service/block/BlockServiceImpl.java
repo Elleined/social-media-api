@@ -56,6 +56,7 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public Set<User> getAllBlockedUsers(User currentUser, Pageable pageable) {
-        return userRepository.findAllBlockedUsers(currentUser, pageable).stream().collect(Collectors.toSet());
+        return userRepository.findAllBlockedUsers(currentUser, pageable).stream()
+                .collect(Collectors.toSet());
     }
 }

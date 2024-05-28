@@ -12,8 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
@@ -179,22 +183,18 @@ class BlockServiceImplTest {
                 .build();
 
         // Set up method
-        currentUser.getBlockedUsers().add(anotherUser);
-        anotherUser.getBlockedUsers().add(currentUser);
 
         // Stubbing methods
+        when(userRepository.findAllBlockedUsers(any(User.class), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(anotherUser)));
 
         // Calling the method
-        Set<User> currentUserBlockedUsers = blockService.getAllBlockedUsers(currentUser);
-        Set<User> anotherUserBlockedUsers = blockService.getAllBlockedUsers(anotherUser);
+        Set<User> currentUserBlockedUsers = blockService.getAllBlockedUsers(currentUser, Pageable.unpaged());
 
         // Behavior Verifications
+        verify(userRepository).findAllBlockedUsers(any(User.class), any(Pageable.class));
 
         // Assertions
         assertNotNull(currentUserBlockedUsers);
         assertTrue(currentUserBlockedUsers.contains(anotherUser));
-
-        assertNotNull(anotherUserBlockedUsers);
-        assertTrue(anotherUserBlockedUsers.contains(currentUser));
     }
 }
