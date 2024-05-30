@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.net.ContentHandler;
-
 public interface StoryRepository extends JpaRepository<Story, Integer> {
 
     @Query("SELECT s.reactions FROM Story s WHERE s = :story")
