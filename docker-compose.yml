@@ -13,6 +13,7 @@ services:
       - MYSQL_PASSWORD=root
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=sma_db
+      - PORT=8081
     networks:
       - sma_network
     depends_on:

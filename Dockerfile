@@ -6,7 +6,8 @@ ENV MYSQL_HOST=sma_mysql_server
 ENV MYSQL_USER=root
 ENV MYSQL_PASSWORD=root
 ENV MYSQL_PORT=3306
-ENV MYSQL_DATABASE=social_media_api_db
+ENV MYSQL_DATABASE=sma_db
+ENV PORT=8081
 
 ADD ./target/*.jar social-media-api.jar
 EXPOSE 8081
