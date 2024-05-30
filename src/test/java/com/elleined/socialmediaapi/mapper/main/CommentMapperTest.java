@@ -6,7 +6,6 @@ import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.user.User;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -24,7 +23,6 @@ class CommentMapperTest {
     private final CommentMapper commentMapper = Mappers.getMapper(CommentMapper.class);
 
     @Test
-    @DisplayName("")
     void toDTO() {
         // Pre defined values
 
@@ -92,7 +90,6 @@ class CommentMapperTest {
     }
 
     @Test
-    @DisplayName("")
     void toEntity() {
         // Pre defined values
 

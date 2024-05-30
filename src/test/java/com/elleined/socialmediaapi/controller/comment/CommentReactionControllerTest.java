@@ -12,7 +12,6 @@ import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.react.ReactionService;
 import com.elleined.socialmediaapi.service.user.UserService;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(CommentReactionController.class)
+@WebMvcTest(value = CommentReactionController.class, properties = {"server.port=5454"})
 class CommentReactionControllerTest {
 
     @Autowired
@@ -123,7 +122,6 @@ class CommentReactionControllerTest {
     }
 
     @Test
-    @DisplayName("Save scenario 1: should invoke save if not already voted")
     void shouldInvokeSaveIfNotAlreadyVoted() throws Exception {
         // Pre defined values
 
@@ -160,7 +158,6 @@ class CommentReactionControllerTest {
     }
 
     @Test
-    @DisplayName("Save scenario 2: should invoke the update if already voted")
     void shouldInvokeTheUpdateIfAlreadyVoted() throws Exception {
         // Pre defined values
 

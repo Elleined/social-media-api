@@ -4,7 +4,6 @@ import com.elleined.socialmediaapi.dto.vote.VoteDTO;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.vote.Vote;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -21,7 +20,6 @@ class VoteMapperTest {
     private final VoteMapper voteMapper = Mappers.getMapper(VoteMapper.class);
 
     @Test
-    @DisplayName("")
     void toDTO() {
         // Pre defined values
 
@@ -63,7 +61,6 @@ class VoteMapperTest {
     }
 
     @Test
-    @DisplayName("")
     void toEntity() {
         // Pre defined values
 

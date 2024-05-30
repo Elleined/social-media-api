@@ -3,7 +3,6 @@ package com.elleined.socialmediaapi.mapper.note;
 import com.elleined.socialmediaapi.dto.note.NoteDTO;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.user.User;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -20,7 +19,6 @@ class NoteMapperTest {
     private final NoteMapper noteMapper = Mappers.getMapper(NoteMapper.class);
 
     @Test
-    @DisplayName("to DTO")
     void toDTO() {
         // Pre defined values
 
@@ -57,7 +55,6 @@ class NoteMapperTest {
     }
 
     @Test
-    @DisplayName("to entity")
     void toEntity() {
         // Pre defined values
 

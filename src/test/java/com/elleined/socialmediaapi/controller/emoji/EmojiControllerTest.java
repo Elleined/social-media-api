@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(EmojiController.class)
+@WebMvcTest(value = EmojiController.class, properties = {"server.port=5454"})
 class EmojiControllerTest {
     @Autowired
     private MockMvc mockMvc;

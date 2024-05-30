@@ -3,7 +3,6 @@ package com.elleined.socialmediaapi.mapper.mention;
 import com.elleined.socialmediaapi.dto.mention.MentionDTO;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -21,7 +20,6 @@ class MentionMapperTest {
     private final MentionMapper mentionMapper = Mappers.getMapper(MentionMapper.class);
 
     @Test
-    @DisplayName("to DTO")
     void toDTO() {
         // Pre defined values
 
@@ -70,7 +68,6 @@ class MentionMapperTest {
     }
 
     @Test
-    @DisplayName("to entity")
     void toEntity() {
         // Pre defined values
 

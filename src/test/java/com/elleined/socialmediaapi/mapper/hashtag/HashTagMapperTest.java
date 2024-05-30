@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.mapper.hashtag;
 
 import com.elleined.socialmediaapi.dto.hashtag.HashTagDTO;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -20,7 +19,6 @@ class HashTagMapperTest {
     private final HashTagMapper hashTagMapper = Mappers.getMapper(HashTagMapper.class);
 
     @Test
-    @DisplayName("to DTO")
     void toDTO() {
         // Pre defined values
 
@@ -55,7 +53,6 @@ class HashTagMapperTest {
     }
 
     @Test
-    @DisplayName("to entity")
     void toEntity() {
         // Pre defined values
 

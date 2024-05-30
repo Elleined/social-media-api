@@ -3,7 +3,6 @@ package com.elleined.socialmediaapi.mapper.friend;
 import com.elleined.socialmediaapi.dto.friend.FriendRequestDTO;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.user.User;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -20,7 +19,6 @@ class FriendRequestMapperTest {
     private final FriendRequestMapper friendRequestMapper = Mappers.getMapper(FriendRequestMapper.class);
 
     @Test
-    @DisplayName("to DTO")
     void toDTO() {
         // Expected Value
         // Mock data
@@ -52,7 +50,6 @@ class FriendRequestMapperTest {
     }
 
     @Test
-    @DisplayName("to entity")
     void toEntity() {
         // Expected Value
 

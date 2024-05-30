@@ -4,7 +4,6 @@ import com.elleined.socialmediaapi.dto.reaction.ReactionDTO;
 import com.elleined.socialmediaapi.model.react.Emoji;
 import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -22,7 +21,6 @@ class ReactionMapperTest {
     private final ReactionMapper reactionMapper = Mappers.getMapper(ReactionMapper.class);
 
     @Test
-    @DisplayName("to DTO")
     void toDTO() {
         // Pre defined values
 
@@ -71,7 +69,6 @@ class ReactionMapperTest {
     }
 
     @Test
-    @DisplayName("to entity")
     void toEntity() {
         // Pre defined values
 

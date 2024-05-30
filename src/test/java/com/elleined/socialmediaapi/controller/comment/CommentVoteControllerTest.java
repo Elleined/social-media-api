@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(CommentVoteController.class)
+@WebMvcTest(value = CommentVoteController.class, properties = {"server.port=5454"})
 class CommentVoteControllerTest {
 
     @Autowired

@@ -5,7 +5,6 @@ import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.user.UserService;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(BlockController.class)
+@WebMvcTest(value = BlockController.class, properties = {"server.port=5454"})
 class BlockControllerTest {
 
     @Autowired
@@ -39,7 +38,6 @@ class BlockControllerTest {
     private UserMapper userMapper;
 
     @Test
-    @DisplayName("Get all users")
     void getAllBlockedUsers() throws Exception {
         // Pre defined values
 
@@ -71,7 +69,6 @@ class BlockControllerTest {
     }
 
     @Test
-    @DisplayName("Is blocked")
     void isBlocked() throws Exception {
         // Pre defined values
 
@@ -99,7 +96,6 @@ class BlockControllerTest {
     }
 
     @Test
-    @DisplayName("Block user")
     void blockUser() throws Exception {
         // Pre defined values
 
@@ -125,7 +121,6 @@ class BlockControllerTest {
     }
 
     @Test
-    @DisplayName("Unblock user")
     void unblockUser() throws Exception {
         // Pre defined values
 

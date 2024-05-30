@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(CommentPinReplyController.class)
+@WebMvcTest(value = CommentPinReplyController.class, properties = {"server.port=5454"})
 class CommentPinReplyControllerTest {
 
     @Autowired

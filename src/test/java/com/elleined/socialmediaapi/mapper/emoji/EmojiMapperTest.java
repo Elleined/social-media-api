@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.mapper.emoji;
 
 import com.elleined.socialmediaapi.dto.reaction.EmojiDTO;
 import com.elleined.socialmediaapi.model.react.Emoji;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -18,7 +17,6 @@ class EmojiMapperTest {
     private final EmojiMapper emojiMapper = Mappers.getMapper(EmojiMapper.class);
 
     @Test
-    @DisplayName("to DTO")
     void toDTO() {
         // Expected Value
         Emoji expected = Emoji.builder()
@@ -49,7 +47,6 @@ class EmojiMapperTest {
     }
 
     @Test
-    @DisplayName("to entity")
     void toEntity() {
         // Expected Value
 
