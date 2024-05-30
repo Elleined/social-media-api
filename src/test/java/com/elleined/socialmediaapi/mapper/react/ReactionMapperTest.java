@@ -40,7 +40,7 @@ class ReactionMapperTest {
                 .posts(new HashSet<>())
                 .comments(new HashSet<>())
                 .replies(new HashSet<>())
-                .notifications(new HashSet<>())
+                .stories(new HashSet<>())
                 .build();
 
         // Mock data
@@ -68,8 +68,6 @@ class ReactionMapperTest {
         assertNotNull(actual.getCommentIds());
 
         assertNotNull(actual.getReplyIds());
-
-        assertNotNull(actual.getNotificationIds());
     }
 
     @Test
@@ -104,7 +102,5 @@ class ReactionMapperTest {
         assertNotNull(actual.getComments());
 
         assertNotNull(actual.getReplies());
-
-        assertNotNull(actual.getNotifications());
     }
 }

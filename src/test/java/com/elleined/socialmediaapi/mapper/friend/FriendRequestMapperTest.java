@@ -31,7 +31,6 @@ class FriendRequestMapperTest {
                 .updatedAt(LocalDateTime.now())
                 .creator(new User())
                 .requestedUser(new User())
-                .notifications(new HashSet<>())
                 .build();
 
         // Set up method
@@ -51,8 +50,6 @@ class FriendRequestMapperTest {
         assertNotNull(expected.getCreator());
 
         assertNotNull(expected.getRequestedUser());
-
-        assertNotNull(expected.getNotifications());
     }
 
     @Test
@@ -79,7 +76,5 @@ class FriendRequestMapperTest {
         assertNotNull(actual.getCreator());
 
         assertNotNull(actual.getRequestedUser());
-
-        assertNotNull(actual.getNotifications());
     }
 }

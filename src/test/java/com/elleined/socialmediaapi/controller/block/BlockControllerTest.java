@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -51,7 +52,7 @@ class BlockControllerTest {
 
         // Stubbing methods
         when(userService.getById(anyInt())).thenReturn(new User());
-        when(blockService.getAllBlockedUsers(any(User.class), any(Pageable.class))).thenReturn(Set.of(new User()));
+        when(blockService.getAllBlockedUsers(any(User.class), any(Pageable.class))).thenReturn(List.of(new User()));
         when(userMapper.toDTO(any(User.class))).thenReturn(new UserDTO());
 
         // Calling the method

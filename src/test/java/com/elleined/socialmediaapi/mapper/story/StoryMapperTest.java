@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,6 +35,8 @@ class StoryMapperTest {
                 .creator(User.builder()
                         .id(1)
                         .build())
+                .mentions(new HashSet<>())
+                .reactions(new HashSet<>())
                 .build();
 
         // Mock data
@@ -73,7 +76,7 @@ class StoryMapperTest {
         // Stubbing methods
 
         // Calling the method
-        Story actual = storyMapper.toEntity(new User(), "Content", "Attached Picture Path", );
+        Story actual = storyMapper.toEntity(new User(), "Content", "Attached Picture Path", new HashSet<>());
 
         // Behavior Verifications
 
@@ -87,5 +90,9 @@ class StoryMapperTest {
         assertNotNull(actual.getAttachPicture());
 
         assertNotNull(actual.getCreator());
+
+        assertNotNull(actual.getMentions());
+
+        assertNotNull(actual.getReactions());
     }
 }

@@ -40,7 +40,6 @@ class PostMapperTest {
                 .creator(User.builder()
                         .id(1)
                         .build())
-                .notifications(new HashSet<>())
                 .commentSectionStatus(Post.CommentSectionStatus.OPEN)
                 .pinnedComment(Comment.builder()
                         .id(1)
@@ -74,8 +73,6 @@ class PostMapperTest {
         assertNotNull(actual.getAttachedPicture());
 
         assertEquals(1, actual.getCreatorId());
-
-        assertNotNull(actual.getNotificationIds());
 
         assertNotNull(actual.getCommentSectionStatus());
 
@@ -128,8 +125,6 @@ class PostMapperTest {
         assertNotNull(actual.getAttachedPicture());
 
         assertNotNull(actual.getCreator());
-
-        assertNotNull(actual.getNotifications());
 
         assertNotNull(actual.getCommentSectionStatus());
 

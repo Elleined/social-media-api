@@ -188,7 +188,7 @@ class BlockServiceImplTest {
         when(userRepository.findAllBlockedUsers(any(User.class), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(anotherUser)));
 
         // Calling the method
-        Set<User> currentUserBlockedUsers = blockService.getAllBlockedUsers(currentUser, Pageable.unpaged());
+        List<User> currentUserBlockedUsers = blockService.getAllBlockedUsers(currentUser, Pageable.unpaged());
 
         // Behavior Verifications
         verify(userRepository).findAllBlockedUsers(any(User.class), any(Pageable.class));

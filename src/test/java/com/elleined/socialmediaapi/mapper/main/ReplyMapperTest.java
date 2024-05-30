@@ -40,7 +40,6 @@ class ReplyMapperTest {
                 .creator(User.builder()
                         .id(1)
                         .build())
-                .notifications(new HashSet<>())
                 .comment(Comment.builder()
                         .id(1)
                         .build())
@@ -70,8 +69,6 @@ class ReplyMapperTest {
         assertNotNull(actual.getAttachedPicture());
 
         assertEquals(1, actual.getCreatorId());
-
-        assertNotNull(actual.getNotificationIds());
 
         assertEquals(1, actual.getCommentId());
 
@@ -115,8 +112,6 @@ class ReplyMapperTest {
         assertNotNull(actual.getAttachedPicture());
 
         assertNotNull(actual.getCreator());
-
-        assertNotNull(actual.getNotifications());
 
         assertNotNull(actual.getComment());
 

@@ -41,7 +41,7 @@ class MentionMapperTest {
                 .posts(new HashSet<>())
                 .comments(new HashSet<>())
                 .replies(new HashSet<>())
-                .notifications(new HashSet<>())
+                .stories(new HashSet<>())
                 .build();
 
         // Set up method
@@ -67,8 +67,6 @@ class MentionMapperTest {
         assertNotNull(actual.getCommentIds());
 
         assertNotNull(actual.getReplyIds());
-
-        assertNotNull(actual.getNotificationIds());
     }
 
     @Test
@@ -103,7 +101,5 @@ class MentionMapperTest {
         assertNotNull(actual.getComments());
 
         assertNotNull(actual.getAllReplyIds());
-
-        assertNotNull(actual.getAllNotificationIds());
     }
 }

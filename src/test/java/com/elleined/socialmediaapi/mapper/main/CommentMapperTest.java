@@ -39,7 +39,6 @@ class CommentMapperTest {
                 .creator(User.builder()
                         .id(1)
                         .build())
-                .notifications(new HashSet<>())
                 .post(Post.builder()
                         .id(1)
                         .build())
@@ -76,8 +75,6 @@ class CommentMapperTest {
         assertNotNull(actual.getAttachedPicture());
 
         assertEquals(1, actual.getCreatorId());
-
-        assertNotNull(actual.getNotificationIds());
 
         assertEquals(1, actual.getPostId());
 
@@ -131,8 +128,6 @@ class CommentMapperTest {
         assertNotNull(actual.getAttachedPicture());
 
         assertNotNull(actual.getCreator());
-
-        assertNotNull(actual.getNotifications());
 
         assertNotNull(actual.getPost());
 
