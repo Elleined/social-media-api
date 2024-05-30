@@ -6,6 +6,7 @@ import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.vote.Vote;
@@ -148,6 +149,9 @@ public class User extends PrimaryKeyIdentity {
             )
     )
     private Set<User> followings;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<Notification> receiveNotifications;
 
     // Get all id
     public Set<Integer> getAllBlockedUserIds() {
