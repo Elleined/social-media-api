@@ -1,17 +1,22 @@
 package com.elleined.socialmediaapi.controller.comment;
 
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
+import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
+import com.elleined.socialmediaapi.mapper.notification.CommentNotificationMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
+import com.elleined.socialmediaapi.service.notification.NotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
+import com.elleined.socialmediaapi.service.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +44,10 @@ public class CommentController {
     private final HashTagService hashTagService;
 
     private final WSService wsService;
+    private final NotificationWSService notificationWSService;
+
+    private final NotificationService notificationService;
+    private final CommentNotificationMapper commentNotificationMapper;
 
     @GetMapping
     public List<CommentDTO> getAll(@PathVariable("currentUserId") int currentUserId,
@@ -84,9 +93,13 @@ public class CommentController {
         Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers, hashTags);
-        CommentDTO commentDTO = commentMapper.toDTO(comment);
-        wsService.broadcast(commentDTO);
+        CommentNotification commentNotification = notificationService.saveOnComment(currentUser, comment);
 
+        CommentDTO commentDTO = commentMapper.toDTO(comment);
+        CommentNotificationDTO commentNotificationDTO = commentNotificationMapper.toDTO(commentNotification);
+
+        wsService.broadcastOnComment(commentDTO);
+        notificationWSService.notifyOnComment(commentNotificationDTO);
         return commentDTO;
     }
 
@@ -103,7 +116,7 @@ public class CommentController {
         comment.getReplies().forEach(reply -> replyService.delete(currentUser, post, comment, reply));
 
         CommentDTO commentDTO = commentMapper.toDTO(comment);
-        wsService.broadcast(commentDTO);
+        wsService.broadcastOnComment(commentDTO);
     }
 
     @PutMapping("/{commentId}")
@@ -120,7 +133,7 @@ public class CommentController {
         commentService.update(currentUser, post, comment, newBody, newAttachedPicture);
 
         CommentDTO commentDTO = commentMapper.toDTO(comment);
-        wsService.broadcast(commentDTO);
+        wsService.broadcastOnComment(commentDTO);
 
         return commentDTO;
     }

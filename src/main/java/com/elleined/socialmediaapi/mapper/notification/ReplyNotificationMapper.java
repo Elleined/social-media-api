@@ -33,7 +33,7 @@ public interface ReplyNotificationMapper extends CustomMapper<ReplyNotification,
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
             @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(reply.getCreator())"),
+            @Mapping(target = "receiver", expression = "java(reply.getComment().getCreator())"),
             @Mapping(target = "reply", expression = "java(reply)"),
     })
     ReplyNotification toEntity(User creator,

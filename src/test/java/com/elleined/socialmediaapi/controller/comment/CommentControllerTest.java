@@ -168,7 +168,7 @@ class CommentControllerTest {
         when(hashTagService.getAllById(anyList())).thenReturn(List.of(new HashTag()));
         when(commentService.save(any(User.class), any(Post.class), anyString(), any(MultipartFile.class), anySet(), anySet())).thenReturn(new Comment());
         when(commentMapper.toDTO(any(Comment.class))).thenReturn(new CommentDTO());
-        doNothing().when(wsService).broadcast(any(CommentDTO.class));
+        doNothing().when(wsService).broadcastOnComment(any(CommentDTO.class));
 
         // Calling the method
         mockMvc.perform(multipart(HttpMethod.POST, "/users/{currentUserId}/posts/{postId}/comments", 1, 1)
@@ -184,7 +184,7 @@ class CommentControllerTest {
         verify(hashTagService).getAllById(anyList());
         verify(commentService).save(any(User.class), any(Post.class), anyString(), any(MultipartFile.class), anySet(), anySet());
         verify(commentMapper).toDTO(any(Comment.class));
-        verify(wsService).broadcast(any(CommentDTO.class));
+        verify(wsService).broadcastOnComment(any(CommentDTO.class));
 
         // Assertions
     }
@@ -208,7 +208,7 @@ class CommentControllerTest {
         doNothing().when(commentService).delete(any(User.class), any(Post.class), any(Comment.class));
         doNothing().when(replyService).delete(any(User.class), any(Post.class), any(Comment.class), any(Reply.class));
         when(commentMapper.toDTO(any(Comment.class))).thenReturn(new CommentDTO());
-        doNothing().when(wsService).broadcast(any(CommentDTO.class));
+        doNothing().when(wsService).broadcastOnComment(any(CommentDTO.class));
 
         // Calling the method
         mockMvc.perform(delete("/users/{currentUserId}/posts/{postId}/comments/{commentId}", 1, 1, 1))
@@ -221,7 +221,7 @@ class CommentControllerTest {
         verify(commentService).delete(any(User.class), any(Post.class), any(Comment.class));
         verify(replyService, atLeastOnce()).delete(any(User.class), any(Post.class), any(Comment.class), any(Reply.class));
         verify(commentMapper).toDTO(any(Comment.class));
-        verify(wsService).broadcast(any(CommentDTO.class));
+        verify(wsService).broadcastOnComment(any(CommentDTO.class));
 
         // Assertions
     }
@@ -242,7 +242,7 @@ class CommentControllerTest {
         when(commentService.getById(anyInt())).thenReturn(new Comment());
         doNothing().when(commentService).update(any(User.class), any(Post.class), any(Comment.class), anyString(), any(MultipartFile.class));
         when(commentMapper.toDTO(any(Comment.class))).thenReturn(new CommentDTO());
-        doNothing().when(wsService).broadcast(any(CommentDTO.class));
+        doNothing().when(wsService).broadcastOnComment(any(CommentDTO.class));
 
         // Stubbing methods
 
@@ -258,7 +258,7 @@ class CommentControllerTest {
         verify(commentService).getById(anyInt());
         verify(commentService).update(any(User.class), any(Post.class), any(Comment.class), anyString(), any(MultipartFile.class));
         verify(commentMapper).toDTO(any(Comment.class));
-        verify(wsService).broadcast(any(CommentDTO.class));
+        verify(wsService).broadcastOnComment(any(CommentDTO.class));
 
         // Assertions
     }

@@ -4,7 +4,7 @@ import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
 
 public interface WSService {
-    void broadcast(CommentDTO commentDTO);
+    void broadcastOnComment(CommentDTO commentDTO);
 
-    void broadcast(ReplyDTO replyDTO);
+    void broadcastOnReply(ReplyDTO replyDTO);
 }

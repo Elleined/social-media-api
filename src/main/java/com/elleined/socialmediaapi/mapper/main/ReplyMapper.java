@@ -27,6 +27,7 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
             @Mapping(target = "status", source = "status"),
             @Mapping(target = "attachedPicture", source = "attachedPicture"),
             @Mapping(target = "creatorId", source = "creator.id"),
+            @Mapping(target = "postId", source = "reply.comment.post.id"), // this field is not present in entity
             @Mapping(target = "commentId", source = "comment.id"),
             @Mapping(target = "hashTagIds", expression = "java(reply.getAllHashTagIds())"),
             @Mapping(target = "mentionIds", expression = "java(reply.getAllMentionIds())"),

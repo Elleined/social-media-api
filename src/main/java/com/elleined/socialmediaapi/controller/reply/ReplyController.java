@@ -1,18 +1,23 @@
 package com.elleined.socialmediaapi.controller.reply;
 
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
+import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
 import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
+import com.elleined.socialmediaapi.mapper.notification.ReplyNotificationMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
+import com.elleined.socialmediaapi.service.notification.NotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
+import com.elleined.socialmediaapi.service.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +49,10 @@ public class ReplyController {
     private final HashTagService hashTagService;
 
     private final WSService wsService;
+    private final NotificationWSService notificationWSService;
+
+    private final NotificationService notificationService;
+    private final ReplyNotificationMapper replyNotificationMapper;
 
     @GetMapping
     public List<ReplyDTO> getAll(@PathVariable("currentUserId") int currentUserId,
@@ -93,10 +102,13 @@ public class ReplyController {
         Comment comment = commentService.getById(commentId);
 
         Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentionedUsers, hashTags);
+        ReplyNotification replyNotification = notificationService.saveOnReply(currentUser, reply);
 
         ReplyDTO replyDTO = replyMapper.toDTO(reply);
-        wsService.broadcast(replyDTO);
+        ReplyNotificationDTO replyNotificationDTO = replyNotificationMapper.toDTO(replyNotification);
 
+        wsService.broadcastOnReply(replyDTO);
+        notificationWSService.notifyOnReply(replyNotificationDTO);
         return replyDTO;
     }
 
@@ -114,7 +126,7 @@ public class ReplyController {
         replyService.delete(currentUser, post, comment, reply);
 
         ReplyDTO replyDTO = replyMapper.toDTO(reply);
-        wsService.broadcast(replyDTO);
+        wsService.broadcastOnReply(replyDTO);
     }
 
     @PutMapping("/{replyId}")
@@ -133,7 +145,7 @@ public class ReplyController {
         replyService.update(currentUser, post, comment, reply, newBody, newAttachedPicture);
 
         ReplyDTO replyDTO = replyMapper.toDTO(reply);
-        wsService.broadcast(replyDTO);
+        wsService.broadcastOnReply(replyDTO);
 
         return replyDTO;
     }

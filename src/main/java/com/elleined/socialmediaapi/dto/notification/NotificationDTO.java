@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.dto.notification;
 
 import com.elleined.socialmediaapi.dto.DTO;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,4 +16,8 @@ public abstract class NotificationDTO extends DTO {
     private Notification.Status status;
     private int creatorId;
     private int receiverId;
+
+    public boolean isRead() {
+        return status == Notification.Status.READ;
+    }
 }

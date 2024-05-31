@@ -20,7 +20,7 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-            registry.enableSimpleBroker("/discussion");
+            registry.enableSimpleBroker("/sma", "/sma-notification");
             registry.setApplicationDestinationPrefixes("/app");
     }
 }

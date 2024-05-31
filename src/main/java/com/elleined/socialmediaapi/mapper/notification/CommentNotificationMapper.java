@@ -33,7 +33,7 @@ public interface CommentNotificationMapper extends CustomMapper<CommentNotificat
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
             @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(comment.getCreator())"),
+            @Mapping(target = "receiver", expression = "java(comment.getPost().getCreator())"),
             @Mapping(target = "comment", expression = "java(comment)"),
     })
     CommentNotification toEntity(User creator,

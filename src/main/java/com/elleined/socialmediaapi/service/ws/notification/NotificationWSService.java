@@ -1,19 +1,13 @@
 package com.elleined.socialmediaapi.service.ws.notification;
 
-import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
-import com.elleined.socialmediaapi.model.main.post.Post;
-import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.react.Reaction;
-import com.elleined.socialmediaapi.model.story.Story;
-import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.model.vote.Vote;
+import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
 
 public interface NotificationWSService {
     // Receiver is the post creator
-    void notifyOnComment(User creator, Comment comment);
+    void notifyOnComment(CommentNotificationDTO commentNotificationDTO);
     // Receiver is the comment creator
-    void notifyOnReply(User creator, Reply reply);
+    void notifyOnReply(ReplyNotificationDTO replyNotificationDTO);
 
     // Reaction
     // // Receiver is the post creator

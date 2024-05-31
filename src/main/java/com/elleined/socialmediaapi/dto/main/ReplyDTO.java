@@ -10,5 +10,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class ReplyDTO extends ForumDTO {
+    private int postId; // this field is not present in entity
     private int commentId;
 }

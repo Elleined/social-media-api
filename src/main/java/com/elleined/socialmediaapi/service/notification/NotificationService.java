@@ -1,24 +1,21 @@
 package com.elleined.socialmediaapi.service.notification;
 
-import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
-import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.react.Reaction;
-import com.elleined.socialmediaapi.model.story.Story;
+import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
+import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.model.vote.Vote;
 
 import java.util.List;
 
 public interface NotificationService {
-    List<Notification> getAll(User currentUser);
+    List<List<? extends Notification>> getAll(User currentUser);
 
     // Receiver is the post creator
-    void saveOnComment(User creator, Comment comment);
+    CommentNotification saveOnComment(User creator, Comment comment);
     // Receiver is the comment creator
-    void saveOnReply(User creator, Reply reply);
+    ReplyNotification saveOnReply(User creator, Reply reply);
 
     // Reaction
     // // Receiver is the post creator
