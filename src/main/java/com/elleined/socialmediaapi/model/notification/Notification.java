@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @MappedSuperclass
 @Getter
 @Setter
@@ -45,5 +47,10 @@ public abstract class Notification extends PrimaryKeyIdentity {
     public enum Status {
         READ,
         UN_READ
+    }
+
+    public void read() {
+        this.setUpdatedAt(LocalDateTime.now());
+        this.setStatus(Notification.Status.READ);
     }
 }

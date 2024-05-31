@@ -13,7 +13,7 @@ import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
-import com.elleined.socialmediaapi.service.notification.NotificationService;
+import com.elleined.socialmediaapi.service.notification.main.comment.CommentNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import com.elleined.socialmediaapi.service.ws.notification.NotificationWSService;
@@ -46,7 +46,7 @@ public class CommentController {
     private final WSService wsService;
     private final NotificationWSService notificationWSService;
 
-    private final NotificationService notificationService;
+    private final CommentNotificationService commentNotificationService;
     private final CommentNotificationMapper commentNotificationMapper;
 
     @GetMapping
@@ -93,7 +93,7 @@ public class CommentController {
         Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
 
         Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers, hashTags);
-        CommentNotification commentNotification = notificationService.saveOnComment(currentUser, comment);
+        CommentNotification commentNotification = commentNotificationService.save(currentUser, comment);
 
         CommentDTO commentDTO = commentMapper.toDTO(comment);
         CommentNotificationDTO commentNotificationDTO = commentNotificationMapper.toDTO(commentNotification);

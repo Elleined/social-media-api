@@ -2,6 +2,8 @@ package com.elleined.socialmediaapi.repository.user;
 
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
+import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,4 +35,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u.sharedPosts FROM User u WHERE u = :currentUser")
     Page<Post> findAllSharedPosts(@Param("currentUser") User currentUser, Pageable pageable);
+
+    @Query("SELECT u.commentNotifications FROM User u WHERE u = :currentUser")
+    Page<CommentNotification> findAllReceiveCommentNotifications(User currentUser, Pageable pageable);
+
+    @Query("SELECT u.replyNotifications FROM User u WHERE u = :currentUser")
+    Page<ReplyNotification> findAllReceiveReplyNotifications(User currentUser, Pageable pageable);
 }

@@ -14,7 +14,7 @@ import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
-import com.elleined.socialmediaapi.service.notification.NotificationService;
+import com.elleined.socialmediaapi.service.notification.main.reply.ReplyNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.ws.WSService;
 import com.elleined.socialmediaapi.service.ws.notification.NotificationWSService;
@@ -51,7 +51,7 @@ public class ReplyController {
     private final WSService wsService;
     private final NotificationWSService notificationWSService;
 
-    private final NotificationService notificationService;
+    private final ReplyNotificationService replyNotificationService;
     private final ReplyNotificationMapper replyNotificationMapper;
 
     @GetMapping
@@ -102,7 +102,7 @@ public class ReplyController {
         Comment comment = commentService.getById(commentId);
 
         Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentionedUsers, hashTags);
-        ReplyNotification replyNotification = notificationService.saveOnReply(currentUser, reply);
+        ReplyNotification replyNotification = replyNotificationService.save(currentUser, reply);
 
         ReplyDTO replyDTO = replyMapper.toDTO(reply);
         ReplyNotificationDTO replyNotificationDTO = replyNotificationMapper.toDTO(replyNotification);

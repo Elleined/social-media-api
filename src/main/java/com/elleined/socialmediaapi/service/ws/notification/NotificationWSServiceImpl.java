@@ -2,8 +2,6 @@ package com.elleined.socialmediaapi.service.ws.notification;
 
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
-import com.elleined.socialmediaapi.mapper.notification.CommentNotificationMapper;
-import com.elleined.socialmediaapi.mapper.notification.ReplyNotificationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
