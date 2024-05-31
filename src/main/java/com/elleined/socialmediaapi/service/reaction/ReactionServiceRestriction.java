@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.react;
+package com.elleined.socialmediaapi.service.reaction;
 
 import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.user.User;

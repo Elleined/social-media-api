@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.react;
+package com.elleined.socialmediaapi.service.reaction;
 
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.model.main.comment.Comment;

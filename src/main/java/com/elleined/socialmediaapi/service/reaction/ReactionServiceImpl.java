@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.react;
+package com.elleined.socialmediaapi.service.reaction;
 
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
@@ -229,6 +229,9 @@ public class ReactionServiceImpl implements ReactionService {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction to this post! because post might be already deleted or doesn't exists!");
 
+        post.getReactions().remove(reaction);
+
+        postRepository.save(post);
         reactionRepository.delete(reaction);
         log.debug("Deleting reaction to post with id of {} success!", post.getId());
     }
@@ -244,6 +247,9 @@ public class ReactionServiceImpl implements ReactionService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction this comment! because comment might be already deleted or doesn't exists!");
 
+        comment.getReactions().remove(reaction);
+
+        commentRepository.save(comment);
         reactionRepository.delete(reaction);
         log.debug("Deleting reaction to comment with id of {} success!", comment.getId());
     }
@@ -262,6 +268,9 @@ public class ReactionServiceImpl implements ReactionService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction to this reply! because reply might be already deleted or doesn't exists!");
 
+        reply.getReactions().remove(reaction);
+
+        replyRepository.save(reply);
         reactionRepository.delete(reaction);
         log.debug("Deleting reaction to reply with id of {} success!", reply.getId());
     }
@@ -271,6 +280,9 @@ public class ReactionServiceImpl implements ReactionService {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because current user doesn't owned this reaction!");
 
+        story.getReactions().remove(reaction);
+
+        storyRepository.save(story);
         reactionRepository.delete(reaction);
         log.debug("Deleting reaction to story with id of {} success!", story.getId());
     }

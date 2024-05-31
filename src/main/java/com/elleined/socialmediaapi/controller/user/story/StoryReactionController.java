@@ -7,7 +7,7 @@ import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
-import com.elleined.socialmediaapi.service.react.ReactionService;
+import com.elleined.socialmediaapi.service.reaction.ReactionService;
 import com.elleined.socialmediaapi.service.story.StoryService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
