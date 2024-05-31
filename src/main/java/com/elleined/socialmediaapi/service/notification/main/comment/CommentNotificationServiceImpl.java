@@ -3,6 +3,7 @@ package com.elleined.socialmediaapi.service.notification.main.comment;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.notification.CommentNotificationMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.notification.main.CommentNotificationRepository;
@@ -24,7 +25,7 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
 
     private final CommentNotificationRepository commentNotificationRepository;
     private final CommentNotificationMapper commentNotificationMapper;
-    
+
     @Override
     public CommentNotification save(User creator, Comment comment) {
         CommentNotification commentNotification = commentNotificationMapper.toEntity(creator, comment);
@@ -35,8 +36,10 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
     }
     
     @Override
-    public List<CommentNotification> getAll(User currentUser, Pageable pageable) {
-        return userRepository.findAllReceiveCommentNotifications(currentUser, pageable).getContent();
+    public List<CommentNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
+        return userRepository.findAllReceiveCommentNotifications(currentUser, pageable).stream()
+                .filter(notification -> notification.getStatus() == status)
+                .toList();
     }
 
     @Override
@@ -45,7 +48,10 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
     }
 
     @Override
-    public void read(CommentNotification notification) {
+    public void read(User currentUser, CommentNotification notification) {
+        if (!currentUser.has(notification))
+            throw new ResourceNotFoundException("Cannot read notification! because current user doesn't owned this notification!");
+
         notification.read();
         commentNotificationRepository.save(notification);
     }

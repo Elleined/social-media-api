@@ -3,6 +3,7 @@ package com.elleined.socialmediaapi.service.notification.main.reply;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.notification.ReplyNotificationMapper;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.notification.main.ReplyNotificationRepository;
@@ -35,8 +36,10 @@ public class ReplyNotificationServiceImpl implements ReplyNotificationService {
     }
     
     @Override
-    public List<ReplyNotification> getAll(User currentUser, Pageable pageable) {
-        return userRepository.findAllReceiveReplyNotifications(currentUser, pageable).getContent();
+    public List<ReplyNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
+        return userRepository.findAllReceiveReplyNotifications(currentUser, pageable).stream()
+                .filter(notification -> notification.getStatus() == status)
+                .toList();
     }
 
     @Override
@@ -45,7 +48,10 @@ public class ReplyNotificationServiceImpl implements ReplyNotificationService {
     }
 
     @Override
-    public void read(ReplyNotification notification) {
+    public void read(User currentUser, ReplyNotification notification) {
+        if (!currentUser.has(notification))
+            throw new ResourceNotFoundException("Cannot read notification! because current user doesn't owned this notification!");
+
         notification.read();
         replyNotificationRepository.save(notification);
     }

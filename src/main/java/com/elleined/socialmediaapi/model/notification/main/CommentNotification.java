@@ -30,6 +30,6 @@ public class CommentNotification extends Notification {
 
     @Override
     public String getMessage() {
-        return STR."\{this.getCreator().getName()} commented on your post: \{this.getComment().getPost()}";
+        return STR."\{this.getCreator().getName()} commented on your post: \{this.getComment().getPost().getBody()}";
     }
 }

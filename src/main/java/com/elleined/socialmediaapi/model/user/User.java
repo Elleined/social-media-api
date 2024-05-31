@@ -235,4 +235,13 @@ public class User extends PrimaryKeyIdentity {
                 .map(PrimaryKeyIdentity::getId)
                 .toList();
     }
+
+
+    public boolean has(CommentNotification commentNotification) {
+        return this.getCommentNotifications().contains(commentNotification);
+    }
+
+    public boolean has(ReplyNotification replyNotification) {
+        return this.getReplyNotifications().contains(replyNotification);
+    }
 }

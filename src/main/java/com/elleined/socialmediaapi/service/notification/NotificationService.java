@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface NotificationService<T extends Notification> {
-    List<T> getAll(User currentUser, Pageable pageable);
+    List<T> getAll(User currentUser, Notification.Status status, Pageable pageable);
     T getById(int id) throws ResourceNotFoundException;
-    void read(T notification);
+    void read(User currentUser, T notification);
 }
