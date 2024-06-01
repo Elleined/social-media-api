@@ -1,12 +1,21 @@
 package com.elleined.socialmediaapi.controller.post;
 
 import com.elleined.socialmediaapi.dto.main.PostDTO;
+import com.elleined.socialmediaapi.dto.notification.mention.PostMentionNotificationDTO;
 import com.elleined.socialmediaapi.mapper.main.PostMapper;
+import com.elleined.socialmediaapi.mapper.notification.mention.MentionNotificationMapper;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.mention.Mention;
+import com.elleined.socialmediaapi.model.notification.mention.PostMentionNotification;
 import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
+import com.elleined.socialmediaapi.service.mention.MentionService;
+import com.elleined.socialmediaapi.service.notification.mention.MentionNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
+import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +40,14 @@ public class PostController {
     private final PostMapper postMapper;
 
     private final CommentService commentService;
+
+    private final MentionService mentionService;
+    private final HashTagService hashTagService;
+
+    private final MentionNotificationService<PostMentionNotification, Post> mentionNotificationService;
+    private final MentionNotificationMapper mentionNotificationMapper;
+
+    private final NotificationWSService notificationWSService;
 
     @GetMapping("/{id}")
     public PostDTO getById(@PathVariable("id") int id) {
@@ -67,11 +84,24 @@ public class PostController {
                         @RequestPart(required = false, name = "keywords") Set<String> keywords,
                         @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture) throws IOException {
 
+        // Getting entities
         User currentUser = userService.getById(currentUserId);
-        Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
 
-        Post post = postService.save(currentUser, body, attachedPicture, mentionedUsers, keywords);
-        return postMapper.toDTO(post);
+        // Saving entities
+        Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
+        Set<HashTag> hashTags = hashTagService.saveAll(keywords);
+        Post post = postService.save(currentUser, body, attachedPicture, mentions, hashTags);
+        List<PostMentionNotification> postMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, post);
+
+        // DTO Conversion
+        PostDTO postDTO = postMapper.toDTO(post);
+        List<PostMentionNotificationDTO> postMentionNotificationDTOS = postMentionNotifications.stream()
+                .map(mentionNotificationMapper::toDTO)
+                .toList();
+
+        // Web Socket
+        postMentionNotificationDTOS.forEach(notificationWSService::notifyOnMentioned);
+        return postDTO;
     }
 
     @DeleteMapping("/{postId}")

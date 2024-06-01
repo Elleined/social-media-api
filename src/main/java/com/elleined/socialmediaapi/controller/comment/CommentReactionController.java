@@ -1,17 +1,22 @@
 package com.elleined.socialmediaapi.controller.comment;
 
+import com.elleined.socialmediaapi.dto.notification.reaction.CommentReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.reaction.ReactionDTO;
+import com.elleined.socialmediaapi.mapper.notification.reaction.ReactionNotificationMapper;
 import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
 import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
+import com.elleined.socialmediaapi.service.notification.reaction.ReactionNotificationService;
 import com.elleined.socialmediaapi.service.reaction.ReactionService;
 import com.elleined.socialmediaapi.service.user.UserService;
+import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +41,12 @@ public class CommentReactionController {
     private final ReactionMapper reactionMapper;
 
     private final EmojiService emojiService;
+
+    private final ReactionNotificationService<CommentReactionNotification, Comment> reactionNotificationService;
+    private final ReactionNotificationMapper reactionNotificationMapper;
+
+
+    private final NotificationWSService notificationWSService;
 
     @GetMapping
     public List<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
@@ -95,7 +106,14 @@ public class CommentReactionController {
         }
 
         Reaction reaction = reactionService.save(currentUser, post, comment, emoji);
-        return reactionMapper.toDTO(reaction);
+        CommentReactionNotification commentReactionNotification = reactionNotificationService.save(currentUser, comment, reaction);
+
+        CommentReactionNotificationDTO commentReactionNotificationDTO = reactionNotificationMapper.toDTO(commentReactionNotification);
+        ReactionDTO reactionDTO = reactionMapper.toDTO(reaction);
+
+        notificationWSService.notifyOnReaction(commentReactionNotificationDTO);
+
+        return reactionDTO;
     }
 
     @DeleteMapping("/{reactionId}")

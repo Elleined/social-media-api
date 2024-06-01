@@ -2,19 +2,25 @@ package com.elleined.socialmediaapi.controller.reply;
 
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.mention.ReplyMentionNotificationDTO;
 import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
 import com.elleined.socialmediaapi.mapper.notification.main.ReplyNotificationMapper;
+import com.elleined.socialmediaapi.mapper.notification.mention.MentionNotificationMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
+import com.elleined.socialmediaapi.model.notification.mention.ReplyMentionNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
+import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.notification.main.reply.ReplyNotificationService;
+import com.elleined.socialmediaapi.service.notification.mention.MentionNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.ws.WSService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
@@ -47,12 +53,16 @@ public class ReplyController {
     private final ReplyMapper replyMapper;
 
     private final HashTagService hashTagService;
+    private final MentionService mentionService;
 
     private final WSService wsService;
     private final NotificationWSService notificationWSService;
 
     private final ReplyNotificationService replyNotificationService;
     private final ReplyNotificationMapper replyNotificationMapper;
+
+    private final MentionNotificationService<ReplyMentionNotification, Reply> mentionNotificationService;
+    private final MentionNotificationMapper mentionNotificationMapper;
 
     @GetMapping
     public List<ReplyDTO> getAll(@PathVariable("currentUserId") int currentUserId,
@@ -95,20 +105,30 @@ public class ReplyController {
                          @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
                          @RequestPart(required = false, name = "hashTagIds") Set<Integer> hashTagIds) throws IOException {
 
+        // Getting entities
         User currentUser = userService.getById(currentUserId);
-        Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
-        Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
+        Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
 
-        Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentionedUsers, hashTags);
+        // Saving entities
+        Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
+        Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentions, hashTags);
         ReplyNotification replyNotification = replyNotificationService.save(currentUser, reply);
+        List<ReplyMentionNotification> replyMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, reply);
 
+        // DTO Conversion
         ReplyDTO replyDTO = replyMapper.toDTO(reply);
         ReplyNotificationDTO replyNotificationDTO = replyNotificationMapper.toDTO(replyNotification);
+        List<ReplyMentionNotificationDTO> replyMentionNotificationDTOS = replyMentionNotifications.stream()
+                .map(mentionNotificationMapper::toDTO)
+                .toList();
 
+        // Web Socket
         wsService.broadcastOnReply(replyDTO);
         notificationWSService.notifyOnReply(replyNotificationDTO);
+        replyMentionNotificationDTOS.forEach(notificationWSService::notifyOnMentioned);
+
         return replyDTO;
     }
 

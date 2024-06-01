@@ -47,8 +47,6 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     private final PostPinCommentService postPinCommentService;
 
-    private final MentionService mentionService;
-
     private final UserServiceRestriction userServiceRestriction;
     private final PostServiceRestriction postServiceRestriction;
 
@@ -59,7 +57,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
                         Post post,
                         String body,
                         MultipartFile attachedPicture,
-                        Set<User> mentionedUsers,
+                        Set<Mention> mentions,
                         Set<HashTag> hashTags) {
 
         if (fieldValidator.isNotValid(body))
@@ -76,8 +74,6 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
         if (blockService.isYouBeenBlockedBy(currentUser, post.getCreator()))
             throw new BlockedException("Cannot save comment! because cannot comment because this user block you already!");
-
-        Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
 
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         Comment comment = commentMapper.toEntity(currentUser, post, body, picture, mentions, hashTags);

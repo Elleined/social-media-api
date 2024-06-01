@@ -28,14 +28,10 @@ public class StoryServiceImpl implements StoryService, StoryServiceRestriction {
     private final StoryRepository storyRepository;
     private final StoryMapper storyMapper;
 
-    private final MentionService mentionService;
-
     @Override
-    public Story save(User currentUser, String content, MultipartFile attachedPicture, Set<User> mentionedUsers) {
+    public Story save(User currentUser, String content, MultipartFile attachedPicture, Set<Mention> mentions) {
         if (hasStory(currentUser))
             throw new ResourceAlreadyExistsException("Cannot save story because you've already created one. please delete first then create again!");
-
-        Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
 
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         Story story = storyMapper.toEntity(currentUser, content, picture, mentions);

@@ -2,18 +2,24 @@ package com.elleined.socialmediaapi.controller.comment;
 
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.mention.CommentMentionNotificationDTO;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
 import com.elleined.socialmediaapi.mapper.notification.main.CommentNotificationMapper;
+import com.elleined.socialmediaapi.mapper.notification.mention.MentionNotificationMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
+import com.elleined.socialmediaapi.model.notification.mention.CommentMentionNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.hashtag.HashTagService;
 import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
+import com.elleined.socialmediaapi.service.mention.MentionService;
 import com.elleined.socialmediaapi.service.notification.main.comment.CommentNotificationService;
+import com.elleined.socialmediaapi.service.notification.mention.MentionNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.ws.WSService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
@@ -41,6 +47,7 @@ public class CommentController {
 
     private final ReplyService replyService;
 
+    private final MentionService mentionService;
     private final HashTagService hashTagService;
 
     private final WSService wsService;
@@ -48,6 +55,9 @@ public class CommentController {
 
     private final CommentNotificationService commentNotificationService;
     private final CommentNotificationMapper commentNotificationMapper;
+
+    private final MentionNotificationService<CommentMentionNotification, Comment> mentionNotificationService;
+    private final MentionNotificationMapper mentionNotificationMapper;
 
     @GetMapping
     public List<CommentDTO> getAll(@PathVariable("currentUserId") int currentUserId,
@@ -87,19 +97,29 @@ public class CommentController {
                            @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
                            @RequestPart(required = false, name = "hashTagIds") Set<Integer> hashTagIds) {
 
+        // Getting entities
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        Set<User> mentionedUsers = new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList()));
         Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
 
-        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentionedUsers, hashTags);
+        // Saving entities
+        Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
+        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentions, hashTags);
         CommentNotification commentNotification = commentNotificationService.save(currentUser, comment);
+        List<CommentMentionNotification> commentMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, comment);
 
+        // DTO Conversion
         CommentDTO commentDTO = commentMapper.toDTO(comment);
         CommentNotificationDTO commentNotificationDTO = commentNotificationMapper.toDTO(commentNotification);
+        List<CommentMentionNotificationDTO> commentMentionNotificationDTOS = commentMentionNotifications.stream()
+                        .map(mentionNotificationMapper::toDTO)
+                .toList();
 
+        // Web Socket
         wsService.broadcastOnComment(commentDTO);
         notificationWSService.notifyOnComment(commentNotificationDTO);
+        commentMentionNotificationDTOS.forEach(notificationWSService::notifyOnMentioned);
+
         return commentDTO;
     }
 

@@ -3,8 +3,10 @@ package com.elleined.socialmediaapi.service.main.post;
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
+import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.CustomService;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +21,8 @@ public interface PostService extends SavedPostService, SharePostService, CustomS
     Post save(User currentUser,
               String body,
               MultipartFile attachedPicture,
-              Set<User> mentionedUsers,
-              Set<String> keywords)
+              Set<Mention> mentions,
+              Set<HashTag> hashTags)
             throws BlockedException,
             ResourceNotFoundException,
             IOException;

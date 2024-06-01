@@ -40,9 +40,6 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
 
-    private final MentionService mentionService;
-    private final HashTagService hashTagService;
-
     private final UserServiceRestriction userServiceRestriction;
 
     private final FieldValidator fieldValidator;
@@ -51,19 +48,15 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     public Post save(User currentUser,
                      String body,
                      MultipartFile attachedPicture,
-                     Set<User> mentionedUsers,
-                     Set<String> keywords) {
+                     Set<Mention> mentions,
+                     Set<HashTag> hashTags) {
 
         if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save post! because body cannot be empty! Please provide text for your post to be posted!");
 
-        Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
-        Set<HashTag> hashTags = hashTagService.saveAll(keywords);
-
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         Post post = postMapper.toEntity(currentUser, body, picture, hashTags, mentions);
         postRepository.save(post);
-
 
         log.debug("Post with id of {} saved successfully!", post.getId());
         return post;

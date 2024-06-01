@@ -1,15 +1,22 @@
+
+
 package com.elleined.socialmediaapi.controller.user.story;
 
+import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.reaction.ReactionDTO;
+import com.elleined.socialmediaapi.mapper.notification.reaction.ReactionNotificationMapper;
 import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
+import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
 import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
+import com.elleined.socialmediaapi.service.notification.reaction.ReactionNotificationService;
 import com.elleined.socialmediaapi.service.reaction.ReactionService;
 import com.elleined.socialmediaapi.service.story.StoryService;
 import com.elleined.socialmediaapi.service.user.UserService;
+import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +37,11 @@ public class StoryReactionController {
     private final ReactionMapper reactionMapper;
 
     private final EmojiService emojiService;
+
+    private final ReactionNotificationService<StoryReactionNotification, Story> reactionNotificationService;
+    private final ReactionNotificationMapper reactionNotificationMapper;
+
+    private final NotificationWSService notificationWSService;
 
     @GetMapping
     public List<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
@@ -83,7 +95,14 @@ public class StoryReactionController {
         }
 
         Reaction reaction = reactionService.save(currentUser, story, emoji);
-        return reactionMapper.toDTO(reaction);
+        StoryReactionNotification storyReactionNotification = reactionNotificationService.save(currentUser, story, reaction);
+
+        StoryReactionNotificationDTO storyReactionNotificationDTO = reactionNotificationMapper.toDTO(storyReactionNotification);
+        ReactionDTO reactionDTO = reactionMapper.toDTO(reaction);
+
+        notificationWSService.notifyOnReaction(storyReactionNotificationDTO);
+
+        return reactionDTO;
     }
 
     @DeleteMapping("/{reactionId}")

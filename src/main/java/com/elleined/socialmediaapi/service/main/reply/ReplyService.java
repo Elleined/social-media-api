@@ -9,6 +9,7 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.CustomService;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,7 @@ public interface ReplyService extends CustomService<Reply> {
                Comment comment,
                String body,
                MultipartFile attachedPicture,
-               Set<User> mentionedUsers,
+               Set<Mention> mentions,
                Set<HashTag> hashTags) throws CommentSectionException,
             ResourceNotOwnedException,
             BlockedException, IOException;

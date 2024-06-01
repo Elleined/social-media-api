@@ -49,8 +49,6 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final CommentPinReplyService commentPinReplyService;
 
-    private final MentionService mentionService;
-
     private final PostServiceRestriction postServiceRestriction;
     private final CommentServiceRestriction commentServiceRestriction;
     private final UserServiceRestriction userServiceRestriction;
@@ -62,7 +60,7 @@ public class ReplyServiceImpl implements ReplyService {
                       Post post, Comment comment,
                       String body,
                       MultipartFile attachedPicture,
-                      Set<User> mentionedUsers, Set<HashTag> hashTags) {
+                      Set<Mention> mentions, Set<HashTag> hashTags) {
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot save reply! because post with id of " + post.getId() + " does not exists or already deleted!") ;
@@ -84,8 +82,6 @@ public class ReplyServiceImpl implements ReplyService {
 
         if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save reply! because reply body cannot be empty!");
-
-        Set<Mention> mentions = mentionService.saveAll(currentUser, mentionedUsers);
 
         String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
         Reply reply = replyMapper.toEntity(currentUser, comment, body, picture, mentions, hashTags);
