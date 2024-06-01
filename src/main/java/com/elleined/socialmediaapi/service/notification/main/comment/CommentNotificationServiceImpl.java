@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.notification.main.comment;
 
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
-import com.elleined.socialmediaapi.mapper.notification.CommentNotificationMapper;
+import com.elleined.socialmediaapi.mapper.notification.main.CommentNotificationMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.main.CommentNotification;

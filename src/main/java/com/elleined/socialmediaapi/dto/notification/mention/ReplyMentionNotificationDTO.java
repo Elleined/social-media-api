@@ -10,6 +10,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class ReplyMentionNotificationDTO extends ReplyNotificationDTO {
+public class ReplyMentionNotificationDTO extends MentionNotificationDTO {
     private int replyId;
 }

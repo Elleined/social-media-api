@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.controller.notification;
 
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
-import com.elleined.socialmediaapi.mapper.notification.ReplyNotificationMapper;
+import com.elleined.socialmediaapi.mapper.notification.main.ReplyNotificationMapper;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
 import com.elleined.socialmediaapi.model.user.User;

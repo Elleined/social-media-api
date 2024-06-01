@@ -43,16 +43,4 @@ public class UserDTO extends DTO {
     private Set<Integer> followerIds;
     private Set<Integer> followingIds;
     private List<Integer> reactionIds;
-
-    // Notifications
-    private List<Integer> commentNotificationIds;
-    private List<Integer> replyNotificationIds;
-    private List<Integer> postMentionNotificationIds;
-    private List<Integer> commentMentionNotificationIds;
-    private List<Integer> replyMentionNotificationIds;
-    private List<Integer> storyMentionNotificationIds;
-    private List<Integer> postReactionNotificationIds;
-    private List<Integer> commentReactionNotificationIds;
-    private List<Integer> replyReactionNotificationIds;
-    private List<Integer> storyReactionNotificationIds;
 }

@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.notification.main.reply;
 
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
-import com.elleined.socialmediaapi.mapper.notification.ReplyNotificationMapper;
+import com.elleined.socialmediaapi.mapper.notification.main.ReplyNotificationMapper;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;

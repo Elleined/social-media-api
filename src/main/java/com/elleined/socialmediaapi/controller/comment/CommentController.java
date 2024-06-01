@@ -3,7 +3,7 @@ package com.elleined.socialmediaapi.controller.comment;
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
-import com.elleined.socialmediaapi.mapper.notification.CommentNotificationMapper;
+import com.elleined.socialmediaapi.mapper.notification.main.CommentNotificationMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
