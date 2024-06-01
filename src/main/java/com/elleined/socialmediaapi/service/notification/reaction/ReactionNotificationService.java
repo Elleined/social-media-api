@@ -1,12 +1,12 @@
 package com.elleined.socialmediaapi.service.notification.reaction;
 
-public interface ReactionNotificationService {
-    // // Receiver is the post creator
-    // void saveOnReaction(User creator, Post post, Reaction reaction);
-    // // Receiver is the comment creator
-    // void saveOnReaction(User creator, Comment comment, Reaction reaction);
-    // // Receiver is the reply creator
-    // void saveOnReaction(User creator, Reply reply, Reaction reaction);
-    // // Receiver is the story creator
-    // void saveOnReaction(User creator, Story story, Reaction reaction);
+import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.notification.reaction.ReactionNotification;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
+import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.service.notification.NotificationService;
+
+public interface ReactionNotificationService<T extends ReactionNotification,
+        S extends PrimaryKeyIdentity> extends NotificationService<T> {
+    T save(User currentUser, S s, Reaction reaction);
 }
