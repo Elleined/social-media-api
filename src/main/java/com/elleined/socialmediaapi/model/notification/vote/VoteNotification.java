@@ -1,6 +1,7 @@
-package com.elleined.socialmediaapi.model.notification.mention;
+package com.elleined.socialmediaapi.model.notification.vote;
 
-import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.notification.Notification;
+import com.elleined.socialmediaapi.model.vote.Vote;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -11,24 +12,24 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "tbl_comment_mention_notification")
+@Table(name = "tbl_vote_notification")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class CommentMentionNotification extends MentionNotification {
+public class VoteNotification extends Notification {
 
     @ManyToOne(optional = false)
     @JoinColumn(
-            name = "comment_id",
+            name = "vote_id",
             referencedColumnName = "id",
             nullable = false,
             updatable = false
     )
-    private Comment comment;
+    private Vote vote;
 
     @Override
     public String getMessage() {
-        return STR."\{this.getCreator().getName()} mentioned you and others in a comment: \"\{this.getComment().getBody()}\" ";
+        return STR."\{this.getCreator().getName()} \{this.getVote().getVerdict().name()}d your comment: \"\{this.getVote().getComment().getBody()}\" ";
     }
 }
