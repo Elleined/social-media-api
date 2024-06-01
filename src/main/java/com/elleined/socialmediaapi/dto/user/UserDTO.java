@@ -1,16 +1,6 @@
 package com.elleined.socialmediaapi.dto.user;
 
 import com.elleined.socialmediaapi.dto.DTO;
-import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
-import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
-import com.elleined.socialmediaapi.model.notification.mention.CommentMentionNotification;
-import com.elleined.socialmediaapi.model.notification.mention.PostMentionNotification;
-import com.elleined.socialmediaapi.model.notification.mention.ReplyMentionNotification;
-import com.elleined.socialmediaapi.model.notification.mention.StoryMentionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.PostReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.ReplyReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

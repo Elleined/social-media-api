@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.dto.notification.mention;
 
-import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

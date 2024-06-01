@@ -4,7 +4,6 @@ import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.notification.reaction.ReactionNotificationMapper;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
 import com.elleined.socialmediaapi.model.notification.reaction.PostReactionNotification;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.user.User;

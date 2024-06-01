@@ -3,7 +3,6 @@ package com.elleined.socialmediaapi.service.notification.reaction;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.notification.reaction.ReactionNotificationMapper;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
 import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;

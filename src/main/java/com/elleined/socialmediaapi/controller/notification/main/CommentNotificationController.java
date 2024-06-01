@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.controller.notification;
+package com.elleined.socialmediaapi.controller.notification.main;
 
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.mapper.notification.main.CommentNotificationMapper;

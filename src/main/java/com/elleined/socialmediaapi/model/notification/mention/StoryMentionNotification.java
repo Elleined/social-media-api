@@ -1,7 +1,5 @@
 package com.elleined.socialmediaapi.model.notification.mention;
 
-import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.story.Story;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

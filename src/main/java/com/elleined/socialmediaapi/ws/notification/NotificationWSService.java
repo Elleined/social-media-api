@@ -10,13 +10,6 @@ import com.elleined.socialmediaapi.dto.notification.reaction.CommentReactionNoti
 import com.elleined.socialmediaapi.dto.notification.reaction.PostReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.ReplyReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
-import com.elleined.socialmediaapi.model.main.post.Post;
-import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.reaction.Reaction;
-import com.elleined.socialmediaapi.model.story.Story;
-import com.elleined.socialmediaapi.model.user.User;
 
 public interface NotificationWSService {
     // Receiver is the post creator
