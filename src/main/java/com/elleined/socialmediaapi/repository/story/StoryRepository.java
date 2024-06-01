@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.repository.story;
 
-import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

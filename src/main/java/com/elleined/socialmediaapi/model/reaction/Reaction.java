@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.model.react;
+package com.elleined.socialmediaapi.model.reaction;
 
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 @Entity
-@Table(name = "tbl_react")
+@Table(name = "tbl_reaction")
 @Getter
 @Setter
 @SuperBuilder

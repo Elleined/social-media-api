@@ -2,8 +2,8 @@ package com.elleined.socialmediaapi.controller.user.story;
 
 import com.elleined.socialmediaapi.dto.reaction.ReactionDTO;
 import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
-import com.elleined.socialmediaapi.model.react.Emoji;
-import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.reaction.Emoji;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;

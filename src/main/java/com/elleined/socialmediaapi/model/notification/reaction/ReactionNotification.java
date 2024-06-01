@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.model.notification.reaction;
 
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

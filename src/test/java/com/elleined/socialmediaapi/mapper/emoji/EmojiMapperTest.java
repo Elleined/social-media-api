@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.mapper.emoji;
 
 import com.elleined.socialmediaapi.dto.reaction.EmojiDTO;
-import com.elleined.socialmediaapi.model.react.Emoji;
+import com.elleined.socialmediaapi.model.reaction.Emoji;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;

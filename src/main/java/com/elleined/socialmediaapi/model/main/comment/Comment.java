@@ -6,7 +6,7 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.vote.Vote;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -82,7 +82,7 @@ public class Comment extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_comment_react",
+            name = "tbl_comment_reaction",
             joinColumns = @JoinColumn(
                     name = "comment_id",
                     referencedColumnName = "id",

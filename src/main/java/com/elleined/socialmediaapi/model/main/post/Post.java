@@ -5,7 +5,7 @@ import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -76,7 +76,7 @@ public class Post extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_post_react",
+            name = "tbl_post_reaction",
             joinColumns = @JoinColumn(
                     name = "post_id",
                     referencedColumnName = "id",

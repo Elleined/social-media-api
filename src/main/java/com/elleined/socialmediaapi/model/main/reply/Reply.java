@@ -5,7 +5,7 @@ import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.mention.Mention;
-import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,7 +67,7 @@ public class Reply extends Forum {
 
     @ManyToMany
     @JoinTable(
-            name = "tbl_reply_react",
+            name = "tbl_reply_reaction",
             joinColumns = @JoinColumn(
                     name = "reply_id",
                     referencedColumnName = "id",

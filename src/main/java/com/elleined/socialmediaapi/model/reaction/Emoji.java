@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.model.react;
+package com.elleined.socialmediaapi.model.reaction;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import jakarta.persistence.Column;

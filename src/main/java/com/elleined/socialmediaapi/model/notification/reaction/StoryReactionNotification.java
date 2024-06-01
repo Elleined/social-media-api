@@ -1,6 +1,6 @@
 package com.elleined.socialmediaapi.model.notification.reaction;
 
-import com.elleined.socialmediaapi.model.react.Emoji;
+import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.model.story.Story;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

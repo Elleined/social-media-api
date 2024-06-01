@@ -16,7 +16,7 @@ import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNo
 import com.elleined.socialmediaapi.model.notification.reaction.PostReactionNotification;
 import com.elleined.socialmediaapi.model.notification.reaction.ReplyReactionNotification;
 import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
-import com.elleined.socialmediaapi.model.react.Reaction;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.vote.Vote;
 import jakarta.persistence.*;
