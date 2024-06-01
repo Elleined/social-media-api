@@ -1,6 +1,16 @@
 package com.elleined.socialmediaapi.dto.user;
 
 import com.elleined.socialmediaapi.dto.DTO;
+import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
+import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
+import com.elleined.socialmediaapi.model.notification.mention.CommentMentionNotification;
+import com.elleined.socialmediaapi.model.notification.mention.PostMentionNotification;
+import com.elleined.socialmediaapi.model.notification.mention.ReplyMentionNotification;
+import com.elleined.socialmediaapi.model.notification.mention.StoryMentionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.PostReactionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.ReplyReactionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,4 +43,16 @@ public class UserDTO extends DTO {
     private Set<Integer> followerIds;
     private Set<Integer> followingIds;
     private List<Integer> reactionIds;
+
+    // Notifications
+    private List<Integer> commentNotificationIds;
+    private List<Integer> replyNotificationIds;
+    private List<Integer> postMentionNotificationIds;
+    private List<Integer> commentMentionNotificationIds;
+    private List<Integer> replyMentionNotificationIds;
+    private List<Integer> storyMentionNotificationIds;
+    private List<Integer> postReactionNotificationIds;
+    private List<Integer> commentReactionNotificationIds;
+    private List<Integer> replyReactionNotificationIds;
+    private List<Integer> storyReactionNotificationIds;
 }
