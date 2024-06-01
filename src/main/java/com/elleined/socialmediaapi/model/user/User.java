@@ -8,6 +8,14 @@ import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
 import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
+import com.elleined.socialmediaapi.model.notification.mention.CommentMentionNotification;
+import com.elleined.socialmediaapi.model.notification.mention.PostMentionNotification;
+import com.elleined.socialmediaapi.model.notification.mention.ReplyMentionNotification;
+import com.elleined.socialmediaapi.model.notification.mention.StoryMentionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.PostReactionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.ReplyReactionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
 import com.elleined.socialmediaapi.model.react.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.vote.Vote;
@@ -92,6 +100,30 @@ public class User extends PrimaryKeyIdentity {
 
     @OneToMany(mappedBy = "receiver")
     private List<ReplyNotification> replyNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<PostMentionNotification> postMentionNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<CommentMentionNotification> commentMentionNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<ReplyMentionNotification> replyMentionNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<StoryMentionNotification> storyMentionNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<PostReactionNotification> postReactionNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<CommentReactionNotification> commentReactionNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<ReplyReactionNotification> replyReactionNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<StoryReactionNotification> storyReactionNotifications;
 
     @ManyToMany
     @JoinTable(
@@ -236,12 +268,43 @@ public class User extends PrimaryKeyIdentity {
                 .toList();
     }
 
-
     public boolean has(CommentNotification commentNotification) {
         return this.getCommentNotifications().contains(commentNotification);
     }
 
     public boolean has(ReplyNotification replyNotification) {
         return this.getReplyNotifications().contains(replyNotification);
+    }
+
+    public boolean has (PostMentionNotification postMentionNotification) {
+        return this.getPostMentionNotifications().contains(postMentionNotification);
+    }
+
+    public boolean has (CommentMentionNotification commentMentionNotification) {
+        return this.getCommentMentionNotifications().contains(commentMentionNotification);
+    }
+
+    public boolean has (ReplyMentionNotification replyMentionNotification) {
+        return this.getReplyMentionNotifications().contains(replyMentionNotification);
+    }
+
+    public boolean has (StoryMentionNotification storyMentionNotification) {
+        return this.getStoryMentionNotifications().contains(storyMentionNotification);
+    }
+
+    public boolean has (PostReactionNotification postReactionNotification) {
+        return this.getPostReactionNotifications().contains(postReactionNotification);
+    }
+
+    public boolean has (CommentReactionNotification commentReactionNotification) {
+        return this.getCommentReactionNotifications().contains(commentReactionNotification);
+    }
+
+    public boolean has (ReplyReactionNotification replyReactionNotification) {
+        return this.getReplyReactionNotifications().contains(replyReactionNotification);
+    }
+
+    public boolean has (StoryReactionNotification storyReactionNotification) {
+        return this.getStoryReactionNotifications().contains(storyReactionNotification);
     }
 }
