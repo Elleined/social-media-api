@@ -1,7 +1,6 @@
-package com.elleined.socialmediaapi.model.notification.main;
+package com.elleined.socialmediaapi.model.notification.mention;
 
-import com.elleined.socialmediaapi.model.main.reply.Reply;
-import com.elleined.socialmediaapi.model.notification.Notification;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -11,25 +10,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Entity
-@Table(name = "tbl_reply_notification")
+@Table(name = "tbl_comment_mention_notification")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class ReplyNotification extends Notification {
+public class CommentMentionNotification extends MentionNotification {
 
     @ManyToOne(optional = false)
     @JoinColumn(
-            name = "reply_id",
+            name = "comment_id",
             referencedColumnName = "id",
             nullable = false,
             updatable = false
     )
-    private Reply reply;
+    private Comment comment;
+
+
 
     @Override
     public String getMessage() {
-        return STR."\{this.getCreator().getName()} replied on your comment: \"\{this.getReply().getComment().getBody()}\" ";
+        return STR."\{this.getCreator().getName()} mentioned you and others in a comment: \"\{this.getComment().getBody()}\" ";
     }
 }

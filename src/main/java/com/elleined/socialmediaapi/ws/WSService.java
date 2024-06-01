@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.ws;
+package com.elleined.socialmediaapi.ws;
 
 import com.elleined.socialmediaapi.dto.main.CommentDTO;
 import com.elleined.socialmediaapi.dto.main.ReplyDTO;

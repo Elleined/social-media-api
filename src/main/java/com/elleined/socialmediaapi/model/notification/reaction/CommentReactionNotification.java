@@ -1,7 +1,7 @@
-package com.elleined.socialmediaapi.model.notification.main;
+package com.elleined.socialmediaapi.model.notification.reaction;
 
 import com.elleined.socialmediaapi.model.main.comment.Comment;
-import com.elleined.socialmediaapi.model.notification.Notification;
+import com.elleined.socialmediaapi.model.react.Emoji;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,12 +12,12 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "tbl_comment_notification")
+@Table(name = "tbl_comment_reaction_notification")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class CommentNotification extends Notification {
+public class CommentReactionNotification extends ReactionNotification {
 
     @ManyToOne(optional = false)
     @JoinColumn(
@@ -30,6 +30,9 @@ public class CommentNotification extends Notification {
 
     @Override
     public String getMessage() {
-        return STR."\{this.getCreator().getName()} commented on your post: \"\{this.getComment().getPost().getBody()}\" ";
+        if (this.getReaction().getEmoji().getType().equals(Emoji.Type.HEART.name()))
+            return STR."\{this.getCreator().getName()} loves to your comment: \"\{this.getComment().getBody()}\" ";
+
+        return STR."\{this.getCreator().getName()} reacted to your comment: \"\{this.getComment().getBody()}\" ";
     }
 }

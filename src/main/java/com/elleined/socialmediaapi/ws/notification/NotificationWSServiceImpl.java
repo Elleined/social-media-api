@@ -1,4 +1,4 @@
-package com.elleined.socialmediaapi.service.ws.notification;
+package com.elleined.socialmediaapi.ws.notification;
 
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
