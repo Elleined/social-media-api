@@ -2,6 +2,21 @@ package com.elleined.socialmediaapi.ws.notification;
 
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.mention.CommentMentionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.mention.PostMentionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.mention.ReplyMentionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.mention.StoryMentionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.reaction.CommentReactionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.reaction.PostReactionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.reaction.ReplyReactionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
+import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.mention.Mention;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
+import com.elleined.socialmediaapi.model.story.Story;
+import com.elleined.socialmediaapi.model.user.User;
 
 public interface NotificationWSService {
     // Receiver is the post creator
@@ -9,25 +24,25 @@ public interface NotificationWSService {
     // Receiver is the comment creator
     void notifyOnReply(ReplyNotificationDTO replyNotificationDTO);
 
-    // Reaction
-    // // Receiver is the post creator
-    // void notifyOnReaction(User creator, Post post, Reaction reaction);
-    // // Receiver is the comment creator
-    // void notifyOnReaction(User creator, Comment comment, Reaction reaction);
-    // // Receiver is the reply creator
-    // void notifyOnReaction(User creator, Reply reply, Reaction reaction);
-    // // Receiver is the story creator
-    // void notifyOnReaction(User creator, Story story, Reaction reaction);
+     // Reaction
+     // Receiver is the post creator
+     void notifyOnReaction(PostReactionNotificationDTO postReactionNotificationDTO);
+     // Receiver is the comment creator
+     void notifyOnReaction(CommentReactionNotificationDTO commentReactionNotificationDTO);
+     // Receiver is the reply creator
+     void notifyOnReaction(ReplyReactionNotificationDTO replyReactionNotificationDTO);
+     // Receiver is the story creator
+     void notifyOnReaction(StoryReactionNotificationDTO storyReactionNotificationDTO);
 
-    // Mention
-    // // Receiver is the mentioned user
-    // void notifyOnMentioned(User creator, User mentionedUser, Post post);
-    // // Receiver is the mentioned user
-    // void notifyOnMentioned(User creator, User mentionedUser, Comment comment);
-    // // Receiver is the mentioned user
-    // void notifyOnMentioned(User creator, User mentionedUser, Reply reply);
-    // // Receiver is the mentioned user
-    // void notifyOnMentioned(User creator, User mentionedUser, Story story);
+     // Mention
+     // Receiver is the mentioned user
+     void notifyOnMentioned(PostMentionNotificationDTO postMentionNotificationDTO);
+     // Receiver is the mentioned user
+     void notifyOnMentioned(CommentMentionNotificationDTO commentMentionNotificationDTO);
+     // Receiver is the mentioned user
+     void notifyOnMentioned(ReplyMentionNotificationDTO replyMentionNotificationDTO);
+     // Receiver is the mentioned user
+     void notifyOnMentioned(StoryMentionNotificationDTO storyMentionNotificationDTO);
 
     // Vote
     // // Receiver is the comment creator
