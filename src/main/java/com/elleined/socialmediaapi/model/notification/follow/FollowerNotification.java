@@ -1,7 +1,6 @@
 package com.elleined.socialmediaapi.model.notification.follow;
 
 import com.elleined.socialmediaapi.model.notification.Notification;
-import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;

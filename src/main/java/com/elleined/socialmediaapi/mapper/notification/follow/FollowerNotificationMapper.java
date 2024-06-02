@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring", imports = {Notification.Status.class})
-public interface FollowNotificationMapper extends CustomMapper<FollowerNotification, FollowerNotificationDTO> {
+public interface FollowerNotificationMapper extends CustomMapper<FollowerNotification, FollowerNotificationDTO> {
 
     @Override
     @Mappings({

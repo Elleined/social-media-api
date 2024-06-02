@@ -4,6 +4,6 @@ import com.elleined.socialmediaapi.model.notification.follow.FollowerNotificatio
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.notification.NotificationService;
 
-public interface FollowNotificationService extends NotificationService<FollowerNotification> {
+public interface FollowerNotificationService extends NotificationService<FollowerNotification> {
     FollowerNotification save(User currentUser, User receiver);
 }

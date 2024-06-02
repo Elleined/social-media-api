@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.mapper.notification.vote;
 
 import com.elleined.socialmediaapi.dto.notification.vote.VoteNotificationDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.vote.VoteNotification;
 import com.elleined.socialmediaapi.model.user.User;

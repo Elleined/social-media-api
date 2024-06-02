@@ -1,7 +1,7 @@
 package com.elleined.socialmediaapi.service.notification.follow;
 
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
-import com.elleined.socialmediaapi.mapper.notification.follow.FollowNotificationMapper;
+import com.elleined.socialmediaapi.mapper.notification.follow.FollowerNotificationMapper;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.follow.FollowerNotification;
 import com.elleined.socialmediaapi.model.user.User;
@@ -19,11 +19,11 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FollowNotificationServiceImpl implements FollowNotificationService {
+public class FollowerNotificationServiceImpl implements FollowerNotificationService {
     private final UserRepository userRepository;
 
     private final FollowerNotificationRepository followerNotificationRepository;
-    private final FollowNotificationMapper followNotificationMapper;
+    private final FollowerNotificationMapper followerNotificationMapper;
 
     @Override
     public List<FollowerNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
@@ -48,7 +48,7 @@ public class FollowNotificationServiceImpl implements FollowNotificationService 
 
     @Override
     public FollowerNotification save(User currentUser, User receiver) {
-        FollowerNotification followerNotification = followNotificationMapper.toEntity(currentUser, receiver);
+        FollowerNotification followerNotification = followerNotificationMapper.toEntity(currentUser, receiver);
 
         followerNotificationRepository.save(followerNotification);
         log.debug("Saving follower notification success");

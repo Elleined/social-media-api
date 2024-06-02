@@ -8,7 +8,6 @@ import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.story.StoryRepository;
-import com.elleined.socialmediaapi.service.mention.MentionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
