@@ -10,5 +10,5 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public class FollowNotificationDTO extends NotificationDTO {
+public class FollowerNotificationDTO extends NotificationDTO {
 }

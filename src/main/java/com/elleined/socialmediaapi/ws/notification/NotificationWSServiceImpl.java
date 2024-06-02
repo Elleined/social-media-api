@@ -1,15 +1,18 @@
 package com.elleined.socialmediaapi.ws.notification;
 
+import com.elleined.socialmediaapi.dto.notification.follow.FollowerNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.CommentMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.PostMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.ReplyMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.StoryMentionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.post.SharedPostNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.CommentReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.PostReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.ReplyReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.vote.VoteNotificationDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -139,5 +142,41 @@ public class NotificationWSServiceImpl implements NotificationWSService {
         final String destination = STR."/sma-notification/users/\{receiverId}";
         simpMessagingTemplate.convertAndSend(destination, storyMentionNotificationDTO);
         log.debug("Broadcasting story mention notification success");
+    }
+
+    @Override
+    public void notifyOnVote(VoteNotificationDTO voteNotificationDTO) {
+         if (voteNotificationDTO.isRead())
+            return;
+
+         int receiverId = voteNotificationDTO.getReceiverId();
+
+         final String destination = STR."/sma-notification/users/\{receiverId}";
+         simpMessagingTemplate.convertAndSend(destination, voteNotificationDTO);
+         log.debug("Broadcasting vote notification");
+    }
+
+    @Override
+    public void notifyOnShare(SharedPostNotificationDTO sharedPostNotificationDTO) {
+         if (sharedPostNotificationDTO.isRead())
+            return;
+
+         int receiverId = sharedPostNotificationDTO.getReceiverId();
+
+         final String destination = STR."/sma-notification/users/\{receiverId}";
+         simpMessagingTemplate.convertAndSend(destination, sharedPostNotificationDTO);
+         log.debug("Broadcasting sharedPost notification");
+    }
+
+    @Override
+    public void notifyOnFollow(FollowerNotificationDTO followerNotificationDTO) {
+         if (followerNotificationDTO.isRead())
+            return;
+
+         int receiverId = followerNotificationDTO.getReceiverId();
+
+         final String destination = STR."/sma-notification/users/\{receiverId}";
+         simpMessagingTemplate.convertAndSend(destination, followerNotificationDTO);
+         log.debug("Broadcasting follower notification");
     }
 }

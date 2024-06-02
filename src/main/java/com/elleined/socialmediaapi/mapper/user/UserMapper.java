@@ -72,7 +72,10 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "postReactionNotifications", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "commentReactionNotifications", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "replyReactionNotifications", expression = "java(new java.util.ArrayList<>())"),
-            @Mapping(target = "storyReactionNotifications", expression = "java(new java.util.ArrayList<>())")
+            @Mapping(target = "storyReactionNotifications", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "followerNotifications", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "sharedPostNotifications", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "voteNotifications", expression = "java(new java.util.ArrayList<>())"),
     })
     User toEntity(String name,
                   String email,

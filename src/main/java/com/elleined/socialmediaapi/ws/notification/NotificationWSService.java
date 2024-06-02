@@ -1,15 +1,18 @@
 package com.elleined.socialmediaapi.ws.notification;
 
+import com.elleined.socialmediaapi.dto.notification.follow.FollowerNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.CommentMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.PostMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.ReplyMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.StoryMentionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.post.SharedPostNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.CommentReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.PostReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.ReplyReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.vote.VoteNotificationDTO;
 
 public interface NotificationWSService {
     // Receiver is the post creator
@@ -39,11 +42,15 @@ public interface NotificationWSService {
 
     // Vote
     // // Receiver is the comment creator
-    // void notifyOnVote(User creator, Comment comment, Vote vote);
+    void notifyOnVote(VoteNotificationDTO voteNotificationDTO);
 
     // Share post
     // // Receiver is the post creator
-    // void notifyOnShare(User creator, Post post);
+    void notifyOnShare(SharedPostNotificationDTO sharedPostNotificationDTO);
+
+    // Follow
+    // // Receiver is the followed user
+    void notifyOnFollow(FollowerNotificationDTO followerNotificationDTO);
 
     // Friend Request
     // // Receiver is the requested user
@@ -53,9 +60,6 @@ public interface NotificationWSService {
     // // Receiver is the friend request creator
     // void notifyOnAcceptFriendRequest(User creator, FriendRequest friendRequest);
 
-    // Follow
-    // // Receiver is the followed user
-    // void notifyOnFollow(User creator, User followedUser);
 }
 
 
