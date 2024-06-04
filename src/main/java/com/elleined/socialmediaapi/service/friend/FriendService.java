@@ -11,7 +11,10 @@ public interface FriendService extends CustomService<FriendRequest> {
     List<User> getAllFriends(User currentUser, Pageable pageable);
     List<FriendRequest> getAllFriendRequests(User currentUser, Pageable pageable);
 
+    // Current user = Requested user
     void acceptFriendRequest(User currentUser, FriendRequest friendRequest);
+
+    // Current user = Requested user
     void rejectFriendRequest(User currentUser, FriendRequest friendRequest);
 
     void sendFriendRequest(User currentUser, User userToAdd);

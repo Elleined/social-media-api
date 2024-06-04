@@ -35,37 +35,37 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
 
     @Override
     public void acceptFriendRequest(User currentUser, FriendRequest friendRequest) {
-        User requestingUser = friendRequest.getCreator();
+        User creator = friendRequest.getCreator();
 
-        if (isFriendsWith(currentUser, requestingUser))
+        if (isFriendsWith(currentUser, creator))
             throw new FriendException("Cannot accept friend request! because you're already friends.");
 
-        if (hasNotReceiveFriendRequest(currentUser, requestingUser))
+        if (hasNotReceiveFriendRequest(currentUser, creator))
             throw new ResourceNotOwnedException("Cannot accept friend request! because you don't receive this friend request.");
 
-        currentUser.getFriends().add(requestingUser);
-        requestingUser.getFriends().add(currentUser);
+        currentUser.getFriends().add(creator);
+        creator.getFriends().add(currentUser);
 
-        friendRequestRepository.delete(friendRequest);
         userRepository.save(currentUser);
-        userRepository.save(requestingUser);
-        log.debug("User with id of {} accepted friend request of user with id of {}", requestingUser.getId(), currentUser.getId());
+        userRepository.save(creator);
+        log.debug("User with id of {} accepted friend request of user with id of {}", creator.getId(), currentUser.getId());
     }
 
     @Override
     public void rejectFriendRequest(User currentUser, FriendRequest friendRequest) {
-        User requestingUser = friendRequest.getCreator();
+        User creator = friendRequest.getCreator();
 
-        if (hasNotReceiveFriendRequest(currentUser, requestingUser))
+        if (hasNotReceiveFriendRequest(currentUser, creator))
             throw new ResourceNotOwnedException("Cannot delete friend request! because you don't have sent this friend request.");
 
-        int friendRequestId = friendRequest.getId();
         currentUser.getReceiveFriendRequests().remove(friendRequest);
+        creator.getSentFriendRequests().remove(friendRequest);
         friendRequest.setUpdatedAt(LocalDateTime.now());
 
         userRepository.save(currentUser);
-        friendRequestRepository.delete(friendRequest);
-        log.debug("User with id of {} delete friend request with id of {}", currentUser.getId(), friendRequestId);
+        userRepository.save(creator);
+        friendRequestRepository.save(friendRequest);
+        log.debug("Current user rejected this friend request");
     }
 
     @Override
