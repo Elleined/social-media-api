@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.ws.notification;
 
 import com.elleined.socialmediaapi.dto.notification.follow.FollowerNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.friend.FriendRequestNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.CommentMentionNotificationDTO;
@@ -13,6 +14,9 @@ import com.elleined.socialmediaapi.dto.notification.reaction.PostReactionNotific
 import com.elleined.socialmediaapi.dto.notification.reaction.ReplyReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.vote.VoteNotificationDTO;
+import com.elleined.socialmediaapi.model.friend.FriendRequest;
+import com.elleined.socialmediaapi.model.notification.friend.FriendRequestNotification;
+import com.elleined.socialmediaapi.model.user.User;
 
 public interface NotificationWSService {
     // Receiver is the post creator
@@ -54,12 +58,11 @@ public interface NotificationWSService {
 
     // Friend Request
     // // Receiver is the requested user
-    // void notifyOnReceiveFriendRequest(User creator, FriendRequest friendRequest);
+    void notifyOnReceiveFriendRequest(FriendRequestNotificationDTO friendRequestNotificationDTO);
 
     // // Creator is the friend request requested user
     // // Receiver is the friend request creator
-    // void notifyOnAcceptFriendRequest(User creator, FriendRequest friendRequest);
-
+    void notifyOnAcceptFriendRequest(FriendRequestNotificationDTO friendRequestNotificationDTO);
 }
 
 

@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.ws.notification;
 
 import com.elleined.socialmediaapi.dto.notification.follow.FollowerNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.friend.FriendRequestNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.CommentNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.main.ReplyNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.CommentMentionNotificationDTO;
@@ -178,5 +179,29 @@ public class NotificationWSServiceImpl implements NotificationWSService {
          final String destination = STR."/sma-notification/users/\{receiverId}";
          simpMessagingTemplate.convertAndSend(destination, followerNotificationDTO);
          log.debug("Broadcasting follower notification");
+    }
+
+    @Override
+    public void notifyOnReceiveFriendRequest(FriendRequestNotificationDTO friendRequestNotificationDTO) {
+        if (friendRequestNotificationDTO.isRead())
+            return;
+
+        int receiverId = friendRequestNotificationDTO.getReceiverId();
+
+        final String destination = STR."/sma-notification/users/\{receiverId}";
+        simpMessagingTemplate.convertAndSend(destination, friendRequestNotificationDTO);
+        log.debug("Broadcasting receive friend request notification");
+    }
+
+    @Override
+    public void notifyOnAcceptFriendRequest(FriendRequestNotificationDTO friendRequestNotificationDTO) {
+        if (friendRequestNotificationDTO.isRead())
+            return;
+
+        int receiverId = friendRequestNotificationDTO.getReceiverId();
+
+        final String destination = STR."/sma-notification/users/\{receiverId}";
+        simpMessagingTemplate.convertAndSend(destination, friendRequestNotificationDTO);
+        log.debug("Broadcasting accepted friend request notification");
     }
 }

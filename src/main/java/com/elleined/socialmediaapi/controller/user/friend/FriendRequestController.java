@@ -1,11 +1,16 @@
 package com.elleined.socialmediaapi.controller.user.friend;
 
 import com.elleined.socialmediaapi.dto.friend.FriendRequestDTO;
+import com.elleined.socialmediaapi.dto.notification.friend.FriendRequestNotificationDTO;
 import com.elleined.socialmediaapi.mapper.friend.FriendRequestMapper;
+import com.elleined.socialmediaapi.mapper.notification.friend.FriendRequestNotificationMapper;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
+import com.elleined.socialmediaapi.model.notification.friend.FriendRequestNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.friend.FriendService;
+import com.elleined.socialmediaapi.service.notification.friend.FriendRequestNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
+import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +28,11 @@ public class FriendRequestController {
     private final UserService userService;
 
     private final FriendRequestMapper friendRequestMapper;
+
+    private final FriendRequestNotificationService friendRequestNotificationService;
+    private final FriendRequestNotificationMapper friendRequestNotificationMapper;
+
+    private final NotificationWSService notificationWSService;
 
     @GetMapping
     public List<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId,
@@ -55,17 +65,40 @@ public class FriendRequestController {
     @PostMapping("/{userToAddId}/send")
     public void sendFriendRequest(@PathVariable("currentUserId") int currentUserId,
                                   @PathVariable("userToAddId") int userToAddId) {
+
+        // Getting entities
         User currentUser = userService.getById(currentUserId);
         User userToAdd = userService.getById(userToAddId);
-        friendService.sendFriendRequest(currentUser, userToAdd);
+
+        // Saving entities
+        FriendRequest friendRequest = friendService.sendFriendRequest(currentUser, userToAdd);
+        FriendRequestNotification friendRequestNotification = friendRequestNotificationService.save(currentUser, userToAdd, STR."\{currentUser.getName()} sent you a friend request", friendRequest);
+
+        // DTO Conversion
+        FriendRequestNotificationDTO friendRequestNotificationDTO = friendRequestNotificationMapper.toDTO(friendRequestNotification);
+
+        // Web Socket
+        notificationWSService.notifyOnReceiveFriendRequest(friendRequestNotificationDTO);
     }
 
     @PatchMapping("/{friendRequestId}/accept")
     public void acceptFriendRequest(@PathVariable("currentUserId") int currentUserId,
                                     @PathVariable("friendRequestId") int friendRequestId) {
+
+        // Getting entities
         User currentUser = userService.getById(currentUserId);
         FriendRequest friendRequest = friendService.getById(friendRequestId);
+        User receiver = friendRequest.getCreator();
+
+        // Saving entities
         friendService.acceptFriendRequest(currentUser, friendRequest);
+        FriendRequestNotification friendRequestNotification = friendRequestNotificationService.save(currentUser, receiver, STR."\{receiver.getName()} accepted your friend request.", friendRequest);
+
+        // DTO Conversion
+        FriendRequestNotificationDTO friendRequestNotificationDTO = friendRequestNotificationMapper.toDTO(friendRequestNotification);
+
+        // Web Socket
+        notificationWSService.notifyOnAcceptFriendRequest(friendRequestNotificationDTO);
     }
 
     @DeleteMapping("/{friendRequestId}/reject")

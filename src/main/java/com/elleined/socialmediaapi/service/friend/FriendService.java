@@ -17,7 +17,7 @@ public interface FriendService extends CustomService<FriendRequest> {
     // Current user = Requested user
     void rejectFriendRequest(User currentUser, FriendRequest friendRequest);
 
-    void sendFriendRequest(User currentUser, User userToAdd);
+    FriendRequest sendFriendRequest(User currentUser, User userToAdd);
 
     void unFriend(User currentUser, User userToUnFriend);
 }
