@@ -7,6 +7,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.notification.follow.FollowerNotification;
+import com.elleined.socialmediaapi.model.notification.friend.FriendRequestNotification;
 import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
 import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
 import com.elleined.socialmediaapi.model.notification.mention.CommentMentionNotification;
@@ -136,6 +137,9 @@ public class User extends PrimaryKeyIdentity {
 
     @OneToMany(mappedBy = "receiver")
     private List<SharedPostNotification> sharedPostNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<FriendRequestNotification> friendRequestNotifications;
 
     @ManyToMany
     @JoinTable(
@@ -321,15 +325,18 @@ public class User extends PrimaryKeyIdentity {
     }
 
     public boolean has(FollowerNotification followerNotification) {
-        return this.getFollowerNotifications().contains(followerNotifications);
+        return this.getFollowerNotifications().contains(followerNotification);
     }
 
     public boolean has(VoteNotification voteNotification) {
-        return this.getVoteNotifications().contains(voteNotifications);
+        return this.getVoteNotifications().contains(voteNotification);
     }
 
     public boolean has(SharedPostNotification sharedPostNotification) {
-        return this.getSharedPostNotifications().contains(sharedPostNotifications);
+        return this.getSharedPostNotifications().contains(sharedPostNotification);
     }
 
+    public boolean has(FriendRequestNotification friendRequestNotification) {
+        return this.getFriendRequestNotifications().contains(friendRequestNotification);
+    }
 }

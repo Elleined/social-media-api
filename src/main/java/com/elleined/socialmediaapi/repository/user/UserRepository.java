@@ -3,6 +3,7 @@ package com.elleined.socialmediaapi.repository.user;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.notification.follow.FollowerNotification;
+import com.elleined.socialmediaapi.model.notification.friend.FriendRequestNotification;
 import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
 import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
 import com.elleined.socialmediaapi.model.notification.mention.CommentMentionNotification;
@@ -85,4 +86,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u.sharedPostNotifications FROM User u WHERE u = :currentUser")
     Page<SharedPostNotification> findAllSharedPostNotifications(@Param("currentUser") User currentUser, Pageable pageable);
+
+    @Query("SELECT u.friendRequestNotifications FROM User u WHERE u = :currentUser")
+    Page<FriendRequestNotification> findAllFriendRequestNotifications(@Param("currentUser") User currentUser, Pageable pageable);
 }
