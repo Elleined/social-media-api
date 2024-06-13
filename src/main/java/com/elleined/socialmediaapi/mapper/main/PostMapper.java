@@ -12,6 +12,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
 import java.util.Set;
 
 @Mapper(componentModel = "spring", imports = {Post.CommentSectionStatus.class, Forum.Status.class})
@@ -24,7 +25,7 @@ public interface PostMapper extends CustomMapper<Post, PostDTO> {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "body", source = "body"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "attachedPicture", source = "attachedPicture"),
+            @Mapping(target = "attachedPictures", source = "attachedPictures"),
             @Mapping(target = "creatorId", source = "creator.id"),
             @Mapping(target = "commentSectionStatus", source = "commentSectionStatus"),
             @Mapping(target = "pinnedCommentId", source = "pinnedComment.id"),
@@ -43,7 +44,7 @@ public interface PostMapper extends CustomMapper<Post, PostDTO> {
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "body", expression = "java(body)"),
             @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
-            @Mapping(target = "attachedPicture", expression = "java(attachedPicture)"),
+            @Mapping(target = "attachedPictures", expression = "java(attachedPictures)"),
             @Mapping(target = "creator", expression = "java(creator)"),
             @Mapping(target = "commentSectionStatus", expression = "java(CommentSectionStatus.OPEN)"),
             @Mapping(target = "pinnedComment", expression = "java(null)"),
@@ -56,7 +57,7 @@ public interface PostMapper extends CustomMapper<Post, PostDTO> {
     })
     Post toEntity(User creator,
                   @Context String body,
-                  String attachedPicture,
+                  List<String> attachedPictures,
                   Set<HashTag> hashTags,
                   Set<Mention> mentions);
 }

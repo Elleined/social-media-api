@@ -20,7 +20,7 @@ public interface PostService extends SavedPostService, SharePostService, CustomS
 
     Post save(User currentUser,
               String body,
-              MultipartFile attachedPicture,
+              List<MultipartFile> attachedPictures,
               Set<Mention> mentions,
               Set<HashTag> hashTags)
             throws BlockedException,
@@ -29,7 +29,10 @@ public interface PostService extends SavedPostService, SharePostService, CustomS
 
     void delete(User currentUser, Post post) throws ResourceNotOwnedException;
 
-    Post update(User currentUser, Post post, String newBody, MultipartFile newAttachedPicture)
+    Post update(User currentUser,
+                Post post,
+                String newBody,
+                List<MultipartFile> attachedPictures)
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 

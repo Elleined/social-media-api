@@ -26,6 +26,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class Comment extends Forum {
 
+    @ElementCollection
+    @CollectionTable(
+            name = "tbl_comment_picture",
+            joinColumns = @JoinColumn(name = "comment_id")
+    )
+    @Column(name = "attached_picture")
+    private List<String> attachedPictures;
+
     @OneToOne
     @JoinColumn(
             name = "pinned_reply_id",

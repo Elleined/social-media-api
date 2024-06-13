@@ -240,7 +240,7 @@ class CommentControllerTest {
         when(userService.getById(anyInt())).thenReturn(new User());
         when(postService.getById(anyInt())).thenReturn(new Post());
         when(commentService.getById(anyInt())).thenReturn(new Comment());
-        doNothing().when(commentService).update(any(User.class), any(Post.class), any(Comment.class), anyString(), any(MultipartFile.class));
+        doNothing().when(commentService).update(any(User.class), any(Post.class), any(Comment.class), anyString(), , any(MultipartFile.class));
         when(commentMapper.toDTO(any(Comment.class))).thenReturn(new CommentDTO());
         doNothing().when(wsService).broadcastOnComment(any(CommentDTO.class));
 
@@ -256,7 +256,7 @@ class CommentControllerTest {
         verify(userService).getById(anyInt());
         verify(postService).getById(anyInt());
         verify(commentService).getById(anyInt());
-        verify(commentService).update(any(User.class), any(Post.class), any(Comment.class), anyString(), any(MultipartFile.class));
+        verify(commentService).update(any(User.class), any(Post.class), any(Comment.class), anyString(), , any(MultipartFile.class));
         verify(commentMapper).toDTO(any(Comment.class));
         verify(wsService).broadcastOnComment(any(CommentDTO.class));
 

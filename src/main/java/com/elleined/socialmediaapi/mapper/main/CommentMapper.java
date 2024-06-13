@@ -13,6 +13,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
 import java.util.Set;
 
 @Mapper(componentModel = "spring", imports = {Forum.Status.class})
@@ -25,7 +26,7 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "body", source = "body"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "attachedPicture", source = "attachedPicture"),
+            @Mapping(target = "attachedPictures", source = "attachedPictures"),
             @Mapping(target = "creatorId", source = "creator.id"),
             @Mapping(target = "postId", source = "post.id"),
             @Mapping(target = "pinnedReplyId", source = "pinnedReply.id"),
@@ -43,7 +44,7 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "body", expression = "java(body)"),
             @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
-            @Mapping(target = "attachedPicture", expression = "java(attachedPicture)"),
+            @Mapping(target = "attachedPictures", expression = "java(attachedPictures)"),
             @Mapping(target = "creator", expression = "java(creator)"),
             @Mapping(target = "post", expression = "java(post)"),
             @Mapping(target = "pinnedReply", expression = "java(null)"),
@@ -56,7 +57,7 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
     Comment toEntity(User creator,
                      Post post,
                      @Context String body,
-                     String attachedPicture,
+                     List<String> attachedPictures,
                      Set<Mention> mentions,
                      Set<HashTag> hashTags);
 }

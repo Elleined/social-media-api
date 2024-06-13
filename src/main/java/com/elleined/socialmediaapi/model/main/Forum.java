@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @MappedSuperclass
 @Getter
 @Setter
@@ -28,9 +30,6 @@ public abstract class Forum extends PrimaryKeyIdentity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "attached_picture")
-    private String attachedPicture;
-
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "creator_id",
@@ -39,7 +38,6 @@ public abstract class Forum extends PrimaryKeyIdentity {
             updatable = false
     )
     private User creator;
-
 
     public boolean isActive() {
         return this.getStatus() == Status.ACTIVE;

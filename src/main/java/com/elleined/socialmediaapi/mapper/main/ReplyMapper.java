@@ -13,6 +13,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
 import java.util.Set;
 
 @Mapper(componentModel = "spring", imports = {Forum.Status.class})
@@ -25,7 +26,7 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "body", source = "body"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "attachedPicture", source = "attachedPicture"),
+            @Mapping(target = "attachedPictures", source = "attachedPictures"),
             @Mapping(target = "creatorId", source = "creator.id"),
             @Mapping(target = "postId", source = "reply.comment.post.id"), // this field is not present in entity
             @Mapping(target = "commentId", source = "comment.id"),
@@ -41,7 +42,7 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "body", expression = "java(body)"),
             @Mapping(target = "status", expression = "java(Status.ACTIVE)"),
-            @Mapping(target = "attachedPicture", expression = "java(attachedPicture)"),
+            @Mapping(target = "attachedPictures", expression = "java(attachedPictures)"),
             @Mapping(target = "creator", expression = "java(creator)"),
             @Mapping(target = "comment", expression = "java(comment)"),
             @Mapping(target = "hashTags", expression = "java(hashTags)"),
@@ -51,7 +52,7 @@ public interface ReplyMapper extends CustomMapper<Reply, ReplyDTO> {
     Reply toEntity(User creator,
                    Comment comment,
                    @Context String body,
-                   String attachedPicture,
+                   List<String> attachedPictures,
                    Set<Mention> mentions,
                    Set<HashTag> hashTags);
 }

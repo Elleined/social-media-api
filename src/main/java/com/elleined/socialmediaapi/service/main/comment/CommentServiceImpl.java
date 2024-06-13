@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     public Comment save(User currentUser,
                         Post post,
                         String body,
-                        MultipartFile attachedPicture,
+                        List<MultipartFile> attachedPictures,
                         Set<Mention> mentions,
                         Set<HashTag> hashTags) {
 
@@ -74,8 +74,11 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
         if (blockService.isYouBeenBlockedBy(currentUser, post.getCreator()))
             throw new BlockedException("Cannot save comment! because cannot comment because this user block you already!");
 
-        String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        Comment comment = commentMapper.toEntity(currentUser, post, body, picture, mentions, hashTags);
+        List<String> pictures = attachedPictures.stream()
+                .map(MultipartFile::getOriginalFilename)
+                .toList();
+
+        Comment comment = commentMapper.toEntity(currentUser, post, body, pictures, mentions, hashTags);
         commentRepository.save(comment);
 
         log.debug("Comment with id of {} saved successfully", comment.getId());
@@ -145,7 +148,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public void update(User currentUser, Post post, Comment comment, String newBody, MultipartFile newAttachedPicture)
+    public void update(User currentUser, Post post, Comment comment, String newBody, List<MultipartFile> attachedPictures)
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
@@ -160,10 +163,12 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot update comment! because this comment might already been deleted or doesn't exists!");
 
-        String picture = newAttachedPicture == null ? null : newAttachedPicture.getOriginalFilename();
+        List<String> pictures = attachedPictures.stream()
+                .map(MultipartFile::getOriginalFilename)
+                .toList();
 
         comment.setBody(newBody);
-        comment.setAttachedPicture(picture);
+        comment.setAttachedPictures(pictures);
         comment.setUpdatedAt(LocalDateTime.now());
 
         commentRepository.save(comment);

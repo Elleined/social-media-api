@@ -45,15 +45,18 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     @Override
     public Post save(User currentUser,
                      String body,
-                     MultipartFile attachedPicture,
+                     List<MultipartFile> attachedPictures,
                      Set<Mention> mentions,
                      Set<HashTag> hashTags) {
 
         if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save post! because body cannot be empty! Please provide text for your post to be posted!");
 
-        String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        Post post = postMapper.toEntity(currentUser, body, picture, hashTags, mentions);
+        List<String> pictures = attachedPictures.stream()
+                .map(MultipartFile::getOriginalFilename)
+                .toList();
+
+        Post post = postMapper.toEntity(currentUser, body, pictures, hashTags, mentions);
         postRepository.save(post);
 
         log.debug("Post with id of {} saved successfully!", post.getId());
@@ -73,7 +76,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
     }
 
     @Override
-    public Post update(User currentUser, Post post, String newBody, MultipartFile newAttachedPicture)
+    public Post update(User currentUser, Post post, String newBody, List<MultipartFile> attachedPictures)
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
@@ -86,10 +89,12 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
         if (userServiceRestriction.notOwned(currentUser, post))
             throw new ResourceNotOwnedException("Cannot update post! because user with id of " + currentUser.getId() + " doesn't have post with id of " + post.getId());
 
-        String picture = newAttachedPicture == null ? null : newAttachedPicture.getOriginalFilename();
+        List<String> pictures = attachedPictures.stream()
+                .map(MultipartFile::getOriginalFilename)
+                .toList();
 
         post.setBody(newBody);
-        post.setAttachedPicture(picture);
+        post.setAttachedPictures(pictures);
         post.setUpdatedAt(LocalDateTime.now());
 
         postRepository.save(post);

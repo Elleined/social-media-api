@@ -24,7 +24,7 @@ public interface ReplyService extends CustomService<Reply> {
                Post post,
                Comment comment,
                String body,
-               MultipartFile attachedPicture,
+               List<MultipartFile> attachedPictures,
                Set<Mention> mentions,
                Set<HashTag> hashTags) throws CommentSectionException,
             ResourceNotOwnedException,
@@ -32,7 +32,12 @@ public interface ReplyService extends CustomService<Reply> {
 
     void delete(User currentUser, Post post, Comment comment, Reply reply) throws ResourceNotOwnedException;
 
-    void update(User currentUser, Post post, Comment comment, Reply reply, String newBody, MultipartFile newAttachedPicture)
+    void update(User currentUser,
+                Post post,
+                Comment comment,
+                Reply reply,
+                String newBody,
+                List<MultipartFile> attachedPictures)
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 

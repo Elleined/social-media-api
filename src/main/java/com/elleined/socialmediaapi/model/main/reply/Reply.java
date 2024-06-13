@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,14 @@ import java.util.stream.Collectors;
 @SuperBuilder
 @NoArgsConstructor
 public class Reply extends Forum {
+
+    @ElementCollection
+    @CollectionTable(
+            name = "tbl_reply_picture",
+            joinColumns = @JoinColumn(name = "reply_id")
+    )
+    @Column(name = "attached_picture")
+    private List<String> attachedPictures;
 
     @ManyToOne(optional = false)
     @JoinColumn(

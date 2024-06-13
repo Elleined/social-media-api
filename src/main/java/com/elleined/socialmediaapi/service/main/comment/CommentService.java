@@ -21,7 +21,7 @@ public interface CommentService extends CustomService<Comment> {
     Comment save(User currentUser,
                  Post post,
                  String body,
-                 MultipartFile attachedPicture,
+                 List<MultipartFile> attachedPictures,
                  Set<Mention> mentions,
                  Set<HashTag> hashTags)
             throws ResourceNotFoundException,
@@ -32,7 +32,11 @@ public interface CommentService extends CustomService<Comment> {
 
     void delete(User currentUser, Post post, Comment comment);
 
-    void update(User currentUser, Post post, Comment comment, String newBody, MultipartFile newAttachedPicture)
+    void update(User currentUser,
+                Post post,
+                Comment comment,
+                String newBody,
+                List<MultipartFile> attachedPictures)
             throws ResourceNotFoundException,
             ResourceNotOwnedException;
 

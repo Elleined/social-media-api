@@ -93,7 +93,7 @@ public class CommentController {
     public CommentDTO save(@PathVariable("currentUserId") int currentUserId,
                            @PathVariable("postId") int postId,
                            @RequestPart("body") String body,
-                           @RequestPart(required = false, value = "attachedPicture") MultipartFile attachedPicture,
+                           @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures,
                            @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
                            @RequestPart(required = false, name = "hashTagIds") Set<Integer> hashTagIds) {
 
@@ -104,7 +104,7 @@ public class CommentController {
 
         // Saving entities
         Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
-        Comment comment = commentService.save(currentUser, post, body, attachedPicture, mentions, hashTags);
+        Comment comment = commentService.save(currentUser, post, body, attachedPictures, mentions, hashTags);
         CommentNotification commentNotification = commentNotificationService.save(currentUser, comment);
         List<CommentMentionNotification> commentMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, comment);
 
@@ -144,13 +144,13 @@ public class CommentController {
                              @PathVariable("postId") int postId,
                              @PathVariable("commentId") int commentId,
                              @RequestPart("newBody") String newBody,
-                             @RequestPart(required = false, name = "newAttachedPicture") MultipartFile newAttachedPicture) {
+                             @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
-        commentService.update(currentUser, post, comment, newBody, newAttachedPicture);
+        commentService.update(currentUser, post, comment, newBody, attachedPictures);
 
         CommentDTO commentDTO = commentMapper.toDTO(comment);
         wsService.broadcastOnComment(commentDTO);

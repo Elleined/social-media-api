@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -16,7 +17,7 @@ import java.util.Set;
 public abstract class ForumDTO extends DTO {
     private String body;
     private Forum.Status status;
-    private String attachedPicture;
+    private List<String> attachedPictures;
     private int creatorId;
     private Set<Integer> hashTagIds;
     private Set<Integer> mentionIds;

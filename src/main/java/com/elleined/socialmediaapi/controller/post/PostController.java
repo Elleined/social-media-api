@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -82,7 +83,7 @@ public class PostController {
                         @RequestPart("body") String body,
                         @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
                         @RequestPart(required = false, name = "keywords") Set<String> keywords,
-                        @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture) throws IOException {
+                        @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures) throws IOException {
 
         // Getting entities
         User currentUser = userService.getById(currentUserId);
@@ -90,7 +91,7 @@ public class PostController {
         // Saving entities
         Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
         Set<HashTag> hashTags = hashTagService.saveAll(keywords);
-        Post post = postService.save(currentUser, body, attachedPicture, mentions, hashTags);
+        Post post = postService.save(currentUser, body, attachedPictures, mentions, hashTags);
         List<PostMentionNotification> postMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, post);
 
         // DTO Conversion
@@ -130,12 +131,12 @@ public class PostController {
     public PostDTO update(@PathVariable("currentUserId") int currentUserId,
                           @PathVariable("postId") int postId,
                           @RequestPart("newBody") String newBody,
-                          @RequestPart(required = false, name = "newAttachedPicture") MultipartFile newAttachedPicture) {
+                          @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
 
-        Post updatedPost = postService.update(currentUser, post, newBody, newAttachedPicture);
+        Post updatedPost = postService.update(currentUser, post, newBody, attachedPictures);
         return postMapper.toDTO(updatedPost);
     }
 

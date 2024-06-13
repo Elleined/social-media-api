@@ -25,6 +25,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class Post extends Forum {
 
+    @ElementCollection
+    @CollectionTable(
+            name = "tbl_post_picture",
+            joinColumns = @JoinColumn(name = "post_id")
+    )
+    @Column(name = "attached_picture")
+    private List<String> attachedPictures;
+
     @Column(
             name = "comment_section_status",
             nullable = false

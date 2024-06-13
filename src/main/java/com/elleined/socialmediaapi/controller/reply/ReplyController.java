@@ -101,7 +101,7 @@ public class ReplyController {
                          @PathVariable("postId") int postId,
                          @PathVariable("commentId") int commentId,
                          @RequestParam("body") String body,
-                         @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
+                         @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures,
                          @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
                          @RequestPart(required = false, name = "hashTagIds") Set<Integer> hashTagIds) throws IOException {
 
@@ -113,7 +113,7 @@ public class ReplyController {
 
         // Saving entities
         Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
-        Reply reply = replyService.save(currentUser, post, comment, body, attachedPicture, mentions, hashTags);
+        Reply reply = replyService.save(currentUser, post, comment, body, attachedPictures, mentions, hashTags);
         ReplyNotification replyNotification = replyNotificationService.save(currentUser, reply);
         List<ReplyMentionNotification> replyMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, reply);
 
@@ -155,14 +155,14 @@ public class ReplyController {
                            @PathVariable("commentId") int commentId,
                            @PathVariable("replyId") int replyId,
                            @RequestPart("newBody") String newBody,
-                           @RequestPart(required = false, name = "newAttachedPicture") MultipartFile newAttachedPicture) {
+                           @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures) {
 
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
 
-        replyService.update(currentUser, post, comment, reply, newBody, newAttachedPicture);
+        replyService.update(currentUser, post, comment, reply, newBody, attachedPictures);
 
         ReplyDTO replyDTO = replyMapper.toDTO(reply);
         wsService.broadcastOnReply(replyDTO);

@@ -58,8 +58,9 @@ public class ReplyServiceImpl implements ReplyService {
     public Reply save(User currentUser,
                       Post post, Comment comment,
                       String body,
-                      MultipartFile attachedPicture,
-                      Set<Mention> mentions, Set<HashTag> hashTags) {
+                      List<MultipartFile> attachedPictures,
+                      Set<Mention> mentions,
+                      Set<HashTag> hashTags) {
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot save reply! because post with id of " + post.getId() + " does not exists or already deleted!") ;
@@ -82,8 +83,11 @@ public class ReplyServiceImpl implements ReplyService {
         if (fieldValidator.isNotValid(body))
             throw new FieldException("Cannot save reply! because reply body cannot be empty!");
 
-        String picture = attachedPicture == null ? null : attachedPicture.getOriginalFilename();
-        Reply reply = replyMapper.toEntity(currentUser, comment, body, picture, mentions, hashTags);
+        List<String> pictures = attachedPictures.stream()
+                .map(MultipartFile::getOriginalFilename)
+                .toList();
+
+        Reply reply = replyMapper.toEntity(currentUser, comment, body, pictures, mentions, hashTags);
         replyRepository.save(reply);
 
         log.debug("Reply with id of {} saved successfully!", reply.getId());
@@ -123,7 +127,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void update(User currentUser, Post post, Comment comment, Reply reply, String newBody, MultipartFile newAttachedPicture)
+    public void update(User currentUser, Post post, Comment comment, Reply reply, String newBody, List<MultipartFile> attachedPictures)
             throws ResourceNotFoundException,
             ResourceNotOwnedException {
 
@@ -150,10 +154,12 @@ public class ReplyServiceImpl implements ReplyService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot update reply! because reply might be already deleted or doesn't exists!");
 
-        String picture = newAttachedPicture == null ? null : newAttachedPicture.getOriginalFilename();
+        List<String> pictures = attachedPictures.stream()
+                .map(MultipartFile::getOriginalFilename)
+                .toList();
 
         reply.setBody(newBody);
-        reply.setAttachedPicture(picture);
+        reply.setAttachedPictures(pictures);
         reply.setUpdatedAt(LocalDateTime.now());
 
         replyRepository.save(reply);
