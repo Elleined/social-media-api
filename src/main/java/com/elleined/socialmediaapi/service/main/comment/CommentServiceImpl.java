@@ -84,8 +84,9 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     @Override
     public void delete(User currentUser, Post post, Comment comment) {
-        if (userServiceRestriction.notOwned(currentUser, comment))
-            throw new ResourceNotOwnedException("Cannot delete comment! because user with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
+        if (!post.getCreator().equals(currentUser) &&
+                userServiceRestriction.notOwned(currentUser, comment))
+            throw new ResourceNotOwnedException("Cannot delete comment! Because you don't owned this comment");
 
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot delete comment! because post with id of " + post.getId() + " does not have comment with id of " + comment.getId());
@@ -190,12 +191,6 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     @Override
     public void updateStatus(User currentUser, Post post, Comment comment, Forum.Status status) {
-        if (userServiceRestriction.notOwned(currentUser, comment))
-            throw new ResourceNotOwnedException("Cannot update comment status! because user with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
-
-        if (postServiceRestriction.notOwned(post, comment))
-            throw new ResourceNotFoundException("Cannot update comment status! because comment with id of " + comment.getId() + " are not associated with post with id of " + post.getId());
-
         comment.setStatus(status);
         comment.setUpdatedAt(LocalDateTime.now());
         commentRepository.save(comment);

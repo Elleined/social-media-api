@@ -107,8 +107,9 @@ public class ReplyServiceImpl implements ReplyService {
         if (commentServiceRestriction.notOwned(comment, reply))
             throw new ResourceNotOwnedException("Cannot delete reply! because comment with id of " + comment.getId() +  " does not have reply with id of " + reply.getId());
 
-        if (userServiceRestriction.notOwned(currentUser, reply))
-            throw new ResourceNotOwnedException("Cannot delete reply! because user with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
+        if (!comment.getCreator().equals(currentUser) &&
+                userServiceRestriction.notOwned(currentUser, reply))
+            throw new ResourceNotOwnedException("Cannot delete reply! Because you don't owned this reply");
 
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot delete reply! because reply might be already deleted or doesn't exists!");
