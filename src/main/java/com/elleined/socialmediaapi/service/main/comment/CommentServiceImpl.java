@@ -110,16 +110,15 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
             throw new CommentSectionException("Cannot save comment! because cannot comment because author already closed the comment section for this post!");
 
         Comment pinnedComment = post.getPinnedComment();
-        List<Comment> comments = new java.util.ArrayList<>(postRepository.findAllComments(post, pageable).stream()
+        List<Comment> comments = postRepository.findAllComments(post, pageable).stream()
                 .filter(Comment::isActive)
                 .filter(comment -> !comment.equals(pinnedComment))
                 .filter(comment -> !blockService.isBlockedByYou(currentUser, comment.getCreator()))
                 .filter(comment -> !blockService.isYouBeenBlockedBy(currentUser, comment.getCreator()))
-                .toList());
+                .toList();
 
-        if (fieldValidator.isValid(pinnedComment)) // Prioritizing pinned comment
-            comments.add(0, pinnedComment);
-
+        if (fieldValidator.isValid(pinnedComment))
+            comments.addFirst(pinnedComment); // Prioritizing pinned comment
         return comments;
     }
 
@@ -177,7 +176,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
             throw new ResourceNotFoundException("Cannot reactivate comment! because this comment are not deleted or doesn't exists!");
 
         if (userServiceRestriction.notOwned(currentUser, comment))
-            throw new ResourceNotOwnedException("Cannot reactivate comment! because user with id of " + currentUser.getId() + " doesn't have comment with id of " + comment.getId());
+            throw new ResourceNotOwnedException("Cannot reactivate comment! Because you don't owned this comment");
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot reactivate comment! because post might already been deleted or doesn't exists!");

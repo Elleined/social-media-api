@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.main;
 
+import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import org.springframework.data.domain.Page;
@@ -12,4 +13,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Integer> {
 
     @Query("SELECT r.reactions FROM Reply r WHERE r = :reply")
     Page<Reaction> findAllReactions(@Param("reply") Reply reply, Pageable pageable);
+
+    @Query("SELECT r FROM Reply r WHERE r.comment = :comment")
+    Page<Reply> findAllReplies(@Param("comment") Comment comment, Pageable pageable);
 }

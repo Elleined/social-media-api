@@ -175,7 +175,7 @@ public class ReplyServiceImpl implements ReplyService {
             throw new ResourceNotFoundException("Cannot get all replies! because the comment you trying to reply is either be deleted or does not exists anymore!");
 
         Reply pinnedReply = comment.getPinnedReply();
-        List<Reply> replies = commentRepository.findAllReplies(comment, pageable).stream()
+        List<Reply> replies = replyRepository.findAllReplies(comment, pageable).stream()
                 .filter(Reply::isActive)
                 .filter(reply -> !reply.equals(pinnedReply))
                 .filter(reply -> !blockService.isBlockedByYou(currentUser, reply.getCreator()))
@@ -183,7 +183,7 @@ public class ReplyServiceImpl implements ReplyService {
                 .toList();
 
         if (fieldValidator.isValid(pinnedReply))
-            replies.add(0, pinnedReply);
+            replies.addFirst(pinnedReply);  // Prioritizing pinned comment
 
         return replies;
     }
@@ -191,7 +191,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public void reactivate(User currentUser, Post post, Comment comment, Reply reply) {
         if (userServiceRestriction.notOwned(currentUser, reply))
-            throw new ResourceNotOwnedException("Cannot reactivate reply! because user with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
+            throw new ResourceNotOwnedException("Cannot delete reply! Because you don't owned this reply");
 
         if (postServiceRestriction.notOwned(post, comment))
             throw new ResourceNotOwnedException("Cannot reactivate reply! because post doesn't owned this comment!");
@@ -214,19 +214,10 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void updateStatus(User currentUser, Post post, Comment comment, Reply reply, Forum.Status status) {
-        if (userServiceRestriction.notOwned(currentUser, reply))
-            throw new ResourceNotOwnedException("Cannot update reply status! because user with id of " + currentUser.getId() + " doesn't have reply with id of " + reply.getId());
-
-        if (postServiceRestriction.notOwned(post, comment))
-            throw new ResourceNotOwnedException("Cannot update reply status! because post doesn't owned this comment!");
-
-        if (commentServiceRestriction.notOwned(comment, reply))
-            throw new ResourceNotOwnedException("Cannot update reply status! because comment doesn't owned this reply!");
-
         reply.setStatus(status);
         reply.setUpdatedAt(LocalDateTime.now());
         replyRepository.save(reply);
-        log.debug("Updating eply status with id of {} success to {}", reply.getId(), status);
+        log.debug("Updating reply status with id of {} success to {}", reply.getId(), status);
     }
 
     @Override
