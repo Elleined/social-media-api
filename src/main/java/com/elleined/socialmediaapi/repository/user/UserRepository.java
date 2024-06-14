@@ -11,10 +11,7 @@ import com.elleined.socialmediaapi.model.notification.mention.PostMentionNotific
 import com.elleined.socialmediaapi.model.notification.mention.ReplyMentionNotification;
 import com.elleined.socialmediaapi.model.notification.mention.StoryMentionNotification;
 import com.elleined.socialmediaapi.model.notification.post.SharedPostNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.PostReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.ReplyReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.*;
 import com.elleined.socialmediaapi.model.notification.vote.VoteNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
@@ -77,6 +74,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u.storyReactionNotifications FROM User u WHERE u = :currentUser")
     Page<StoryReactionNotification> findAllStoryReactionNotifications(@Param("currentUser") User currentUser, Pageable pageable);
+
+    @Query("SELECT u.noteReactionNotifications FROM User u WHERE u = :currentUser")
+    Page<NoteReactionNotification> findAllNoteReactionNotifications(@Param("currentUser") User currentUser, Pageable pageable);
 
     @Query("SELECT u.followerNotifications FROM User u WHERE u = :currentUser")
     Page<FollowerNotification> findAllFollowerNotifications(@Param("currentUser") User currentUser, Pageable pageable);

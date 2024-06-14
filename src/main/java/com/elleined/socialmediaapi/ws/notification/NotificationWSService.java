@@ -9,13 +9,11 @@ import com.elleined.socialmediaapi.dto.notification.mention.PostMentionNotificat
 import com.elleined.socialmediaapi.dto.notification.mention.ReplyMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.StoryMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.post.SharedPostNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.CommentReactionNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.PostReactionNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.ReplyReactionNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.reaction.*;
 import com.elleined.socialmediaapi.dto.notification.vote.VoteNotificationDTO;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.notification.friend.FriendRequestNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.NoteReactionNotification;
 import com.elleined.socialmediaapi.model.user.User;
 
 public interface NotificationWSService {
@@ -33,6 +31,8 @@ public interface NotificationWSService {
      void notifyOnReaction(ReplyReactionNotificationDTO replyReactionNotificationDTO);
      // Receiver is the story creator
      void notifyOnReaction(StoryReactionNotificationDTO storyReactionNotificationDTO);
+    // Receiver is the note creator
+    void notifyOnReaction(NoteReactionNotificationDTO noteReactionNotificationDTO);
 
      // Mention
      // Receiver is the mentioned user

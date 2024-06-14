@@ -9,10 +9,7 @@ import com.elleined.socialmediaapi.dto.notification.mention.PostMentionNotificat
 import com.elleined.socialmediaapi.dto.notification.mention.ReplyMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.StoryMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.post.SharedPostNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.CommentReactionNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.PostReactionNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.ReplyReactionNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
+import com.elleined.socialmediaapi.dto.notification.reaction.*;
 import com.elleined.socialmediaapi.dto.notification.vote.VoteNotificationDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,6 +92,18 @@ public class NotificationWSServiceImpl implements NotificationWSService {
         final String destination = STR."/sma-notification/users/\{receiverId}";
         simpMessagingTemplate.convertAndSend(destination, storyReactionNotificationDTO);
         log.debug("Broadcasting story reaction notification success");
+    }
+
+    @Override
+    public void notifyOnReaction(NoteReactionNotificationDTO noteReactionNotificationDTO) {
+        if (noteReactionNotificationDTO.isRead())
+            return;
+
+        int receiverId = noteReactionNotificationDTO.getReceiverId();
+
+        final String destination = STR."/sma-notification/users/\{receiverId}";
+        simpMessagingTemplate.convertAndSend(destination, noteReactionNotificationDTO);
+        log.debug("Broadcasting note reaction notification success");
     }
 
     @Override

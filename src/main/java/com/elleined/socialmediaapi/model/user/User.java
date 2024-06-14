@@ -15,10 +15,7 @@ import com.elleined.socialmediaapi.model.notification.mention.PostMentionNotific
 import com.elleined.socialmediaapi.model.notification.mention.ReplyMentionNotification;
 import com.elleined.socialmediaapi.model.notification.mention.StoryMentionNotification;
 import com.elleined.socialmediaapi.model.notification.post.SharedPostNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.PostReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.ReplyReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
+import com.elleined.socialmediaapi.model.notification.reaction.*;
 import com.elleined.socialmediaapi.model.notification.vote.VoteNotification;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
@@ -128,6 +125,9 @@ public class User extends PrimaryKeyIdentity {
 
     @OneToMany(mappedBy = "receiver")
     private List<StoryReactionNotification> storyReactionNotifications;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<NoteReactionNotification> noteReactionNotifications;
 
     @OneToMany(mappedBy = "receiver")
     private List<FollowerNotification> followerNotifications;
@@ -322,6 +322,10 @@ public class User extends PrimaryKeyIdentity {
 
     public boolean has (StoryReactionNotification storyReactionNotification) {
         return this.getStoryReactionNotifications().contains(storyReactionNotification);
+    }
+
+    public boolean has(NoteReactionNotification noteReactionNotification) {
+        return this.getNoteReactionNotifications().contains(noteReactionNotification);
     }
 
     public boolean has(FollowerNotification followerNotification) {

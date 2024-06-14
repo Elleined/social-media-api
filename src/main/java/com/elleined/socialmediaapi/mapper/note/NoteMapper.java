@@ -29,7 +29,7 @@ public interface NoteMapper extends CustomMapper<Note, NoteDTO> {
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "thought", expression = "java(thought)"),
             @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())")
+            @Mapping(target = "reactions", expression = "java(new java.util.HashSet<>())")
     })
     Note toEntity(User creator,
                   @Context String thought);
