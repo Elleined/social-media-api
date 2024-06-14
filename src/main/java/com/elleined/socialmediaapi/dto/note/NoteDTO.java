@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -13,4 +15,5 @@ import lombok.experimental.SuperBuilder;
 public class NoteDTO extends DTO {
     private String thought;
     private int creatorId;
+    private Set<Integer> reactionIds;
 }

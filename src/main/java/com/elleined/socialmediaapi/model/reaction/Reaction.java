@@ -6,6 +6,7 @@ import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
@@ -55,6 +56,9 @@ public class Reaction extends PrimaryKeyIdentity {
     @ManyToMany(mappedBy = "reactions")
     private Set<Story> stories;
 
+    @ManyToMany(mappedBy = "reactions")
+    private Set<Note> notes;
+
     public Set<Integer> getAllPostIds() {
         return this.getPosts().stream()
                 .map(Forum::getId)
@@ -75,6 +79,12 @@ public class Reaction extends PrimaryKeyIdentity {
 
     public Set<Integer> getAllStoryIds() {
         return this.getStories().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Integer> getAllNoteIds() {
+        return this.getNotes().stream()
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }

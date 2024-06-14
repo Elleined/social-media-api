@@ -22,10 +22,6 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class MentionServiceImpl implements MentionService {
-    private final UserRepository userRepository;
-
-    private final BlockService blockService;
-
     private final MentionRepository mentionRepository;
     private final MentionMapper mentionMapper;
 

@@ -7,6 +7,7 @@ import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
@@ -14,6 +15,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
 import com.elleined.socialmediaapi.repository.main.PostRepository;
 import com.elleined.socialmediaapi.repository.main.ReplyRepository;
+import com.elleined.socialmediaapi.repository.note.NoteRepository;
 import com.elleined.socialmediaapi.repository.react.ReactionRepository;
 import com.elleined.socialmediaapi.repository.story.StoryRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
@@ -38,6 +40,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ReactionServiceImpl implements ReactionService {
+    private final NoteRepository noteRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
@@ -157,6 +160,23 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
+    public Reaction save(User currentUser, Note note, Emoji emoji) {
+        if (blockService.isBlockedByYou(currentUser, note.getCreator()))
+            throw new BlockedException("Cannot react to this note! because you blocked this user already!");
+
+        if (blockService.isYouBeenBlockedBy(currentUser, note.getCreator()))
+            throw new BlockedException("Cannot react to this note! because this user block you already!");
+
+        Reaction reaction = reactionMapper.toEntity(currentUser, emoji);
+        reactionRepository.save(reaction);
+
+        note.getReactions().add(reaction);
+        noteRepository.save(note);
+        log.debug("Reacting to note with id of {} success with emoji id of {}", note.getId(), emoji.getId());
+        return reaction;
+    }
+
+    @Override
     public void update(User currentUser, Post post, Reaction reaction, Emoji emoji) {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this post! because current user doesn't owned this reaction!");
@@ -219,6 +239,18 @@ public class ReactionServiceImpl implements ReactionService {
 
         reactionRepository.save(reaction);
         log.debug("Updating current user reaction to story with id of {} success with emoji id of {}", story.getId(), emoji.getId());
+    }
+
+    @Override
+    public void update(User currentUser, Note note, Reaction reaction, Emoji emoji) {
+        if (userServiceRestriction.notOwned(currentUser, reaction))
+            throw new ResourceNotOwnedException("Cannot update reaction to this note! because current user doesn't owned this reaction!");
+
+        reaction.setEmoji(emoji);
+        reaction.setUpdatedAt(LocalDateTime.now());
+
+        reactionRepository.save(reaction);
+        log.debug("Updating current user reaction to story with id of {} success with emoji id of {}", note.getId(), emoji.getId());
     }
 
     @Override
@@ -287,6 +319,18 @@ public class ReactionServiceImpl implements ReactionService {
         log.debug("Deleting reaction to story with id of {} success!", story.getId());
     }
 
+    @Override
+    public void delete(User currentUser, Note note, Reaction reaction) {
+        if (userServiceRestriction.notOwned(currentUser, reaction))
+            throw new ResourceNotOwnedException("Cannot delete reaction to this note! because current user doesn't owned this reaction!");
+
+        note.getReactions().remove(reaction);
+
+        noteRepository.save(note);
+        reactionRepository.delete(reaction);
+        log.debug("Deleting reaction to note with id of {} success!", note.getId());
+    }
+
 
     @Override
     public List<Reaction> getAll(User currentUser, Post post, Pageable pageable) {
@@ -339,6 +383,14 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
+    public List<Reaction> getAll(User currentUser, Note note, Pageable pageable) {
+        if (userServiceRestriction.notOwned(currentUser, note))
+            throw new ResourceNotOwnedException("Current user doesn't owned this note!");
+
+        return noteRepository.findAllReactions(note, pageable).getContent();
+    }
+
+    @Override
     public boolean isAlreadyReactedTo(User currentUser, Post post) {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve user already reacted to this post! because this might be already deleted or doesn't exists!");
@@ -380,6 +432,13 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public boolean isAlreadyReactedTo(User currentUser, Story story) {
         return story.getReactions().stream()
+                .map(Reaction::getCreator)
+                .anyMatch(currentUser::equals);
+    }
+
+    @Override
+    public boolean isAlreadyReactedTo(User currentUser, Note note) {
+        return note.getReactions().stream()
                 .map(Reaction::getCreator)
                 .anyMatch(currentUser::equals);
     }
@@ -429,6 +488,14 @@ public class ReactionServiceImpl implements ReactionService {
     @Override
     public Reaction getByUserReaction(User currentUser, Story story) {
         return story.getReactions().stream()
+                .filter(react -> react.getCreator().equals(currentUser))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Getting reaction by user failed! "));
+    }
+
+    @Override
+    public Reaction getByUserReaction(User currentUser, Note note) {
+        return note.getReactions().stream()
                 .filter(react -> react.getCreator().equals(currentUser))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Getting reaction by user failed! "));

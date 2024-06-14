@@ -18,7 +18,8 @@ public interface NoteMapper extends CustomMapper<Note, NoteDTO> {
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "thought", source = "thought"),
-            @Mapping(target = "creatorId", source = "creator.id")
+            @Mapping(target = "creatorId", source = "creator.id"),
+            @Mapping(target = "reactionIds", expression = "java(note.getAllReactionIds())")
     })
     NoteDTO toDTO(Note note);
 
@@ -27,7 +28,8 @@ public interface NoteMapper extends CustomMapper<Note, NoteDTO> {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "thought", expression = "java(thought)"),
-            @Mapping(target = "creator", expression = "java(creator)")
+            @Mapping(target = "creator", expression = "java(creator)"),
+            @Mapping(target = "reactions", expression = "java(new java.util.ArrayList<>())")
     })
     Note toEntity(User creator,
                   @Context String thought);

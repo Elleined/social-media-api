@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.model.note;
 
 import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -34,11 +37,34 @@ public class Note extends PrimaryKeyIdentity {
     )
     private User creator;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "tbl_note_reaction",
+            joinColumns = @JoinColumn(
+                    name = "note_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "reaction_id",
+                    referencedColumnName = "id",
+                    nullable = false
+            )
+    )
+    private Set<Reaction> reactions;
+
     public boolean isExpired() {
         LocalDateTime noteCreation = this.getCreatedAt();
         LocalDateTime noteExpiration = noteCreation.plusDays(1);
 
         return LocalDateTime.now().isAfter(noteExpiration) ||
                 LocalDateTime.now().equals(noteExpiration);
+    }
+
+    public Set<Integer> getAllReactionIds() {
+        return this.getReactions().stream()
+                .map(PrimaryKeyIdentity::getId)
+                .collect(Collectors.toSet());
     }
 }
