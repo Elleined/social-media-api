@@ -38,9 +38,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class ReplyServiceImpl implements ReplyService {
-    private final CommentRepository commentRepository;
-
+public class ReplyServiceImpl implements ReplyService, ReplyRestrictionService {
     private final ReplyRepository replyRepository;
     private final ReplyMapper replyMapper;
 

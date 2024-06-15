@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.service.main.comment;
 
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.vote.Vote;
 
@@ -26,5 +27,9 @@ public interface CommentServiceRestriction {
         return currentUser.getVotedComments().stream()
                 .map(Vote::getComment)
                 .anyMatch(comment::equals);
+    }
+
+    default boolean notOwned(Comment comment, Reaction reaction) {
+        return !comment.getReactions().contains(reaction);
     }
 }

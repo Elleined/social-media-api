@@ -67,4 +67,8 @@ public class Note extends PrimaryKeyIdentity {
                 .map(PrimaryKeyIdentity::getId)
                 .collect(Collectors.toSet());
     }
+
+    public boolean notOwned(Reaction reaction) {
+        return !this.getReactions().contains(reaction);
+    }
 }

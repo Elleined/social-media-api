@@ -23,6 +23,7 @@ import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;
 import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
+import com.elleined.socialmediaapi.service.main.reply.ReplyRestrictionService;
 import com.elleined.socialmediaapi.service.main.reply.ReplyService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,7 @@ public class ReactionServiceImpl implements ReactionService {
     private final UserServiceRestriction userServiceRestriction;
     private final PostServiceRestriction postServiceRestriction;
     private final CommentServiceRestriction commentServiceRestriction;
+    private final ReplyRestrictionService replyRestrictionService;
 
     @Override
     public Reaction getById(int id) throws ResourceNotFoundException {
@@ -181,6 +183,9 @@ public class ReactionServiceImpl implements ReactionService {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this post! because current user doesn't owned this reaction!");
 
+        if (postServiceRestriction.notOwned(post, reaction))
+            throw new ResourceNotOwnedException("Cannot update reaction to this post! because post doesn't have this reaction!");
+
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot update reaction to this post! because post might be already deleted or doesn't exists!");
 
@@ -194,6 +199,12 @@ public class ReactionServiceImpl implements ReactionService {
     public void update(User currentUser, Post post, Comment comment, Reaction reaction, Emoji emoji) {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction this comment! because current user doesn't owned this reaction!");
+
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotOwnedException("Cannot update reaction this comment! because post doesn't have this comment");
+
+        if (commentServiceRestriction.notOwned(comment, reaction))
+            throw new ResourceNotOwnedException("Cannot update reaction this comment! because comment doesn't owned this reaction!");
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot update reaction this comment! because post might be already deleted or doesn't exists!");
@@ -212,6 +223,15 @@ public class ReactionServiceImpl implements ReactionService {
     public void update(User currentUser, Post post, Comment comment, Reply reply, Reaction reaction, Emoji emoji) {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this reply! because current user doesn't owned this reaction!");
+
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotOwnedException("Cannot update reaction to this reply! because post doesn't owned this comment!");
+
+        if (commentServiceRestriction.notOwned(comment, reply))
+            throw new ResourceNotOwnedException("Cannot update reaction to this reply! because comment doesn't owned this reply!");
+
+        if (replyRestrictionService.notOwned(reply, reaction))
+            throw new ResourceNotOwnedException("Cannot update reaction to this reply! because this reply doesn't have this reaction!");
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot update reaction to this reply! because post might be already deleted or doesn't exists!");
@@ -234,6 +254,9 @@ public class ReactionServiceImpl implements ReactionService {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this reply! because current user doesn't owned this reaction!");
 
+        if (story.notOwned(reaction))
+            throw new ResourceNotOwnedException("Cannot update reaction to this reply! because this story doesn't have the reaction!");
+
         reaction.setEmoji(emoji);
         reaction.setUpdatedAt(LocalDateTime.now());
 
@@ -246,6 +269,9 @@ public class ReactionServiceImpl implements ReactionService {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot update reaction to this note! because current user doesn't owned this reaction!");
 
+        if (note.notOwned(reaction))
+            throw new ResourceNotOwnedException("Cannot update reaction to this note! because this note doesn't have the reaction!");
+
         reaction.setEmoji(emoji);
         reaction.setUpdatedAt(LocalDateTime.now());
 
@@ -257,6 +283,9 @@ public class ReactionServiceImpl implements ReactionService {
     public void delete(User currentUser, Post post, Reaction reaction) {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this post! because current user doesn't owned this reaction!");
+
+        if (postServiceRestriction.notOwned(post, reaction))
+            throw new ResourceNotOwnedException("Cannot delete reaction to this post! because this post doesn't have the reaction!");
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction to this post! because post might be already deleted or doesn't exists!");
@@ -272,6 +301,12 @@ public class ReactionServiceImpl implements ReactionService {
     public void delete(User currentUser, Post post, Comment comment, Reaction reaction) {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction this comment! because current user doesn't owned this reaction!");
+
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotOwnedException("Cannot delete reaction this comment! because the post doesn't have the comment!");
+
+        if (commentServiceRestriction.notOwned(comment, reaction))
+            throw new ResourceNotOwnedException("Cannot delete reaction this comment! because the comment doesn't have the reaction! ");
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction this comment! because post might be already deleted or doesn't exists!");
@@ -290,6 +325,15 @@ public class ReactionServiceImpl implements ReactionService {
     public void delete(User currentUser, Post post, Comment comment, Reply reply, Reaction reaction) {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because current user doesn't owned this reaction!");
+
+        if (postServiceRestriction.notOwned(post, comment))
+            throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because the post doesn't have the comment!");
+
+        if (commentServiceRestriction.notOwned(comment, reply))
+            throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because the comment doesn't have the reply!");
+
+        if (replyRestrictionService.notOwned(reply, reaction))
+            throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because the reply doesn't have the reaction!");
 
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot delete reaction to this reply! because post might be already deleted or doesn't exists!");
@@ -312,6 +356,9 @@ public class ReactionServiceImpl implements ReactionService {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because current user doesn't owned this reaction!");
 
+        if (story.notOwned(reaction))
+            throw new ResourceNotOwnedException("Cannot delete reaction to this reply! because story doesn't owned this reaction!");
+
         story.getReactions().remove(reaction);
 
         storyRepository.save(story);
@@ -323,6 +370,9 @@ public class ReactionServiceImpl implements ReactionService {
     public void delete(User currentUser, Note note, Reaction reaction) {
         if (userServiceRestriction.notOwned(currentUser, reaction))
             throw new ResourceNotOwnedException("Cannot delete reaction to this note! because current user doesn't owned this reaction!");
+
+        if (note.notOwned(reaction))
+            throw new ResourceNotOwnedException("Cannot delete reaction to this note! because note doesn't owned this reaction!");
 
         note.getReactions().remove(reaction);
 

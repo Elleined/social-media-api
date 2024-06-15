@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.service.main.post;
 
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.reaction.Reaction;
 
 public interface PostServiceRestriction {
     default boolean isCommentSectionClosed(Post post) {
@@ -26,5 +27,9 @@ public interface PostServiceRestriction {
 
     default boolean notOwned(Post post, Comment comment) {
         return post.getComments().stream().noneMatch(comment::equals);
+    }
+
+    default boolean notOwned(Post post, Reaction reaction) {
+        return !post.getReactions().contains(reaction);
     }
 }
