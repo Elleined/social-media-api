@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.repository.react;
 
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
+import com.elleined.socialmediaapi.model.main.reply.Reply;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,4 +27,12 @@ public interface ReactionRepository extends JpaRepository<Reaction, Integer> {
             WHERE post = :post
             """)
     Page<Reaction> findAllByPost(@Param("post") Post post, Pageable pageable);
+
+    @Query("""
+            SELECT r
+            FROM Reaction r
+            JOIN r.replies reply
+            WHERE reply = :reply
+            """)
+    Page<Reaction> findAllReactions(@Param("reply") Reply reply, Pageable pageable);
 }

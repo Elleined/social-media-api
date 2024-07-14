@@ -180,7 +180,7 @@ public class ReplyServiceImpl implements ReplyService, ReplyRestrictionService {
             throw new ResourceNotFoundException("Cannot get all replies! because the comment you trying to reply is either be deleted or does not exists anymore!");
 
         Reply pinnedReply = comment.getPinnedReply();
-        List<Reply> replies = replyRepository.findAllReplies(comment, pageable).stream()
+        List<Reply> replies = replyRepository.findAll(comment, pageable).stream()
                 .filter(Reply::isActive)
                 .filter(reply -> !reply.equals(pinnedReply))
                 .filter(reply -> !blockService.isBlockedByYou(currentUser, reply.getCreator()))
