@@ -13,16 +13,19 @@ import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-@Service
 @Slf4j
+@Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService, FriendServiceRestriction {
@@ -113,7 +116,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     }
 
     @Override
-    public List<User> getAllFriends(User currentUser, Pageable pageable) {
+    public Page<User> getAllFriends(User currentUser, Pageable pageable) {
         return userRepository.findAllFriends(currentUser, pageable).getContent();
     }
 
@@ -125,7 +128,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     }
 
     @Override
-    public List<FriendRequest> getAllFriendRequests(User currentUser, Pageable pageable) {
+    public Page<FriendRequest> getAllFriendRequests(User currentUser, Pageable pageable) {
         return userRepository.findAllFriendRequests(currentUser, pageable).getContent();
     }
 
@@ -140,7 +143,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
     }
 
     @Override
-    public List<FriendRequest> getAll(Pageable pageable) {
+    public Page<FriendRequest> getAll(Pageable pageable) {
         return friendRequestRepository.findAll(pageable).getContent();
     }
 }

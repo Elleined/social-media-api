@@ -11,6 +11,7 @@ import java.util.Set;
 
 public interface MentionNotificationService<T extends MentionNotification,
         S extends PrimaryKeyIdentity> extends NotificationService<T> {
+
     T save(User currentUser, Mention mention, S s);
 
 

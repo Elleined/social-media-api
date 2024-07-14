@@ -11,6 +11,7 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.CustomService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +29,7 @@ public interface CommentService extends CustomService<Comment> {
             CommentSectionException,
             BlockedException;
 
-    List<Comment> getAll(User currentUser, Post post, Pageable pageable) throws ResourceNotFoundException;
+    Page<Comment> getAll(User currentUser, Post post, Pageable pageable) throws ResourceNotFoundException;
 
     void delete(User currentUser, Post post, Comment comment);
 

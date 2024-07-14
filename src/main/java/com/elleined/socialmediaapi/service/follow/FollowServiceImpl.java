@@ -11,13 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
-@Service
 @Slf4j
-@RequiredArgsConstructor
+@Service
+@Validated
 @Transactional
+@RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService, FollowServiceRestriction {
     private final UserRepository userRepository;
     private final BlockService blockService;

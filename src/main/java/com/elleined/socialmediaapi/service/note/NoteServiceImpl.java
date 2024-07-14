@@ -9,9 +9,11 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.note.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService, NoteServiceRestriction {
@@ -74,7 +77,7 @@ public class NoteServiceImpl implements NoteService, NoteServiceRestriction {
     }
 
     @Override
-    public List<Note> getAll(Pageable pageable) {
+    public Page<Note> getAll(Pageable pageable) {
         return noteRepository.findAll(pageable).getContent();
     }
 

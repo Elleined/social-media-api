@@ -11,14 +11,15 @@ import com.elleined.socialmediaapi.repository.notification.reaction.NoteReaction
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import org.springframework.validation.annotation.Validated;
 
 @Slf4j
 @Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 public class NoteReactionNotificationService implements ReactionNotificationService<NoteReactionNotification, Note> {
@@ -28,7 +29,7 @@ public class NoteReactionNotificationService implements ReactionNotificationServ
     private final ReactionNotificationMapper reactionNotificationMapper;
 
     @Override
-    public List<NoteReactionNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
+    public Page<NoteReactionNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
         return userRepository.findAllNoteReactionNotifications(currentUser, pageable).stream()
                 .filter(notification -> notification.getStatus() == status)
                 .toList();

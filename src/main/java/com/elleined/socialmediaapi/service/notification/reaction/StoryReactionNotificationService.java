@@ -11,14 +11,15 @@ import com.elleined.socialmediaapi.repository.notification.reaction.StoryReactio
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import org.springframework.validation.annotation.Validated;
 
 @Slf4j
 @Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 public class StoryReactionNotificationService implements ReactionNotificationService<StoryReactionNotification, Story>{
@@ -37,7 +38,7 @@ public class StoryReactionNotificationService implements ReactionNotificationSer
     }
 
     @Override
-    public List<StoryReactionNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
+    public Page<StoryReactionNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
         return userRepository.findAllStoryReactionNotifications(currentUser, pageable).stream()
                 .filter(notification -> notification.getStatus() == status)
                 .toList();

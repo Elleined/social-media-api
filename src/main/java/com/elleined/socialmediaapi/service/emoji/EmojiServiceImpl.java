@@ -5,22 +5,25 @@ import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.repository.react.EmojiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
 @Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 public class EmojiServiceImpl implements EmojiService {
     private final EmojiRepository emojiRepository;
 
     @Override
-    public List<Emoji> getAll(Pageable pageable) {
+    public Page<Emoji> getAll(Pageable pageable) {
         return emojiRepository.findAll(pageable).getContent();
     }
 

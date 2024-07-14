@@ -9,9 +9,8 @@ import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface ReactionService {
     Reaction getById(int id) throws ResourceNotFoundException;
@@ -34,11 +33,11 @@ public interface ReactionService {
     void delete(User currentUser, Story story, Reaction reaction);
     void delete(User currentUser, Note note, Reaction reaction);
 
-    List<Reaction> getAll(User currentUser, Post post, Pageable pageable);
-    List<Reaction> getAll(User currentUser, Post post, Comment comment, Pageable pageable);
-    List<Reaction> getAll(User currentUser, Post post, Comment comment, Reply reply, Pageable pageable);
-    List<Reaction> getAll(User currentUser, Story story, Pageable pageable);
-    List<Reaction> getAll(User currentUser, Note note, Pageable pageable);
+    Page<Reaction> getAll(User currentUser, Post post, Pageable pageable);
+    Page<Reaction> getAll(User currentUser, Post post, Comment comment, Pageable pageable);
+    Page<Reaction> getAll(User currentUser, Post post, Comment comment, Reply reply, Pageable pageable);
+    Page<Reaction> getAll(User currentUser, Story story, Pageable pageable);
+    Page<Reaction> getAll(User currentUser, Note note, Pageable pageable);
 
     boolean isAlreadyReactedTo(User currentUser, Post post);
     boolean isAlreadyReactedTo(User currentUser, Post post, Comment comment);
@@ -52,31 +51,31 @@ public interface ReactionService {
     Reaction getByUserReaction(User currentUser, Story story);
     Reaction getByUserReaction(User currentUser, Note note);
 
-    default List<Reaction> getAllByEmoji(User currentUser, Post post, Emoji emoji, Pageable pageable) {
+    default Page<Reaction> getAllByEmoji(User currentUser, Post post, Emoji emoji, Pageable pageable) {
         return this.getAll(currentUser, post, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
     }
 
-    default List<Reaction> getAllByEmoji(User currentUser, Post post, Comment comment, Emoji emoji, Pageable pageable) {
+    default Page<Reaction> getAllByEmoji(User currentUser, Post post, Comment comment, Emoji emoji, Pageable pageable) {
         return this.getAll(currentUser, post, comment, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
     }
 
-    default List<Reaction> getAllByEmoji(User currentUser, Post post, Comment comment, Reply reply, Emoji emoji, Pageable pageable) {
+    default Page<Reaction> getAllByEmoji(User currentUser, Post post, Comment comment, Reply reply, Emoji emoji, Pageable pageable) {
         return this.getAll(currentUser, post, comment, reply, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
     }
 
-    default List<Reaction> getAllByEmoji(User currentUser, Story story, Emoji emoji, Pageable pageable) {
+    default Page<Reaction> getAllByEmoji(User currentUser, Story story, Emoji emoji, Pageable pageable) {
         return this.getAll(currentUser, story, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
     }
 
-    default List<Reaction> getAllByEmoji(User currentUser, Note note, Emoji emoji, Pageable pageable) {
+    default Page<Reaction> getAllByEmoji(User currentUser, Note note, Emoji emoji, Pageable pageable) {
         return this.getAll(currentUser, note, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();

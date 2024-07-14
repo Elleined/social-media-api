@@ -11,14 +11,15 @@ import com.elleined.socialmediaapi.repository.notification.reaction.CommentReact
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import org.springframework.validation.annotation.Validated;
 
 @Slf4j
 @Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 public class CommentReactionNotificationService implements ReactionNotificationService<CommentReactionNotification, Comment> {
@@ -28,7 +29,7 @@ public class CommentReactionNotificationService implements ReactionNotificationS
     private final ReactionNotificationMapper reactionNotificationMapper;
 
     @Override
-    public List<CommentReactionNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
+    public Page<CommentReactionNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
         return userRepository.findAllCommentReactionNotifications(currentUser, pageable).stream()
                 .filter(notification -> notification.getStatus() == status)
                 .toList();

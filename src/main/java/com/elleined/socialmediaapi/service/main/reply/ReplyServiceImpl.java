@@ -23,9 +23,11 @@ import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -34,9 +36,10 @@ import java.util.List;
 import java.util.Set;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@Validated
 @Transactional
+@RequiredArgsConstructor
 public class ReplyServiceImpl implements ReplyService, ReplyRestrictionService {
     private final ReplyRepository replyRepository;
     private final ReplyMapper replyMapper;
@@ -164,7 +167,7 @@ public class ReplyServiceImpl implements ReplyService, ReplyRestrictionService {
     }
 
     @Override
-    public List<Reply> getAll(User currentUser, Post post, Comment comment, Pageable pageable) throws ResourceNotFoundException {
+    public Page<Reply> getAll(User currentUser, Post post, Comment comment, Pageable pageable) throws ResourceNotFoundException {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot get all replies! because post with id of " + post.getId() + " does not exists or already deleted!") ;
 
@@ -234,7 +237,7 @@ public class ReplyServiceImpl implements ReplyService, ReplyRestrictionService {
     }
 
     @Override
-    public List<Reply> getAll(Pageable pageable) {
+    public Page<Reply> getAll(Pageable pageable) {
         return replyRepository.findAll(pageable).getContent();
     }
 

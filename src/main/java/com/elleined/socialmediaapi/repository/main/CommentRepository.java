@@ -11,10 +11,6 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
-
-    @Query("SELECT c.votes FROM Comment c WHERE c = :comment")
-    Page<Vote> findAllVotes(@Param("comment") Comment comment, Pageable pageable);
-
     @Query("SELECT c.reactions FROM Comment c WHERE c = :comment")
     Page<Reaction> findAllReactions(@Param("comment") Comment comment, Pageable pageable);
 }

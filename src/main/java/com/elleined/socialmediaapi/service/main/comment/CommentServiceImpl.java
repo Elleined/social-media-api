@@ -22,9 +22,11 @@ import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -33,9 +35,10 @@ import java.util.List;
 import java.util.Set;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@Validated
 @Transactional
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService, CommentServiceRestriction {
     private final BlockService blockService;
 
@@ -105,7 +108,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public List<Comment> getAll(User currentUser, Post post, Pageable pageable) throws ResourceNotFoundException {
+    public Page<Comment> getAll(User currentUser, Post post, Pageable pageable) throws ResourceNotFoundException {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot save comment! because the post you trying to comment is either be deleted or does not exists anymore!");
 
@@ -136,7 +139,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
     }
 
     @Override
-    public List<Comment> getAll(Pageable pageable) {
+    public Page<Comment> getAll(Pageable pageable) {
         return commentRepository.findAll(pageable).getContent();
     }
 

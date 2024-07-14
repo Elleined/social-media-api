@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.service.block;
 
 import com.elleined.socialmediaapi.exception.block.BlockedException;
 import com.elleined.socialmediaapi.model.user.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface BlockService {
         return suspectedUser.getBlockedUsers().contains(currentUser);
     }
 
-    List<User> getAllBlockedUsers(User currentUser, Pageable pageable);
+    Page<User> getAllBlockedUsers(User currentUser, Pageable pageable);
 }

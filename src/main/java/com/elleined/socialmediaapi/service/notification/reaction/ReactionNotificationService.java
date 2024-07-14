@@ -8,5 +8,6 @@ import com.elleined.socialmediaapi.service.notification.NotificationService;
 
 public interface ReactionNotificationService<T extends ReactionNotification,
         S extends PrimaryKeyIdentity> extends NotificationService<T> {
+
     T save(User currentUser, S s, Reaction reaction);
 }

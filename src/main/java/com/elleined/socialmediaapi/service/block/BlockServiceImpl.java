@@ -5,14 +5,15 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import org.springframework.validation.annotation.Validated;
 
 @Slf4j
 @Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 public class BlockServiceImpl implements BlockService {
@@ -38,7 +39,7 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    public List<User> getAllBlockedUsers(User currentUser, Pageable pageable) {
+    public Page<User> getAllBlockedUsers(User currentUser, Pageable pageable) {
         return userRepository.findAllBlockedUsers(currentUser, pageable).getContent();
     }
 

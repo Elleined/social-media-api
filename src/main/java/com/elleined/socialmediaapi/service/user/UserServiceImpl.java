@@ -10,17 +10,20 @@ import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.validator.EmailValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@Validated
 @Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserServiceRestriction {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -53,7 +56,7 @@ public class UserServiceImpl implements UserService, UserServiceRestriction {
     }
 
     @Override
-    public List<User> getAll(Pageable pageable) {
+    public Page<User> getAll(Pageable pageable) {
         return userRepository.findAll(pageable).getContent();
     }
 
@@ -81,7 +84,7 @@ public class UserServiceImpl implements UserService, UserServiceRestriction {
 
 
     @Override
-    public List<User> getAllSuggestedMentions(User currentUser, String name, Pageable pageable) {
+    public Page<User> getAllSuggestedMentions(User currentUser, String name, Pageable pageable) {
         return userRepository.findAllByName(name, pageable).stream()
                 .filter(suggestedUser -> !suggestedUser.equals(currentUser))
                 .filter(suggestedUser -> !blockService.isBlockedByYou(currentUser, suggestedUser))

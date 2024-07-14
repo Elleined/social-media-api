@@ -10,9 +10,11 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.story.StoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
@@ -21,6 +23,7 @@ import java.util.Set;
 
 @Slf4j
 @Service
+@Validated
 @Transactional
 @RequiredArgsConstructor
 public class StoryServiceImpl implements StoryService, StoryServiceRestriction {
@@ -50,7 +53,7 @@ public class StoryServiceImpl implements StoryService, StoryServiceRestriction {
     }
 
     @Override
-    public List<Story> getAll(Pageable pageable) {
+    public Page<Story> getAll(Pageable pageable) {
         return storyRepository.findAll(pageable).getContent();
     }
 
