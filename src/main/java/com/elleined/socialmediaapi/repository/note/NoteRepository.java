@@ -2,7 +2,6 @@ package com.elleined.socialmediaapi.repository.note;
 
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
-import com.elleined.socialmediaapi.model.story.Story;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

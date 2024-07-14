@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.model.notification.reaction;
 
-import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.reaction.Emoji;
 import jakarta.persistence.Entity;

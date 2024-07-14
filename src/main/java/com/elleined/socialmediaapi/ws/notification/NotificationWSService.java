@@ -11,10 +11,6 @@ import com.elleined.socialmediaapi.dto.notification.mention.StoryMentionNotifica
 import com.elleined.socialmediaapi.dto.notification.post.SharedPostNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.reaction.*;
 import com.elleined.socialmediaapi.dto.notification.vote.VoteNotificationDTO;
-import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.model.notification.friend.FriendRequestNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.NoteReactionNotification;
-import com.elleined.socialmediaapi.model.user.User;
 
 public interface NotificationWSService {
     // Receiver is the post creator

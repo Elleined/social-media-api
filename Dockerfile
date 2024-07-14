@@ -1,8 +1,8 @@
-FROM openjdk:17-alpine
+FROM alpine/java:21-jdk
 MAINTAINER Elleined
 
 # Docker MySQL Credentials
-ENV MYSQL_HOST=sma_mysql_server
+ENV MYSQL_HOST=mysql_server
 ENV MYSQL_USER=root
 ENV MYSQL_PASSWORD=root
 ENV MYSQL_PORT=3306

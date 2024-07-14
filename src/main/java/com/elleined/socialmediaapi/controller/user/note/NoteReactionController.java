@@ -1,16 +1,13 @@
 package com.elleined.socialmediaapi.controller.user.note;
 
 import com.elleined.socialmediaapi.dto.notification.reaction.NoteReactionNotificationDTO;
-import com.elleined.socialmediaapi.dto.notification.reaction.StoryReactionNotificationDTO;
 import com.elleined.socialmediaapi.dto.reaction.ReactionDTO;
 import com.elleined.socialmediaapi.mapper.notification.reaction.ReactionNotificationMapper;
 import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.notification.reaction.NoteReactionNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
 import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
-import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import com.elleined.socialmediaapi.service.note.NoteService;
