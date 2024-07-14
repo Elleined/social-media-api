@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.model.main.reply;
 
-import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
@@ -14,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Entity

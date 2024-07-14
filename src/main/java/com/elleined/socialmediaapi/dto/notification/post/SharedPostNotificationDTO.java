@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.dto.notification.post;
 
+import com.elleined.socialmediaapi.dto.main.PostDTO;
 import com.elleined.socialmediaapi.dto.notification.NotificationDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,5 +12,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class SharedPostNotificationDTO extends NotificationDTO {
-    private int sharedPostId;
+    private PostDTO postDTO;
 }

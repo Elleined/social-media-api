@@ -1,6 +1,5 @@
 package com.elleined.socialmediaapi.model.main.comment;
 
-import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.post.Post;
@@ -16,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tbl_comment")

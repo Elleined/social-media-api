@@ -6,13 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
 public class HashTagDTO extends DTO {
     private String keyword;
-    private Set<Integer> postIds;
 }

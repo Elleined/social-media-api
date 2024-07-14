@@ -1,12 +1,11 @@
 package com.elleined.socialmediaapi.dto.story;
 
 import com.elleined.socialmediaapi.dto.DTO;
+import com.elleined.socialmediaapi.dto.user.UserDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +14,5 @@ import java.util.Set;
 public class StoryDTO extends DTO {
     private String content;
     private String attachPicture;
-    private int creatorId;
-    private Set<Integer> mentionIds;
-    private Set<Integer> reactionIds;
+    private UserDTO creatorDTO;
 }

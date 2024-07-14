@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.dto.notification.mention;
 
+import com.elleined.socialmediaapi.dto.mention.MentionDTO;
 import com.elleined.socialmediaapi.dto.notification.NotificationDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,5 +12,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public abstract class MentionNotificationDTO extends NotificationDTO {
-    private int mentionId;
+    private MentionDTO mentionDTO;
 }

@@ -1,18 +1,5 @@
 package com.elleined.socialmediaapi.repository.user;
 
-import com.elleined.socialmediaapi.model.friend.FriendRequest;
-import com.elleined.socialmediaapi.model.main.post.Post;
-import com.elleined.socialmediaapi.model.notification.follow.FollowerNotification;
-import com.elleined.socialmediaapi.model.notification.friend.FriendRequestNotification;
-import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
-import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
-import com.elleined.socialmediaapi.model.notification.mention.CommentMentionNotification;
-import com.elleined.socialmediaapi.model.notification.mention.PostMentionNotification;
-import com.elleined.socialmediaapi.model.notification.mention.ReplyMentionNotification;
-import com.elleined.socialmediaapi.model.notification.mention.StoryMentionNotification;
-import com.elleined.socialmediaapi.model.notification.post.SharedPostNotification;
-import com.elleined.socialmediaapi.model.notification.reaction.*;
-import com.elleined.socialmediaapi.model.notification.vote.VoteNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

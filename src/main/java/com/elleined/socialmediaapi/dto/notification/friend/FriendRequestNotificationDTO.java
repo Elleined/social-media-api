@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.dto.notification.friend;
 
+import com.elleined.socialmediaapi.dto.friend.FriendRequestDTO;
 import com.elleined.socialmediaapi.dto.notification.NotificationDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class FriendRequestNotificationDTO extends NotificationDTO {
-    private int friendRequestId;
+    private FriendRequestDTO friendRequestDTO;
     private String message;
 }
