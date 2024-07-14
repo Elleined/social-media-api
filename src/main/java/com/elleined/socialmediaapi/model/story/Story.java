@@ -80,18 +80,6 @@ public class Story extends PrimaryKeyIdentity {
                 LocalDateTime.now().equals(storyExpiration);
     }
 
-    public Set<Integer> getAllMentionIds() {
-        return this.getMentions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllReactionIds() {
-        return this.getReactions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
     public boolean notOwned(Reaction reaction) {
         return !this.getReactions().contains(reaction);
     }

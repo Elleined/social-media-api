@@ -34,10 +34,4 @@ public class HashTag extends PrimaryKeyIdentity {
 
     @ManyToMany(mappedBy = "hashTags")
     private Set<Post> posts;
-
-    public Set<Integer> getAllPostIds() {
-        return this.getPosts().stream()
-                .map(Forum::getId)
-                .collect(Collectors.toSet());
-    }
 }

@@ -131,40 +131,4 @@ public class Post extends Forum {
     private Set<User> sharers;
 
     public enum CommentSectionStatus {OPEN, CLOSED}
-
-    public Set<Integer> getAllHashTagIds() {
-        return this.getHashTags().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllMentionIds() {
-        return this.getMentions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllReactionIds() {
-        return this.getReactions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public List<Integer> getAllCommentIds() {
-        return this.getComments().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .toList();
-    }
-
-    public Set<Integer> getAllSavingUserIds() {
-        return this.getSavingUsers().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllSharerIds() {
-        return this.getSharers().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
 }

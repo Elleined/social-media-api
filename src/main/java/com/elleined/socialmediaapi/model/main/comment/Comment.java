@@ -103,33 +103,4 @@ public class Comment extends Forum {
             )
     )
     private Set<Reaction> reactions;
-
-    public List<Integer> getAllReplyIds() {
-        return this.getReplies().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .toList();
-    }
-
-    public Set<Integer> getAllHashTagIds() {
-        return this.getHashTags().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllMentionIds() {
-        return this.getMentions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-    public Set<Integer> getAllReactionIds() {
-        return this.getReactions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllVoteIds() {
-        return this.getVotes().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
 }

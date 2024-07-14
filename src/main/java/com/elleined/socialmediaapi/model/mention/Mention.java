@@ -53,28 +53,4 @@ public class Mention extends PrimaryKeyIdentity {
 
     @ManyToMany(mappedBy = "mentions")
     private Set<Story> stories;
-
-    public Set<Integer> getAllPostIds() {
-        return this.getPosts().stream()
-                .map(Forum::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllCommentIds() {
-        return this.getComments().stream()
-                .map(Forum::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllReplyIds() {
-        return this.getReplies().stream()
-                .map(Forum::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllStoryIds() {
-        return this.getStories().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
 }

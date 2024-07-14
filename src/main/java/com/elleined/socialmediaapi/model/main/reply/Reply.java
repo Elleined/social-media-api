@@ -89,21 +89,4 @@ public class Reply extends Forum {
             )
     )
     private Set<Reaction> reactions;
-
-    public Set<Integer> getAllMentionIds() {
-        return this.getMentions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-    public Set<Integer> getAllReactionIds() {
-        return this.getReactions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllHashTagIds() {
-        return this.getHashTags().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
 }

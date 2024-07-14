@@ -58,34 +58,4 @@ public class Reaction extends PrimaryKeyIdentity {
 
     @ManyToMany(mappedBy = "reactions")
     private Set<Note> notes;
-
-    public Set<Integer> getAllPostIds() {
-        return this.getPosts().stream()
-                .map(Forum::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllCommentIds() {
-        return this.getComments().stream()
-                .map(Forum::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllReplyIds() {
-        return this.getReplies().stream()
-                .map(Forum::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllStoryIds() {
-        return this.getStories().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
-    public Set<Integer> getAllNoteIds() {
-        return this.getNotes().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
 }

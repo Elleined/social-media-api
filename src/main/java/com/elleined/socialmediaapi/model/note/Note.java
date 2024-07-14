@@ -62,12 +62,6 @@ public class Note extends PrimaryKeyIdentity {
                 LocalDateTime.now().equals(noteExpiration);
     }
 
-    public Set<Integer> getAllReactionIds() {
-        return this.getReactions().stream()
-                .map(PrimaryKeyIdentity::getId)
-                .collect(Collectors.toSet());
-    }
-
     public boolean notOwned(Reaction reaction) {
         return !this.getReactions().contains(reaction);
     }
