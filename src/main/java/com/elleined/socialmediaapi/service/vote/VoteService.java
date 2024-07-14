@@ -8,8 +8,6 @@ import com.elleined.socialmediaapi.service.CustomService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface VoteService extends CustomService<Vote> {
     Vote save(User currentUser, Post post, Comment comment, Vote.Verdict verdict);
     Page<Vote> getAll(User currentUser, Post post, Comment comment, Pageable pageable);

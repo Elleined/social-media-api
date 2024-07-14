@@ -6,4 +6,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface MentionNotificationRepository<T extends MentionNotification> extends NotificationRepository<T> {
+
 }

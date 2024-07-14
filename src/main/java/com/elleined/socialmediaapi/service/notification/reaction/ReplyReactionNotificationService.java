@@ -8,7 +8,6 @@ import com.elleined.socialmediaapi.model.notification.reaction.ReplyReactionNoti
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.notification.reaction.ReplyReactionNotificationRepository;
-import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

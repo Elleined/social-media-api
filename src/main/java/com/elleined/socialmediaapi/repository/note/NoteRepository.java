@@ -9,7 +9,4 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface NoteRepository extends JpaRepository<Note, Integer> {
-
-    @Query("SELECT n.reactions FROM Note n WHERE n = :note")
-    Page<Reaction> findAllReactions(@Param("note") Note note, Pageable pageable);
 }

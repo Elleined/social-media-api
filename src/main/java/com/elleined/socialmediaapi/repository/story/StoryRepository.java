@@ -9,7 +9,4 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface StoryRepository extends JpaRepository<Story, Integer> {
-
-    @Query("SELECT s.reactions FROM Story s WHERE s = :story")
-    Page<Reaction> findAllReactions(@Param("story") Story story, Pageable pageable);
 }
