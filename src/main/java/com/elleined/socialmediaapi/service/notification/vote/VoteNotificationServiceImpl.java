@@ -7,7 +7,6 @@ import com.elleined.socialmediaapi.model.notification.vote.VoteNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.model.vote.Vote;
 import com.elleined.socialmediaapi.repository.notification.vote.VoteNotificationRepository;
-import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,16 +21,12 @@ import org.springframework.validation.annotation.Validated;
 @Transactional
 @RequiredArgsConstructor
 public class VoteNotificationServiceImpl implements VoteNotificationService {
-    private final UserRepository userRepository;
-
     private final VoteNotificationRepository voteNotificationRepository;
     private final VoteNotificationMapper voteNotificationMapper;
 
     @Override
     public Page<VoteNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
-        return userRepository.findAllVoteNotifications(currentUser, pageable).stream()
-                .filter(notification -> notification.getStatus() == status)
-                .toList();
+        return voteNotificationRepository.findAll(currentUser, status, pageable);
     }
 
     @Override
@@ -45,6 +40,15 @@ public class VoteNotificationServiceImpl implements VoteNotificationService {
             throw new ResourceNotFoundException("Cannot read notification! because current user doesn't owned this notification!");
 
         notification.read();
+        voteNotificationRepository.save(notification);
+    }
+
+    @Override
+    public void unread(User currentUser, VoteNotification notification) {
+        if (!currentUser.has(notification))
+            throw new ResourceNotFoundException("Cannot unread notification! because current user doesn't owned this notification!");
+
+        notification.unread();
         voteNotificationRepository.save(notification);
     }
 

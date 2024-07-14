@@ -51,6 +51,11 @@ public abstract class Notification extends PrimaryKeyIdentity {
 
     public void read() {
         this.setUpdatedAt(LocalDateTime.now());
-        this.setStatus(Notification.Status.READ);
+        this.setStatus(Status.READ);
+    }
+
+    public void unread() {
+        this.setUpdatedAt(LocalDateTime.now());
+        this.setStatus(Status.UN_READ);
     }
 }

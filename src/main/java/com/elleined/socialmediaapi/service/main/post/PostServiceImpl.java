@@ -15,6 +15,7 @@ import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
+import com.elleined.socialmediaapi.validator.PageableUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -136,24 +136,17 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     @Override
     public Page<Post> getAll(Pageable pageable) {
-        return postRepository.findAll(pageable).getContent();
-    }
-
-
-    @Override
-    public List<Post> getAllById(List<Integer> ids) {
-        return postRepository.findAllById(ids).stream()
-                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
-                .toList();
+        return postRepository.findAll(pageable);
     }
 
     @Override
     public Page<Post> getAll(User currentUser, Pageable pageable) {
-        return postRepository.findAll(pageable).stream()
+        List<Post> posts = postRepository.findAll(pageable).stream()
                 .filter(Post::isActive)
                 .filter(post -> !blockService.isBlockedByYou(currentUser, post.getCreator()))
                 .filter(post -> !blockService.isYouBeenBlockedBy(currentUser, post.getCreator()))
                 .toList();
+        return PageableUtil.toPage(posts, pageable);
     }
 
     @Override
@@ -211,9 +204,10 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     @Override
     public Page<Post> getAllSavedPosts(User currentUser, Pageable pageable) {
-        return userRepository.findAllSavedPosts(currentUser, pageable).stream()
+        List<Post> posts = userRepository.findAllSavedPosts(currentUser, pageable).stream()
                 .filter(Post::isActive)
                 .toList();
+        return PageableUtil.toPage(posts, pageable);
     }
 
     @Override
@@ -248,8 +242,10 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     @Override
     public Page<Post> getAllSharedPosts(User currentUser, Pageable pageable) {
-        return userRepository.findAllSharedPosts(currentUser, pageable).stream()
+        List<Post> posts = userRepository.findAllSharedPosts(currentUser, pageable).stream()
                 .filter(Post::isActive)
                 .toList();
+
+        return PageableUtil.toPage(posts, pageable);
     }
 }

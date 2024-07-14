@@ -40,7 +40,7 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public Page<User> getAllBlockedUsers(User currentUser, Pageable pageable) {
-        return userRepository.findAllBlockedUsers(currentUser, pageable).getContent();
+        return userRepository.findAllBlockedUsers(currentUser, pageable);
     }
 
     @Override

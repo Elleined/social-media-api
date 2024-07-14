@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -54,14 +53,7 @@ public class StoryServiceImpl implements StoryService, StoryServiceRestriction {
 
     @Override
     public Page<Story> getAll(Pageable pageable) {
-        return storyRepository.findAll(pageable).getContent();
-    }
-
-    @Override
-    public List<Story> getAllById(List<Integer> ids) {
-        return storyRepository.findAllById(ids).stream()
-                .sorted(Comparator.comparing(Story::getCreatedAt).reversed())
-                .toList();
+        return storyRepository.findAll(pageable);
     }
 
     @Override

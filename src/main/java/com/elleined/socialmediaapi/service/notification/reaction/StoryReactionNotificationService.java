@@ -23,8 +23,6 @@ import org.springframework.validation.annotation.Validated;
 @Transactional
 @RequiredArgsConstructor
 public class StoryReactionNotificationService implements ReactionNotificationService<StoryReactionNotification, Story>{
-    private final UserRepository userRepository;
-
     private final StoryReactionNotificationRepository storyReactionNotificationRepository;
     private final ReactionNotificationMapper reactionNotificationMapper;
 
@@ -39,9 +37,7 @@ public class StoryReactionNotificationService implements ReactionNotificationSer
 
     @Override
     public Page<StoryReactionNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
-        return userRepository.findAllStoryReactionNotifications(currentUser, pageable).stream()
-                .filter(notification -> notification.getStatus() == status)
-                .toList();
+        return storyReactionNotificationRepository.findAll(currentUser, status, pageable);
     }
 
     @Override
@@ -55,6 +51,15 @@ public class StoryReactionNotificationService implements ReactionNotificationSer
             throw new ResourceNotFoundException("Cannot read notification! because current user doesn't owned this notification!");
 
         notification.read();
+        storyReactionNotificationRepository.save(notification);
+    }
+
+    @Override
+    public void unread(User currentUser, StoryReactionNotification notification) {
+        if (!currentUser.has(notification))
+            throw new ResourceNotFoundException("Cannot unread notification! because current user doesn't owned this notification!");
+
+        notification.unread();
         storyReactionNotificationRepository.save(notification);
     }
 }

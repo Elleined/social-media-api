@@ -8,12 +8,11 @@ import com.elleined.socialmediaapi.repository.user.UserRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -57,12 +56,12 @@ public class FollowServiceImpl implements FollowService, FollowServiceRestrictio
     }
 
     @Override
-    public List<User> getAllFollowers(User currentUser, Pageable pageable) {
-        return userRepository.findAllFollowers(currentUser, pageable).getContent();
+    public Page<User> getAllFollowers(User currentUser, Pageable pageable) {
+        return userRepository.findAllFollowers(currentUser, pageable);
     }
 
     @Override
-    public List<User> getAllFollowing(User currentUser, Pageable pageable) {
-        return userRepository.findAllFollowings(currentUser, pageable).getContent();
+    public Page<User> getAllFollowing(User currentUser, Pageable pageable) {
+        return userRepository.findAllFollowings(currentUser, pageable);
     }
 }

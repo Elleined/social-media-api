@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Comparator;
-import java.util.List;
-
 @Slf4j
 @Service
 @Validated
@@ -24,7 +21,7 @@ public class EmojiServiceImpl implements EmojiService {
 
     @Override
     public Page<Emoji> getAll(Pageable pageable) {
-        return emojiRepository.findAll(pageable).getContent();
+        return emojiRepository.findAll(pageable);
     }
 
     @Override
@@ -35,12 +32,5 @@ public class EmojiServiceImpl implements EmojiService {
     @Override
     public Emoji getById(int id) throws ResourceNotFoundException {
         return emojiRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Emoji with id of " + id + " doesn't exists"));
-    }
-
-    @Override
-    public List<Emoji> getAllById(List<Integer> ids) {
-        return emojiRepository.findAllById(ids).stream()
-                .sorted(Comparator.comparing(Emoji::getType))
-                .toList();
     }
 }

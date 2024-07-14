@@ -3,7 +3,6 @@ package com.elleined.socialmediaapi.service.note;
 import com.elleined.socialmediaapi.exception.note.NoteException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.mapper.note.NoteMapper;
-import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.note.Note;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.note.NoteRepository;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -78,14 +76,7 @@ public class NoteServiceImpl implements NoteService, NoteServiceRestriction {
 
     @Override
     public Page<Note> getAll(Pageable pageable) {
-        return noteRepository.findAll(pageable).getContent();
-    }
-
-    @Override
-    public List<Note> getAllById(List<Integer> ids) {
-        return noteRepository.findAllById(ids).stream()
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
-                .toList();
+        return noteRepository.findAll(pageable);
     }
 
     @Override

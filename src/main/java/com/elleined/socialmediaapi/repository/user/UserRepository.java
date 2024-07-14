@@ -81,9 +81,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u.followerNotifications FROM User u WHERE u = :currentUser")
     Page<FollowerNotification> findAllFollowerNotifications(@Param("currentUser") User currentUser, Pageable pageable);
 
-    @Query("SELECT u.voteNotifications FROM User u WHERE u = :currentUser")
-    Page<VoteNotification> findAllVoteNotifications(@Param("currentUser") User currentUser, Pageable pageable);
-
     @Query("SELECT u.sharedPostNotifications FROM User u WHERE u = :currentUser")
     Page<SharedPostNotification> findAllSharedPostNotifications(@Param("currentUser") User currentUser, Pageable pageable);
 

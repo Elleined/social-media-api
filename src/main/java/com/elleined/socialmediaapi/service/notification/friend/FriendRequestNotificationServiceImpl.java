@@ -22,16 +22,12 @@ import org.springframework.validation.annotation.Validated;
 @Transactional
 @RequiredArgsConstructor
 public class FriendRequestNotificationServiceImpl implements FriendRequestNotificationService {
-    private final UserRepository userRepository;
-
     private final FriendRequestNotificationRepository friendRequestNotificationRepository;
     private final FriendRequestNotificationMapper friendRequestNotificationMapper;
 
     @Override
     public Page<FriendRequestNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
-        return userRepository.findAllFriendRequestNotifications(currentUser, pageable).stream()
-                .filter(notification -> notification.getStatus() == status)
-                .toList();
+        return friendRequestNotificationRepository.findAll(currentUser, status, pageable);
     }
 
     @Override
@@ -45,6 +41,15 @@ public class FriendRequestNotificationServiceImpl implements FriendRequestNotifi
             throw new ResourceNotFoundException("Cannot read notification! because current user doesn't owned this notification!");
 
         notification.read();
+        friendRequestNotificationRepository.save(notification);
+    }
+
+    @Override
+    public void unread(User currentUser, FriendRequestNotification notification) {
+        if (!currentUser.has(notification))
+            throw new ResourceNotFoundException("Cannot unread notification! because current user doesn't owned this notification!");
+
+        notification.unread();
         friendRequestNotificationRepository.save(notification);
     }
 

@@ -9,8 +9,11 @@ import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.story.Story;
 import com.elleined.socialmediaapi.model.user.User;
+import com.elleined.socialmediaapi.validator.PageableUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface ReactionService {
     Reaction getById(int id) throws ResourceNotFoundException;
@@ -52,33 +55,38 @@ public interface ReactionService {
     Reaction getByUserReaction(User currentUser, Note note);
 
     default Page<Reaction> getAllByEmoji(User currentUser, Post post, Emoji emoji, Pageable pageable) {
-        return this.getAll(currentUser, post, pageable).stream()
+        List<Reaction> reactions = this.getAll(currentUser, post, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
+        return PageableUtil.toPage(reactions, pageable);
     }
 
     default Page<Reaction> getAllByEmoji(User currentUser, Post post, Comment comment, Emoji emoji, Pageable pageable) {
-        return this.getAll(currentUser, post, comment, pageable).stream()
+        List<Reaction> reactions = this.getAll(currentUser, post, comment, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
+        return PageableUtil.toPage(reactions, pageable);
     }
 
     default Page<Reaction> getAllByEmoji(User currentUser, Post post, Comment comment, Reply reply, Emoji emoji, Pageable pageable) {
-        return this.getAll(currentUser, post, comment, reply, pageable).stream()
+        List<Reaction> reactions = this.getAll(currentUser, post, comment, reply, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
+        return PageableUtil.toPage(reactions, pageable);
     }
 
     default Page<Reaction> getAllByEmoji(User currentUser, Story story, Emoji emoji, Pageable pageable) {
-        return this.getAll(currentUser, story, pageable).stream()
+        List<Reaction> reactions = this.getAll(currentUser, story, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
+        return PageableUtil.toPage(reactions, pageable);
     }
 
     default Page<Reaction> getAllByEmoji(User currentUser, Note note, Emoji emoji, Pageable pageable) {
-        return this.getAll(currentUser, note, pageable).stream()
+        List<Reaction> reactions = this.getAll(currentUser, note, pageable).stream()
                 .filter(react -> react.getEmoji().equals(emoji))
                 .toList();
+        return PageableUtil.toPage(reactions, pageable);
     }
 }
 

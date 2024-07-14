@@ -6,7 +6,6 @@ import com.elleined.socialmediaapi.exception.field.FieldException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotFoundException;
 import com.elleined.socialmediaapi.exception.resource.ResourceNotOwnedException;
 import com.elleined.socialmediaapi.mapper.main.CommentMapper;
-import com.elleined.socialmediaapi.model.PrimaryKeyIdentity;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.Forum;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
@@ -20,6 +19,7 @@ import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import com.elleined.socialmediaapi.validator.FieldValidator;
+import com.elleined.socialmediaapi.validator.PageableUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -125,7 +124,8 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
         if (fieldValidator.isValid(pinnedComment))
             comments.addFirst(pinnedComment); // Prioritizing pinned comment
-        return comments;
+
+        return PageableUtil.toPage(comments, pageable);
     }
 
     @Override
@@ -140,14 +140,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
 
     @Override
     public Page<Comment> getAll(Pageable pageable) {
-        return commentRepository.findAll(pageable).getContent();
-    }
-
-    @Override
-    public List<Comment> getAllById(List<Integer> ids) {
-        return commentRepository.findAllById(ids).stream()
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
-                .toList();
+        return commentRepository.findAll(pageable);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.elleined.socialmediaapi.mapper.hashtag.HashTagMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.repository.hashtag.HashTagRepository;
+import com.elleined.socialmediaapi.validator.PageableUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -37,14 +37,7 @@ public class HashTagServiceImpl implements HashTagService {
 
     @Override
     public Page<HashTag> getAll(Pageable pageable) {
-        return hashTagRepository.findAll(pageable).getContent();
-    }
-
-    @Override
-    public List<HashTag> getAllById(List<Integer> ids) {
-        return hashTagRepository.findAllById(ids).stream()
-                .sorted(Comparator.comparing(HashTag::getCreatedAt).reversed())
-                .toList();
+        return hashTagRepository.findAll(pageable);
     }
 
     @Override
@@ -64,9 +57,11 @@ public class HashTagServiceImpl implements HashTagService {
 
     @Override
     public Page<Post> getAllByKeyword(String keyword, Pageable pageable) {
-        return hashTagRepository.getAllByKeyword(keyword, pageable).stream()
+        List<Post> posts = hashTagRepository.getAllByKeyword(keyword, pageable)
                 .filter(Post::isActive)
                 .toList();
+
+        return PageableUtil.toPage(posts, pageable);
     }
 
     @Override

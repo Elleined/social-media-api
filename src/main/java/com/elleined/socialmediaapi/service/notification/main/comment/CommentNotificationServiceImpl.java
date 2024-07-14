@@ -22,8 +22,6 @@ import org.springframework.validation.annotation.Validated;
 @Transactional
 @RequiredArgsConstructor
 public class CommentNotificationServiceImpl implements CommentNotificationService {
-    private final UserRepository userRepository;
-
     private final CommentNotificationRepository commentNotificationRepository;
     private final CommentNotificationMapper commentNotificationMapper;
 
@@ -38,9 +36,7 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
     
     @Override
     public Page<CommentNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
-        return userRepository.findAllReceiveCommentNotifications(currentUser, pageable).stream()
-                .filter(notification -> notification.getStatus() == status)
-                .toList();
+        return commentNotificationRepository.findAll(currentUser, status, pageable);
     }
 
     @Override
@@ -54,6 +50,15 @@ public class CommentNotificationServiceImpl implements CommentNotificationServic
             throw new ResourceNotFoundException("Cannot read notification! because current user doesn't owned this notification!");
 
         notification.read();
+        commentNotificationRepository.save(notification);
+    }
+
+    @Override
+    public void unread(User currentUser, CommentNotification notification) {
+        if (!currentUser.has(notification))
+            throw new ResourceNotFoundException("Cannot unread notification! because current user doesn't owned this notification!");
+
+        notification.unread();
         commentNotificationRepository.save(notification);
     }
 }

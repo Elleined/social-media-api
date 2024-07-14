@@ -24,16 +24,12 @@ import org.springframework.validation.annotation.Validated;
 @Transactional
 @RequiredArgsConstructor
 public class PostMentionNotificationService implements MentionNotificationService<PostMentionNotification, Post> {
-    private final UserRepository userRepository;
-
     private final PostMentionNotificationRepository postMentionNotificationRepository;
     private final MentionNotificationMapper mentionNotificationMapper;
 
     @Override
     public Page<PostMentionNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
-        return userRepository.findAllPostMentionNotifications(currentUser, pageable).stream()
-                .filter(notification -> notification.getStatus() == status)
-                .toList();
+        return postMentionNotificationRepository.findAll(currentUser, status, pageable);
     }
 
     @Override
@@ -47,6 +43,15 @@ public class PostMentionNotificationService implements MentionNotificationServic
             throw new ResourceNotFoundException("Cannot read notification! because current user doesn't owned this notification!");
 
         notification.read();
+        postMentionNotificationRepository.save(notification);
+    }
+
+    @Override
+    public void unread(User currentUser, PostMentionNotification notification) {
+        if (!currentUser.has(notification))
+            throw new ResourceNotFoundException("Cannot unread notification! because current user doesn't owned this notification!");
+
+        notification.unread();
         postMentionNotificationRepository.save(notification);
     }
 

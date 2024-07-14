@@ -22,16 +22,12 @@ import org.springframework.validation.annotation.Validated;
 @Transactional
 @RequiredArgsConstructor
 public class SharedPostNotificationServiceImpl implements SharedPostNotificationService {
-    private final UserRepository userRepository;
-
     private final SharedPostNotificationRepository sharedPostNotificationRepository;
     private final SharedPostNotificationMapper sharedPostNotificationMapper;
 
     @Override
     public Page<SharedPostNotification> getAll(User currentUser, Notification.Status status, Pageable pageable) {
-        return userRepository.findAllSharedPostNotifications(currentUser, pageable).stream()
-                .filter(notification -> notification.getStatus() == status)
-                .toList();
+        return sharedPostNotificationRepository.findAll(currentUser, status, pageable);
     }
 
     @Override
@@ -46,6 +42,11 @@ public class SharedPostNotificationServiceImpl implements SharedPostNotification
 
         notification.read();
         sharedPostNotificationRepository.save(notification);
+    }
+
+    @Override
+    public void unread(User currentUser, SharedPostNotification notification) {
+
     }
 
     @Override

@@ -46,13 +46,6 @@ public class MentionServiceImpl implements MentionService {
 
     @Override
     public Page<Mention> getAll(Pageable pageable) {
-        return mentionRepository.findAll(pageable).getContent();
-    }
-
-    @Override
-    public List<Mention> getAllById(List<Integer> ids) {
-        return mentionRepository.findAllById(ids).stream()
-                .sorted(Comparator.comparing(PrimaryKeyIdentity::getCreatedAt).reversed())
-                .toList();
+        return mentionRepository.findAll(pageable);
     }
 }
