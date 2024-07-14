@@ -9,11 +9,4 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface HashTagRepository extends JpaRepository<HashTag, Integer> {
-
-    @Query("""
-            SELECT h.posts
-            FROM HashTag h
-            WHERE h.keyword LIKE CONCAT('%', :keyword, '%')
-            """)
-    Page<Post> getAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

@@ -11,9 +11,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
-    @Query("SELECT p.comments FROM Post p WHERE p = :post")
-    Page<Comment> findAllComments(@Param("post") Post post, Pageable pageable);
-
-    @Query("SELECT p.reactions FROM Post p WHERE p = :post")
-    Page<Reaction> findAllReactions(@Param("post") Post post, Pageable pageable);
+    @Query("""
+            SELECT p
+            FROM Post p
+            JOIN p.hashTags hashtag
+            WHERE hashtag.keyword
+            LIKE CONCAT('%', :keyword, '%')
+            """)
+    Page<Post> getAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

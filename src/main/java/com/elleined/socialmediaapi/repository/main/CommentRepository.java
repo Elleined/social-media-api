@@ -1,6 +1,7 @@
 package com.elleined.socialmediaapi.repository.main;
 
 import com.elleined.socialmediaapi.model.main.comment.Comment;
+import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.reaction.Reaction;
 import com.elleined.socialmediaapi.model.vote.Vote;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,11 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
-    @Query("SELECT c.reactions FROM Comment c WHERE c = :comment")
-    Page<Reaction> findAllReactions(@Param("comment") Comment comment, Pageable pageable);
+
+    @Query("""
+            SELECT c
+            FROM Comment c
+            WHERE c.post = :post
+            """)
+    Page<Comment> findAll(@Param("post") Post post, Pageable pageable);
 }
