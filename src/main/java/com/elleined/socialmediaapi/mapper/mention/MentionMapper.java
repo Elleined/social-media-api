@@ -2,6 +2,7 @@ package com.elleined.socialmediaapi.mapper.mention;
 
 import com.elleined.socialmediaapi.dto.mention.MentionDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
+import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import org.mapstruct.Context;
@@ -9,7 +10,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                UserMapper.class
+        }
+)
 public interface MentionMapper extends CustomMapper<Mention, MentionDTO> {
 
     @Override
@@ -17,12 +23,8 @@ public interface MentionMapper extends CustomMapper<Mention, MentionDTO> {
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "mentionedUserId", source = "mentionedUser.id"),
-            @Mapping(target = "postIds", expression = "java(mention.getAllPostIds())"),
-            @Mapping(target = "commentIds", expression = "java(mention.getAllCommentIds())"),
-            @Mapping(target = "replyIds", expression = "java(mention.getAllReplyIds())"),
-            @Mapping(target = "storyIds", expression = "java(mention.getAllStoryIds())")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "mentionedUserDTO", source = "mentionedUser")
     })
     MentionDTO toDTO(Mention mention);
 

@@ -2,6 +2,8 @@ package com.elleined.socialmediaapi.mapper.notification.friend;
 
 import com.elleined.socialmediaapi.dto.notification.friend.FriendRequestNotificationDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
+import com.elleined.socialmediaapi.mapper.friend.FriendRequestMapper;
+import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.friend.FriendRequest;
 import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.friend.FriendRequestNotification;
@@ -10,7 +12,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", imports = {Notification.Status.class})
+@Mapper(
+        componentModel = "spring",
+        imports = {
+                Notification.Status.class
+        },
+        uses = {
+                UserMapper.class,
+                FriendRequestMapper.class
+        }
+)
 public interface FriendRequestNotificationMapper extends CustomMapper<FriendRequestNotification, FriendRequestNotificationDTO> {
 
     @Override
@@ -19,9 +30,9 @@ public interface FriendRequestNotificationMapper extends CustomMapper<FriendRequ
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "friendRequestId", source = "friendRequest.id"),
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "friendRequestDTO", source = "friendRequest"),
             @Mapping(target = "message", source = "message"),
     })
     FriendRequestNotificationDTO toDTO(FriendRequestNotification friendRequestNotification);

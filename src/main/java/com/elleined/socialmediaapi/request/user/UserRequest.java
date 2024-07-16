@@ -3,14 +3,15 @@ package com.elleined.socialmediaapi.request.user;
 import com.elleined.socialmediaapi.request.Request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 public class UserRequest extends Request {
 
     @NotBlank(message = "Please provide your name")
@@ -22,13 +23,4 @@ public class UserRequest extends Request {
     @NotBlank(message = "Please provide your email")
     @Email(message = "Please provide valid email")
     private String email;
-
-    @Builder
-    public UserRequest(String name,
-                       String picture,
-                       String email) {
-        this.name = name;
-        this.picture = picture;
-        this.email = email;
-    }
 }

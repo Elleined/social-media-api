@@ -4,6 +4,12 @@ import com.elleined.socialmediaapi.dto.notification.mention.CommentMentionNotifi
 import com.elleined.socialmediaapi.dto.notification.mention.PostMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.ReplyMentionNotificationDTO;
 import com.elleined.socialmediaapi.dto.notification.mention.StoryMentionNotificationDTO;
+import com.elleined.socialmediaapi.mapper.main.CommentMapper;
+import com.elleined.socialmediaapi.mapper.main.PostMapper;
+import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
+import com.elleined.socialmediaapi.mapper.mention.MentionMapper;
+import com.elleined.socialmediaapi.mapper.story.StoryMapper;
+import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
@@ -19,7 +25,21 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", imports = {Notification.Status.class})
+@Mapper(
+        componentModel = "spring",
+        imports = {
+                Notification.Status.class
+        },
+        uses = {
+                UserMapper.class,
+                MentionMapper.class,
+                PostMapper.class,
+                CommentMapper.class,
+                ReplyMapper.class,
+                StoryMapper.class,
+                MentionMapper.class
+        }
+)
 public interface MentionNotificationMapper {
 
     @Mappings({
@@ -27,10 +47,10 @@ public interface MentionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(mention.getMentionedUser())"),
-            @Mapping(target = "mention", expression = "java(mention)"),
-            @Mapping(target = "post", expression = "java(post)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "mention.mentionedUser"),
+            @Mapping(target = "mention", source = "mention"),
+            @Mapping(target = "post", source = "post")
     })
     PostMentionNotification toEntity(User creator, Mention mention, Post post);
 
@@ -39,10 +59,10 @@ public interface MentionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(mention.getMentionedUser())"),
-            @Mapping(target = "mention", expression = "java(mention)"),
-            @Mapping(target = "comment", expression = "java(comment)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "mention.mentionedUser"),
+            @Mapping(target = "mention", source = "mention"),
+            @Mapping(target = "comment", source = "comment")
     })
     CommentMentionNotification toEntity(User creator, Mention mention, Comment comment);
 
@@ -51,10 +71,10 @@ public interface MentionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(mention.getMentionedUser())"),
-            @Mapping(target = "mention", expression = "java(mention)"),
-            @Mapping(target = "reply", expression = "java(reply)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "mention.mentionedUser"),
+            @Mapping(target = "mention", source = "mention"),
+            @Mapping(target = "reply", source = "reply")
     })
     ReplyMentionNotification toEntity(User creator, Mention mention, Reply reply);
 
@@ -63,10 +83,10 @@ public interface MentionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(mention.getMentionedUser())"),
-            @Mapping(target = "mention", expression = "java(mention)"),
-            @Mapping(target = "story", expression = "java(story)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "mention.mentionedUser"),
+            @Mapping(target = "mention", source = "mention"),
+            @Mapping(target = "story", source = "story")
     })
     StoryMentionNotification toEntity(User creator, Mention mention, Story story);
 
@@ -76,10 +96,10 @@ public interface MentionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(postMentionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "mentionId", source = "mention.id"),
-            @Mapping(target = "postId", source = "post.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "mentionDTO", source = "mention"),
+            @Mapping(target = "postDTO", source = "post")
     })
     PostMentionNotificationDTO toDTO(PostMentionNotification postMentionNotification);
 
@@ -89,10 +109,10 @@ public interface MentionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(commentMentionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "mentionId", source = "mention.id"),
-            @Mapping(target = "commentId", source = "comment.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "mentionDTO", source = "mention"),
+            @Mapping(target = "commentDTO", source = "comment")
     })
     CommentMentionNotificationDTO toDTO(CommentMentionNotification commentMentionNotification);
 
@@ -102,10 +122,10 @@ public interface MentionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(replyMentionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "mentionId", source = "mention.id"),
-            @Mapping(target = "replyId", source = "reply.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "mentionDTO", source = "mention"),
+            @Mapping(target = "replyDTO", source = "reply")
     })
     ReplyMentionNotificationDTO toDTO(ReplyMentionNotification replyMentionNotification);
 
@@ -115,10 +135,10 @@ public interface MentionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(storyMentionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "mentionId", source = "mention.id"),
-            @Mapping(target = "storyId", source = "story.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "mentionDTO", source = "mention"),
+            @Mapping(target = "storyDTO", source = "story")
     })
     StoryMentionNotificationDTO toDTO(StoryMentionNotification storyMentionNotification);
 

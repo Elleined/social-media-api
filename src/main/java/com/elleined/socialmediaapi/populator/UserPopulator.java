@@ -4,7 +4,6 @@ import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class UserPopulator implements Populator {

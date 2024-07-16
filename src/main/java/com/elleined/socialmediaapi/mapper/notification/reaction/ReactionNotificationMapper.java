@@ -1,6 +1,13 @@
 package com.elleined.socialmediaapi.mapper.notification.reaction;
 
 import com.elleined.socialmediaapi.dto.notification.reaction.*;
+import com.elleined.socialmediaapi.mapper.main.CommentMapper;
+import com.elleined.socialmediaapi.mapper.main.PostMapper;
+import com.elleined.socialmediaapi.mapper.main.ReplyMapper;
+import com.elleined.socialmediaapi.mapper.note.NoteMapper;
+import com.elleined.socialmediaapi.mapper.react.ReactionMapper;
+import com.elleined.socialmediaapi.mapper.story.StoryMapper;
+import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.main.comment.Comment;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.main.reply.Reply;
@@ -14,7 +21,21 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", imports = {Notification.Status.class})
+@Mapper(
+        componentModel = "spring",
+        imports = {
+                Notification.Status.class
+        },
+        uses = {
+                UserMapper.class,
+                PostMapper.class,
+                CommentMapper.class,
+                ReplyMapper.class,
+                NoteMapper.class,
+                StoryMapper.class,
+                ReactionMapper.class
+        }
+)
 public interface ReactionNotificationMapper {
 
     @Mappings({
@@ -22,10 +43,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(post.getCreator())"),
-            @Mapping(target = "reaction", expression = "java(reaction)"),
-            @Mapping(target = "post", expression = "java(post)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "post.creator"),
+            @Mapping(target = "reaction", source = "reaction"),
+            @Mapping(target = "post", source = "post")
     })
     PostReactionNotification toEntity(User creator, Post post, Reaction reaction);
 
@@ -34,10 +55,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(comment.getCreator())"),
-            @Mapping(target = "reaction", expression = "java(reaction)"),
-            @Mapping(target = "comment", expression = "java(comment)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "comment.creator"),
+            @Mapping(target = "reaction", source = "reaction"),
+            @Mapping(target = "comment", source = "comment")
     })
     CommentReactionNotification toEntity(User creator, Comment comment, Reaction reaction);
 
@@ -46,10 +67,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(reply.getCreator())"),
-            @Mapping(target = "reaction", expression = "java(reaction)"),
-            @Mapping(target = "reply", expression = "java(reply)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "reply.creator"),
+            @Mapping(target = "reaction", source = "reaction"),
+            @Mapping(target = "reply", source = "reply")
     })
     ReplyReactionNotification toEntity(User creator, Reply reply, Reaction reaction);
 
@@ -58,10 +79,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(story.getCreator())"),
-            @Mapping(target = "reaction", expression = "java(reaction)"),
-            @Mapping(target = "story", expression = "java(story)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "story.creator"),
+            @Mapping(target = "reaction", source = "reaction"),
+            @Mapping(target = "story", source = "story")
     })
     StoryReactionNotification toEntity(User creator, Story story, Reaction reaction);
 
@@ -70,10 +91,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "status", expression = "java(Status.UN_READ)"),
-            @Mapping(target = "creator", expression = "java(creator)"),
-            @Mapping(target = "receiver", expression = "java(note.getCreator())"),
-            @Mapping(target = "reaction", expression = "java(reaction)"),
-            @Mapping(target = "note", expression = "java(note)")
+            @Mapping(target = "creator", source = "creator"),
+            @Mapping(target = "receiver", source = "note.creator"),
+            @Mapping(target = "reaction", source = "reaction"),
+            @Mapping(target = "note", source = "note")
     })
     NoteReactionNotification toEntity(User creator, Note note, Reaction reaction);
 
@@ -83,10 +104,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(postReactionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "reactionId", source = "reaction.id"),
-            @Mapping(target = "postId", source = "post.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "reactionDTO", source = "reaction"),
+            @Mapping(target = "postDTO", source = "post")
     })
     PostReactionNotificationDTO toDTO(PostReactionNotification postReactionNotification);
 
@@ -96,10 +117,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(commentReactionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "reactionId", source = "reaction.id"),
-            @Mapping(target = "commentId", source = "comment.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "reactionDTO", source = "reaction"),
+            @Mapping(target = "commentDTO", source = "comment")
     })
     CommentReactionNotificationDTO toDTO(CommentReactionNotification commentReactionNotification);
 
@@ -109,10 +130,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(replyReactionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "reactionId", source = "reaction.id"),
-            @Mapping(target = "replyId", source = "reply.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "reactionDTO", source = "reaction"),
+            @Mapping(target = "replyDTO", source = "reply")
     })
     ReplyReactionNotificationDTO toDTO(ReplyReactionNotification replyReactionNotification);
 
@@ -122,10 +143,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(storyReactionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "reactionId", source = "reaction.id"),
-            @Mapping(target = "storyId", source = "story.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "reactionDTO", source = "reaction"),
+            @Mapping(target = "storyDTO", source = "story")
     })
     StoryReactionNotificationDTO toDTO(StoryReactionNotification storyReactionNotification);
 
@@ -135,10 +156,10 @@ public interface ReactionNotificationMapper {
             @Mapping(target = "updatedAt", source = "updatedAt"),
             @Mapping(target = "message", expression = "java(noteReactionNotification.getMessage())"),
             @Mapping(target = "status", source = "status"),
-            @Mapping(target = "creatorId", source = "creator.id"),
-            @Mapping(target = "receiverId", source = "receiver.id"),
-            @Mapping(target = "reactionId", source = "reaction.id"),
-            @Mapping(target = "noteId", source = "note.id")
+            @Mapping(target = "creatorDTO", source = "creator"),
+            @Mapping(target = "receiverDTO", source = "receiver"),
+            @Mapping(target = "reactionDTO", source = "reaction"),
+            @Mapping(target = "noteDTO", source = "note")
     })
     NoteReactionNotificationDTO toDTO(NoteReactionNotification noteReactionNotification);
 }
