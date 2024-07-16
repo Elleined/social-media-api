@@ -17,10 +17,10 @@ public class WSServiceImpl implements WSService {
     @Override
     public void broadcastOnComment(CommentDTO commentDTO) {
         commentDTO.setBody(HtmlUtils.htmlEscape(commentDTO.getBody()));
-        int postId = commentDTO.getPostId();
+        int postId = commentDTO.getPostDTO().getId();
         int commentId = commentDTO.getId();
 
-        final String destination = STR."/sma/posts/\{commentDTO.getPostId()}/comments";
+        final String destination = STR."/sma/posts/\{postId}/comments";
         simpMessagingTemplate.convertAndSend(destination, commentDTO);
         log.debug("Broadcasting comment with id of {} in post with id of {} success", commentId, postId);
     }
@@ -28,11 +28,11 @@ public class WSServiceImpl implements WSService {
     @Override
     public void broadcastOnReply(ReplyDTO replyDTO) {
         replyDTO.setBody(HtmlUtils.htmlEscape(replyDTO.getBody()));
-        int postId = replyDTO.getPostId();
-        int commentId = replyDTO.getCommentId();
+        int postId = replyDTO.getCommentDTO().getPostDTO().getId();
+        int commentId = replyDTO.getCommentDTO().getId();
         int replyId = replyDTO.getId();
 
-        final String destination = STR."/sma/posts\{postId}/comments/\{replyDTO.getCommentId()}/replies";
+        final String destination = STR."/sma/posts\{postId}/comments/\{commentId}/replies";
         simpMessagingTemplate.convertAndSend(destination, replyDTO);
         log.debug("Broadcasting reply with id of {} to comment with id of {} success", replyId, commentId);
     }

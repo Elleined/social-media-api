@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.reaction;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.reaction.StoryReactionNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,9 @@ public interface StoryReactionNotificationRepository extends ReactionNotificatio
             SELECT srn
             FROM StoryReactionNotification srn
             WHERE srn.receiver = :currentUser
+            AND srn.status = :status
             """)
-    Page<StoryReactionNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<StoryReactionNotification> findAll(@Param("currentUser") User currentUser,
+                                            @Param("status") Notification.Status status,
+                                            Pageable pageable);
 }

@@ -27,10 +27,10 @@ import java.time.LocalDateTime;
 @Transactional
 @RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService, FriendServiceRestriction {
-    private final UserRepository userRepository;
-
     private final FriendRequestRepository friendRequestRepository;
     private final FriendRequestMapper friendRequestMapper;
+
+    private final UserRepository userRepository;
 
     private final BlockService blockService;
 
@@ -120,7 +120,7 @@ public class FriendServiceImpl implements FriendService, FriendServiceRestrictio
 
     @Override
     public Page<FriendRequest> getAllFriendRequests(User currentUser, Pageable pageable) {
-        return userRepository.findAllFriendRequests(currentUser, pageable);
+        return friendRequestRepository.findAll(currentUser, pageable);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.follow;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.follow.FollowerNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,9 @@ public interface FollowerNotificationRepository extends JpaRepository<FollowerNo
             SELECT fn
             FROM FollowerNotification fn
             WHERE fn.receiver = :currentUser
+            AND fn.status = :status
             """)
-    Page<FollowerNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<FollowerNotification> findAll(@Param("currentUser") User currentUser,
+                                       @Param("status") Notification.Status status,
+                                       Pageable pageable);
 }

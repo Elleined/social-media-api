@@ -33,5 +33,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             WHERE hashtag.keyword
             LIKE CONCAT('%', :keyword, '%')
             """)
-    Page<Post> getAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
+    Page<Post> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

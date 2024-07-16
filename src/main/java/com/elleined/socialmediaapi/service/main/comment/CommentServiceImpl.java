@@ -13,7 +13,6 @@ import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.mention.Mention;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.main.CommentRepository;
-import com.elleined.socialmediaapi.repository.main.PostRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.pin.PostPinCommentService;
@@ -39,12 +38,10 @@ import java.util.Set;
 @Transactional
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService, CommentServiceRestriction {
-    private final BlockService blockService;
-
-    private final PostRepository postRepository;
-
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+
+    private final BlockService blockService;
 
     private final PostPinCommentService postPinCommentService;
 
@@ -115,7 +112,7 @@ public class CommentServiceImpl implements CommentService, CommentServiceRestric
             throw new CommentSectionException("Cannot save comment! because cannot comment because author already closed the comment section for this post!");
 
         Comment pinnedComment = post.getPinnedComment();
-        List<Comment> comments = postRepository.findAllComments(post, pageable).stream()
+        List<Comment> comments = commentRepository.findAll(post, pageable).stream()
                 .filter(Comment::isActive)
                 .filter(comment -> !comment.equals(pinnedComment))
                 .filter(comment -> !blockService.isBlockedByYou(currentUser, comment.getCreator()))

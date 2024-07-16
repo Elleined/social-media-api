@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.mention;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.mention.ReplyMentionNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,9 @@ public interface ReplyMentionNotificationRepository extends MentionNotificationR
             SELECT rmn
             FROM ReplyMentionNotification rmn
             WHERE rmn.receiver = :currentUser
+            AND rmn.status = :status
             """)
-    Page<ReplyMentionNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<ReplyMentionNotification> findAll(@Param("currentUser") User currentUser,
+                                           @Param("status") Notification.Status status,
+                                           Pageable pageable);
 }

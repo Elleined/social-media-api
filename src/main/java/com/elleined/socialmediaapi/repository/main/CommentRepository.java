@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
@@ -16,5 +18,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             FROM Comment c
             WHERE c.post = :post
             """)
-    Page<Comment> findAll(@Param("post") Post post, Pageable pageable);
+    List<Comment> findAll(@Param("post") Post post, Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.mention;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.mention.PostMentionNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,9 @@ public interface PostMentionNotificationRepository extends MentionNotificationRe
             SELECT pmn
             FROM PostMentionNotification pmn
             WHERE pmn.receiver = :currentUser
+            AND pmn.status = :status
             """)
-    Page<PostMentionNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<PostMentionNotification> findAll(@Param("currentUser") User currentUser,
+                                          @Param("status") Notification.Status status,
+                                          Pageable pageable);
 }

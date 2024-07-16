@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.main;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.main.CommentNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.notification.NotificationRepository;
@@ -14,6 +15,9 @@ public interface CommentNotificationRepository extends NotificationRepository<Co
             SELECT cn
             FROM CommentNotification cn
             WHERE cn.receiver = :currentUser
+            AND cn.status = :status
             """)
-    Page<CommentNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<CommentNotification> findAll(@Param("currentUser") User currentUser,
+                                      @Param("status") Notification.Status status,
+                                      Pageable pageable);
 }

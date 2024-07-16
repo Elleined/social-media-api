@@ -35,11 +35,12 @@ import java.util.Set;
 @Transactional
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService, PostServiceRestriction {
-    private final UserRepository userRepository;
-    private final BlockService blockService;
-
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+
+    private final UserRepository userRepository;
+
+    private final BlockService blockService;
 
     private final UserServiceRestriction userServiceRestriction;
 
@@ -204,7 +205,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     @Override
     public Page<Post> getAllSavedPosts(User currentUser, Pageable pageable) {
-        List<Post> posts = userRepository.findAllSavedPosts(currentUser, pageable).stream()
+        List<Post> posts = postRepository.findAllSavedPosts(currentUser, pageable).stream()
                 .filter(Post::isActive)
                 .toList();
         return PageableUtil.toPage(posts, pageable);
@@ -242,7 +243,7 @@ public class PostServiceImpl implements PostService, PostServiceRestriction {
 
     @Override
     public Page<Post> getAllSharedPosts(User currentUser, Pageable pageable) {
-        List<Post> posts = userRepository.findAllSharedPosts(currentUser, pageable).stream()
+        List<Post> posts = postRepository.findAllSharedPosts(currentUser, pageable).stream()
                 .filter(Post::isActive)
                 .toList();
 

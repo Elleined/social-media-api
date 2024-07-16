@@ -21,4 +21,8 @@ public abstract class NotificationDTO extends DTO {
     public boolean isRead() {
         return status == Notification.Status.READ;
     }
+
+    public int getReceiverId() {
+        return this.getReceiverDTO().getId();
+    }
 }

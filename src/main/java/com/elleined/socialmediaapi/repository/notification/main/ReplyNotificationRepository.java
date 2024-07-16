@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.main;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.main.ReplyNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.repository.notification.NotificationRepository;
@@ -14,6 +15,9 @@ public interface ReplyNotificationRepository extends NotificationRepository<Repl
             SELECT rn
             FROM ReplyNotification rn
             WHERE rn.receiver = :currentUser
+            AND rn.status = :status
             """)
-    Page<ReplyNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<ReplyNotification> findAll(@Param("currentUser") User currentUser,
+                                    @Param("status") Notification.Status status,
+                                    Pageable pageable);
 }

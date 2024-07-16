@@ -19,12 +19,9 @@ import com.elleined.socialmediaapi.repository.note.NoteRepository;
 import com.elleined.socialmediaapi.repository.react.ReactionRepository;
 import com.elleined.socialmediaapi.repository.story.StoryRepository;
 import com.elleined.socialmediaapi.service.block.BlockService;
-import com.elleined.socialmediaapi.service.main.comment.CommentService;
 import com.elleined.socialmediaapi.service.main.comment.CommentServiceRestriction;
-import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.main.post.PostServiceRestriction;
 import com.elleined.socialmediaapi.service.main.reply.ReplyRestrictionService;
-import com.elleined.socialmediaapi.service.main.reply.ReplyService;
 import com.elleined.socialmediaapi.service.user.UserServiceRestriction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,20 +40,16 @@ import java.time.LocalDateTime;
 @Transactional
 @RequiredArgsConstructor
 public class ReactionServiceImpl implements ReactionService {
-    private final NoteRepository noteRepository;
+    private final ReactionRepository reactionRepository;
+    private final ReactionMapper reactionMapper;
+
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
+    private final NoteRepository noteRepository;
     private final StoryRepository storyRepository;
 
     private final BlockService blockService;
-
-    private final PostService postService;
-    private final CommentService commentService;
-    private final ReplyService replyService;
-
-    private final ReactionRepository reactionRepository;
-    private final ReactionMapper reactionMapper;
 
     private final UserServiceRestriction userServiceRestriction;
     private final PostServiceRestriction postServiceRestriction;
@@ -83,7 +76,7 @@ public class ReactionServiceImpl implements ReactionService {
         reactionRepository.save(reaction);
 
         post.getReactions().add(reaction);
-        postService.save(post);
+        postRepository.save(post);
         log.debug("Reacting to post with id of {} success with emoji id of {}", post.getId(), emoji.getId());
         return reaction;
     }
@@ -109,7 +102,7 @@ public class ReactionServiceImpl implements ReactionService {
         reactionRepository.save(reaction);
 
         comment.getReactions().add(reaction);
-        commentService.save(comment);
+        commentRepository.save(comment);
         log.debug("Reacting to comment with id of {} success with emoji id of {}", comment.getId(), emoji.getId());
         return reaction;
     }
@@ -141,7 +134,7 @@ public class ReactionServiceImpl implements ReactionService {
         reactionRepository.save(reaction);
 
         reply.getReactions().add(reaction);
-        replyService.save(reply);
+        replyRepository.save(reply);
         log.debug("Reacting to reply with id of {} success with emoji id of {}", reply.getId(), emoji.getId());
         return reaction;
     }
@@ -389,7 +382,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (post.isInactive())
             throw new ResourceNotFoundException("Cannot retrieve reactions to this post! because this might be already deleted or doesn't exists!");
 
-        return postRepository.findAllReactions(post, pageable);
+        return reactionRepository.findAll(post, pageable);
     }
 
     @Override
@@ -403,7 +396,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (comment.isInactive())
             throw new ResourceNotFoundException("Cannot get all reactions to this comment! because comment might be already deleted or doesn't exists!");
 
-        return commentRepository.findAllReactions(comment, pageable);
+        return reactionRepository.findAll(comment, pageable);
     }
 
     @Override
@@ -423,7 +416,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (reply.isInactive())
             throw new ResourceNotFoundException("Cannot get all reactions to this reply! because reply might be already deleted or doesn't exists!");
 
-        return replyRepository.findAllReactions(reply, pageable);
+        return reactionRepository.findAll(reply, pageable);
     }
 
     @Override
@@ -431,7 +424,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (userServiceRestriction.notOwned(currentUser, story))
             throw new ResourceNotOwnedException("Current user doesn't owned this story!");
 
-        return storyRepository.findAllReactions(story, pageable);
+        return reactionRepository.findAll(story, pageable);
     }
 
     @Override
@@ -439,7 +432,7 @@ public class ReactionServiceImpl implements ReactionService {
         if (userServiceRestriction.notOwned(currentUser, note))
             throw new ResourceNotOwnedException("Current user doesn't owned this note!");
 
-        return noteRepository.findAllReactions(note, pageable);
+        return reactionRepository.findAll(note, pageable);
     }
 
     @Override

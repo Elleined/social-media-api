@@ -5,6 +5,7 @@ import com.elleined.socialmediaapi.mapper.hashtag.HashTagMapper;
 import com.elleined.socialmediaapi.model.hashtag.HashTag;
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.repository.hashtag.HashTagRepository;
+import com.elleined.socialmediaapi.repository.main.PostRepository;
 import com.elleined.socialmediaapi.validator.PageableUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,8 @@ import java.util.List;
 public class HashTagServiceImpl implements HashTagService {
     private final HashTagRepository hashTagRepository;
     private final HashTagMapper hashTagMapper;
+
+    private final PostRepository postRepository;
 
     @Override
     public HashTag save(HashTag hashTag) {
@@ -57,7 +60,7 @@ public class HashTagServiceImpl implements HashTagService {
 
     @Override
     public Page<Post> getAllByKeyword(String keyword, Pageable pageable) {
-        List<Post> posts = hashTagRepository.getAllByKeyword(keyword, pageable)
+        List<Post> posts = postRepository.findAllByKeyword(keyword, pageable)
                 .filter(Post::isActive)
                 .toList();
 

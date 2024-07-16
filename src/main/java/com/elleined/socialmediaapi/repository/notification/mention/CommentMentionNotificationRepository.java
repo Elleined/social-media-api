@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.mention;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.mention.CommentMentionNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,9 @@ public interface CommentMentionNotificationRepository extends MentionNotificatio
             SELECT cmn
             FROM CommentMentionNotification cmn
             WHERE cmn.receiver = :currentUser
+            AND cmn.status = :status
             """)
-    Page<CommentMentionNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<CommentMentionNotification> findAll(@Param("currentUser") User currentUser,
+                                             @Param("status") Notification.Status status,
+                                             Pageable pageable);
 }

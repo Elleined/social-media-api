@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.post;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.post.SharedPostNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,9 @@ public interface SharedPostNotificationRepository extends JpaRepository<SharedPo
             SELECT spn
             FROM SharedPostNotification spn
             WHERE spn.receiver = :currentUser
+            AND spn.status = :status
             """)
-    Page<SharedPostNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<SharedPostNotification> findAll(@Param("currentUser") User currentUser,
+                                         @Param("status") Notification.Status status,
+                                         Pageable pageable);
 }

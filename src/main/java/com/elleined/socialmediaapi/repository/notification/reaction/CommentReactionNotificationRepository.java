@@ -1,5 +1,6 @@
 package com.elleined.socialmediaapi.repository.notification.reaction;
 
+import com.elleined.socialmediaapi.model.notification.Notification;
 import com.elleined.socialmediaapi.model.notification.reaction.CommentReactionNotification;
 import com.elleined.socialmediaapi.model.user.User;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,9 @@ public interface CommentReactionNotificationRepository extends ReactionNotificat
             SELECT crn
             FROM CommentReactionNotification crn
             WHERE crn.receiver = :currentUser
+            AND crn.status = :status
             """)
-    Page<CommentReactionNotification> findAll(@Param("currentUser") User currentUser, Pageable pageable);
+    Page<CommentReactionNotification> findAll(@Param("currentUser") User currentUser,
+                                              @Param("status") Notification.Status status,
+                                              Pageable pageable);
 }
