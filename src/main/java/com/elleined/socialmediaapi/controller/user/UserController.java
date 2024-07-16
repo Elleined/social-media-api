@@ -7,12 +7,11 @@ import com.elleined.socialmediaapi.request.user.UserRequest;
 import com.elleined.socialmediaapi.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,13 +32,6 @@ public class UserController {
         return userMapper.toDTO(user);
     }
 
-    @GetMapping("/get-all-by-id")
-    public List<UserDTO> getAllById(@RequestBody List<Integer> ids) {
-        return userService.getAllById(ids).stream()
-                .map(userMapper::toDTO)
-                .toList();
-    }
-
     @GetMapping("/uuid/{uuid}")
     public UserDTO getByUUID(@PathVariable("uuid") String uuid) {
         User user = userService.getByUUID(uuid);
@@ -47,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/{currentUserId}/mention/suggested-users")
-    public List<UserDTO> getAllSuggestedMentions(@PathVariable("currentUserId") int currentUserId,
+    public Page<UserDTO> getAllSuggestedMentions(@PathVariable("currentUserId") int currentUserId,
                                                  @RequestParam("name") String name,
                                                  @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                  @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
@@ -57,8 +49,7 @@ public class UserController {
         User currentUser = userService.getById(currentUserId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return userService.getAllSuggestedMentions(currentUser, name, pageable).stream()
-                .map(userMapper::toDTO)
-                .toList();
+        return userService.getAllSuggestedMentions(currentUser, name, pageable)
+                .map(userMapper::toDTO);
     }
 }

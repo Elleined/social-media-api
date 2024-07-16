@@ -8,6 +8,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.notification.main.comment.CommentNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,7 +26,7 @@ public class CommentNotificationController {
     private final CommentNotificationMapper commentNotificationMapper;
 
     @GetMapping
-    public List<CommentNotificationDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<CommentNotificationDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                                @RequestParam("status") Notification.Status status,
                                                @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
@@ -35,9 +36,8 @@ public class CommentNotificationController {
         User currentUser = userService.getById(currentUserId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return commentNotificationService.getAll(currentUser, status, pageable).stream()
-                .map(commentNotificationMapper::toDTO)
-                .toList();
+        return commentNotificationService.getAll(currentUser, status, pageable)
+                .map(commentNotificationMapper::toDTO);
     }
 
     @PostMapping("/{id}/read")

@@ -8,6 +8,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.notification.follow.FollowerNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,7 +26,7 @@ public class FollowerNotificationController {
     private final FollowerNotificationMapper followerNotificationMapper;
 
     @GetMapping
-    public List<FollowerNotificationDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<FollowerNotificationDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                                 @RequestParam("status") Notification.Status status,
                                                 @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                 @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
@@ -35,9 +36,8 @@ public class FollowerNotificationController {
         User currentUser = userService.getById(currentUserId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return followerNotificationService.getAll(currentUser, status, pageable).stream()
-                .map(followerNotificationMapper::toDTO)
-                .toList();
+        return followerNotificationService.getAll(currentUser, status, pageable)
+                .map(followerNotificationMapper::toDTO);
     }
 
     @PostMapping("/{id}/read")

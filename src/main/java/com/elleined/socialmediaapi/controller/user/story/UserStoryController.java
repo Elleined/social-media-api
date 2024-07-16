@@ -55,7 +55,7 @@ public class UserStoryController {
         User currentUser = userService.getById(currentUserId);
 
         // Saving entities
-        Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
+        Set<Mention> mentions = mentionService.saveAll(currentUser, userService.getAllById(mentionedUserIds));
         Story story = storyService.save(currentUser, content, attachedPicture, mentions);
         List<StoryMentionNotification> storyMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, story);
 

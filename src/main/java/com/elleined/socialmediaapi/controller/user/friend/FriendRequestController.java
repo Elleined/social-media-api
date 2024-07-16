@@ -12,6 +12,7 @@ import com.elleined.socialmediaapi.service.notification.friend.FriendRequestNoti
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,7 +36,7 @@ public class FriendRequestController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public List<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId,
+    public Page<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId,
                                                        @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                        @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                                        @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
@@ -44,22 +45,14 @@ public class FriendRequestController {
         User currentUser = userService.getById(currentUserId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return friendService.getAllFriendRequests(currentUser, pageable).stream()
-                .map(friendRequestMapper::toDTO)
-                .toList();
+        return friendService.getAllFriendRequests(currentUser, pageable)
+                .map(friendRequestMapper::toDTO);
     }
 
     @GetMapping("/{id}")
     public FriendRequestDTO getById(@PathVariable("id") int id) {
         FriendRequest friendRequest = friendService.getById(id);
         return friendRequestMapper.toDTO(friendRequest);
-    }
-
-    @GetMapping("/get-all-by-id")
-    public List<FriendRequestDTO> getAllById(@RequestBody List<Integer> ids) {
-        return friendService.getAllById(ids).stream()
-                .map(friendRequestMapper::toDTO)
-                .toList();
     }
 
     @PostMapping("/{userToAddId}/send")

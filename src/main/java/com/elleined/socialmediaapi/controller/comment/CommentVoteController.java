@@ -11,12 +11,11 @@ import com.elleined.socialmediaapi.service.main.post.PostService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.service.vote.VoteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,7 +30,7 @@ public class CommentVoteController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<VoteDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<VoteDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                 @PathVariable("postId") int postId,
                                 @PathVariable("commentId") int commentId,
                                 @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -44,9 +43,8 @@ public class CommentVoteController {
         Comment comment = commentService.getById(commentId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return voteService.getAll(currentUser, post, comment, pageable).stream()
-                .map(voteMapper::toDTO)
-                .toList();
+        return voteService.getAll(currentUser, post, comment, pageable)
+                .map(voteMapper::toDTO);
     }
 
     @GetMapping("/{id}")
@@ -55,15 +53,8 @@ public class CommentVoteController {
         return voteMapper.toDTO(vote);
     }
 
-    @GetMapping("/get-all-by-id")
-    public List<VoteDTO> getAllById(@RequestBody List<Integer> ids) {
-        return voteService.getAllById(ids).stream()
-                .map(voteMapper::toDTO)
-                .toList();
-    }
-
     @GetMapping("/verdict")
-    public List<VoteDTO> getAllByVerdict(@PathVariable("currentUserId") int currentUserId,
+    public Page<VoteDTO> getAllByVerdict(@PathVariable("currentUserId") int currentUserId,
                                          @PathVariable("postId") int postId,
                                          @PathVariable("commentId") int commentId,
                                          @RequestParam("verdict") Vote.Verdict verdict,
@@ -77,9 +68,8 @@ public class CommentVoteController {
         Comment comment = commentService.getById(commentId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return voteService.getAll(currentUser, post, comment, verdict, pageable).stream()
-                .map(voteMapper::toDTO)
-                .toList();
+        return voteService.getAll(currentUser, post, comment, verdict, pageable)
+                .map(voteMapper::toDTO);
     }
 
     @PostMapping

@@ -6,6 +6,7 @@ import com.elleined.socialmediaapi.model.reaction.Emoji;
 import com.elleined.socialmediaapi.service.emoji.EmojiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,15 +23,14 @@ public class EmojiController {
     private final EmojiMapper emojiMapper;
 
     @GetMapping
-    public List<EmojiDTO> getAll(@RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+    public Page<EmojiDTO> getAll(@RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                  @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                  @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                  @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
-        return emojiService.getAll(pageable).stream()
-                .map(emojiMapper::toDTO)
-                .toList();
+        return emojiService.getAll(pageable)
+                .map(emojiMapper::toDTO);
     }
 
     @GetMapping("/{id}")
@@ -38,12 +38,4 @@ public class EmojiController {
         Emoji emoji = emojiService.getById(id);
         return emojiMapper.toDTO(emoji);
     }
-
-    @GetMapping("/get-all-by-id")
-    public List<EmojiDTO> getAllById(@RequestBody List<Integer> ids) {
-        return emojiService.getAllById(ids).stream()
-                .map(emojiMapper::toDTO)
-                .toList();
-    }
-
 }

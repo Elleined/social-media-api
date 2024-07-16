@@ -24,6 +24,7 @@ import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.ws.WSService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -60,7 +61,7 @@ public class CommentController {
     private final MentionNotificationMapper mentionNotificationMapper;
 
     @GetMapping
-    public List<CommentDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<CommentDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                    @PathVariable("postId") int postId,
                                    @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                    @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
@@ -71,22 +72,14 @@ public class CommentController {
         Post post = postService.getById(postId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return commentService.getAll(currentUser, post, pageable).stream()
-                .map(commentMapper::toDTO)
-                .toList();
+        return commentService.getAll(currentUser, post, pageable)
+                .map(commentMapper::toDTO);
     }
 
     @GetMapping("/{id}")
     public CommentDTO getById(@PathVariable("id") int id) {
         Comment comment = commentService.getById(id);
         return commentMapper.toDTO(comment);
-    }
-
-    @GetMapping("/get-all-by-id")
-    public List<CommentDTO> getAllById(@RequestBody List<Integer> ids) {
-        return commentService.getAllById(ids).stream()
-                .map(commentMapper::toDTO)
-                .toList();
     }
 
     @PostMapping
@@ -100,10 +93,10 @@ public class CommentController {
         // Getting entities
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
-        Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
+        Set<HashTag> hashTags = hashTagService.getAllById(hashTagIds);
 
         // Saving entities
-        Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
+        Set<Mention> mentions = mentionService.saveAll(currentUser, userService.getAllById(mentionedUserIds));
         Comment comment = commentService.save(currentUser, post, body, attachedPictures, mentions, hashTags);
         CommentNotification commentNotification = commentNotificationService.save(currentUser, comment);
         List<CommentMentionNotification> commentMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, comment);
@@ -112,7 +105,7 @@ public class CommentController {
         CommentDTO commentDTO = commentMapper.toDTO(comment);
         CommentNotificationDTO commentNotificationDTO = commentNotificationMapper.toDTO(commentNotification);
         List<CommentMentionNotificationDTO> commentMentionNotificationDTOS = commentMentionNotifications.stream()
-                        .map(mentionNotificationMapper::toDTO)
+                .map(mentionNotificationMapper::toDTO)
                 .toList();
 
         // Web Socket

@@ -19,12 +19,11 @@ import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,7 +48,7 @@ public class CommentReactionController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public List<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                     @PathVariable("postId") int postId,
                                     @PathVariable("commentId") int commentId,
                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -62,13 +61,12 @@ public class CommentReactionController {
         Comment comment = commentService.getById(commentId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return reactionService.getAll(currentUser, post, comment, pageable).stream()
-                .map(reactionMapper::toDTO)
-                .toList();
+        return reactionService.getAll(currentUser, post, comment, pageable)
+                .map(reactionMapper::toDTO);
     }
 
     @GetMapping("/emoji")
-    public List<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
                                            @PathVariable("postId") int postId,
                                            @PathVariable("commentId") int commentId,
                                            @RequestParam("emojiId") int emojiId,
@@ -83,9 +81,8 @@ public class CommentReactionController {
         Emoji emoji = emojiService.getById(emojiId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return reactionService.getAllByEmoji(currentUser, post, comment, emoji, pageable).stream()
-                .map(reactionMapper::toDTO)
-                .toList();
+        return reactionService.getAllByEmoji(currentUser, post, comment, emoji, pageable)
+                .map(reactionMapper::toDTO);
     }
 
     @PostMapping

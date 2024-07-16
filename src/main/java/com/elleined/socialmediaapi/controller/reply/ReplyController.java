@@ -26,6 +26,7 @@ import com.elleined.socialmediaapi.ws.WSService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -65,7 +66,7 @@ public class ReplyController {
     private final MentionNotificationMapper mentionNotificationMapper;
 
     @GetMapping
-    public List<ReplyDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReplyDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                  @PathVariable("postId") int postId,
                                  @PathVariable("commentId") int commentId,
                                  @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -76,24 +77,16 @@ public class ReplyController {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return replyService.getAll(currentUser, post, comment, pageable).stream()
-                .map(replyMapper::toDTO)
-                .toList();
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+        return replyService.getAll(currentUser, post, comment, pageable)
+                .map(replyMapper::toDTO);
     }
 
     @GetMapping("/{id}")
     public ReplyDTO getById(@PathVariable("id") int id) {
         Reply reply = replyService.getById(id);
         return replyMapper.toDTO(reply);
-    }
-
-    @GetMapping("/get-all-by-id")
-    public List<ReplyDTO> getAllById(@RequestBody List<Integer> ids) {
-        return replyService.getAllById(ids).stream()
-                .map(replyMapper::toDTO)
-                .toList();
     }
 
     @PostMapping
@@ -109,10 +102,10 @@ public class ReplyController {
         User currentUser = userService.getById(currentUserId);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
-        Set<HashTag> hashTags = new HashSet<>(hashTagService.getAllById(hashTagIds.stream().toList()));
+        Set<HashTag> hashTags = hashTagService.getAllById(hashTagIds);
 
         // Saving entities
-        Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
+        Set<Mention> mentions = mentionService.saveAll(currentUser, userService.getAllById(mentionedUserIds));
         Reply reply = replyService.save(currentUser, post, comment, body, attachedPictures, mentions, hashTags);
         ReplyNotification replyNotification = replyNotificationService.save(currentUser, reply);
         List<ReplyMentionNotification> replyMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, reply);

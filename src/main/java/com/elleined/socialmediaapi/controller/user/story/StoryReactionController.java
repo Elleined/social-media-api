@@ -18,6 +18,7 @@ import com.elleined.socialmediaapi.service.story.StoryService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -44,7 +45,7 @@ public class StoryReactionController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public List<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                     @PathVariable("storyId") int storyId,
                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                     @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
@@ -55,13 +56,12 @@ public class StoryReactionController {
         Story story = storyService.getById(storyId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return reactionService.getAll(currentUser, story, pageable).stream()
-                .map(reactionMapper::toDTO)
-                .toList();
+        return reactionService.getAll(currentUser, story, pageable)
+                .map(reactionMapper::toDTO);
     }
 
     @GetMapping("/emoji")
-    public List<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
                                            @PathVariable("storyId") int storyId,
                                            @RequestParam("emojiId") int emojiId,
                                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -74,9 +74,8 @@ public class StoryReactionController {
         Emoji emoji = emojiService.getById(emojiId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return reactionService.getAllByEmoji(currentUser, story, emoji, pageable).stream()
-                .map(reactionMapper::toDTO)
-                .toList();
+        return reactionService.getAllByEmoji(currentUser, story, emoji, pageable)
+                .map(reactionMapper::toDTO);
     }
 
     @PostMapping

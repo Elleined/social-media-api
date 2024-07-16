@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -31,6 +33,11 @@ public class UserServiceImpl implements UserService, UserServiceRestriction {
     private final BlockService blockService;
 
     private final EmailValidator emailValidator;
+
+    @Override
+    public Set<User> getAllById(Set<Integer> ids) {
+        return new HashSet<>(userRepository.findAllById(ids));
+    }
 
     @Override
     public User save(UserRequest userRequest) {

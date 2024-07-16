@@ -9,6 +9,7 @@ import com.elleined.socialmediaapi.model.user.User;
 import com.elleined.socialmediaapi.service.notification.friend.FriendRequestNotificationService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,7 +28,7 @@ public class FriendRequestNotificationController {
 
 
     @GetMapping
-    public List<FriendRequestNotificationDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<FriendRequestNotificationDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                                      @RequestParam("status") Notification.Status status,
                                                      @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                      @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
@@ -37,9 +38,8 @@ public class FriendRequestNotificationController {
         User currentUser = userService.getById(currentUserId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return friendRequestNotificationService.getAll(currentUser, status, pageable).stream()
-                .map(friendRequestNotificationMapper::toDTO)
-                .toList();
+        return friendRequestNotificationService.getAll(currentUser, status, pageable)
+                .map(friendRequestNotificationMapper::toDTO);
     }
 
     @PostMapping("/{id}/read")

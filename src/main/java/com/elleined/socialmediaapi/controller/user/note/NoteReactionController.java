@@ -16,12 +16,11 @@ import com.elleined.socialmediaapi.service.reaction.ReactionService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -43,7 +42,7 @@ public class NoteReactionController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public List<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                     @PathVariable("noteId") int noteId,
                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                     @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
@@ -52,15 +51,14 @@ public class NoteReactionController {
 
         User currentUser = userService.getById(currentUserId);
         Note note = noteService.getById(noteId);
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return reactionService.getAll(currentUser, note, pageable).stream()
-                .map(reactionMapper::toDTO)
-                .toList();
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+        return reactionService.getAll(currentUser, note, pageable)
+                .map(reactionMapper::toDTO);
     }
 
     @GetMapping("/emoji")
-    public List<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
                                            @PathVariable("noteId") int noteId,
                                            @RequestParam("emojiId") int emojiId,
                                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -71,11 +69,10 @@ public class NoteReactionController {
         User currentUser = userService.getById(currentUserId);
         Note note = noteService.getById(noteId);
         Emoji emoji = emojiService.getById(emojiId);
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return reactionService.getAllByEmoji(currentUser, note, emoji, pageable).stream()
-                .map(reactionMapper::toDTO)
-                .toList();
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+        return reactionService.getAllByEmoji(currentUser, note, emoji, pageable)
+                .map(reactionMapper::toDTO);
     }
 
     @PostMapping

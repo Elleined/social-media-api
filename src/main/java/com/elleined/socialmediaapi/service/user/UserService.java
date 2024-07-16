@@ -7,7 +7,11 @@ import com.elleined.socialmediaapi.service.CustomService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Set;
+
 public interface UserService extends CustomService<User> {
+    Set<User> getAllById(Set<Integer> ids);
+    
     User save(UserRequest userRequest);
 
     User getByUUID(String UUID) throws ResourceNotFoundException;

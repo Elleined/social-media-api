@@ -18,6 +18,7 @@ import com.elleined.socialmediaapi.service.user.UserService;
 import com.elleined.socialmediaapi.ws.notification.NotificationWSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -55,26 +56,18 @@ public class PostController {
         return postMapper.toDTO(post);
     }
 
-    @GetMapping("/get-all-by-id")
-    public List<PostDTO> getAllById(@RequestBody List<Integer> ids) {
-        return postService.getAllById(ids).stream()
-                .map(postMapper::toDTO)
-                .toList();
-    }
-
     @GetMapping
-    public List<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId,
                                 @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                 @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                 @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                 @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         User currentUser = userService.getById(currentUserId);
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        return postService.getAll(currentUser, pageable).stream()
-                .map(postMapper::toDTO)
-                .toList();
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+        return postService.getAll(currentUser, pageable)
+                .map(postMapper::toDTO);
     }
 
     @PostMapping
@@ -88,7 +81,7 @@ public class PostController {
         User currentUser = userService.getById(currentUserId);
 
         // Saving entities
-        Set<Mention> mentions = mentionService.saveAll(currentUser, new HashSet<>(userService.getAllById(mentionedUserIds.stream().toList())));
+        Set<Mention> mentions = mentionService.saveAll(currentUser, userService.getAllById(mentionedUserIds));
         Set<HashTag> hashTags = hashTagService.saveAll(keywords);
         Post post = postService.save(currentUser, body, attachedPictures, mentions, hashTags);
         List<PostMentionNotification> postMentionNotifications = mentionNotificationService.saveAll(currentUser, mentions, post);

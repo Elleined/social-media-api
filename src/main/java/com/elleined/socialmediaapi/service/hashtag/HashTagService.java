@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface HashTagService extends CustomService<HashTag> {
+    Set<HashTag> getAllById(Set<Integer> ids);
     HashTag save(String keyword);
     boolean isExists(String keyword);
     HashTag getByKeyword(String keyword);

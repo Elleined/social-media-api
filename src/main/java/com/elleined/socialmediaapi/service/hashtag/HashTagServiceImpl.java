@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -65,6 +67,11 @@ public class HashTagServiceImpl implements HashTagService {
                 .toList();
 
         return PageableUtil.toPage(posts, pageable);
+    }
+
+    @Override
+    public Set<HashTag> getAllById(Set<Integer> ids) {
+        return new HashSet<>(hashTagRepository.findAllById(ids));
     }
 
     @Override
