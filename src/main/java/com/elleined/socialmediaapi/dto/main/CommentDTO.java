@@ -11,6 +11,4 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class CommentDTO extends ForumDTO {
     private PostDTO postDTO;
-    private ReplyDTO pinnedReplyDTO;
-
 }

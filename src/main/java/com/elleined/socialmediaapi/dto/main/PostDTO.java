@@ -12,6 +12,4 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class PostDTO extends ForumDTO {
     private Post.CommentSectionStatus commentSectionStatus;
-    private CommentDTO pinnedCommentDTO;
-
 }

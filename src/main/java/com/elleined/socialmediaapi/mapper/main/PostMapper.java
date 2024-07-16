@@ -22,8 +22,7 @@ import java.util.Set;
                 Forum.Status.class
         },
         uses = {
-                UserMapper.class,
-                CommentMapper.class
+                UserMapper.class
         }
 )
 public interface PostMapper extends CustomMapper<Post, PostDTO> {
@@ -37,8 +36,7 @@ public interface PostMapper extends CustomMapper<Post, PostDTO> {
             @Mapping(target = "status", source = "status"),
             @Mapping(target = "attachedPictures", source = "attachedPictures"),
             @Mapping(target = "creatorDTO", source = "creator"),
-            @Mapping(target = "commentSectionStatus", source = "commentSectionStatus"),
-            @Mapping(target = "pinnedCommentDTO", source = "pinnedComment")
+            @Mapping(target = "commentSectionStatus", source = "commentSectionStatus")
     })
     PostDTO toDTO(Post post);
 

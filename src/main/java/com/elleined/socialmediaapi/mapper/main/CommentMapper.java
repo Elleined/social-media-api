@@ -23,8 +23,7 @@ import java.util.Set;
         },
         uses = {
                 UserMapper.class,
-                PostMapper.class,
-                ReplyMapper.class
+                PostMapper.class
         }
 )
 public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
@@ -38,8 +37,7 @@ public interface CommentMapper extends CustomMapper<Comment, CommentDTO> {
             @Mapping(target = "status", source = "status"),
             @Mapping(target = "attachedPictures", source = "attachedPictures"),
             @Mapping(target = "creatorDTO", source = "creator"),
-            @Mapping(target = "postDTO", source = "post"),
-            @Mapping(target = "pinnedReplyDTO", source = "pinnedReply")
+            @Mapping(target = "postDTO", source = "post")
     })
     CommentDTO toDTO(Comment comment);
 
