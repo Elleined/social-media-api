@@ -8,7 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+@Cacheable
+@org.hibernate.annotations.Cache(region = "voteCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 
 @Entity
 @Table(name = "tbl_comment_vote")

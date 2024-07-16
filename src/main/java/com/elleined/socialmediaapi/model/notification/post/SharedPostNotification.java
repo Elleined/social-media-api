@@ -2,14 +2,15 @@ package com.elleined.socialmediaapi.model.notification.post;
 
 import com.elleined.socialmediaapi.model.main.post.Post;
 import com.elleined.socialmediaapi.model.notification.Notification;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+@Cacheable
+@org.hibernate.annotations.Cache(region = "sharedPostNotificationCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 
 @Entity
 @Table(name = "tbl_post_shared_notification")

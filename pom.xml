@@ -18,8 +18,14 @@
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<lombok.version>1.18.30</lombok.version>
 		<data-faker-version>2.2.2</data-faker-version>
+		<redisson-version>3.32.0</redisson-version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson-hibernate-6</artifactId>
+			<version>${redisson-version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>
