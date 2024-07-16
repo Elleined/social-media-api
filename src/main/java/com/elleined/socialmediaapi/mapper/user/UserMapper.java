@@ -9,13 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(
-        componentModel = "spring",
-        uses = {
-                NoteMapper.class,
-                StoryMapper.class
-        }
-)
+@Mapper(componentModel = "spring")
 public interface UserMapper extends CustomMapper<User, UserDTO> {
 
     @Override
@@ -26,9 +20,7 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "email", source = "email"),
             @Mapping(target = "picture", source = "picture"),
-            @Mapping(target = "UUID", source = "UUID"),
-            @Mapping(target = "noteDTO", source = "note"),
-            @Mapping(target = "storyDTO", source = "story")
+            @Mapping(target = "UUID", source = "UUID")
     })
     UserDTO toDTO(User user);
 

@@ -17,6 +17,4 @@ public class UserDTO extends DTO {
     private String email;
     private String picture;
     private String UUID;
-    private NoteDTO noteDTO;
-    private StoryDTO storyDTO;
 }
