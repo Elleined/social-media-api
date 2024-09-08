@@ -13,24 +13,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{currentUserId}/shared-posts")
+@RequestMapping("/users/shared-posts")
 public class SharedPostController {
     private final UserService userService;
     private final PostService postService;
     private final PostMapper postMapper;
 
     @GetMapping
-    public Page<PostDTO> getAllSharedPost(@PathVariable("currentUserId") int currentUserId,
+    public Page<PostDTO> getAllSharedPost(@RequestHeader("Authorization") String jwt,
                                           @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                           @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                           @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                           @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
         return postService.getAllSharedPosts(currentUser, pageable)
@@ -38,9 +36,9 @@ public class SharedPostController {
     }
 
     @PostMapping("/{postId}")
-    public PostDTO sharePost(@PathVariable("currentUserId") int currentUserId,
+    public PostDTO sharePost(@RequestHeader("Authorization") String jwt,
                              @PathVariable("postId") int postId) {
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
 
         Post sharedPost = postService.sharePost(currentUser, post);
@@ -48,9 +46,9 @@ public class SharedPostController {
     }
 
     @DeleteMapping("/{postId}")
-    public void unSharePost(@PathVariable("currentUserId") int currentUserId,
+    public void unSharePost(@RequestHeader("Authorization") String jwt,
                             @PathVariable("postId") int postId) {
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
 
         postService.unSharePost(currentUser, post);

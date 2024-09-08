@@ -11,15 +11,12 @@ import com.elleined.socialmediaapi.service.pin.CommentPinReplyService;
 import com.elleined.socialmediaapi.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts/{postId}/comments/{commentId}/pin-reply")
+@RequestMapping("/users/posts/{postId}/comments/{commentId}/pin-reply")
 public class CommentPinReplyController {
     private final UserService userService;
 
@@ -30,11 +27,11 @@ public class CommentPinReplyController {
     private final ReplyService replyService;
 
     @PatchMapping("/{replyId}")
-    public CommentDTO pinReply(@PathVariable("currentUserId") int currentUserId,
+    public CommentDTO pinReply(@RequestHeader("Authorization") String jwt,
                                @PathVariable("commentId") int commentId,
                                @PathVariable("replyId") int replyId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
 

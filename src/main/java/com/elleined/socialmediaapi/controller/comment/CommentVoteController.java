@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts/{postId}/comments/{commentId}/votes")
+@RequestMapping("/users/posts/{postId}/comments/{commentId}/votes")
 public class CommentVoteController {
     private final UserService userService;
 
@@ -30,7 +30,7 @@ public class CommentVoteController {
     private final CommentService commentService;
 
     @GetMapping
-    public Page<VoteDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<VoteDTO> getAll(@RequestHeader("Authorization") String jwt,
                                 @PathVariable("postId") int postId,
                                 @PathVariable("commentId") int commentId,
                                 @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -38,7 +38,7 @@ public class CommentVoteController {
                                 @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                 @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
@@ -54,7 +54,7 @@ public class CommentVoteController {
     }
 
     @GetMapping("/verdict")
-    public Page<VoteDTO> getAllByVerdict(@PathVariable("currentUserId") int currentUserId,
+    public Page<VoteDTO> getAllByVerdict(@RequestHeader("Authorization") String jwt,
                                          @PathVariable("postId") int postId,
                                          @PathVariable("commentId") int commentId,
                                          @RequestParam("verdict") Vote.Verdict verdict,
@@ -63,7 +63,7 @@ public class CommentVoteController {
                                          @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                          @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
@@ -73,12 +73,12 @@ public class CommentVoteController {
     }
 
     @PostMapping
-    public VoteDTO save(@PathVariable("currentUserId") int currentUserId,
+    public VoteDTO save(@RequestHeader("Authorization") String jwt,
                         @PathVariable("postId") int postId,
                         @PathVariable("commentId") int commentId,
                         @RequestParam("verdict") Vote.Verdict verdict) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 

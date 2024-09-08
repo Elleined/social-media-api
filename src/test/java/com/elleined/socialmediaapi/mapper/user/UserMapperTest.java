@@ -122,7 +122,7 @@ class UserMapperTest {
         // Stubbing methods
 
         // Calling the method
-        User actual = userMapper.toEntity("Name", "email@gmail.com", "Picture path");
+        User actual = userMapper.toEntity("Name", "email@gmail.com", , "Picture path");
 
         // Behavior Verifications
 

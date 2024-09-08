@@ -23,12 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts/{postId}/reactions")
+@RequestMapping("/users/posts/{postId}/reactions")
 public class PostReactionController {
     private final UserService userService;
 
@@ -45,14 +43,14 @@ public class PostReactionController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public Page<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAll(@RequestHeader("Authorization") String jwt,
                                     @PathVariable("postId") int postId,
                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                     @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                     @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                     @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
@@ -61,7 +59,7 @@ public class PostReactionController {
     }
 
     @GetMapping("/emoji")
-    public Page<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAllByEmoji(@RequestHeader("Authorization") String jwt,
                                            @PathVariable("postId") int postId,
                                            @RequestParam("emojiId") int emojiId,
                                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -69,7 +67,7 @@ public class PostReactionController {
                                            @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                            @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Emoji emoji = emojiService.getById(emojiId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
@@ -79,10 +77,10 @@ public class PostReactionController {
     }
 
     @PostMapping
-    public ReactionDTO save(@PathVariable("currentUserId") int currentUserId,
+    public ReactionDTO save(@RequestHeader("Authorization") String jwt,
                             @PathVariable("postId") int postId,
                             @RequestParam("emojiId") int emojiId) {
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Emoji emoji = emojiService.getById(emojiId);
 
@@ -104,11 +102,11 @@ public class PostReactionController {
     }
 
     @DeleteMapping("/{reactionId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("postId") int postId,
                        @PathVariable("reactionId") int reactionId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Reaction reaction = reactionService.getById(reactionId);
         reactionService.delete(currentUser, post, reaction);

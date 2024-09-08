@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts/{postId}/comments/{commentId}/reactions")
+@RequestMapping("/users/posts/{postId}/comments/{commentId}/reactions")
 public class CommentReactionController {
     private final UserService userService;
 
@@ -48,7 +48,7 @@ public class CommentReactionController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public Page<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAll(@RequestHeader("Authorization") String jwt,
                                     @PathVariable("postId") int postId,
                                     @PathVariable("commentId") int commentId,
                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -56,7 +56,7 @@ public class CommentReactionController {
                                     @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                     @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
@@ -66,7 +66,7 @@ public class CommentReactionController {
     }
 
     @GetMapping("/emoji")
-    public Page<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAllByEmoji(@RequestHeader("Authorization") String jwt,
                                            @PathVariable("postId") int postId,
                                            @PathVariable("commentId") int commentId,
                                            @RequestParam("emojiId") int emojiId,
@@ -75,7 +75,7 @@ public class CommentReactionController {
                                            @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                            @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Emoji emoji = emojiService.getById(emojiId);
@@ -86,12 +86,12 @@ public class CommentReactionController {
     }
 
     @PostMapping
-    public ReactionDTO save(@PathVariable("currentUserId") int currentUserId,
+    public ReactionDTO save(@RequestHeader("Authorization") String jwt,
                             @PathVariable("postId") int postId,
                             @PathVariable("commentId") int commentId,
                             @RequestParam("emojiId") int emojiId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Emoji emoji = emojiService.getById(emojiId);
@@ -114,12 +114,12 @@ public class CommentReactionController {
     }
 
     @DeleteMapping("/{reactionId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("postId") int postId,
                        @PathVariable("commentId") int commentId,
                        @PathVariable("reactionId") int reactionId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Reaction reaction = reactionService.getById(reactionId);

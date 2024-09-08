@@ -3,9 +3,7 @@ package com.elleined.socialmediaapi.controller.user;
 import com.elleined.socialmediaapi.dto.user.UserDTO;
 import com.elleined.socialmediaapi.mapper.user.UserMapper;
 import com.elleined.socialmediaapi.model.user.User;
-import com.elleined.socialmediaapi.request.user.UserRequest;
 import com.elleined.socialmediaapi.service.user.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,12 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
-
-    @PostMapping
-    public UserDTO save(@Valid @RequestBody UserRequest userRequest) {
-        User user = userService.save(userRequest);
-        return userMapper.toDTO(user);
-    }
 
     @GetMapping("/{id}")
     public UserDTO getById(@PathVariable("id") int id) {

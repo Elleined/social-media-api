@@ -17,13 +17,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/story")
+@RequestMapping("/users/story")
 public class UserStoryController {
     private final UserService userService;
 
@@ -39,20 +38,20 @@ public class UserStoryController {
 
 
     @GetMapping
-    public StoryDTO getStory(@PathVariable("currentUserId") int currentUserId) {
-        User currentUser = userService.getById(currentUserId);
+    public StoryDTO getStory(@RequestHeader("Authorization") String jwt) {
+        User currentUser = userService.getByJWT(jwt);
         Story story = storyService.getStory(currentUser);
         return storyMapper.toDTO(story);
     }
 
     @PostMapping
-    public StoryDTO save(@PathVariable("currentUserId") int currentUserId,
+    public StoryDTO save(@RequestHeader("Authorization") String jwt,
                          @RequestPart("content") String content,
                          @RequestPart(required = false, name = "attachedPicture") MultipartFile attachedPicture,
                          @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds) {
 
         // Getting entities
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
 
         // Saving entities
         Set<Mention> mentions = mentionService.saveAll(currentUser, userService.getAllById(mentionedUserIds));
@@ -72,9 +71,9 @@ public class UserStoryController {
     }
 
     @DeleteMapping("/{storyId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("storyId") int storyId) {
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Story story = storyService.getById(storyId);
         storyService.delete(currentUser, story);
     }
