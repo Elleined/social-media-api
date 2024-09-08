@@ -2,8 +2,6 @@ package com.elleined.socialmediaapi.mapper.user;
 
 import com.elleined.socialmediaapi.dto.user.UserDTO;
 import com.elleined.socialmediaapi.mapper.CustomMapper;
-import com.elleined.socialmediaapi.mapper.note.NoteMapper;
-import com.elleined.socialmediaapi.mapper.story.StoryMapper;
 import com.elleined.socialmediaapi.model.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -29,6 +27,7 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "name", source = "name"),
+            @Mapping(target = "password", source = "password"),
             @Mapping(target = "email", source = "email"),
             @Mapping(target = "picture", source = "picture"),
             @Mapping(target = "UUID", expression = "java(java.util.UUID.randomUUID().toString())"),
@@ -63,9 +62,11 @@ public interface UserMapper extends CustomMapper<User, UserDTO> {
             @Mapping(target = "sharedPostNotifications", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "voteNotifications", expression = "java(new java.util.ArrayList<>())"),
             @Mapping(target = "friendRequestNotifications", expression = "java(new java.util.ArrayList<>())"),
-            @Mapping(target = "noteReactionNotifications", expression = "java(new java.util.ArrayList<>())")
+            @Mapping(target = "noteReactionNotifications", expression = "java(new java.util.ArrayList<>())"),
+
     })
     User toEntity(String name,
                   String email,
+                  String password,
                   String picture);
 }

@@ -24,11 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/stories/{storyId}/reactions")
+@RequestMapping("/users/stories/{storyId}/reactions")
 public class StoryReactionController {
     private final UserService userService;
 
@@ -45,14 +43,14 @@ public class StoryReactionController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public Page<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAll(@RequestHeader("Authorization") String jwt,
                                     @PathVariable("storyId") int storyId,
                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                     @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                     @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                     @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Story story = storyService.getById(storyId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
@@ -61,7 +59,7 @@ public class StoryReactionController {
     }
 
     @GetMapping("/emoji")
-    public Page<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAllByEmoji(@RequestHeader("Authorization") String jwt,
                                            @PathVariable("storyId") int storyId,
                                            @RequestParam("emojiId") int emojiId,
                                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -69,7 +67,7 @@ public class StoryReactionController {
                                            @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                            @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Story story = storyService.getById(storyId);
         Emoji emoji = emojiService.getById(emojiId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
@@ -79,12 +77,12 @@ public class StoryReactionController {
     }
 
     @PostMapping
-    public ReactionDTO save(@PathVariable("currentUserId") int currentUserId,
+    public ReactionDTO save(@RequestHeader("Authorization") String jwt,
                             @PathVariable("storyId") int storyId,
                             @RequestParam("emojiId") int emojiId) {
 
         // Getting entities
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Story story = storyService.getById(storyId);
         Emoji emoji = emojiService.getById(emojiId);
 
@@ -109,11 +107,11 @@ public class StoryReactionController {
     }
 
     @DeleteMapping("/{reactionId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("storyId") int storyId,
                        @PathVariable("reactionId") int reactionId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Story story = storyService.getById(storyId);
         Reaction reaction = reactionService.getById(reactionId);
 

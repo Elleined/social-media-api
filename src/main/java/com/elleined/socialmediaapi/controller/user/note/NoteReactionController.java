@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/note/{noteId}/reactions")
+@RequestMapping("/users/note/{noteId}/reactions")
 public class NoteReactionController {
 
     private final UserService userService;
@@ -42,14 +42,14 @@ public class NoteReactionController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public Page<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAll(@RequestHeader("Authorization") String jwt,
                                     @PathVariable("noteId") int noteId,
                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                     @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                     @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                     @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Note note = noteService.getById(noteId);
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
@@ -58,7 +58,7 @@ public class NoteReactionController {
     }
 
     @GetMapping("/emoji")
-    public Page<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAllByEmoji(@RequestHeader("Authorization") String jwt,
                                            @PathVariable("noteId") int noteId,
                                            @RequestParam("emojiId") int emojiId,
                                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -66,7 +66,7 @@ public class NoteReactionController {
                                            @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                            @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Note note = noteService.getById(noteId);
         Emoji emoji = emojiService.getById(emojiId);
 
@@ -76,12 +76,12 @@ public class NoteReactionController {
     }
 
     @PostMapping
-    public ReactionDTO save(@PathVariable("currentUserId") int currentUserId,
+    public ReactionDTO save(@RequestHeader("Authorization") String jwt,
                             @PathVariable("noteId") int noteId,
                             @RequestParam("emojiId") int emojiId) {
 
         // Getting entities
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Note note = noteService.getById(noteId);
         Emoji emoji = emojiService.getById(emojiId);
 
@@ -106,11 +106,11 @@ public class NoteReactionController {
     }
 
     @DeleteMapping("/{reactionId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("noteId") int noteId,
                        @PathVariable("reactionId") int reactionId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Note note = noteService.getById(noteId);
         Reaction reaction = reactionService.getById(reactionId);
 

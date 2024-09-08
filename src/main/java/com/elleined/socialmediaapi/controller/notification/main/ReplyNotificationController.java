@@ -14,11 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{currentUserId}/reply-notifications")
+@RequestMapping("/users/reply-notifications")
 public class ReplyNotificationController {
     private final UserService userService;
 
@@ -26,14 +24,14 @@ public class ReplyNotificationController {
     private final ReplyNotificationMapper replyNotificationMapper;
 
     @GetMapping
-    public Page<ReplyNotificationDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReplyNotificationDTO> getAll(@RequestHeader("Authorization") String jwt,
                                              @RequestParam("status") Notification.Status status,
                                              @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                              @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                              @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                              @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
         return replyNotificationService.getAll(currentUser, status, pageable)
@@ -41,10 +39,10 @@ public class ReplyNotificationController {
     }
 
     @PostMapping("/{id}/read")
-    public void read(@PathVariable("currentUserId") int currentUserId,
+    public void read(@RequestHeader("Authorization") String jwt,
                      @PathVariable("id") int id) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         ReplyNotification replyNotification = replyNotificationService.getById(id);
 
         replyNotificationService.read(currentUser, replyNotification);

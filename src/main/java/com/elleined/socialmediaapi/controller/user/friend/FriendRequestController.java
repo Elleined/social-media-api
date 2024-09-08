@@ -18,11 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/friend-requests")
+@RequestMapping("/users/friend-requests")
 public class FriendRequestController {
 
     private final FriendService friendService;
@@ -36,13 +34,13 @@ public class FriendRequestController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public Page<FriendRequestDTO> getAllFriendRequests(@PathVariable("currentUserId") int currentUserId,
+    public Page<FriendRequestDTO> getAllFriendRequests(@RequestHeader("Authorization") String jwt,
                                                        @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                        @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                                        @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                                        @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
         return friendService.getAllFriendRequests(currentUser, pageable)
@@ -56,11 +54,11 @@ public class FriendRequestController {
     }
 
     @PostMapping("/{userToAddId}/send")
-    public void sendFriendRequest(@PathVariable("currentUserId") int currentUserId,
+    public void sendFriendRequest(@RequestHeader("Authorization") String jwt,
                                   @PathVariable("userToAddId") int userToAddId) {
 
         // Getting entities
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         User userToAdd = userService.getById(userToAddId);
 
         // Saving entities
@@ -75,11 +73,11 @@ public class FriendRequestController {
     }
 
     @PatchMapping("/{friendRequestId}/accept")
-    public void acceptFriendRequest(@PathVariable("currentUserId") int currentUserId,
+    public void acceptFriendRequest(@RequestHeader("Authorization") String jwt,
                                     @PathVariable("friendRequestId") int friendRequestId) {
 
         // Getting entities
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         FriendRequest friendRequest = friendService.getById(friendRequestId);
         User receiver = friendRequest.getCreator();
 
@@ -95,9 +93,9 @@ public class FriendRequestController {
     }
 
     @DeleteMapping("/{friendRequestId}/reject")
-    public void rejectFriendRequest(@PathVariable("currentUserId") int currentUserId,
+    public void rejectFriendRequest(@RequestHeader("Authorization") String jwt,
                                     @PathVariable("friendRequestId") int friendRequestId) {
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         FriendRequest friendRequest = friendService.getById(friendRequestId);
         friendService.rejectFriendRequest(currentUser, friendRequest);
     }

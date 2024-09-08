@@ -13,11 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{currentUserId}/saved-posts")
+@RequestMapping("/users/saved-posts")
 public class SavedPostController {
     private final UserService userService;
 
@@ -25,13 +23,13 @@ public class SavedPostController {
     private final PostMapper postMapper;
 
     @GetMapping
-    public Page<PostDTO> getAllSavedPost(@PathVariable("currentUserId") int currentUserId,
+    public Page<PostDTO> getAllSavedPost(@RequestHeader("Authorization") String jwt,
                                          @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                          @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                          @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                          @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
         return postService.getAllSavedPosts(currentUser, pageable)
@@ -39,19 +37,19 @@ public class SavedPostController {
     }
 
     @PostMapping("/{postId}")
-    public PostDTO savedPost(@PathVariable("currentUserId") int currentUserId,
+    public PostDTO savedPost(@RequestHeader("Authorization") String jwt,
                              @PathVariable("postId") int postId) {
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         postService.savedPost(currentUser, post);
         return postMapper.toDTO(post);
     }
 
     @DeleteMapping("/{postId}")
-    public void unSavedPost(@PathVariable("currentUserId") int currentUserId,
+    public void unSavedPost(@RequestHeader("Authorization") String jwt,
                             @PathVariable("postId") int postId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         postService.unSavedPost(currentUser, post);
     }

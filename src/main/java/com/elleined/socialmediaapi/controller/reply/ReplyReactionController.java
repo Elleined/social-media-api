@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts/{postId}/comments/{commentId}/replies/{replyId}/reactions")
+@RequestMapping("/users/posts/{postId}/comments/{commentId}/replies/{replyId}/reactions")
 public class ReplyReactionController {
     private final UserService userService;
 
@@ -51,7 +51,7 @@ public class ReplyReactionController {
     private final NotificationWSService notificationWSService;
 
     @GetMapping
-    public Page<ReactionDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAll(@RequestHeader("Authorization") String jwt,
                                     @PathVariable("postId") int postId,
                                     @PathVariable("commentId") int commentId,
                                     @PathVariable("replyId") int replyId,
@@ -60,7 +60,7 @@ public class ReplyReactionController {
                                     @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                     @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
@@ -71,7 +71,7 @@ public class ReplyReactionController {
     }
 
     @GetMapping("/{emojiId}")
-    public Page<ReactionDTO> getAllByEmoji(@PathVariable("currentUserId") int currentUserId,
+    public Page<ReactionDTO> getAllByEmoji(@RequestHeader("Authorization") String jwt,
                                                    @PathVariable("postId") int postId,
                                                    @PathVariable("commentId") int commentId,
                                                    @PathVariable("replyId") int replyId,
@@ -81,7 +81,7 @@ public class ReplyReactionController {
                                            @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                            @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
@@ -93,13 +93,13 @@ public class ReplyReactionController {
     }
 
     @PostMapping
-    public ReactionDTO save(@PathVariable("currentUserId") int currentUserId,
+    public ReactionDTO save(@RequestHeader("Authorization") String jwt,
                             @PathVariable("postId") int postId,
                             @PathVariable("commentId") int commentId,
                             @PathVariable("replyId") int replyId,
                             @RequestParam("emojiId") int emojiId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);
@@ -123,13 +123,13 @@ public class ReplyReactionController {
     }
 
     @DeleteMapping("/{reactionId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("postId") int postId,
                        @PathVariable("commentId") int commentId,
                        @PathVariable("replyId") int replyId,
                        @PathVariable("reactionId") int reactionId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
         Reply reply = replyService.getById(replyId);

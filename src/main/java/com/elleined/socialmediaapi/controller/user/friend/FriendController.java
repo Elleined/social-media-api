@@ -12,12 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/friends")
+@RequestMapping("/users/friends")
 public class FriendController {
 
     private final FriendService friendService;
@@ -26,13 +23,13 @@ public class FriendController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public Page<UserDTO> getAllFriends(@PathVariable("currentUserId") int currentUserId,
+    public Page<UserDTO> getAllFriends(@RequestHeader("Authorization") String jwt,
                                        @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                        @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                        @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                        @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
         return friendService.getAllFriends(currentUser, pageable)
@@ -40,9 +37,9 @@ public class FriendController {
     }
 
     @DeleteMapping("/{userToUnFriendId}/unFriend")
-    public void unFriend(@PathVariable("currentUserId") int currentUserId,
+    public void unFriend(@RequestHeader("Authorization") String jwt,
                          @PathVariable("userToUnFriendId") int userToUnFriendId) {
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         User userToUnFriend = userService.getById(userToUnFriendId);
         friendService.unFriend(currentUser, userToUnFriend);
     }
