@@ -15,11 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{currentUserId}/comment-reaction-notifications")
+@RequestMapping("/users/comment-reaction-notifications")
 public class CommentReactionNotificationController {
     private final UserService userService;
 
@@ -27,14 +25,14 @@ public class CommentReactionNotificationController {
     private final ReactionNotificationMapper reactionNotificationMapper;
 
     @GetMapping
-    public Page<CommentReactionNotificationDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<CommentReactionNotificationDTO> getAll(@RequestHeader("Authorization") String jwt,
                                                        @RequestParam("status") Notification.Status status,
                                                        @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                        @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                                        @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                                        @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
         return reactionNotificationService.getAll(currentUser, status, pageable)
@@ -42,10 +40,10 @@ public class CommentReactionNotificationController {
     }
 
     @PostMapping("/{id}/read")
-    public void read(@PathVariable("currentUserId") int currentUserId,
+    public void read(@RequestHeader("Authorization") String jwt,
                      @PathVariable("id") int id) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         CommentReactionNotification commentReactionNotification = reactionNotificationService.getById(id);
 
         reactionNotificationService.read(currentUser, commentReactionNotification);

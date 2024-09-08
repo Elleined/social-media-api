@@ -26,14 +26,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts")
+@RequestMapping("/users/posts")
 public class PostController {
     private final UserService userService;
 
@@ -57,13 +56,13 @@ public class PostController {
     }
 
     @GetMapping
-    public Page<PostDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<PostDTO> getAll(@RequestHeader("Authorization") String jwt,
                                 @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                 @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                 @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                 @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
         return postService.getAll(currentUser, pageable)
@@ -71,14 +70,14 @@ public class PostController {
     }
 
     @PostMapping
-    public PostDTO save(@PathVariable("currentUserId") int currentUserId,
+    public PostDTO save(@RequestHeader("Authorization") String jwt,
                         @RequestPart("body") String body,
                         @RequestPart(required = false, name = "mentionedUserIds") Set<Integer> mentionedUserIds,
                         @RequestPart(required = false, name = "keywords") Set<String> keywords,
                         @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures) throws IOException {
 
         // Getting entities
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
 
         // Saving entities
         Set<Mention> mentions = mentionService.saveAll(currentUser, userService.getAllById(mentionedUserIds));
@@ -98,10 +97,10 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("postId") int postId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
 
         postService.delete(currentUser, post);
@@ -109,10 +108,10 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}/comment-section-status")
-    public PostDTO updateCommentSectionStatus(@PathVariable("currentUserId") int currentUserId,
+    public PostDTO updateCommentSectionStatus(@RequestHeader("Authorization") String jwt,
                                               @PathVariable("postId") int postId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
 
         Post updatedPost = postService.updateCommentSectionStatus(currentUser, post);
@@ -120,12 +119,12 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public PostDTO update(@PathVariable("currentUserId") int currentUserId,
+    public PostDTO update(@RequestHeader("Authorization") String jwt,
                           @PathVariable("postId") int postId,
                           @RequestPart("newBody") String newBody,
                           @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
 
         Post updatedPost = postService.update(currentUser, post, newBody, attachedPictures);
@@ -133,10 +132,10 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}/reactivate")
-    public PostDTO reactivate(@PathVariable("currentUserId") int currentUserId,
+    public PostDTO reactivate(@RequestHeader("Authorization") String jwt,
                               @PathVariable("postId") int postId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
 
         postService.reactivate(currentUser, post);

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/note")
+@RequestMapping("/users/note")
 public class UserNoteController {
     private final UserService userService;
 
@@ -19,34 +19,34 @@ public class UserNoteController {
     private final NoteMapper noteMapper;
 
     @GetMapping
-    public NoteDTO getNote(@PathVariable("currentUserId") int currentUserId) {
-        User currentUser = userService.getById(currentUserId);
+    public NoteDTO getNote(@RequestHeader("Authorization") String jwt) {
+        User currentUser = userService.getByJWT(jwt);
         Note note = noteService.getNote(currentUser);
         return noteMapper.toDTO(note);
     }
 
     @PostMapping
-    public NoteDTO save(@PathVariable("currentUserId") int currentUserId,
+    public NoteDTO save(@RequestHeader("Authorization") String jwt,
                         @RequestParam("thought") String thought) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Note note = noteService.save(currentUser, thought);
         return noteMapper.toDTO(note);
     }
 
     @PatchMapping
-    public NoteDTO update(@PathVariable("currentUserId") int currentUserId,
+    public NoteDTO update(@RequestHeader("Authorization") String jwt,
                           @RequestParam("newThought") String newThought) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Note note = noteService.update(currentUser, newThought);
         return noteMapper.toDTO(note);
     }
 
     @DeleteMapping("{noteId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("noteId") int noteId) {
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Note note = noteService.getById(noteId);
         noteService.delete(currentUser, note);
     }

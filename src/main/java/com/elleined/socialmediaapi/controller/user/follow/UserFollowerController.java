@@ -12,10 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/users/{currentUserId}/followers")
+@RequestMapping("/users/followers")
 @RequiredArgsConstructor
 public class UserFollowerController {
     private final UserService userService;
@@ -24,13 +22,13 @@ public class UserFollowerController {
     private final FollowService followService;
 
     @GetMapping
-    public Page<UserDTO> getAllFollowers(@PathVariable("currentUserId") int currentUserId,
+    public Page<UserDTO> getAllFollowers(@RequestHeader("Authorization") String jwt,
                                          @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                          @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                          @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                          @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
         return followService.getAllFollowers(currentUser, pageable)

@@ -12,12 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}")
+@RequestMapping("/users")
 public class BlockController {
     private final BlockService blockService;
 
@@ -25,13 +22,13 @@ public class BlockController {
     private final UserMapper userMapper;
 
     @GetMapping("/blocked-users")
-    public Page<UserDTO> getAllBlockedUsers(@PathVariable("currentUserId") int currentUserId,
+    public Page<UserDTO> getAllBlockedUsers(@RequestHeader("Authorization") String jwt,
                                             @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                             @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                             @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                             @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
         return blockService.getAllBlockedUsers(currentUser, pageable)
@@ -39,10 +36,10 @@ public class BlockController {
     }
 
     @GetMapping("/is-blocked/{otherUserId}")
-    public boolean isBlocked(@PathVariable("currentUserId") int currentUserId,
-                               @PathVariable("otherUserId") int otherUserId) {
+    public boolean isBlocked(@RequestHeader("Authorization") String jwt,
+                             @PathVariable("otherUserId") int otherUserId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         User otherUser = userService.getById(otherUserId);
 
         return blockService.isBlockedByYou(currentUser, otherUser) ||
@@ -50,20 +47,20 @@ public class BlockController {
     }
 
     @PatchMapping("/block/{userToBeBlockedId}")
-    public void blockUser(@PathVariable("currentUserId") int currentUserId,
+    public void blockUser(@RequestHeader("Authorization") String jwt,
                           @PathVariable("userToBeBlockedId") int userToBeBlockedId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         User userToBeBlocked = userService.getById(userToBeBlockedId);
 
         blockService.blockUser(currentUser, userToBeBlocked);
     }
 
     @PatchMapping("/unblock/{userToBeUnblockedId}")
-    public void unblockUser(@PathVariable("currentUserId") int currentUserId,
+    public void unblockUser(@RequestHeader("Authorization") String jwt,
                             @PathVariable("userToBeUnblockedId") int userToBeUnblockedId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         User userToBeUnblocked = userService.getById(userToBeUnblockedId);
 
         blockService.unBlockUser(currentUser, userToBeUnblocked);

@@ -31,13 +31,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users/{currentUserId}/posts/{postId}/comments")
+@RequestMapping("/users/posts/{postId}/comments")
 public class CommentController {
     private final UserService userService;
 
@@ -61,14 +60,14 @@ public class CommentController {
     private final MentionNotificationMapper mentionNotificationMapper;
 
     @GetMapping
-    public Page<CommentDTO> getAll(@PathVariable("currentUserId") int currentUserId,
+    public Page<CommentDTO> getAll(@RequestHeader("Authorization") String jwt,
                                    @PathVariable("postId") int postId,
                                    @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                    @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                    @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
                                    @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
@@ -83,7 +82,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public CommentDTO save(@PathVariable("currentUserId") int currentUserId,
+    public CommentDTO save(@RequestHeader("Authorization") String jwt,
                            @PathVariable("postId") int postId,
                            @RequestPart("body") String body,
                            @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures,
@@ -91,7 +90,7 @@ public class CommentController {
                            @RequestPart(required = false, name = "hashTagIds") Set<Integer> hashTagIds) {
 
         // Getting entities
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Set<HashTag> hashTags = hashTagService.getAllById(hashTagIds);
 
@@ -117,11 +116,11 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public void delete(@PathVariable("currentUserId") int currentUserId,
+    public void delete(@RequestHeader("Authorization") String jwt,
                        @PathVariable("postId") int postId,
                        @PathVariable("commentId") int commentId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
@@ -133,13 +132,13 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public CommentDTO update(@PathVariable("currentUserId") int currentUserId,
+    public CommentDTO update(@RequestHeader("Authorization") String jwt,
                              @PathVariable("postId") int postId,
                              @PathVariable("commentId") int commentId,
                              @RequestPart("newBody") String newBody,
                              @RequestPart(required = false, name = "attachedPictures") List<MultipartFile> attachedPictures) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
@@ -152,11 +151,11 @@ public class CommentController {
     }
 
     @PatchMapping("/{commentId}/reactivate")
-    public CommentDTO reactivate(@PathVariable("currentUserId") int currentUserId,
+    public CommentDTO reactivate(@RequestHeader("Authorization") String jwt,
                                  @PathVariable("postId") int postId,
                                  @PathVariable("commentId") int commentId) {
 
-        User currentUser = userService.getById(currentUserId);
+        User currentUser = userService.getByJWT(jwt);
         Post post = postService.getById(postId);
         Comment comment = commentService.getById(commentId);
 
